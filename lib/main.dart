@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tv/initialApp.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,7 +14,8 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: InitialApp(),
+      initialRoute: RouteGenerator.root,
+      onGenerateRoute: RouteGenerator.generateRoute,
     );
   }
 }
