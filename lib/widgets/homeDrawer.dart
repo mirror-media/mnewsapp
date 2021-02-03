@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -22,7 +23,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             child: DrawerHeader(
               margin: null,
               decoration: BoxDecoration(
-                color: Color(0xff004DBC),
+                color: drawerColor,
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

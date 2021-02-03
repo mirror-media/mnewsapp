@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class InitialApp extends StatefulWidget {
@@ -30,7 +31,7 @@ class _InitialAppState extends State<InitialApp> {
         icon: Icon(Icons.menu),
         onPressed: () => scaffoldkey.currentState.openDrawer()
       ),
-      backgroundColor: Color(0xff003366),
+      backgroundColor: appBarColor,
       centerTitle: true,
       title: Text('鏡新聞'),
       actions: <Widget>[
