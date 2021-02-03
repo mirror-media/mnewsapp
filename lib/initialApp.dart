@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tv/widgets/homeDrawer.dart';
 
 class InitialApp extends StatefulWidget {
   @override
@@ -12,7 +13,7 @@ class _InitialAppState extends State<InitialApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      drawer: Drawer(),
+      drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
       body: Center(
         child: Text(
