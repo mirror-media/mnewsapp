@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
+import 'package:tv/blocs/config/bloc.dart';
+import 'package:tv/services/configService.dart';
 
 class RouteGenerator {
   static const String root = '/';
@@ -9,7 +12,10 @@ class RouteGenerator {
       case root:
         return MaterialPageRoute(
           settings: settings,
-          builder: (_) => InitialApp()
+          builder: (_) => BlocProvider(
+            create: (context) => ConfigBloc(configRepos: ConfigServices()),
+            child: InitialApp(),
+          ),
         );
       default:
         // If there is no such named route in the switch statement, e.g. /third
