@@ -30,8 +30,10 @@ dependencies:
   cupertino_icons: ^1.0.0
   # The Font Awesome Icon pack available as set of Flutter Icons.
   font_awesome_flutter: ^8.11.0
-  # Launching a URL in the mobile platform
+  # Launching a URL in the mobile platform.
   url_launcher: ^5.7.10
+  # Blocs and cubits
+  flutter_bloc: ^6.1.1
 
 dev_dependencies:
   flutter_test:
