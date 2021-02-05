@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/services/categoryService.dart';
+import 'package:tv/widgets/categoryTab.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,10 +20,9 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldkey,
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
-      body: Center(
-        child: Text(
-          'mnews',
-        ),
+      body: BlocProvider(
+        create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
+        child: CategoryTab(),
       ),
     );
   }
