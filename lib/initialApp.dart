@@ -1,46 +1,45 @@
 import 'package:flutter/material.dart';
-import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/widgets/homeDrawer.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/config/bloc.dart';
+import 'package:tv/blocs/config/events.dart';
+import 'package:tv/blocs/config/states.dart';
+import 'package:tv/pages/configPage.dart';
+import 'package:tv/pages/homePage.dart';
 
 class InitialApp extends StatefulWidget {
   @override
   _InitialAppState createState() => _InitialAppState();
 }
 
-class _InitialAppState extends State<InitialApp> {
-  var _scaffoldkey = GlobalKey<ScaffoldState>();
+class _InitialAppState extends State<InitialApp> {  
+  @override
+  void initState() {
+    _loadingConfig();
+    super.initState();
+  }
+
+  _loadingConfig() async{
+    context.read<ConfigBloc>().add(ConfigEvents.loadingConfig);
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldkey,
-      drawer: HomeDrawer(),
-      appBar: _buildBar(context, _scaffoldkey),
-      body: Center(
-        child: Text(
-          'mnews',
-        ),
-      ),
-    );
-  }
+    return BlocBuilder<ConfigBloc, ConfigState>(
+      builder: (BuildContext context, ConfigState state) {
+        if (state is ConfigError) {
+          final error = state.error;
+          String message = '${error.message}\nTap to Retry.';
+          return Center(
+            child: Text(message),
+          );
+        }
+        if (state is ConfigLoaded) {
+          return HomePage();
+        }
 
-  Widget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
-    return AppBar(
-      elevation: 0.1,
-      leading: IconButton(
-        icon: Icon(Icons.menu),
-        onPressed: () => scaffoldkey.currentState.openDrawer()
-      ),
-      backgroundColor: appBarColor,
-      centerTitle: true,
-      title: Text('鏡新聞'),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () {},
-        ),
-      ],
+        // state is Init, loading, or other 
+        return ConfigPage();
+      }
     );
   }
 }
