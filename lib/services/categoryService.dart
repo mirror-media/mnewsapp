@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/services.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/categoryList.dart';
@@ -43,6 +44,11 @@ class CategoryServices implements CategoryRepos{
 
     CategoryList categoryList = CategoryList.fromJson(jsonResponse['data']['allCategories']);
 
-    return categoryList;
+    String jsonFixed = await rootBundle.loadString('assets/json/menu.json');
+    final fixedMenu = json.decode(jsonFixed);
+    CategoryList fixedCategoryList = CategoryList.fromJson(fixedMenu);
+    fixedCategoryList.addAll(categoryList);
+    
+    return fixedCategoryList;
   }
 }
