@@ -1,7 +1,7 @@
 class GraphqlBody {
   final String operationName;
   final String query;
-  final Map<String,String> variables;
+  final Map<String, dynamic> variables;
 
   GraphqlBody({
     this.operationName,
