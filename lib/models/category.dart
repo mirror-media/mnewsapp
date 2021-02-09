@@ -23,6 +23,10 @@ class Category {
         'slug': slug,
       };
 
+  bool isLatestCategory() {
+    return id == 'latest';
+  }
+
   @override
   int get hashCode => this.hashCode;
 
