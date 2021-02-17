@@ -32,10 +32,14 @@ dependencies:
   font_awesome_flutter: ^8.11.0
   # Launching a URL in the mobile platform.
   url_launcher: ^5.7.10
-  # Blocs and cubits
+  # Blocs and cubits.
   flutter_bloc: ^6.1.1
   # The dart library for making HTTP requests.
   http: ^0.12.2
+  # Carousel slider in flutter.
+  carousel_slider: ^2.3.1
+  # Cached network image.
+  cached_network_image: ^2.5.0
 
 dev_dependencies:
   flutter_test:

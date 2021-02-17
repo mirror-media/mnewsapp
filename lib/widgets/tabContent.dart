@@ -25,6 +25,11 @@ class _TabContentState extends State<TabContent> {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if(widget.needCarousel)
+                    BlocProvider(
+                      create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
+                      child: BuildEditorChoiceCarousel(),
+                    ),
                   Center(child: Text('Tab content')),
                 ],
               );
