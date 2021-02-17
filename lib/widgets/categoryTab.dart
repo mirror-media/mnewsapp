@@ -3,9 +3,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
+import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
+import 'package:tv/services/newsMarqueeService.dart';
+import 'package:tv/widgets/newsMarqueeWidget.dart';
 import 'package:tv/widgets/tabContent.dart';
 
 class CategoryTab extends StatefulWidget {
@@ -120,6 +123,13 @@ class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin
               tabs: tabs.toList(),
               controller: tabController,
             ),
+          ),
+        ),
+        BlocProvider(
+          create: (context) => NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
+            child: BuildNewsMarquee(),
           ),
         ),
         Expanded(
