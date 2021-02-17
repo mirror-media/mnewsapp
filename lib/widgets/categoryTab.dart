@@ -6,6 +6,7 @@ import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
+import 'package:tv/widgets/tabContent.dart';
 
 class CategoryTab extends StatefulWidget {
   @override
@@ -53,7 +54,9 @@ class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin
       );
 
       _tabWidgets.add(
-        Center(child: Text(category.slug))
+        TabContent(
+          needCarousel: categoryList[i].isLatestCategory(),
+        ),
       );
     }
 
