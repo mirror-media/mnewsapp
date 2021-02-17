@@ -7,3 +7,5 @@ const Color tabBarUnselectedColor = Colors.grey;
 const Color drawerColor = Color(0xff004DBC);
 const Color editorChoiceTagColor = Color(0xff003366);
 const Color editorChoiceTitleBackgroundColor = Color(0xff004DBC);
+const Color newsMarqueeLeadingColor = Color(0xffFFCC00);
+const Color newsMarqueeContentColor = Color(0xff003366);
