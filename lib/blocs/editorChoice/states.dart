@@ -1,5 +1,3 @@
-
-
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class EditorChoiceState {}
