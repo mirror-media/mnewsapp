@@ -84,7 +84,7 @@ class CarouselDisplayWidget extends StatelessWidget {
             text: TextSpan(
               style: TextStyle(
                 color: Colors.white,
-                fontSize: 20.0,
+                fontSize: 22.0,
               ),
               text: storyListItem.name,
             ),
