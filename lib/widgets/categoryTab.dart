@@ -58,6 +58,7 @@ class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin
 
       _tabWidgets.add(
         TabContent(
+          categorySlug: category.slug,
           needCarousel: categoryList[i].isLatestCategory(),
         ),
       );

@@ -4,6 +4,7 @@ import 'package:tv/models/customizedList.dart';
 import 'package:tv/models/storyListItem.dart';
 
 class StoryListItemList extends CustomizedList<StoryListItem> {
+  int allStoryCount = 0;
   // constructor
   StoryListItemList();
 

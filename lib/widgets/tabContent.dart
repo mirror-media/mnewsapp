@@ -1,12 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
+import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
+import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceCarousel.dart';
+import 'package:tv/widgets/tabStoryList.dart';
 
 class TabContent extends StatefulWidget {
+  final String categorySlug;
   final bool needCarousel;
   TabContent({
+    @required this.categorySlug,
     this.needCarousel = false,
   });
 
@@ -29,8 +35,12 @@ class _TabContentState extends State<TabContent> {
               ),
             ),
           ),
-        SliverToBoxAdapter(
-          child: Center(child: Text('Tab content'))
+        BlocProvider(
+          create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
+          child: BuildTabStoryList(
+            categorySlug: widget.categorySlug,
+            needCarousel: widget.needCarousel,
+          ),
         ),
       ],
     );
