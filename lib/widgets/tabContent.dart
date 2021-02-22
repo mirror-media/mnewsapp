@@ -19,23 +19,18 @@ class _TabContentState extends State<TabContent> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if(widget.needCarousel)
-                    BlocProvider(
-                      create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
-                      child: BuildEditorChoiceCarousel(),
-                    ),
-                  Center(child: Text('Tab content')),
-                ],
-              );
-            },
-            childCount: 1,
+        if(widget.needCarousel)
+          SliverToBoxAdapter(
+            child: BlocProvider(
+              create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: BuildEditorChoiceCarousel(),
+              ),
+            ),
           ),
+        SliverToBoxAdapter(
+          child: Center(child: Text('Tab content'))
         ),
       ],
     );
