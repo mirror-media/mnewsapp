@@ -27,6 +27,10 @@ class Category {
     return id == 'latest';
   }
 
+  static bool checkIsLatestCategoryBySlug(String slug) {
+    return slug == 'latest';
+  }
+
   @override
   int get hashCode => this.hashCode;
 
