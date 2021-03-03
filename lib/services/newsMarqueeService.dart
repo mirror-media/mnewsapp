@@ -23,7 +23,7 @@ class NewsMarqueeServices implements NewsMarqueeRepos{
       allPosts(
         where: \$where, 
         first: \$first, 
-        sortBy: [ publishTime_ASC ]
+        sortBy: [ publishTime_DESC ]
       ) {
         slug
         name
