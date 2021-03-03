@@ -27,7 +27,7 @@ class TabStoryListServices implements TabStoryListRepos{
       where: \$where, 
       skip: \$skip, 
       first: \$first, 
-      sortBy: [ publishTime_ASC ]
+      sortBy: [ publishTime_DESC ]
     ) {
       slug
       name
