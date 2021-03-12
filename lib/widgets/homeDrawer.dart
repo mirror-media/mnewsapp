@@ -9,124 +9,81 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  String _selectString = '新聞';
+
   @override
   Widget build(BuildContext context) {
-    var height = MediaQuery.of(context).size.height;
+    //var height = MediaQuery.of(context).size.height;
     var padding = MediaQuery.of(context).padding;
 
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: [
-          Container(
-            height: 84.0 + padding.top,
-            child: DrawerHeader(
-              margin: null,
-              decoration: BoxDecoration(
-                color: drawerColor,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Text(
-                        '登入 / 註冊',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 17,
+      child: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: Container(
+              height: 84.0 + padding.top,
+              child: DrawerHeader(
+                margin: null,
+                decoration: BoxDecoration(
+                  color: drawerColor,
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Text(
+                          '登入 / 註冊',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                          ),
                         ),
-                      ),
-                      SizedBox(width: 8.0),
-                      Icon(
-                        Icons.arrow_forward_ios,
+                        SizedBox(width: 8.0),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        )
+                      ],
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.settings,
                         color: Colors.white,
-                      )
-                    ],
-                  ),
-                  IconButton(
-                    icon: Icon(
-                      Icons.settings,
-                      color: Colors.white,
-                    ), 
-                    onPressed: () {
-                      print('go to setting');
-                    }
-                  ),
-                ]
+                      ), 
+                      onPressed: () {
+                        print('go to setting');
+                      }
+                    ),
+                  ]
+                ),
               ),
             ),
           ),
-          _drawerButton(
-            '新聞', 
-            true, 
-            (){
-              print('新聞');
-            }
-          ),
-          _dividerBlock(),
-          _drawerButton(
-            '直播', 
-            false, 
-            (){
-              print('直播');
-            }
-          ),
-          _dividerBlock(),
-          _drawerButton(
-            '影音', 
-            false, 
-            (){
-              print('影音');
-            }
-          ),
-          _dividerBlock(),
-          _drawerButton(
-            '節目', 
-            false, 
-            (){
-              print('節目');
-            }
-          ),
-          _anchorBlock(height),
-          _thirdPartyMediaLinkButton(
-            FontAwesomeIcons.youtube , 
-            '鏡電視 YouTube 頻道', 
-            'https://www.google.com/'
-          ),
-          _thirdPartyMediaLinkButton(
-            FontAwesomeIcons.facebookSquare , 
-            '鏡電視 粉絲專頁', 
-            'https://www.google.com/'
-          ),
-          _thirdPartyMediaLinkButton(
-            FontAwesomeIcons.instagram , 
-            '鏡電視 Instagram', 
-            'https://www.google.com/'
+          SliverToBoxAdapter(child: _drawerButtonBloc(_selectString)),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: _thirdPartyBlock(),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _drawerButton(String title, bool isSelected, Function function) {
+  Widget _drawerButton(Widget child, bool isSelected, Function function) {
     return InkWell(
       child: Row(
         children: [
           Container(
-            width: 8.0, 
+            width: 12.0, 
             height: 56,
             color: isSelected? Color(0xffFFCC00) : null,
           ),
-          SizedBox(width: 8.0),
-          Text(
-            title,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: isSelected? Color(0xff004DBC) : null,
-            ),
-          ),
+          SizedBox(width: 12.0),
+          child,
         ],
       ),
       onTap: function
@@ -139,24 +96,103 @@ class _HomeDrawerState extends State<HomeDrawer> {
     color: Colors.grey,
   );
 
-  Widget _anchorBlock(double height) {
-    return Container(
-      color: Color(0xffF4F5F6),
-      height: height/3,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Icon(Icons.mic),
-                SizedBox(width: 15),
-                Text('鏡主播'),
-              ],
+  Widget _drawerButtonBloc(String selectString) {
+    return Column(
+      children: [
+        _drawerButton(
+          Text(
+            '新聞',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: selectString == '新聞' ? Color(0xff004DBC) : null,
             ),
           ),
-        ],
-      ),
+          selectString == '新聞', 
+          (){
+            setState(() {
+              _selectString = '新聞';
+            });
+          }
+        ),
+        _dividerBlock(),
+        _drawerButton(
+          Text(
+            '直播',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: selectString == '直播' ? Color(0xff004DBC) : null,
+            ),
+          ),
+          selectString == '直播', 
+          (){
+            setState(() {
+              _selectString = '直播';
+            });
+          }
+        ),
+        _dividerBlock(),
+        _drawerButton(
+          Text(
+            '影音',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: selectString == '影音' ? Color(0xff004DBC) : null,
+            ),
+          ),
+          selectString == '影音', 
+          (){
+            setState(() {
+              _selectString = '影音';
+            });
+          }
+        ),
+        _dividerBlock(),
+        _drawerButton(
+          Text(
+            '節目',
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+              color: selectString == '節目' ? Color(0xff004DBC) : null,
+            ),
+          ),
+          selectString == '節目', 
+          (){
+            setState(() {
+              _selectString = '節目';
+            });
+          }
+        ),
+        _dividerBlock(),
+        _drawerButton(
+          Row(
+            children: [
+              Icon(
+                Icons.mic_none,
+              ),
+              SizedBox(width: 12),
+              Text(
+                '鏡主播',
+                style: TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w500,
+                  color: selectString == '鏡主播' ? Color(0xff004DBC) : null,
+                ),
+              ),
+            ],
+          ),
+          selectString == '鏡主播', 
+          (){
+            setState(() {
+              _selectString = '鏡主播';
+            });
+          }
+        ),
+        _dividerBlock(),
+      ]
     );
   }
 
@@ -192,6 +228,36 @@ class _HomeDrawerState extends State<HomeDrawer> {
           throw 'Could not launch $link';
         }
       }
+    );
+  }
+
+  Widget _thirdPartyBlock() {
+    return Container(
+      // real size is 143 ((15*1.4+16)*3+32)
+      height: 150,
+      color: Color(0xffF4F5F6),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 24, 16),
+        child: Column(
+          children: [
+            _thirdPartyMediaLinkButton(
+              FontAwesomeIcons.youtube , 
+              '鏡電視 YouTube 頻道', 
+              'https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw'
+            ),
+            _thirdPartyMediaLinkButton(
+              FontAwesomeIcons.facebookSquare , 
+              '鏡電視 粉絲專頁', 
+              'https://www.facebook.com/mirrormediamg/'
+            ),
+            _thirdPartyMediaLinkButton(
+              FontAwesomeIcons.instagram , 
+              '鏡電視 Instagram', 
+              'https://www.instagram.com/mirror_media/?hl=zh-tw'
+            ),
+          ]
+        ),
+      ),
     );
   }
 }
