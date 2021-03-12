@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/states.dart';
-import 'package:tv/models/mNewsSection.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/categoryService.dart';
 import 'package:tv/widgets/categoryTab.dart';
@@ -32,8 +31,8 @@ class _HomePageState extends State<HomePage> {
               child: Text(message),
             );
           } else {
-            MNewsSection section = state.section;
-            return _buildBody(section);
+            String sectionId = state.sectionId;
+            return _buildBody(sectionId);
           }
         }
       ),
@@ -60,14 +59,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(MNewsSection section) {
-    if(section == MNewsSection.news) {
+  Widget _buildBody(String sectionId) {
+    if(sectionId == 'news') {
       return BlocProvider(
         create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
         child: CategoryTab(),
       );
     }
     
-    return Center(child: Text(MNewsSectionStringList[section.index]));
+    return Center(child: Text(sectionId));
   }
 }

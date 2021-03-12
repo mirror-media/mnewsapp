@@ -1,6 +1,5 @@
 import 'package:tv/blocs/section/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/mNewsSection.dart';
 import 'package:tv/services/sectionService.dart';
 
 abstract class SectionEvents{
@@ -8,17 +7,17 @@ abstract class SectionEvents{
 }
 
 class ChangeSection extends SectionEvents {
-  final MNewsSection section;
-  ChangeSection(this.section);
+  final String sectionId;
+  ChangeSection(this.sectionId);
   @override
-  String toString() => 'ChangeSection { MNewsSection: $section }';
+  String toString() => 'ChangeSection { SectionId: $sectionId }';
 
   @override
   Stream<SectionState> run(SectionRepos sectionRepos) async*{
     print(this.toString());
     try {
-      MNewsSection section = sectionRepos.changeSection(this.section);
-      yield SectionLoaded(section: section);
+      String sectionId = sectionRepos.changeSection(this.sectionId);
+      yield SectionLoaded(sectionId: sectionId);
     } catch (e) {
       yield SectionError(
         error: UnknownException(e.toString()),

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/events.dart';
 import 'package:tv/blocs/section/states.dart';
-import 'package:tv/models/mNewsSection.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/models/sectionList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
@@ -14,8 +14,8 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  _changeSection(MNewsSection section) {
-    context.read<SectionBloc>().add(ChangeSection(section));
+  _changeSection(String sectionId) {
+    context.read<SectionBloc>().add(ChangeSection(sectionId));
   }
 
   @override
@@ -32,13 +32,13 @@ class _HomeDrawerState extends State<HomeDrawer> {
             child: Text(message),
           );
         } else {
-          MNewsSection section = state.section;
+          String sectionId = state.sectionId;
           
           return Drawer(
             child: CustomScrollView(
               slivers: [
                 SliverToBoxAdapter(child: _buildDrawerHeader(padding),),
-                SliverToBoxAdapter(child: _drawerButtonBlock(MNewsSectionStringList[section.index])),
+                SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Align(
@@ -119,93 +119,59 @@ class _HomeDrawerState extends State<HomeDrawer> {
     color: Colors.grey,
   );
 
-  Widget _drawerButtonBlock(String selectString) {
-    return Column(
-      children: [
-        _drawerButton(
-          Text(
-            '新聞',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: selectString == '新聞' ? Color(0xff004DBC) : null,
-            ),
-          ),
-          selectString == '新聞', 
-          (){
-            _changeSection(MNewsSection.news);
-          }
-        ),
-        _dividerBlock(),
-        _drawerButton(
-          Text(
-            '直播',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: selectString == '直播' ? Color(0xff004DBC) : null,
-            ),
-          ),
-          selectString == '直播', 
-          (){
-            _changeSection(MNewsSection.live);
-          }
-        ),
-        _dividerBlock(),
-        _drawerButton(
-          Text(
-            '影音',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: selectString == '影音' ? Color(0xff004DBC) : null,
-            ),
-          ),
-          selectString == '影音', 
-          (){
-            _changeSection(MNewsSection.media);
-          }
-        ),
-        _dividerBlock(),
-        _drawerButton(
-          Text(
-            '節目',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: selectString == '節目' ? Color(0xff004DBC) : null,
-            ),
-          ),
-          selectString == '節目', 
-          (){
-            _changeSection(MNewsSection.show);
-          }
-        ),
-        _dividerBlock(),
-        _drawerButton(
-          Row(
-            children: [
-              Icon(
-                Icons.mic_none,
-              ),
-              SizedBox(width: 12),
-              Text(
-                '鏡主播',
-                style: TextStyle(
-                  fontSize: 17,
-                  fontWeight: FontWeight.w500,
-                  color: selectString == '鏡主播' ? Color(0xff004DBC) : null,
+  Widget _drawerButtonBlock(String sectionId) {
+    SectionList sectionList = SectionList.fromJson(mNewsSectionList);
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      padding: const EdgeInsets.all(0.0),
+      itemCount: sectionList.length,
+      itemBuilder: (context, index) {
+
+        return Column(
+          children: [
+            sectionList[index].id != 'anchorperson'
+            ? _drawerButton(
+                Text(
+                  sectionList[index].name,
+                  style: TextStyle(
+                    fontSize: 17,
+                    fontWeight: FontWeight.w500,
+                    color: sectionId == sectionList[index].id ? Color(0xff004DBC) : null,
+                  ),
                 ),
+                sectionId == sectionList[index].id,
+                (){
+                  _changeSection(sectionList[index].id);
+                }
+              )
+            : _drawerButton(
+                Row(
+                  children: [
+                    Icon(
+                      Icons.mic_none,
+                    ),
+                    SizedBox(width: 12),
+                    Text(
+                      sectionList[index].name,
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w500,
+                        color: sectionId == sectionList[index].id ? Color(0xff004DBC) : null,
+                      ),
+                    ),
+                  ],
+                ),
+                sectionId == sectionList[index].id,
+                (){
+                  _changeSection(sectionList[index].id);
+                }
               ),
-            ],
-          ),
-          selectString == '鏡主播', 
-          (){
-            _changeSection(MNewsSection.anchorperson);
-          }
-        ),
-        _dividerBlock(),
-      ]
+            _dividerBlock(),
+          ]
+        );
+      }
     );
   }
 
