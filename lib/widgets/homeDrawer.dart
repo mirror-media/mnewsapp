@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/section/bloc.dart';
+import 'package:tv/blocs/section/events.dart';
+import 'package:tv/blocs/section/states.dart';
+import 'package:tv/models/mNewsSection.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,66 +14,84 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  String _selectString = '新聞';
+  _changeSection(MNewsSection section) {
+    context.read<SectionBloc>().add(ChangeSection(section));
+  }
 
   @override
   Widget build(BuildContext context) {
     //var height = MediaQuery.of(context).size.height;
     var padding = MediaQuery.of(context).padding;
 
-    return Drawer(
-      child: CustomScrollView(
-        slivers: [
-          SliverToBoxAdapter(
-            child: Container(
-              height: 84.0 + padding.top,
-              child: DrawerHeader(
-                margin: null,
-                decoration: BoxDecoration(
-                  color: drawerColor,
+    return BlocBuilder<SectionBloc, SectionState>(
+      builder: (BuildContext context, SectionState state) {
+        if (state is SectionError) {
+          final error = state.error;
+          String message = '${error.message}\nTap to Retry.';
+          return Center(
+            child: Text(message),
+          );
+        } else {
+          MNewsSection section = state.section;
+          
+          return Drawer(
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(child: _buildDrawerHeader(padding),),
+                SliverToBoxAdapter(child: _drawerButtonBlock(MNewsSectionStringList[section.index])),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: _thirdPartyBlock(),
+                  ),
                 ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          '登入 / 註冊',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 17,
-                          ),
-                        ),
-                        SizedBox(width: 8.0),
-                        Icon(
-                          Icons.arrow_forward_ios,
-                          color: Colors.white,
-                        )
-                      ],
-                    ),
-                    IconButton(
-                      icon: Icon(
-                        Icons.settings,
-                        color: Colors.white,
-                      ), 
-                      onPressed: () {
-                        print('go to setting');
-                      }
-                    ),
-                  ]
+              ],
+            ),
+          );
+        }
+      }
+    );
+  }
+
+  Widget _buildDrawerHeader(EdgeInsets padding) {
+    return Container(
+      height: 84.0 + padding.top,
+      child: DrawerHeader(
+        margin: null,
+        decoration: BoxDecoration(
+          color: drawerColor,
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Text(
+                  '登入 / 註冊',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 17,
+                  ),
                 ),
-              ),
+                SizedBox(width: 8.0),
+                Icon(
+                  Icons.arrow_forward_ios,
+                  color: Colors.white,
+                )
+              ],
             ),
-          ),
-          SliverToBoxAdapter(child: _drawerButtonBloc(_selectString)),
-          SliverFillRemaining(
-            hasScrollBody: false,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: _thirdPartyBlock(),
+            IconButton(
+              icon: Icon(
+                Icons.settings,
+                color: Colors.white,
+              ), 
+              onPressed: () {
+                print('go to setting');
+              }
             ),
-          ),
-        ],
+          ]
+        ),
       ),
     );
   }
@@ -96,7 +119,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     color: Colors.grey,
   );
 
-  Widget _drawerButtonBloc(String selectString) {
+  Widget _drawerButtonBlock(String selectString) {
     return Column(
       children: [
         _drawerButton(
@@ -110,9 +133,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '新聞', 
           (){
-            setState(() {
-              _selectString = '新聞';
-            });
+            _changeSection(MNewsSection.news);
           }
         ),
         _dividerBlock(),
@@ -127,9 +148,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '直播', 
           (){
-            setState(() {
-              _selectString = '直播';
-            });
+            _changeSection(MNewsSection.live);
           }
         ),
         _dividerBlock(),
@@ -144,9 +163,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '影音', 
           (){
-            setState(() {
-              _selectString = '影音';
-            });
+            _changeSection(MNewsSection.media);
           }
         ),
         _dividerBlock(),
@@ -161,9 +178,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '節目', 
           (){
-            setState(() {
-              _selectString = '節目';
-            });
+            _changeSection(MNewsSection.show);
           }
         ),
         _dividerBlock(),
@@ -186,9 +201,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '鏡主播', 
           (){
-            setState(() {
-              _selectString = '鏡主播';
-            });
+            _changeSection(MNewsSection.vocal);
           }
         ),
         _dividerBlock(),

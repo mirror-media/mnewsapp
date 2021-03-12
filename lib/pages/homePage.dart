@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/bloc.dart';
+import 'package:tv/blocs/section/bloc.dart';
+import 'package:tv/blocs/section/states.dart';
+import 'package:tv/models/mNewsSection.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/categoryService.dart';
 import 'package:tv/widgets/categoryTab.dart';
@@ -16,13 +19,23 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return  Scaffold(
       key: _scaffoldkey,
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
-      body: BlocProvider(
-        create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
-        child: CategoryTab(),
+      body: BlocBuilder<SectionBloc, SectionState>(
+        builder: (BuildContext context, SectionState state) {
+          if (state is SectionError) {
+            final error = state.error;
+            String message = '${error.message}\nTap to Retry.';
+            return Center(
+              child: Text(message),
+            );
+          } else {
+            MNewsSection section = state.section;
+            return _buildBody(section);
+          }
+        }
       ),
     );
   }
@@ -45,5 +58,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ],
     );
+  }
+
+  Widget _buildBody(MNewsSection section) {
+    if(section == MNewsSection.news) {
+      return BlocProvider(
+        create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
+        child: CategoryTab(),
+      );
+    }
+    
+    return Center(child: Text(MNewsSectionStringList[section.index]));
   }
 }
