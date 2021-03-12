@@ -3,7 +3,7 @@ enum MNewsSection {
   live,
   media,
   show,
-  vocal,
+  anchorperson,
 }
 
 const MNewsSectionStringList = [

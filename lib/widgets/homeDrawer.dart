@@ -201,7 +201,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           selectString == '鏡主播', 
           (){
-            _changeSection(MNewsSection.vocal);
+            _changeSection(MNewsSection.anchorperson);
           }
         ),
         _dividerBlock(),
