@@ -27,23 +27,23 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-    Widget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
-      return AppBar(
-        elevation: 0.1,
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () => scaffoldkey.currentState.openDrawer()
+  Widget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
+    return AppBar(
+      elevation: 0.1,
+      leading: IconButton(
+        icon: Icon(Icons.menu),
+        onPressed: () => scaffoldkey.currentState.openDrawer()
+      ),
+      backgroundColor: appBarColor,
+      centerTitle: true,
+      title: Text('鏡新聞'),
+      actions: <Widget>[
+        IconButton(
+          icon: Icon(Icons.search),
+          tooltip: 'Search',
+          onPressed: () {},
         ),
-        backgroundColor: appBarColor,
-        centerTitle: true,
-        title: Text('鏡新聞'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.search),
-            tooltip: 'Search',
-            onPressed: () {},
-          ),
-        ],
-      );
-    }
+      ],
+    );
+  }
 }
