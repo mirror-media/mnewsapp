@@ -16,7 +16,7 @@ const Color newsMarqueeContentColor = Color(0xff003366);
 enum MNewsSection {
   news,
   live,
-  media,
+  video,
   show,
   anchorperson
 }
@@ -31,7 +31,7 @@ const mNewsSectionList = [
     Section.nameKey: '直播'
   },
   {
-    Section.idKey: MNewsSection.media,
+    Section.idKey: MNewsSection.video,
     Section.nameKey: '影音'
   },
   {
