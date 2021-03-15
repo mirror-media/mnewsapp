@@ -31,7 +31,7 @@ class _HomePageState extends State<HomePage> {
               child: Text(message),
             );
           } else {
-            String sectionId = state.sectionId;
+            MNewsSection sectionId = state.sectionId;
             return _buildBody(sectionId);
           }
         }
@@ -59,14 +59,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(String sectionId) {
-    if(sectionId == 'news') {
+  Widget _buildBody(MNewsSection sectionId) {
+    if(sectionId == MNewsSection.news) {
       return BlocProvider(
         create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
         child: CategoryTab(),
       );
     }
     
-    return Center(child: Text(sectionId));
+    return Center(child: Text(sectionId.toString()));
   }
 }

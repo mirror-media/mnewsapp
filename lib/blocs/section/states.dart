@@ -1,15 +1,17 @@
+import 'package:tv/helpers/dataConstants.dart';
+
 abstract class SectionState {
-  final String sectionId;
+  final MNewsSection sectionId;
   SectionState({this.sectionId});
 }
 
 class SectionInitState extends SectionState {
-  final String sectionId;
-  SectionInitState({this.sectionId = 'news'});
+  final MNewsSection sectionId;
+  SectionInitState({this.sectionId = MNewsSection.news});
 }
 
 class SectionLoaded extends SectionState {
-  final String sectionId;
+  final MNewsSection sectionId;
   SectionLoaded({this.sectionId});
 }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tv/models/section.dart';
 
 /// color
 const Color appBarColor = Color(0xff003366);
@@ -12,25 +13,33 @@ const Color newsMarqueeLeadingColor = Color(0xffFFCC00);
 const Color newsMarqueeContentColor = Color(0xff003366);
 
 /// section
+enum MNewsSection {
+  news,
+  live,
+  media,
+  show,
+  anchorperson
+}
+
 const mNewsSectionList = [
   {
-    'id': 'news',
-    'name': '新聞'
+    Section.idKey: MNewsSection.news,
+    Section.nameKey: '新聞'
   },
   {
-    'id': 'live',
-    'name': '直播'
+    Section.idKey: MNewsSection.live,
+    Section.nameKey: '直播'
   },
   {
-    'id': 'media',
-    'name': '影音'
+    Section.idKey: MNewsSection.media,
+    Section.nameKey: '影音'
   },
   {
-    'id': 'show',
-    'name': '節目'
+    Section.idKey: MNewsSection.show,
+    Section.nameKey: '節目'
   },
   {
-    'id': 'anchorperson',
-    'name': '鏡主播'
+    Section.idKey: MNewsSection.anchorperson,
+    Section.nameKey: '鏡主播'
   }
 ];

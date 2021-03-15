@@ -14,7 +14,7 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  _changeSection(String sectionId) {
+  _changeSection(MNewsSection sectionId) {
     context.read<SectionBloc>().add(ChangeSection(sectionId));
   }
 
@@ -32,7 +32,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             child: Text(message),
           );
         } else {
-          String sectionId = state.sectionId;
+          MNewsSection sectionId = state.sectionId;
           
           return Drawer(
             child: CustomScrollView(
@@ -119,7 +119,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     color: Colors.grey,
   );
 
-  Widget _drawerButtonBlock(String sectionId) {
+  Widget _drawerButtonBlock(MNewsSection sectionId) {
     SectionList sectionList = SectionList.fromJson(mNewsSectionList);
 
     return ListView.builder(
@@ -131,7 +131,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Column(
           children: [
-            sectionList[index].id != 'anchorperson'
+            sectionList[index].id != MNewsSection.anchorperson
             ? _drawerButton(
                 Text(
                   sectionList[index].name,

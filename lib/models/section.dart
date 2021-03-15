@@ -1,5 +1,10 @@
+import 'package:tv/helpers/dataConstants.dart';
+
 class Section {
-  final String id;
+  static const idKey = 'id';
+  static const nameKey = 'name';
+
+  final MNewsSection id;
   final String name;
 
   Section({
@@ -9,8 +14,8 @@ class Section {
 
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
-      id: json['id'],
-      name: json['name'],
+      id: json[idKey],
+      name: json[nameKey],
     );
   }
 }

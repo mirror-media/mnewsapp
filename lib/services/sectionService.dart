@@ -1,10 +1,12 @@
+import 'package:tv/helpers/dataConstants.dart';
+
 abstract class SectionRepos {
-  String changeSection(String sectionId);
+  MNewsSection changeSection(MNewsSection sectionId);
 }
 
 class SectionServices implements SectionRepos{
   @override
-  String changeSection(String sectionId){
+  MNewsSection changeSection(MNewsSection sectionId){
     return sectionId;
   }
 }
