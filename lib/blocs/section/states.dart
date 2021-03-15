@@ -1,18 +1,18 @@
-import 'package:tv/models/mNewsSection.dart';
+import 'package:tv/helpers/dataConstants.dart';
 
 abstract class SectionState {
-  final MNewsSection section;
-  SectionState({this.section});
+  final MNewsSection sectionId;
+  SectionState({this.sectionId});
 }
 
 class SectionInitState extends SectionState {
-  final MNewsSection section;
-  SectionInitState({this.section = MNewsSection.news});
+  final MNewsSection sectionId;
+  SectionInitState({this.sectionId = MNewsSection.news});
 }
 
 class SectionLoaded extends SectionState {
-  final MNewsSection section;
-  SectionLoaded({this.section = MNewsSection.news});
+  final MNewsSection sectionId;
+  SectionLoaded({this.sectionId});
 }
 
 class SectionError extends SectionState {
