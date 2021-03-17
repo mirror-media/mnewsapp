@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/services/categoryService.dart';
-import 'package:tv/widgets/categoryTab.dart';
+import 'package:tv/pages/section/anchorpersonPage.dart';
+import 'package:tv/pages/section/livePage.dart';
+import 'package:tv/pages/section/newsPage.dart';
+import 'package:tv/pages/section/showPage.dart';
+import 'package:tv/pages/section/videoPage.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -60,13 +62,23 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(MNewsSection sectionId) {
-    if(sectionId == MNewsSection.news) {
-      return BlocProvider(
-        create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
-        child: CategoryTab(),
-      );
+    switch (sectionId) {
+      case MNewsSection.news:
+        return NewsPage();
+        break;
+      case MNewsSection.live:
+        return LivePage();
+        break;
+      case MNewsSection.video:
+        return VideoPage();
+        break;
+      case MNewsSection.show:
+        return ShowPage();
+        break;
+      case MNewsSection.anchorperson:
+        return AnchorpersonPage();
+        break;
     }
-    
-    return Center(child: Text(sectionId.toString()));
+    return Container();
   }
 }
