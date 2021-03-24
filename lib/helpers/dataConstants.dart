@@ -46,3 +46,4 @@ const mNewsSectionList = [
 
 /// live
 const String mNewsLiveYoutubeId = 'coYw-eVU0Ks';
+const String mNewsLiveSiteYoutubePlayListId = 'PLT6yxVwBEbi2dWegLu37V63_tP-nI6em_';
