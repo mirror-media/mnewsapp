@@ -131,43 +131,40 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Column(
           children: [
-            sectionList[index].id != MNewsSection.anchorperson
-            ? _drawerButton(
-                Text(
-                  sectionList[index].name,
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.w500,
-                    color: sectionId == sectionList[index].id ? Color(0xff004DBC) : null,
-                  ),
-                ),
-                sectionId == sectionList[index].id,
-                (){
-                  _changeSection(sectionList[index].id);
-                }
-              )
-            : _drawerButton(
-                Row(
-                  children: [
+            _drawerButton(
+              Row(
+                children: [
+                  if(sectionList[index].id == MNewsSection.anchorperson)
+                  ...[
                     Icon(
                       Icons.mic_none,
                     ),
-                    SizedBox(width: 12),
-                    Text(
-                      sectionList[index].name,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: sectionId == sectionList[index].id ? Color(0xff004DBC) : null,
-                      ),
+                    SizedBox(width: 8),
+                  ],
+                  Text(
+                    sectionList[index].name,
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.w500,
+                      color: sectionId == sectionList[index].id ? Color(0xff004DBC) : null,
+                    ),
+                  ),
+                  if(sectionList[index].id == MNewsSection.live)
+                  ...[
+                    SizedBox(width: 8),
+                    FaIcon(
+                      FontAwesomeIcons.podcast,
+                      size: 18,
+                      color: Colors.red,
                     ),
                   ],
-                ),
-                sectionId == sectionList[index].id,
-                (){
-                  _changeSection(sectionList[index].id);
-                }
+                ],
               ),
+              sectionId == sectionList[index].id,
+              (){
+                _changeSection(sectionList[index].id);
+              }
+            ),
             _dividerBlock(),
           ]
         );
