@@ -43,3 +43,6 @@ const mNewsSectionList = [
     Section.nameKey: '鏡主播'
   }
 ];
+
+/// live
+const String mNewsLiveYoutubeId = 'coYw-eVU0Ks';
