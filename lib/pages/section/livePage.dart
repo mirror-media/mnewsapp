@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tv/blocs/liveSite/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/services/youtubePlaylistService.dart';
+import 'package:tv/widgets/liveSite.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class LivePage extends StatelessWidget {
@@ -20,6 +24,13 @@ class LivePage extends StatelessWidget {
               autoPlay: true,
               isLive: true,
             ),
+
+            BlocProvider(
+              create: (context) => LiveSiteBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
+              child: LiveSite()
+            ),
+
+            SizedBox(height: 24),
           ],
         ),
       ],
