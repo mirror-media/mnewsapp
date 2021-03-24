@@ -63,7 +63,8 @@ dynamic returnResponse(http.Response response) {
       var responseJson = json.decode(utf8Json);
 
       // properties responded by member graphql
-      bool hasData = responseJson.containsKey('data');
+      bool hasData = responseJson.containsKey('data') || 
+        responseJson.containsKey('items');
       if(!hasData) {
         throw BadRequestException(response.body.toString());
       }
