@@ -49,6 +49,9 @@ class CategoryServices implements CategoryRepos{
 
     CategoryList categoryList = CategoryList.fromJson(jsonResponse['data']['allCategories']);
 
+    /// cuz video page is in the home drawer sections
+    categoryList.removeWhere((category) => category.slug == 'video');
+
     String jsonFixed = await rootBundle.loadString('assets/json/menu.json');
     final fixedMenu = json.decode(jsonFixed);
     CategoryList fixedCategoryList = CategoryList.fromJson(fixedMenu);
