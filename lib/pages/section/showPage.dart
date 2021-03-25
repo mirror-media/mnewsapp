@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/categories/bloc.dart';
+import 'package:tv/services/showService.dart';
+import 'package:tv/widgets/showCategoryTab.dart';
 
 class ShowPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('Show'),
+    return BlocProvider(
+      create: (context) => CategoriesBloc(categoryRepos: ShowServices()),
+      child: ShowCategoryTab(),
     );
   }
 }
