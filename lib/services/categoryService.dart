@@ -18,7 +18,12 @@ class CategoryServices implements CategoryRepos{
     String query = 
     """
     query {
-      allCategories(sortBy: [sortOrder_ASC]) {
+      allCategories(
+        where: {
+          isFeatured: true
+        },
+        sortBy: [sortOrder_ASC]
+      ) {
         id
         name
         slug
