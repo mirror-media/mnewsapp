@@ -36,6 +36,8 @@ dependencies:
   flutter_bloc: ^6.1.1
   # The dart library for making HTTP requests.
   http: ^0.12.2
+  # local storage
+  localstorage: ^3.0.6+9
   # Carousel slider in flutter.
   carousel_slider: ^2.3.1
   # Cached network image.
