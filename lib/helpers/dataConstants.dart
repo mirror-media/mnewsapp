@@ -4,6 +4,9 @@ import 'package:tv/models/section.dart';
 /// assets
 const String menuJson = 'assets/json/menu.json';
 const String defaultNotificationListJson = 'assets/json/defaultNotificationList.json';
+const String error400Png = 'assets/image/error404.png';
+const String error500Png = 'assets/image/error500.png';
+const String noSignalPng = 'assets/image/noSignal.png';
 
 /// color
 const Color appBarColor = Color(0xff003366);
