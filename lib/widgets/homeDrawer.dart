@@ -5,6 +5,7 @@ import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/events.dart';
 import 'package:tv/blocs/section/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/sectionList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -86,9 +87,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 Icons.settings,
                 color: Colors.white,
               ), 
-              onPressed: () {
-                print('go to setting');
-              }
+              onPressed: () => RouteGenerator.navigateToSetting(context),
             ),
           ]
         ),

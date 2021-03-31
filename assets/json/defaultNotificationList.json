@@ -1,0 +1,20 @@
+{
+    "defaultNotificationList": 
+    [
+        {
+            "type": "switch", "id": "notification", "title": "推播通知", "value": false, 
+            "notificationSettingList": [
+                {"type": "checkbox", "id": "popular", "title": "熱門", "topic": "popular", "value": false},
+                {"type": "checkbox", "id": "life", "title": "生活", "topic": "life", "value": false},
+                {"type": "checkbox", "id": "political", "title": "政治", "topic": "political", "value": false},
+                {"type": "checkbox", "id": "entertainment", "title": "娛樂", "topic": "entertainment", "value": false},
+                {"type": "checkbox", "id": "financial", "title": "財經", "topic": "financial", "value": false},
+                {"type": "checkbox", "id": "international", "title": "國際", "topic": "international", "value": false},
+                {"type": "checkbox", "id": "somebody", "title": "人物", "topic": "somebody", "value": false},
+                {"type": "checkbox", "id": "society", "title": "社會", "topic": "society", "value": false}
+            ]
+        },
+        {"type": "switch", "id": "dark", "title": "深色模式", "topic": "dark", "value": false},
+        {"type": "switch", "id": "sub", "title": "訂閱內容", "topic": "sub", "value": false}
+    ]
+}
