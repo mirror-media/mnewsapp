@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/notificationSetting.dart';
 import 'package:tv/models/notificationSettingList.dart';
 
@@ -48,8 +49,7 @@ class NotificationSettingServices implements NotificationSettingRepos{
   }
 
   Future<NotificationSettingList> _fetchDefaultNotificationList() async {
-    var jsonSetting =
-        await rootBundle.loadString('assets/json/defaultNotificationList.json');
+    var jsonSetting = await rootBundle.loadString(defaultNotificationListJson);
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
     NotificationSettingList notificationSettingList =

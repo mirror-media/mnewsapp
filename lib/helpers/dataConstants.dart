@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tv/models/section.dart';
 
+/// assets
+const String menuJson = 'assets/json/menu.json';
+const String defaultNotificationListJson = 'assets/json/defaultNotificationList.json';
+
 /// color
 const Color appBarColor = Color(0xff003366);
 const Color tabBarColor = Color(0xffF4F5F6);
