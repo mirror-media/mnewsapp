@@ -66,7 +66,7 @@ dynamic returnResponse(http.Response response) {
       bool hasData = responseJson.containsKey('data') || 
         responseJson.containsKey('items');
       if(!hasData) {
-        throw BadRequestException(response.body.toString());
+        throw FormatException(response.body.toString());
       }
 
       return responseJson;
