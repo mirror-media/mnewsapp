@@ -66,7 +66,7 @@ dynamic returnResponse(http.Response response) {
       bool hasData = responseJson.containsKey('data') || 
         responseJson.containsKey('items');
       if(!hasData) {
-        throw BadRequestException(response.body.toString());
+        throw FormatException(response.body.toString());
       }
 
       return responseJson;
@@ -76,6 +76,7 @@ dynamic returnResponse(http.Response response) {
     case 403:
       throw UnauthorisedException(response.body.toString());
     case 500:
+      throw InternalServerErrorException(response.body.toString());
     default:
       throw FetchDataException(
           'Error occured while Communication with Server with StatusCode : ${response.statusCode}');

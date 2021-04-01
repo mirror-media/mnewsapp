@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
+import 'package:tv/pages/routeErrorPage.dart';
 import 'package:tv/pages/settingPage.dart';
 import 'package:tv/services/configService.dart';
 
@@ -34,14 +35,7 @@ class RouteGenerator {
     return MaterialPageRoute(
       settings: settings,
       builder: (_) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text('Error'),
-          ),
-          body: Center(
-            child: Text('ERROR'),
-          ),
-        );
+        return RouteErrorPage();
       }
     );
   }

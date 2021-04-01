@@ -5,6 +5,7 @@ import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/newsMarqueeService.dart';
@@ -85,10 +86,12 @@ class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin
       builder: (BuildContext context, CategoriesState state) {
         if (state is CategoriesError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('NewsCategoriesError: ${error.message}');
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _loadCategoryList());
+          } 
+          
+          return error.renderWidget();
         }
         if (state is CategoriesLoaded) {
           CategoryList categoryList = state.categoryList;

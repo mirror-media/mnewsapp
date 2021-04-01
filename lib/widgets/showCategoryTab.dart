@@ -4,6 +4,7 @@ import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 
@@ -78,10 +79,12 @@ class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderSt
       builder: (BuildContext context, CategoriesState state) {
         if (state is CategoriesError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('ShowCategoriesError: ${error.message}');
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _loadCategoryList());
+          } 
+          
+          return error.renderWidget();
         }
         if (state is CategoriesLoaded) {
           CategoryList categoryList = state.categoryList;

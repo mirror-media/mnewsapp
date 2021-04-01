@@ -1,3 +1,4 @@
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
 
 abstract class CategoriesState {}
@@ -12,6 +13,6 @@ class CategoriesLoaded extends CategoriesState {
 }
 
 class CategoriesError extends CategoriesState {
-  final error;
+  final MNewException error;
   CategoriesError({this.error});
 }
