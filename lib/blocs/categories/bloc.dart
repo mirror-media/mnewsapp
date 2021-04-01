@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
+import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/categoryService.dart';
@@ -34,6 +35,26 @@ class CategoriesBloc extends Bloc<CategoryEvents, CategoriesState> {
         } on FormatException {
           yield CategoriesError(
             error: InvalidFormatException('Invalid Response format'),
+          );
+        } on FetchDataException {
+          yield CategoriesError(
+            error: NoInternetException('Error During Communication'),
+          );
+        } on BadRequestException {
+          yield CategoriesError(
+            error: Error400Exception('Invalid Request'),
+          );
+        } on UnauthorisedException {
+          yield CategoriesError(
+            error: Error400Exception('Unauthorised'),
+          );
+        } on InvalidInputException {
+          yield CategoriesError(
+            error: Error400Exception('Invalid Input'),
+          );
+        } on InternalServerErrorException {
+          yield CategoriesError(
+            error: Error500Exception('Internal Server Error'),
           );
         } catch (e) {
           yield CategoriesError(
