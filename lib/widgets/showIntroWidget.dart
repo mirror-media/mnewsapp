@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
 import 'package:tv/models/showIntro.dart';
+import 'package:tv/widgets/showPlaylistWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
@@ -105,6 +106,11 @@ class ShowIntroWidget extends StatelessWidget {
               fontWeight: FontWeight.w400,
             ),
           ),
+        ),
+        SizedBox(height: 48),
+        Padding(
+          padding: const EdgeInsets.only(left: 24, right: 24),
+          child: ShowPlaylistWidget(showIntro: showIntro,),
         ),
       ]
     );
