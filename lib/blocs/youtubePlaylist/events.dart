@@ -1,15 +1,15 @@
 import 'dart:io';
 
-import 'package:tv/blocs/liveSite/states.dart';
+import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 
-abstract class LiveSiteEvents{
-  Stream<LiveSiteState> run(YoutubePlaylistRepos youtubePlaylistRepos);
+abstract class YoutubePlaylistEvents{
+  Stream<YoutubePlaylistState> run(YoutubePlaylistRepos youtubePlaylistRepos);
 }
 
-class FetchSnippetByPlaylistId extends LiveSiteEvents {
+class FetchSnippetByPlaylistId extends YoutubePlaylistEvents {
   final String playlistId;
   final int maxResult;
   FetchSnippetByPlaylistId(this.playlistId, {this.maxResult = 5});
@@ -18,27 +18,27 @@ class FetchSnippetByPlaylistId extends LiveSiteEvents {
   String toString() => 'FetchSnippetByPlaylistId { storySlug: $playlistId, maxResult: $maxResult }';
 
   @override
-  Stream<LiveSiteState> run(YoutubePlaylistRepos youtubePlaylistRepos) async*{
+  Stream<YoutubePlaylistState> run(YoutubePlaylistRepos youtubePlaylistRepos) async*{
     print(this.toString());
     try{
-      yield LiveSiteLoading();
+      yield YoutubePlaylistLoading();
       YoutubePlaylistItemList youtubePlaylistItemList = 
           await youtubePlaylistRepos.fetchSnippetByPlaylistId(playlistId, maxResults: maxResult);
-      yield LiveSiteLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
+      yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
     } on SocketException {
-      yield LiveSiteError(
+      yield YoutubePlaylistError(
         error: NoInternetException('No Internet'),
       );
     } on HttpException {
-      yield LiveSiteError(
+      yield YoutubePlaylistError(
         error: NoServiceFoundException('No Service Found'),
       );
     } on FormatException {
-      yield LiveSiteError(
+      yield YoutubePlaylistError(
         error: InvalidFormatException('Invalid Response format'),
       );
     } catch (e) {
-      yield LiveSiteError(
+      yield YoutubePlaylistError(
         error: UnknownException(e.toString()),
       );
     }
