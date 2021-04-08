@@ -5,9 +5,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
-import 'package:tv/blocs/liveSite/bloc.dart';
-import 'package:tv/blocs/liveSite/events.dart';
-import 'package:tv/blocs/liveSite/states.dart';
+import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/blocs/youtubePlaylist/events.dart';
+import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 import 'package:tv/helpers/dataConstants.dart';
 
@@ -26,21 +26,19 @@ class _LiveSiteState extends State<LiveSite> {
   }
 
   _fetchSnippetByPlaylistId(String id) async {
-    context.read<LiveSiteBloc>().add(FetchSnippetByPlaylistId(id));
+    context.read<YoutubePlaylistBloc>().add(FetchSnippetByPlaylistId(id));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveSiteBloc, LiveSiteState>(
-      builder: (BuildContext context, LiveSiteState state) {
-        if (state is LiveSiteError) {
+    return BlocBuilder<YoutubePlaylistBloc, YoutubePlaylistState>(
+      builder: (BuildContext context, YoutubePlaylistState state) {
+        if (state is YoutubePlaylistError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('LiveSite YoutubePlaylistError: ${error.message}');
+          return Container();
         }
-        if (state is LiveSiteLoaded) {
+        if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
 
           return Column(

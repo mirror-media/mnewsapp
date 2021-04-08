@@ -1,11 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tv/blocs/liveSite/events.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/liveSite/bloc.dart';
-import 'package:tv/blocs/liveSite/states.dart';
+import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/blocs/youtubePlaylist/events.dart';
+import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 
@@ -30,19 +30,19 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   }
 
   _fetchSnippetByPlaylistId(String id) async {
-    context.read<LiveSiteBloc>().add(FetchSnippetByPlaylistId(id, maxResult: fetchPlaylistMaxResult));
+    context.read<YoutubePlaylistBloc>().add(FetchSnippetByPlaylistId(id, maxResult: fetchPlaylistMaxResult));
   }
   
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveSiteBloc, LiveSiteState>(
-      builder: (BuildContext context, LiveSiteState state) {
-        if (state is LiveSiteError) {
+    return BlocBuilder<YoutubePlaylistBloc, YoutubePlaylistState>(
+      builder: (BuildContext context, YoutubePlaylistState state) {
+        if (state is YoutubePlaylistError) {
           final error = state.error;
           print('LiveSiteError: ${error.message}');
           return Container();
         }
-        if (state is LiveSiteLoaded) {
+        if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
 
           return Column(
