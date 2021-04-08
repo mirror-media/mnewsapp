@@ -11,10 +11,11 @@ abstract class LiveSiteEvents{
 
 class FetchSnippetByPlaylistId extends LiveSiteEvents {
   final String playlistId;
-  FetchSnippetByPlaylistId(this.playlistId);
+  final int maxResult;
+  FetchSnippetByPlaylistId(this.playlistId, {this.maxResult = 5});
 
   @override
-  String toString() => 'FetchSnippetByPlaylistId { storySlug: $playlistId }';
+  String toString() => 'FetchSnippetByPlaylistId { storySlug: $playlistId, maxResult: $maxResult }';
 
   @override
   Stream<LiveSiteState> run(YoutubePlaylistRepos youtubePlaylistRepos) async*{
@@ -22,7 +23,7 @@ class FetchSnippetByPlaylistId extends LiveSiteEvents {
     try{
       yield LiveSiteLoading();
       YoutubePlaylistItemList youtubePlaylistItemList = 
-          await youtubePlaylistRepos.fetchSnippetByPlaylistId(playlistId);
+          await youtubePlaylistRepos.fetchSnippetByPlaylistId(playlistId, maxResults: maxResult);
       yield LiveSiteLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
     } on SocketException {
       yield LiveSiteError(

@@ -1,7 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/liveSite/bloc.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
+import 'package:tv/services/youtubePlaylistService.dart';
+import 'package:tv/widgets/showPlaylistTabContent.dart';
 
 class ShowPlaylistWidget extends StatefulWidget {
   final ShowIntro showIntro;
@@ -17,6 +21,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   int _segmentedControlGroupValue = 0;
   Map<int, Widget> _tabs = Map();
   List<Widget> _tabWidgets = List<Widget>();
+
   @override
   void initState() {
     if(widget.showIntro.playList01.youtubePlayListId != null &&
@@ -30,12 +35,30 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   _initializeTabs(ShowIntro showIntro) {
     _segmentedControlGroupValue = 0;
     _tabs = <int, Widget>{
-      0: Text(showIntro.playList01.name),
-      1: Text(showIntro.playList02.name)
+      0: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
+          child: Text(
+            showIntro.playList01.name,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      1: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
+          child: Text(
+            showIntro.playList02.name,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
     };
     _tabWidgets = [
-      _buildTabWidget(widget.showIntro.playList01),
-      _buildTabWidget(widget.showIntro.playList02),
+      _buildTabWidget(showIntro.playList01),
+      _buildTabWidget(showIntro.playList02),
     ];
   }
 
@@ -80,6 +103,12 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   }
 
   Widget _buildTabWidget(YoutubePlaylistInfo youtubePlaylistInfo) {
-    return Text('${youtubePlaylistInfo.name}:${youtubePlaylistInfo.youtubePlayListId}');
+    return BlocProvider(
+      create: (context) => LiveSiteBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
+      child: ShowPlaylistTabContent(
+        key: UniqueKey(),
+        youtubePlaylistInfo: youtubePlaylistInfo
+      ),
+    );
   }
 }
