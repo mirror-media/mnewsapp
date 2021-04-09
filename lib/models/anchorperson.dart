@@ -1,11 +1,13 @@
 import 'package:tv/helpers/apiConstants.dart';
 
 class Anchorperson {
+  final String id;
   final String name;
   final String photoUrl;
   final String slug;
 
   Anchorperson({
+    this.id,
     this.name,
     this.photoUrl,
     this.slug,
@@ -19,6 +21,7 @@ class Anchorperson {
     }
     
     return Anchorperson(
+      id: json['id'],
       name: json['name'],
       photoUrl: photoUrl,
       slug: json['slug'],

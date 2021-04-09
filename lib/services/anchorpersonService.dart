@@ -22,6 +22,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
           anchorperson: true
         }
       ) {
+        id
         name
         image {
           urlMobileSized
