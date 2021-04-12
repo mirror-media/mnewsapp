@@ -18,7 +18,7 @@ class Category {
   }
 
   Map<String, dynamic> toJson() => {
-        '_id': id,
+        'id': id,
         'name': name,
         'slug': slug,
       };
