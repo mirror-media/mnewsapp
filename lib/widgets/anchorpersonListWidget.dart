@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/anchorperson/bloc.dart';
 import 'package:tv/blocs/anchorperson/events.dart';
 import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/anchorpersonList.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
@@ -102,7 +103,13 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 ),
               ]
             ),
-            onTap: (){},
+            onTap: (){
+              RouteGenerator.navigateToAnchorpersonStory(
+                context, 
+                anchorpersonList[index].id,
+                anchorpersonList[index].name,
+              );
+            },
           ),
         );
       }
