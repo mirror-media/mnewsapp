@@ -6,11 +6,21 @@ class Anchorperson {
   final String photoUrl;
   final String slug;
 
+  final String twitterUrl;
+  final String facebookUrl;
+  final String instatgramUrl;
+  final String bio;
+
   Anchorperson({
     this.id,
     this.name,
     this.photoUrl,
     this.slug,
+
+    this.twitterUrl,
+    this.facebookUrl,
+    this.instatgramUrl,
+    this.bio,
   });
 
   factory Anchorperson.fromJson(Map<String, dynamic> json) {
@@ -25,6 +35,11 @@ class Anchorperson {
       name: json['name'],
       photoUrl: photoUrl,
       slug: json['slug'],
+
+      twitterUrl: json['twitter'],
+      facebookUrl: json['facebook'],
+      instatgramUrl: json['instatgram'],
+      bio: json['bio'],
     );
   }
 }
