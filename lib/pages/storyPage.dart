@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/services/storyService.dart';
+import 'package:tv/widgets/storyWidget.dart';
 
 class StoryPage extends StatefulWidget {
   final String slug;
@@ -16,7 +20,10 @@ class _StoryPageState extends State<StoryPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text(widget.slug)),
+      body: BlocProvider(
+        create: (context) => StoryBloc(storyRepos: StoryServices()),
+        child: StoryWidget(slug: widget.slug)
+      ),
     );
   }
 
