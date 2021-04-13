@@ -8,6 +8,7 @@ import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
+import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
 
@@ -108,6 +109,17 @@ class ParagraphFormat {
             return InfoBoxWidget(
               title: paragraph.contents[0].description,
               description: paragraph.contents[0].data,
+            );
+          }
+          return Container();
+        }
+        break;
+      case 'video':
+        {
+          if (paragraph.contents.length > 0) {
+            return MNewsVideoPlayer(
+              videourl: paragraph.contents[0].data,
+              aspectRatio: 16 / 9,
             );
           }
           return Container();
