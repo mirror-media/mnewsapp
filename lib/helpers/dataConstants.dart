@@ -23,6 +23,7 @@ const Color newsMarqueeContentColor = Color(0xff003366);
 const Color storyWidgetColor = Color(0xff004DBC);
 const Color storyBriefFrameColor = storyWidgetColor;
 const Color storyBriefTextColor = storyWidgetColor;
+const Color blockquoteColor = storyWidgetColor;
 
 /// section
 enum MNewsSection {

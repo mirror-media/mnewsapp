@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
+import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 
 class ParagraphFormat {
@@ -44,6 +45,14 @@ class ParagraphFormat {
       case 'unordered-list-item':
         {
           return buildUnorderListWidget(paragraph.contents);
+        }
+        break;
+      case 'blockquote':
+        {
+          if (paragraph.contents.length > 0) {
+            return BlockQuoteWidget(content: paragraph.contents[0].data,);
+          }
+          return Container();
         }
         break;
       default:
