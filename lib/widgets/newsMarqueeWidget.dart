@@ -5,6 +5,7 @@ import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/widgets/marqueeWidget.dart';
 
@@ -138,7 +139,9 @@ class _NewsMarqueeState extends State<NewsMarquee> {
             ),
           ),
         ),
-        onTap: () {},
+        onTap: () {
+          RouteGenerator.navigateToStory(context, newsList[i].slug);
+        },
       ));
     }
 

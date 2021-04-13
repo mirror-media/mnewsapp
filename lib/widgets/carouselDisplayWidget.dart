@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 
 class CarouselDisplayWidget extends StatelessWidget {
@@ -30,7 +31,9 @@ class CarouselDisplayWidget extends StatelessWidget {
           Expanded(child: _displayTitle(storyListItem)),
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        RouteGenerator.navigateToStory(context, storyListItem.slug);
+      },
     );
   }
 

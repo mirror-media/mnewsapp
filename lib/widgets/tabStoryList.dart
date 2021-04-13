@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
@@ -188,7 +189,9 @@ class _BuildTabStoryListState extends State<BuildTabStoryList> {
           ),
         ],
       ),
-      onTap: () {}
+      onTap: () {
+        RouteGenerator.navigateToStory(context, storyListItem.slug);
+      }
     );
   }
 
@@ -239,7 +242,9 @@ class _BuildTabStoryListState extends State<BuildTabStoryList> {
           ],
         ),
       ),
-      onTap: () {}
+      onTap: () {
+        RouteGenerator.navigateToStory(context, storyListItem.slug);
+      }
     );
   }
 
