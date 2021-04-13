@@ -5,6 +5,7 @@ import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
+import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
@@ -48,6 +49,22 @@ class ParagraphFormat {
       case 'unordered-list-item':
         {
           return buildUnorderListWidget(paragraph.contents);
+        }
+        break;
+      case 'image':
+        {
+          var width = MediaQuery.of(context).size.width - 48;
+          if(paragraph.contents.length > 0 &&
+            paragraph.contents[0].data != null
+          ) {
+            return ImageDescriptionWidget(
+              imageUrl: paragraph.contents[0].data,
+              description: paragraph.contents[0].description,
+              width: width,
+            );
+          }
+          
+          return Container();
         }
         break;
       case 'annotation':
