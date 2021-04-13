@@ -10,6 +10,7 @@ import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
+import 'package:tv/models/tagList.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
@@ -89,6 +90,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildBrief(story.brief),
           SizedBox(height: 32),
         ],
+        Center(child: _buildUpdatedTime(story.updatedAt)),
+        SizedBox(height: 32),
+        if(story.tags != null && story.tags.length > 0)
+        ...[
+          _buildTags(story.tags),
+          SizedBox(height: 16),
+        ]          
       ],
     );
   }
@@ -412,5 +420,55 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
 
     return Container();
+  }
+
+  Widget _buildUpdatedTime(String updateTime) {
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
+
+    return Text(
+      '更新時間：'+dateTimeFormat.changeStringToDisplayString(
+          updateTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+      style: TextStyle(
+        fontSize: 15,
+        color: Color(0xff757575),
+      ),
+    );
+  }
+  
+  Widget _buildTags(TagList tags) {
+    if (tags == null) {
+      return Container();
+    } else {
+      List<Widget> tagWidgets = List();
+      for (int i = 0; i < tags.length; i++) {
+        tagWidgets.add(
+          Padding(
+            padding: const EdgeInsets.all(4.0),
+            child: Container(
+              decoration: BoxDecoration(
+                //color: storyWidgetColor,
+                border: Border.all(width: 2.0, color: storyWidgetColor),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '#' + tags[i].name,
+                  style: TextStyle(fontSize: 18, color: storyWidgetColor),
+                ),
+              ),
+            ),
+          ),
+        );
+        if(i != tags.length-1) {
+          tagWidgets.add(SizedBox(width: 4,));
+        }
+      }
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+        child: Wrap(
+          children: tagWidgets,
+        ),
+      );
+    }
   }
 }
