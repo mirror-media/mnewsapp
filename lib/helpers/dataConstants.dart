@@ -26,6 +26,7 @@ const Color storyBriefTextColor = storyWidgetColor;
 const Color blockquoteColor = storyWidgetColor;
 const Color quotebyColor = storyWidgetColor;
 const Color annotationColor = storyWidgetColor;
+const Color infoBoxTitleColor = storyWidgetColor;
 
 /// section
 enum MNewsSection {

@@ -5,6 +5,7 @@ import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
+import 'package:tv/widgets/story/infoBoxWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
 
@@ -71,6 +72,17 @@ class ParagraphFormat {
             return QuoteByWidget(
               quote: paragraph.contents[0].data,
               quoteBy: paragraph.contents[0].description,
+            );
+          }
+          return Container();
+        }
+        break;
+      case 'infobox':
+        {
+          if (paragraph.contents.length > 0) {
+            return InfoBoxWidget(
+              title: paragraph.contents[0].description,
+              description: paragraph.contents[0].data,
             );
           }
           return Container();
