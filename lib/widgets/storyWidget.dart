@@ -4,6 +4,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
@@ -70,6 +72,8 @@ class _StoryWidgetState extends State<StoryWidget> {
     return ListView(
       children: [
         _buildHeroWidget(width, story),
+        SizedBox(height: 24),
+        _buildCategoryAndPublishedDate(story),
       ],
     );
   }
@@ -125,6 +129,37 @@ class _StoryWidgetState extends State<StoryWidget> {
     return MNewsVideoPlayer(
       videourl: videoUrl,
       aspectRatio: 16 / 9,
+    );
+  }
+  
+  Widget _buildCategoryAndPublishedDate(Story story) {
+    DateTimeFormat dateTimeFormat = DateTimeFormat();
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          if(story.categoryList.length == 0)
+            Container(),
+          if(story.categoryList.length > 0)
+            Text(
+              story.categoryList[0].name,
+              style: TextStyle(
+                fontSize: 15,
+                color: appBarColor,
+              ),
+            ),
+          Text(
+            dateTimeFormat.changeStringToDisplayString(
+                story.publishTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+            style: TextStyle(
+              fontSize: 14,
+              color: Color(0xff757575),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
