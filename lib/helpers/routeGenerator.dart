@@ -5,11 +5,13 @@ import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/pages/anchorpersonStoryPage.dart';
 import 'package:tv/pages/routeErrorPage.dart';
 import 'package:tv/pages/settingPage.dart';
+import 'package:tv/pages/storyPage.dart';
 import 'package:tv/services/configService.dart';
 
 class RouteGenerator {
   static const String root = '/';
   static const String setting = '/setting';
+  static const String story = '/story';
   static const String anchorpersonStory = '/anchorpersonStory';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
@@ -27,6 +29,20 @@ class RouteGenerator {
           settings: settings,
           builder: (_) => SettingPage()
         );
+      case story:
+        Map args = settings.arguments;
+        // Validation of correct data type
+        if (args['slug'] is String) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => StoryPage(
+              slug: args['slug'],
+            )
+          );
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
       case anchorpersonStory:
         Map args = settings.arguments;
         // Validation of correct data type
@@ -60,6 +76,15 @@ class RouteGenerator {
   static void navigateToSetting(BuildContext context) {
     Navigator.of(context).pushNamed(
       setting,
+    );
+  }
+
+  static void navigateToStory(BuildContext context, String slug) {
+    Navigator.of(context).pushNamed(
+      story,
+      arguments: {
+        'slug': slug,
+      },
     );
   }
 
