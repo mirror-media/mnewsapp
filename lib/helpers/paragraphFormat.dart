@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
+import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
@@ -46,6 +47,14 @@ class ParagraphFormat {
       case 'unordered-list-item':
         {
           return buildUnorderListWidget(paragraph.contents);
+        }
+        break;
+      case 'annotation':
+        {
+          if (paragraph.contents.length > 0) {
+            return AnnotationWidget(data: paragraph.contents[0].data,);
+          }
+          return Container();
         }
         break;
       case 'blockquote':
