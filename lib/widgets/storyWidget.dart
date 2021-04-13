@@ -10,6 +10,8 @@ import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
+import 'package:tv/models/storyListItem.dart';
+import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
@@ -96,7 +98,12 @@ class _StoryWidgetState extends State<StoryWidget> {
         ...[
           _buildTags(story.tags),
           SizedBox(height: 16),
-        ]          
+        ],
+        if(story.relatedStories.length > 0)
+        ...[
+          _buildRelatedWidget(width, story.relatedStories),
+          SizedBox(height: 16),
+        ],
       ],
     );
   }
@@ -470,5 +477,85 @@ class _StoryWidgetState extends State<StoryWidget> {
         ),
       );
     }
+  }
+
+  Widget _buildRelatedWidget(
+    double width, 
+    StoryListItemList relatedStories
+  ) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      child: ListView.separated(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
+        itemCount: relatedStories.length,
+        //padding: const EdgeInsets.only(bottom: 16),
+        itemBuilder: (context, index) {
+          if(index == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '相關文章',
+                  style: TextStyle(
+                    fontSize: 26,
+                    color: storyWidgetColor,
+                  ),
+                ),
+                SizedBox(height: 16),
+                _buildRelatedItem(width, relatedStories[index]),
+              ]
+            );
+          }
+          return _buildRelatedItem(width, relatedStories[index]);
+        }
+      ),
+    );
+  }
+
+  Widget _buildRelatedItem(
+    double width, 
+    StoryListItem story
+  ) {
+    double imageWidth = 33 * (width - 48) / 100;
+    double imageHeight = imageWidth;
+
+    return InkWell(
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CachedNetworkImage(
+            height: imageHeight,
+            width: imageWidth,
+            imageUrl: story.photoUrl,
+            placeholder: (context, url) => Container(
+              height: imageHeight,
+              width: imageWidth,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: imageHeight,
+              width: imageWidth,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.cover,
+          ),
+          SizedBox(
+            width: 16,
+          ),
+          Expanded(
+            child: Text(
+              story.name,
+              style: TextStyle(fontSize: 20),
+            ),
+          ),
+        ],
+      ),
+      onTap: () {
+        _loadStory(story.slug);
+      },
+    );
   }
 }
