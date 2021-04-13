@@ -12,6 +12,7 @@ import 'package:tv/widgets/story/mNewsAudioPlayer.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
+import 'package:tv/widgets/story/youtubeWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
@@ -139,6 +140,18 @@ class ParagraphFormat {
           return Container();
         }
         break;
+      case 'youtube':
+        {
+          if (paragraph.contents.length > 0) {
+            var width = MediaQuery.of(context).size.width - 48;
+            return YoutubeWidget(
+              width: width,
+              youtubeId: paragraph.contents[0].data,
+              description: paragraph.contents[0].description,
+            );
+          }
+          return Container();
+        }
       default:
         {
           return Container();
