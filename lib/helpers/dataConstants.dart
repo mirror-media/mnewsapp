@@ -9,6 +9,7 @@ const String error500Png = 'assets/image/error500.png';
 const String noSignalPng = 'assets/image/noSignal.png';
 
 /// color
+const Color themeColor = Color(0xff003366);
 const Color appBarColor = Color(0xff003366);
 const Color tabBarColor = Color(0xffF4F5F6);
 const Color tabBarSelectedColor = Color(0xff003366);
@@ -18,6 +19,10 @@ const Color editorChoiceTagColor = Color(0xff003366);
 const Color editorChoiceTitleBackgroundColor = Color(0xff004DBC);
 const Color newsMarqueeLeadingColor = Color(0xffFFCC00);
 const Color newsMarqueeContentColor = Color(0xff003366);
+
+const Color storyWidgetColor = Color(0xff004DBC);
+const Color storyBriefFrameColor = storyWidgetColor;
+const Color storyBriefTextColor = storyWidgetColor;
 
 /// section
 enum MNewsSection {

@@ -6,10 +6,13 @@ import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
+import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
+import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class StoryWidget extends StatefulWidget {
@@ -80,6 +83,12 @@ class _StoryWidgetState extends State<StoryWidget> {
         _buildStoryTitle(story.name),
         SizedBox(height: 8),
         _buildAuthors(story),
+        SizedBox(height: 32),
+        if(story.brief.length > 0)
+        ...[
+          _buildBrief(story.brief),
+          SizedBox(height: 32),
+        ],
       ],
     );
   }
@@ -339,5 +348,69 @@ class _StoryWidgetState extends State<StoryWidget> {
       ));
     }
     return authorItems;
+  }
+
+  // only display unstyled paragraph type in brief
+  Widget _buildBrief(ParagraphList articles) {
+    if (articles.length > 0) {
+      List<Widget> articleWidgets = List();
+
+      for (int i = 0; i < articles.length; i++) {
+        if (articles[i].type == 'unstyled') {
+          if (articles[i].contents.length > 0) {
+            articleWidgets.add(
+              ParseTheTextToHtmlWidget(
+                html: articles[i].contents[0].data, 
+                color: storyBriefTextColor,
+              ),
+            );
+          }
+
+          if (i != articles.length - 1) {
+            articleWidgets.add(
+              SizedBox(height: 16),
+            );
+          }
+        }
+      }
+
+      if (articleWidgets.length == 0) {
+        return Container();
+      }
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+        child: Column(
+          children: [
+            ClipPath(
+              clipper: StoryBriefTopFrameClipper(),
+              child: Container(
+                height: 16,
+                decoration: BoxDecoration(
+                  color: storyBriefFrameColor,
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: articleWidgets,
+              ),
+            ),
+            ClipPath(
+              clipper: StoryBriefBottomFrameClipper(),
+              child: Container(
+                height: 16,
+                decoration: BoxDecoration(
+                  color: storyBriefFrameColor,
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container();
   }
 }
