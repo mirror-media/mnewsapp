@@ -6,6 +6,8 @@ import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/helpers/paragraphFormat.dart';
+import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/peopleList.dart';
@@ -92,6 +94,8 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildBrief(story.brief),
           SizedBox(height: 32),
         ],
+        _buildContent(story.contentApiData),
+        SizedBox(height: 16),
         Center(child: _buildUpdatedTime(story.updatedAt)),
         SizedBox(height: 32),
         if(story.tags != null && story.tags.length > 0)
@@ -427,6 +431,32 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
 
     return Container();
+  }
+  
+  Widget _buildContent(ParagraphList storyContents) {
+    ParagraphFormat paragraphFormat = ParagraphFormat();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+      child: ListView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: storyContents.length,
+        itemBuilder: (context, index) {
+          Paragraph paragraph = storyContents[index];
+          if (paragraph.contents != null && 
+              paragraph.contents.length > 0 &&
+              !_isNullOrEmpty(paragraph.contents[0].data)
+          ) {
+            return Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: paragraphFormat.parseTheParagraph(paragraph, context),
+            );
+          }
+          
+          return Container();
+        },
+      ),
+    );
   }
 
   Widget _buildUpdatedTime(String updateTime) {
