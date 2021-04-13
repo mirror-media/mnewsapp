@@ -5,6 +5,7 @@ import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
+import 'package:tv/widgets/story/embeddedCodeWidget.dart';
 import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
@@ -152,6 +153,17 @@ class ParagraphFormat {
           }
           return Container();
         }
+      case 'embeddedcode':
+        {
+          if (paragraph.contents.length > 0) {
+            return EmbeddedCodeWidget(
+              embeddedCoede: paragraph.contents[0].data,
+              aspectRatio:  paragraph.contents[0].aspectRatio,
+            );
+          }
+          return Container(); 
+        }
+        break;
       default:
         {
           return Container();
