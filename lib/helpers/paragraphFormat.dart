@@ -5,6 +5,7 @@ import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
+import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
@@ -65,6 +66,13 @@ class ParagraphFormat {
           }
           
           return Container();
+        }
+        break;
+      case 'slideshow':
+        {
+          return ImageAndDescriptionSlideShowWidget(
+            contentList: paragraph.contents
+          );
         }
         break;
       case 'annotation':
