@@ -8,6 +8,7 @@ import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
+import 'package:tv/widgets/story/mNewsAudioPlayer.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
@@ -120,6 +121,19 @@ class ParagraphFormat {
             return MNewsVideoPlayer(
               videourl: paragraph.contents[0].data,
               aspectRatio: 16 / 9,
+            );
+          }
+          return Container();
+        }
+        break;
+      case 'audio':
+        {
+          if (paragraph.contents.length > 0) {
+            List<String> titleAndDescription =
+                paragraph.contents[0].description.split(';');
+            return MNewsAudioPlayer(
+              audioUrl: paragraph.contents[0].data,
+              title: titleAndDescription[0],
             );
           }
           return Container();
