@@ -5,6 +5,7 @@ import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
+import 'package:tv/widgets/story/quoteByWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
@@ -51,6 +52,17 @@ class ParagraphFormat {
         {
           if (paragraph.contents.length > 0) {
             return BlockQuoteWidget(content: paragraph.contents[0].data,);
+          }
+          return Container();
+        }
+        break;
+      case 'quoteby':
+        {
+          if (paragraph.contents.length > 0) {
+            return QuoteByWidget(
+              quote: paragraph.contents[0].data,
+              quoteBy: paragraph.contents[0].description,
+            );
           }
           return Container();
         }
