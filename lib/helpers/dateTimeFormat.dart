@@ -13,4 +13,21 @@ class DateTimeFormat {
     DateTime gmt8Date = parsedDate.add(Duration(hours: gmtHour));
     return DateFormat(targetFormatType).format(gmt8Date);
   }
+
+  /// return string of duration in mm:ss form(has pending 0)
+  static String stringDuration(Duration duration) {
+    if (duration == null) {
+      return "00:00";
+    }
+
+    String twoDigits(int n) {
+      if (n >= 10) return "$n";
+      return "0$n";
+    }
+
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60));
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60));
+
+    return "$twoDigitMinutes:$twoDigitSeconds";
+  }
 }
