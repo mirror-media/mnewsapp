@@ -63,10 +63,12 @@ class ShowIntroWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    ScrollController listviewController = ScrollController();
     double width = MediaQuery.of(context).size.width;
     double height = width/375*140;
 
     return ListView(
+      controller: listviewController,
       //crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CachedNetworkImage(
@@ -110,7 +112,7 @@ class ShowIntroWidget extends StatelessWidget {
         SizedBox(height: 48),
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
-          child: ShowPlaylistWidget(showIntro: showIntro,),
+          child: ShowPlaylistWidget(showIntro: showIntro, listviewController: listviewController,),
         ),
       ]
     );

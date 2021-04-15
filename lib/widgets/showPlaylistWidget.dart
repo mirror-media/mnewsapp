@@ -9,8 +9,10 @@ import 'package:tv/widgets/showPlaylistTabContent.dart';
 
 class ShowPlaylistWidget extends StatefulWidget {
   final ShowIntro showIntro;
+  final ScrollController listviewController;
   ShowPlaylistWidget({
     @required this.showIntro,
+    @required this.listviewController,s
   });
 
   @override
@@ -106,8 +108,8 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
     return BlocProvider(
       create: (context) => YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
       child: ShowPlaylistTabContent(
-        key: UniqueKey(),
-        youtubePlaylistInfo: youtubePlaylistInfo
+        youtubePlaylistInfo: youtubePlaylistInfo,
+        listviewController: widget.listviewController,
       ),
     );
   }
