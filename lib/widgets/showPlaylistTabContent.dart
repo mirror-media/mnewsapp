@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
@@ -11,9 +12,11 @@ import 'package:tv/models/youtubePlaylistItemList.dart';
 
 class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
+  final ScrollController listviewController;
   ShowPlaylistTabContent({
     Key key,
     @required this.youtubePlaylistInfo,
+    @required this.listviewController,
   }) : super(key: key);
 
   @override
@@ -21,18 +24,54 @@ class ShowPlaylistTabContent extends StatefulWidget {
 }
 
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
-  final fetchPlaylistMaxResult = 10;
+  final int _fetchPlaylistMaxResult = 10;
+  bool _isLoading;
+  String _nextPagetoken;
 
   @override
   void initState() {
     _fetchSnippetByPlaylistId(widget.youtubePlaylistInfo.youtubePlayListId);
+    _initPagetokenAndIsLoading();
+
+    widget.listviewController.addListener(
+      () { 
+        if (widget.listviewController.position.pixels == widget.listviewController.position.maxScrollExtent &&
+          !_isLoading &&
+          _nextPagetoken != '' && _nextPagetoken != null
+        ) {
+          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken);
+        }
+      }
+    );
     super.initState();
   }
 
-  _fetchSnippetByPlaylistId(String id) async {
-    context.read<YoutubePlaylistBloc>().add(FetchSnippetByPlaylistId(id, maxResult: fetchPlaylistMaxResult));
+  @override
+  void didUpdateWidget(ShowPlaylistTabContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _fetchSnippetByPlaylistId(widget.youtubePlaylistInfo.youtubePlayListId);
+    _initPagetokenAndIsLoading();
   }
-  
+
+  _fetchSnippetByPlaylistId(String id) async {
+    context.read<YoutubePlaylistBloc>().add(FetchSnippetByPlaylistId(id, maxResults: _fetchPlaylistMaxResult));
+  }
+
+  _fetchSnippetByPlaylistIdAndPageToken(String id, String pageToken) async {
+    context.read<YoutubePlaylistBloc>().add(
+      FetchSnippetByPlaylistIdAndPageToken(
+        id,
+        pageToken,
+        maxResults: _fetchPlaylistMaxResult
+      )
+    );
+  }
+
+ _initPagetokenAndIsLoading() {
+   _isLoading = true;
+   _nextPagetoken = '';
+ }
+
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<YoutubePlaylistBloc, YoutubePlaylistState>(
@@ -42,33 +81,60 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           print('LiveSiteError: ${error.message}');
           return Container();
         }
+        if (state is YoutubePlaylistLoadingMore) {
+          _isLoading = true;
+          YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
+          return _buildYoutubePlaylistItemList(youtubePlaylistItemList, isLoading: true);
+        }
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
+          _isLoading = false;
+          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildLiveTitle(widget.youtubePlaylistInfo.name),
-              SizedBox(height: 24),
-              ListView.separated(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
-                itemCount: youtubePlaylistItemList.length,
-                itemBuilder: (context, index) {
-                  return _buildListItem(
-                    context,
-                    youtubePlaylistItemList[index]
-                  );
-                }
-              ),
-            ],
-          );
+          return _buildYoutubePlaylistItemList(youtubePlaylistItemList);
         }
 
         // state is Init, loading, or other 
-        return Container();
+        return _loadMoreWidget();
       }
+    );
+  }
+
+  Widget _buildYoutubePlaylistItemList(
+    YoutubePlaylistItemList youtubePlaylistItemList, 
+    { bool isLoading = false }
+  ) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLiveTitle(widget.youtubePlaylistInfo.name),
+        SizedBox(height: 24),
+        ListView.separated(
+          //controller: widget.listviewController,
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
+          itemCount: youtubePlaylistItemList.length,
+          itemBuilder: (context, index) {
+            return _buildListItem(
+              context,
+              youtubePlaylistItemList[index]
+            );
+          }
+        ),
+        if(isLoading)
+          _loadMoreWidget(),
+        // if(!isLoading)
+        //   InkWell(
+        //     child: Padding(
+        //       padding: const EdgeInsets.all(8.0),
+        //       child: Text('loading more'),
+        //     ),
+        //     onTap: () {
+        //       _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _currentPagetoken);
+        //     }
+        //   ),
+      ],
     );
   }
 
@@ -147,6 +213,15 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         ],
       ),
       onTap: () {}
+    );
+  }
+  
+  Widget _loadMoreWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: CupertinoActivityIndicator()
+      ),
     );
   }
 }
