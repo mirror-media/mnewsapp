@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/pages/section/anchorpersonPage.dart';
 import 'package:tv/pages/section/livePage.dart';
 import 'package:tv/pages/section/newsPage.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
+    return Scaffold(
       key: _scaffoldkey,
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
@@ -55,7 +56,7 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: Icon(Icons.search),
           tooltip: 'Search',
-          onPressed: () {},
+          onPressed: () => RouteGenerator.navigateToSearch(context),
         ),
       ],
     );
