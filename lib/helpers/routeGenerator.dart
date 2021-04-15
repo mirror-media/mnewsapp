@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/anchorpersonStoryPage.dart';
 import 'package:tv/pages/routeErrorPage.dart';
 import 'package:tv/pages/settingPage.dart';
+import 'package:tv/pages/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/services/configService.dart';
 
@@ -13,6 +15,7 @@ class RouteGenerator {
   static const String setting = '/setting';
   static const String story = '/story';
   static const String anchorpersonStory = '/anchorpersonStory';
+  static const String showStory = '/showStory';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -52,6 +55,20 @@ class RouteGenerator {
             builder: (context) => AnchorpersonStoryPage(
               anchorpersonId: args['anchorpersonId'],
               anchorpersonName: args['anchorpersonName'],
+            )
+          );
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
+      case showStory:
+        Map args = settings.arguments;
+        // Validation of correct data type
+        if (args['youtubePlaylistItem'] is YoutubePlaylistItem) {
+          return MaterialPageRoute(
+            settings: settings,
+            builder: (context) => ShowStoryPage(
+              youtubePlaylistItem: args['youtubePlaylistItem'],
             )
           );
         }
@@ -98,6 +115,15 @@ class RouteGenerator {
       arguments: {
         'anchorpersonId': anchorpersonId,
         'anchorpersonName': anchorpersonName,
+      },
+    );
+  }
+
+  static void navigateToShowStory(BuildContext context, YoutubePlaylistItem youtubePlaylistItem) {
+    Navigator.of(context).pushNamed(
+      showStory,
+      arguments: {
+        'youtubePlaylistItem': youtubePlaylistItem,
       },
     );
   }

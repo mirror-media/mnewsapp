@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
@@ -212,7 +213,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           ),
         ],
       ),
-      onTap: () {}
+      onTap: () => RouteGenerator.navigateToShowStory(context, youtubePlaylistItem),
     );
   }
   
