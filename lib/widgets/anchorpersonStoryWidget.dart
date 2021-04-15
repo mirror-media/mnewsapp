@@ -22,11 +22,11 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   @override
   void initState() {
-    _fetchAnchorpersonList(widget.anchorpersonId);
+    _fetchAnchorpersonById(widget.anchorpersonId);
     super.initState();
   }
 
-  _fetchAnchorpersonList(String anchorpersonId) async {
+  _fetchAnchorpersonById(String anchorpersonId) async {
     context.read<AnchorpersonBloc>().add(FetchAnchorpersonById(anchorpersonId));
   }
 
@@ -40,7 +40,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
           final error = state.error;
           print('AnchorpersonError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchAnchorpersonList(widget.anchorpersonId));
+            return error.renderWidget(onPressed: () => _fetchAnchorpersonById(widget.anchorpersonId));
           } 
           
           return error.renderWidget();
