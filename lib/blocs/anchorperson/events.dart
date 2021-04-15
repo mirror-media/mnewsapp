@@ -90,6 +90,26 @@ class FetchAnchorpersonById extends AnchorpersonEvents {
       yield AnchorpersonError(
         error: InvalidFormatException('Invalid Response format'),
       );
+    } on FetchDataException {
+      yield AnchorpersonError(
+        error: NoInternetException('Error During Communication'),
+      );
+    } on BadRequestException {
+      yield AnchorpersonError(
+        error: Error400Exception('Invalid Request'),
+      );
+    } on UnauthorisedException {
+      yield AnchorpersonError(
+        error: Error400Exception('Unauthorised'),
+      );
+    } on InvalidInputException {
+      yield AnchorpersonError(
+        error: Error400Exception('Invalid Input'),
+      );
+    } on InternalServerErrorException {
+      yield AnchorpersonError(
+        error: Error500Exception('Internal Server Error'),
+      );
     } catch (e) {
       yield AnchorpersonError(
         error: UnknownException(e.toString()),

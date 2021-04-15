@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/blocs/anchorperson/bloc.dart';
 import 'package:tv/blocs/anchorperson/events.dart';
 import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/anchorperson.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,11 +22,11 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   @override
   void initState() {
-    _fetchAnchorpersonList(widget.anchorpersonId);
+    _fetchAnchorpersonById(widget.anchorpersonId);
     super.initState();
   }
 
-  _fetchAnchorpersonList(String anchorpersonId) async {
+  _fetchAnchorpersonById(String anchorpersonId) async {
     context.read<AnchorpersonBloc>().add(FetchAnchorpersonById(anchorpersonId));
   }
 
@@ -38,7 +39,11 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         if (state is AnchorpersonError) {
           final error = state.error;
           print('AnchorpersonError: ${error.message}');
-          return Container();
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _fetchAnchorpersonById(widget.anchorpersonId));
+          } 
+          
+          return error.renderWidget();
         }
         if (state is AnchorpersonLoaded) {
           Anchorperson anchorperson = state.anchorperson;
