@@ -134,16 +134,6 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         ),
         if(isLoading)
           _loadMoreWidget(),
-        // if(!isLoading)
-        //   InkWell(
-        //     child: Padding(
-        //       padding: const EdgeInsets.all(8.0),
-        //       child: Text('loading more'),
-        //     ),
-        //     onTap: () {
-        //       _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _currentPagetoken);
-        //     }
-        //   ),
       ],
     );
   }
