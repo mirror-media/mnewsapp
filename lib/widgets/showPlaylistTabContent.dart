@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
@@ -84,14 +85,21 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         if (state is YoutubePlaylistLoadingMore) {
           _isLoading = true;
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
-          return _buildYoutubePlaylistItemList(youtubePlaylistItemList, isLoading: true);
+          return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList, 
+            isLoading: true
+          );
         }
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
           _isLoading = false;
           _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
-          return _buildYoutubePlaylistItemList(youtubePlaylistItemList);
+          return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList,
+          );
         }
 
         // state is Init, loading, or other 
@@ -101,6 +109,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   }
 
   Widget _buildYoutubePlaylistItemList(
+    String youtubePlayListId,
     YoutubePlaylistItemList youtubePlaylistItemList, 
     { bool isLoading = false }
   ) {
@@ -118,22 +127,13 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           itemBuilder: (context, index) {
             return _buildListItem(
               context,
+              youtubePlayListId,
               youtubePlaylistItemList[index]
             );
           }
         ),
         if(isLoading)
           _loadMoreWidget(),
-        // if(!isLoading)
-        //   InkWell(
-        //     child: Padding(
-        //       padding: const EdgeInsets.all(8.0),
-        //       child: Text('loading more'),
-        //     ),
-        //     onTap: () {
-        //       _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _currentPagetoken);
-        //     }
-        //   ),
       ],
     );
   }
@@ -148,7 +148,11 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, YoutubePlaylistItem youtubePlaylistItem) {
+  Widget _buildListItem(
+    BuildContext context, 
+    String youtubePlayListId,
+    YoutubePlaylistItem youtubePlaylistItem,
+  ) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
     var width = MediaQuery.of(context).size.width;
     double imageWidth = 33.3 * (width - 48) / 100;
@@ -212,7 +216,11 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           ),
         ],
       ),
-      onTap: () {}
+      onTap: () => RouteGenerator.navigateToShowStory(
+        context, 
+        youtubePlayListId,
+        youtubePlaylistItem
+      ),
     );
   }
   
