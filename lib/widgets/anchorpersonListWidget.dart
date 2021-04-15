@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/anchorperson/bloc.dart';
 import 'package:tv/blocs/anchorperson/events.dart';
 import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/anchorpersonList.dart';
 
@@ -33,7 +34,11 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         if (state is AnchorpersonError) {
           final error = state.error;
           print('AnchorpersonError: ${error.message}');
-          return Container();
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _fetchAnchorpersonList());
+          } 
+          
+          return error.renderWidget();
         }
         if (state is AnchorpersonListLoaded) {
           AnchorpersonList anchorpersonList = state.anchorpersonList;
