@@ -1,12 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
+import 'package:tv/services/youtubePlaylistService.dart';
+import 'package:tv/widgets/showPlaylistTabContent.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class ShowStoryPage extends StatefulWidget {
+  final String youtubePlayListId;
   final YoutubePlaylistItem youtubePlaylistItem;
   ShowStoryPage({
+    @required this.youtubePlayListId,
     @required this.youtubePlaylistItem,
   });
 
@@ -15,6 +22,7 @@ class ShowStoryPage extends StatefulWidget {
 }
 
 class _ShowStoryPageState extends State<ShowStoryPage> {
+  ScrollController _listviewController = ScrollController();
   DateTimeFormat _dateTimeFormat = DateTimeFormat();
 
   @override
@@ -22,16 +30,30 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: ListView(
+        controller: _listviewController,
         children: [
-          YoutubeViewer(
-            widget.youtubePlaylistItem.youtubeVideoId
+          // it's a trick, 
+          // use column to avoid dispose YoutubeViewer widget
+          Column(
+            children: [
+              YoutubeViewer(
+                widget.youtubePlaylistItem.youtubeVideoId
+              ),
+              SizedBox(height: 12),
+              Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _buildTitleAndPublishedDate(),
+              ),
+              SizedBox(height: 48),
+              Padding(
+                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+                child: _buildMoreShowContent(
+                  title: '更多節目內容',
+                  youtubePlayListId: widget.youtubePlayListId
+                ),
+              ),
+            ],
           ),
-          SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-            child: _buildTitleAndPublishedDate(),
-          ),
-          SizedBox(height: 48),
         ],
       ),
     );
@@ -80,6 +102,19 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
           ),
         ),
       ]
+    );
+  }
+
+  Widget _buildMoreShowContent({String title, String youtubePlayListId}) {
+    return BlocProvider(
+      create: (context) => YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
+      child: ShowPlaylistTabContent(
+        youtubePlaylistInfo: YoutubePlaylistInfo(
+          name: title,
+          youtubePlayListId: youtubePlayListId,
+        ),
+        listviewController: _listviewController,
+      ),
     );
   }
 }

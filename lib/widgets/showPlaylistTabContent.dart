@@ -85,14 +85,21 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         if (state is YoutubePlaylistLoadingMore) {
           _isLoading = true;
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
-          return _buildYoutubePlaylistItemList(youtubePlaylistItemList, isLoading: true);
+          return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList, 
+            isLoading: true
+          );
         }
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
           _isLoading = false;
           _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
-          return _buildYoutubePlaylistItemList(youtubePlaylistItemList);
+          return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList,
+          );
         }
 
         // state is Init, loading, or other 
@@ -102,6 +109,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   }
 
   Widget _buildYoutubePlaylistItemList(
+    String youtubePlayListId,
     YoutubePlaylistItemList youtubePlaylistItemList, 
     { bool isLoading = false }
   ) {
@@ -119,6 +127,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           itemBuilder: (context, index) {
             return _buildListItem(
               context,
+              youtubePlayListId,
               youtubePlaylistItemList[index]
             );
           }
@@ -149,7 +158,11 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     );
   }
 
-  Widget _buildListItem(BuildContext context, YoutubePlaylistItem youtubePlaylistItem) {
+  Widget _buildListItem(
+    BuildContext context, 
+    String youtubePlayListId,
+    YoutubePlaylistItem youtubePlaylistItem,
+  ) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
     var width = MediaQuery.of(context).size.width;
     double imageWidth = 33.3 * (width - 48) / 100;
@@ -213,7 +226,11 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToShowStory(context, youtubePlaylistItem),
+      onTap: () => RouteGenerator.navigateToShowStory(
+        context, 
+        youtubePlayListId,
+        youtubePlaylistItem
+      ),
     );
   }
   

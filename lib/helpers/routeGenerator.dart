@@ -64,10 +64,14 @@ class RouteGenerator {
       case showStory:
         Map args = settings.arguments;
         // Validation of correct data type
-        if (args['youtubePlaylistItem'] is YoutubePlaylistItem) {
+        if (
+          args['youtubePlayListId'] is String &&
+          args['youtubePlaylistItem'] is YoutubePlaylistItem
+        ) {
           return MaterialPageRoute(
             settings: settings,
             builder: (context) => ShowStoryPage(
+              youtubePlayListId: args['youtubePlayListId'],
               youtubePlaylistItem: args['youtubePlaylistItem'],
             )
           );
@@ -119,10 +123,15 @@ class RouteGenerator {
     );
   }
 
-  static void navigateToShowStory(BuildContext context, YoutubePlaylistItem youtubePlaylistItem) {
+  static void navigateToShowStory(
+    BuildContext context, 
+    String youtubePlayListId,
+    YoutubePlaylistItem youtubePlaylistItem
+  ) {
     Navigator.of(context).pushNamed(
       showStory,
       arguments: {
+        'youtubePlayListId': youtubePlayListId,
         'youtubePlaylistItem': youtubePlaylistItem,
       },
     );
