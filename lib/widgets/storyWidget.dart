@@ -6,6 +6,7 @@ import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
@@ -31,9 +32,12 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidgetState extends State<StoryWidget> {
+  String _currentSlug;
+
   @override
   void initState() {
-    _loadStory(widget.slug);
+    _currentSlug = widget.slug;
+    _loadStory(_currentSlug);
     super.initState();
   }
 
@@ -53,10 +57,12 @@ class _StoryWidgetState extends State<StoryWidget> {
       builder: (BuildContext context, StoryState state) {
         if (state is StoryError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('NewsCategoriesError: ${error.message}');
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _loadStory(_currentSlug));
+          } 
+          
+          return error.renderWidget();
         }
         if (state is StoryLoaded) {
           Story story = state.story;
@@ -584,7 +590,8 @@ class _StoryWidgetState extends State<StoryWidget> {
         ],
       ),
       onTap: () {
-        _loadStory(story.slug);
+        _currentSlug = story.slug;
+        _loadStory(_currentSlug);
       },
     );
   }
