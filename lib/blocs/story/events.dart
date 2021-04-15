@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
@@ -35,6 +36,26 @@ class FetchPublishedStoryBySlug extends StoryEvents {
     } on FormatException {
       yield StoryError(
         error: InvalidFormatException('Invalid Response format'),
+      );
+    } on FetchDataException {
+      yield StoryError(
+        error: NoInternetException('Error During Communication'),
+      );
+    } on BadRequestException {
+      yield StoryError(
+        error: Error400Exception('Invalid Request'),
+      );
+    } on UnauthorisedException {
+      yield StoryError(
+        error: Error400Exception('Unauthorised'),
+      );
+    } on InvalidInputException {
+      yield StoryError(
+        error: Error400Exception('Invalid Input'),
+      );
+    } on InternalServerErrorException {
+      yield StoryError(
+        error: Error500Exception('Internal Server Error'),
       );
     } catch (e) {
       yield StoryError(
