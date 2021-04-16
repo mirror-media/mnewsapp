@@ -55,13 +55,11 @@ class _BuildTabStoryListState extends State<BuildTabStoryList> {
       builder: (BuildContext context, TabStoryListState state) {
         if (state is TabStoryListError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
+          print('TabStoryListError: ${error.message}');
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return Center(
-                  child: Text(message),
-                );
+                return Container();
               },
               childCount: 1,
             ),

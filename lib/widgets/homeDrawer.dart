@@ -28,10 +28,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
       builder: (BuildContext context, SectionState state) {
         if (state is SectionError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('SectionError: ${error.message}');
+          return Container();
         } else {
           MNewsSection sectionId = state.sectionId;
           
