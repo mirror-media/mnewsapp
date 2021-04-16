@@ -31,10 +31,8 @@ class _BuildNewsMarqueeState extends State<BuildNewsMarquee> {
       builder: (BuildContext context, NewsMarqueeState state) {
         if (state is NewsMarqueeError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('NewsMarqueeError: ${error.message}');
+          return Container();
         }
         if (state is NewsMarqueeLoaded) {
           StoryListItemList newsList = state.newsList;

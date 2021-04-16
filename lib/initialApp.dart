@@ -30,10 +30,8 @@ class _InitialAppState extends State<InitialApp> {
       builder: (BuildContext context, ConfigState state) {
         if (state is ConfigError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('ConfigError: ${error.message}');
+          return Container();
         }
         if (state is ConfigLoaded) {
           return BlocProvider(

@@ -35,10 +35,8 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
       builder: (BuildContext context, ShowState state) {
         if (state is ShowError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('ShowError: ${error.message}');
+          return Container();
         }
         if (state is ShowIntroLoaded) {
           ShowIntro showIntro = state.showIntro;

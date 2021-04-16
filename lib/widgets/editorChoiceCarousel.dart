@@ -29,10 +29,8 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
       builder: (BuildContext context, EditorChoiceState state) {
         if (state is EditorChoiceError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('EditorChoiceError: ${error.message}');
+          return Container();
         }
         if (state is EditorChoiceLoaded) {
           StoryListItemList editorChoiceList = state.editorChoiceList;

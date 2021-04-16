@@ -61,10 +61,8 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
       builder: (BuildContext context, NotificationSettingState state) {
         if (state is NotificationSettingError) {
           final error = state.error;
-          String message = '${error.message}\nTap to Retry.';
-          return Center(
-            child: Text(message),
-          );
+          print('NotificationSettingError: ${error.message}');
+          return Container();
         }
         if (state is NotificationSettingLoaded) {
           NotificationSettingList notificationSettingList = state.notificationSettingList;
