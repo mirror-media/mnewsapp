@@ -3,6 +3,7 @@ import 'package:tv/models/section.dart';
 
 /// url link
 const mNewsWebsiteLink = 'https://dev.mnews.tw/';
+const youtubeLink = 'https://www.youtube.com/';
 
 /// assets
 const String menuJson = 'assets/json/menu.json';
