@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -70,7 +71,10 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
         IconButton(
           icon: Icon(Icons.share),
           tooltip: 'Share',
-          onPressed: () {},
+          onPressed: () {
+            String url = youtubeLink + 'watch?v=' + widget.youtubePlayListId;
+            Share.share(url);
+          },
         ),
       ],
     );
