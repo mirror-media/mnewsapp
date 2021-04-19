@@ -17,12 +17,12 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
   @override
   void initState() {
-    _fetchContactList();
+    _fetchAnchorpersonOrHostContactList();
     super.initState();
   }
 
-  _fetchContactList() async {
-    context.read<ContactBloc>().add(FetchContactList());
+  _fetchAnchorpersonOrHostContactList() async {
+    context.read<ContactBloc>().add(FetchAnchorpersonOrHostContactList());
   }
 
   @override
@@ -35,7 +35,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
           final error = state.error;
           print('ContactError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchContactList());
+            return error.renderWidget(onPressed: () => _fetchAnchorpersonOrHostContactList());
           } 
           
           return error.renderWidget();
