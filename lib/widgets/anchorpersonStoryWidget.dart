@@ -2,9 +2,9 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tv/blocs/anchorperson/bloc.dart';
-import 'package:tv/blocs/anchorperson/events.dart';
-import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/blocs/contact/bloc.dart';
+import 'package:tv/blocs/contact/events.dart';
+import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/contact.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,30 +22,30 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   @override
   void initState() {
-    _fetchAnchorpersonById(widget.anchorpersonId);
+    _fetchContactById(widget.anchorpersonId);
     super.initState();
   }
 
-  _fetchAnchorpersonById(String anchorpersonId) async {
-    context.read<AnchorpersonBloc>().add(FetchAnchorpersonById(anchorpersonId));
+  _fetchContactById(String contactId) async {
+    context.read<ContactBloc>().add(FetchContactById(contactId));
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<AnchorpersonBloc, AnchorpersonState>(
-      builder: (BuildContext context, AnchorpersonState state) {
-        if (state is AnchorpersonError) {
+    return BlocBuilder<ContactBloc, ContactState>(
+      builder: (BuildContext context, ContactState state) {
+        if (state is ContactError) {
           final error = state.error;
-          print('AnchorpersonError: ${error.message}');
+          print('ContactError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchAnchorpersonById(widget.anchorpersonId));
+            return error.renderWidget(onPressed: () => _fetchContactById(widget.anchorpersonId));
           } 
           
           return error.renderWidget();
         }
-        if (state is AnchorpersonLoaded) {
+        if (state is ContactLoaded) {
           Contact contact = state.contact;
           
           return _buildAnchorpersonStory(contact, width);

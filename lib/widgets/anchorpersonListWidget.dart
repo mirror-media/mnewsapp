@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/anchorperson/bloc.dart';
-import 'package:tv/blocs/anchorperson/events.dart';
-import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/blocs/contact/bloc.dart';
+import 'package:tv/blocs/contact/events.dart';
+import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/contactList.dart';
@@ -17,30 +17,30 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
   @override
   void initState() {
-    _fetchAnchorpersonList();
+    _fetchContactList();
     super.initState();
   }
 
-  _fetchAnchorpersonList() async {
-    context.read<AnchorpersonBloc>().add(FetchAnchorpersonList());
+  _fetchContactList() async {
+    context.read<ContactBloc>().add(FetchContactList());
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 48- 15;
 
-    return BlocBuilder<AnchorpersonBloc, AnchorpersonState>(
-      builder: (BuildContext context, AnchorpersonState state) {
-        if (state is AnchorpersonError) {
+    return BlocBuilder<ContactBloc, ContactState>(
+      builder: (BuildContext context, ContactState state) {
+        if (state is ContactError) {
           final error = state.error;
-          print('AnchorpersonError: ${error.message}');
+          print('ContactError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchAnchorpersonList());
+            return error.renderWidget(onPressed: () => _fetchContactList());
           } 
           
           return error.renderWidget();
         }
-        if (state is AnchorpersonListLoaded) {
+        if (state is ContactListLoaded) {
           ContactList contactList = state.contactList;
           
           return Padding(
