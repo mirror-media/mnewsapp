@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tv/models/section.dart';
 
+/// url link
+const mNewsWebsiteLink = 'https://dev.mnews.tw/';
+
 /// assets
 const String menuJson = 'assets/json/menu.json';
 const String defaultNotificationListJson = 'assets/json/defaultNotificationList.json';

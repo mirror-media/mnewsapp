@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:share/share.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/storyService.dart';
@@ -13,16 +14,28 @@ class StoryPage extends StatefulWidget {
 
   @override
   _StoryPageState createState() => _StoryPageState();
+
+  static _StoryPageState of(BuildContext context) =>
+    context.findAncestorStateOfType<_StoryPageState>();
 }
 
 class _StoryPageState extends State<StoryPage> {
+  String _slug;
+  set slug(String value) => _slug = value;
+
+  @override
+  void initState() {
+    _slug = widget.slug;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => StoryBloc(storyRepos: StoryServices()),
-        child: StoryWidget(slug: widget.slug)
+        child: StoryWidget(slug: _slug)
       ),
     );
   }
@@ -37,13 +50,16 @@ class _StoryPageState extends State<StoryPage> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.text_fields),
-          tooltip: 'Search',
+          tooltip: 'Change text size',
           onPressed: () {},
         ),
         IconButton(
           icon: Icon(Icons.share),
           tooltip: 'Share',
-          onPressed: () {},
+          onPressed: () {
+            String url = mNewsWebsiteLink + 'story/' +  _slug;
+            Share.share(url);
+          },
         ),
       ],
     );
