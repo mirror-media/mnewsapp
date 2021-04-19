@@ -16,6 +16,7 @@ import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
+import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
@@ -591,6 +592,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       ),
       onTap: () {
         _currentSlug = story.slug;
+        StoryPage.of(context).slug = _currentSlug;
         _loadStory(_currentSlug);
       },
     );

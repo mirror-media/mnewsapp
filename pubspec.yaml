@@ -38,6 +38,8 @@ dependencies:
   http: ^0.12.2
   # local storage
   localstorage: ^3.0.6+9
+  # share url
+  share: ^0.6.4+5
   # Carousel slider in flutter.
   carousel_slider: ^2.3.1
   # Cached network image.
