@@ -1,5 +1,5 @@
-import 'package:tv/models/anchorperson.dart';
-import 'package:tv/models/anchorpersonList.dart';
+import 'package:tv/models/contact.dart';
+import 'package:tv/models/contactList.dart';
 
 abstract class AnchorpersonState {}
 
@@ -8,13 +8,13 @@ class AnchorpersonInitState extends AnchorpersonState {}
 class AnchorpersonLoading extends AnchorpersonState {}
 
 class AnchorpersonListLoaded extends AnchorpersonState {
-  final AnchorpersonList anchorpersonList;
-  AnchorpersonListLoaded({this.anchorpersonList});
+  final ContactList contactList;
+  AnchorpersonListLoaded({this.contactList});
 }
 
 class AnchorpersonLoaded extends AnchorpersonState {
-  final Anchorperson anchorperson;
-  AnchorpersonLoaded({this.anchorperson});
+  final Contact contact;
+  AnchorpersonLoaded({this.contact});
 }
 
 class AnchorpersonError extends AnchorpersonState {

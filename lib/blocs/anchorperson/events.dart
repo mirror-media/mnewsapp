@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:tv/blocs/anchorperson/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/anchorperson.dart';
-import 'package:tv/models/anchorpersonList.dart';
+import 'package:tv/models/contact.dart';
+import 'package:tv/models/contactList.dart';
 import 'package:tv/services/anchorpersonService.dart';
 
 abstract class AnchorpersonEvents{
@@ -22,8 +22,8 @@ class FetchAnchorpersonList extends AnchorpersonEvents {
     print(this.toString());
     try{
       yield AnchorpersonLoading();
-      AnchorpersonList anchorpersonList = await anchorpersonRepos.fetchAnchorpersonList();
-      yield AnchorpersonListLoaded(anchorpersonList: anchorpersonList);
+      ContactList contactList = await anchorpersonRepos.fetchAnchorpersonList();
+      yield AnchorpersonListLoaded(contactList: contactList);
     } on SocketException {
       yield AnchorpersonError(
         error: NoInternetException('No Internet'),
@@ -76,8 +76,8 @@ class FetchAnchorpersonById extends AnchorpersonEvents {
     print(this.toString());
     try{
       yield AnchorpersonLoading();
-      Anchorperson anchorperson = await anchorpersonRepos.fetchAnchorpersonById(anchorpersonId);
-      yield AnchorpersonLoaded(anchorperson: anchorperson);
+      Contact contact = await anchorpersonRepos.fetchAnchorpersonById(anchorpersonId);
+      yield AnchorpersonLoaded(contact: contact);
     } on SocketException {
       yield AnchorpersonError(
         error: NoInternetException('No Internet'),

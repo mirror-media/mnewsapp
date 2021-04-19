@@ -1,6 +1,6 @@
 import 'package:tv/helpers/apiConstants.dart';
 
-class Anchorperson {
+class Contact {
   final String id;
   final String name;
   final String photoUrl;
@@ -11,7 +11,7 @@ class Anchorperson {
   final String instatgramUrl;
   final String bio;
 
-  Anchorperson({
+  Contact({
     this.id,
     this.name,
     this.photoUrl,
@@ -23,14 +23,14 @@ class Anchorperson {
     this.bio,
   });
 
-  factory Anchorperson.fromJson(Map<String, dynamic> json) {
+  factory Contact.fromJson(Map<String, dynamic> json) {
     String photoUrl = mirrorNewsDefaultImageUrl;
     if (json['image'] != null && 
       json['image']['urlMobileSized'] != null) {
       photoUrl = json['image']['urlMobileSized'];
     }
     
-    return Anchorperson(
+    return Contact(
       id: json['id'],
       name: json['name'],
       photoUrl: photoUrl,

@@ -6,7 +6,7 @@ import 'package:tv/blocs/anchorperson/bloc.dart';
 import 'package:tv/blocs/anchorperson/events.dart';
 import 'package:tv/blocs/anchorperson/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/anchorperson.dart';
+import 'package:tv/models/contact.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AnchorpersonStoryWidget extends StatefulWidget {
@@ -46,9 +46,9 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
           return error.renderWidget();
         }
         if (state is AnchorpersonLoaded) {
-          Anchorperson anchorperson = state.anchorperson;
+          Contact contact = state.contact;
           
-          return _buildAnchorpersonStory(anchorperson, width);
+          return _buildAnchorpersonStory(contact, width);
         }
 
         // state is Init, loading, or other 
@@ -62,20 +62,20 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         child: CircularProgressIndicator(),
       );
   
-  Widget _buildAnchorpersonStory(Anchorperson anchorperson, double width) {
+  Widget _buildAnchorpersonStory(Contact contact, double width) {
 
 
     return ListView(
       children: [
         SizedBox(height: 55),
-        _buildAnchorpersonProfile(anchorperson, width),
+        _buildAnchorpersonProfile(contact, width),
         SizedBox(height: 20),
-        _buildBioWidget(anchorperson.bio),
+        _buildBioWidget(contact.bio),
       ],
     );
   }
 
-  Widget _buildAnchorpersonProfile(Anchorperson anchorperson, double width) {
+  Widget _buildAnchorpersonProfile(Contact contact, double width) {
     double imageWidth = width/2;
     double imageHeight = imageWidth / 1.333;
 
@@ -84,7 +84,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         CachedNetworkImage(
           height: imageHeight,
           width: imageWidth,
-          imageUrl: anchorperson.photoUrl,
+          imageUrl: contact.photoUrl,
           placeholder: (context, url) => Container(
             height: imageHeight,
             width: imageWidth,
@@ -100,7 +100,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         ),
         SizedBox(height: 12),
         Text(
-          anchorperson.name,
+          contact.name,
           style: TextStyle(
             fontSize: 17, 
             fontWeight: FontWeight.w600,
@@ -110,28 +110,28 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if(anchorperson.twitterUrl != null)
+            if(contact.twitterUrl != null)
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.twitter,
-                  anchorperson.twitterUrl
+                  contact.twitterUrl
                 ),
               ),
-            if(anchorperson.facebookUrl != null)
+            if(contact.facebookUrl != null)
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.facebook,
-                  anchorperson.facebookUrl
+                  contact.facebookUrl
                 ),
               ),
-            if(anchorperson.instatgramUrl != null)
+            if(contact.instatgramUrl != null)
               Padding(
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.instagram,
-                  anchorperson.instatgramUrl
+                  contact.instatgramUrl
                 ),
               ),
           ]

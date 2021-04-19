@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/apiConstants.dart';
-import 'package:tv/models/anchorperson.dart';
-import 'package:tv/models/anchorpersonList.dart';
+import 'package:tv/models/contact.dart';
+import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
 
 abstract class AnchorpersonRepos {
-  Future<Anchorperson> fetchAnchorpersonById(String anchorpersonId);
-  Future<AnchorpersonList> fetchAnchorpersonList();
+  Future<Contact> fetchAnchorpersonById(String anchorpersonId);
+  Future<ContactList> fetchAnchorpersonList();
 }
 
 class AnchorpersonServices implements AnchorpersonRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<AnchorpersonList> fetchAnchorpersonList() async {
+  Future<ContactList> fetchAnchorpersonList() async {
     String query = 
     """
     query {
@@ -50,12 +50,12 @@ class AnchorpersonServices implements AnchorpersonRepos{
       }
     );
 
-    AnchorpersonList anchorpersonList = AnchorpersonList.fromJson(jsonResponse['data']['allContacts']);
-    return anchorpersonList;
+    ContactList contactList = ContactList.fromJson(jsonResponse['data']['allContacts']);
+    return contactList;
   }
 
   @override
-  Future<Anchorperson> fetchAnchorpersonById(String anchorpersonId) async{
+  Future<Contact> fetchAnchorpersonById(String anchorpersonId) async{
     String query = 
     """
     query(\$where: ContactWhereUniqueInput!) {
@@ -92,7 +92,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
       }
     );
 
-    Anchorperson anchorperson = Anchorperson.fromJson(jsonResponse['data']['Contact']);
-    return anchorperson;
+    Contact contact = Contact.fromJson(jsonResponse['data']['Contact']);
+    return contact;
   }
 }
