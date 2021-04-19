@@ -1,12 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/anchorperson/bloc.dart';
-import 'package:tv/blocs/anchorperson/events.dart';
-import 'package:tv/blocs/anchorperson/states.dart';
+import 'package:tv/blocs/contact/bloc.dart';
+import 'package:tv/blocs/contact/events.dart';
+import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/anchorpersonList.dart';
+import 'package:tv/models/contactList.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
   @override
@@ -17,38 +17,38 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
   @override
   void initState() {
-    _fetchAnchorpersonList();
+    _fetchContactList();
     super.initState();
   }
 
-  _fetchAnchorpersonList() async {
-    context.read<AnchorpersonBloc>().add(FetchAnchorpersonList());
+  _fetchContactList() async {
+    context.read<ContactBloc>().add(FetchContactList());
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 48- 15;
 
-    return BlocBuilder<AnchorpersonBloc, AnchorpersonState>(
-      builder: (BuildContext context, AnchorpersonState state) {
-        if (state is AnchorpersonError) {
+    return BlocBuilder<ContactBloc, ContactState>(
+      builder: (BuildContext context, ContactState state) {
+        if (state is ContactError) {
           final error = state.error;
-          print('AnchorpersonError: ${error.message}');
+          print('ContactError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchAnchorpersonList());
+            return error.renderWidget(onPressed: () => _fetchContactList());
           } 
           
           return error.renderWidget();
         }
-        if (state is AnchorpersonListLoaded) {
-          AnchorpersonList anchorpersonList = state.anchorpersonList;
+        if (state is ContactListLoaded) {
+          ContactList contactList = state.contactList;
           
           return Padding(
             padding: const EdgeInsets.only(
               left: 24-7.5, right: 24-7.5,
               top: 24-16.0, bottom: 24-16.0,
             ),
-            child: _buildAnchorpersonList(anchorpersonList, width),
+            child: _buildAnchorpersonList(contactList, width),
           );
         }
 
@@ -63,13 +63,15 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         child: CircularProgressIndicator(),
       );
 
-  Widget _buildAnchorpersonList(AnchorpersonList anchorpersonList, double width) {
+  Widget _buildAnchorpersonList(ContactList contactList, double width) {
     double imageWidth = width/2;
     double imageHeight = imageWidth / 1.333;
 
     return GridView.builder(
+      // shrinkWrap: true,
+      // physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(0),
-      itemCount: anchorpersonList.length,
+      itemCount: contactList.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         childAspectRatio: 1 - 16/imageWidth,
@@ -85,7 +87,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                   child: CachedNetworkImage(
                     height: imageHeight,
                     width: imageWidth,
-                    imageUrl: anchorpersonList[index].photoUrl,
+                    imageUrl: contactList[index].photoUrl,
                     placeholder: (context, url) => Container(
                       height: imageHeight,
                       width: imageWidth,
@@ -102,7 +104,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 ),
                 Center(
                   child: Text(
-                    anchorpersonList[index].name,
+                    contactList[index].name,
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
                   ),
                 ),
@@ -111,8 +113,8 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
             onTap: (){
               RouteGenerator.navigateToAnchorpersonStory(
                 context, 
-                anchorpersonList[index].id,
-                anchorpersonList[index].name,
+                contactList[index].id,
+                contactList[index].name,
               );
             },
           ),

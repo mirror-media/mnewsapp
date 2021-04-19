@@ -2,20 +2,20 @@ import 'dart:convert';
 
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/apiConstants.dart';
-import 'package:tv/models/anchorperson.dart';
-import 'package:tv/models/anchorpersonList.dart';
+import 'package:tv/models/contact.dart';
+import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
 
-abstract class AnchorpersonRepos {
-  Future<Anchorperson> fetchAnchorpersonById(String anchorpersonId);
-  Future<AnchorpersonList> fetchAnchorpersonList();
+abstract class ContactRepos {
+  Future<Contact> fetchContactById(String contactId);
+  Future<ContactList> fetchContactList();
 }
 
-class AnchorpersonServices implements AnchorpersonRepos{
+class ContactServices implements ContactRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<AnchorpersonList> fetchAnchorpersonList() async {
+  Future<ContactList> fetchContactList() async {
     String query = 
     """
     query {
@@ -50,12 +50,12 @@ class AnchorpersonServices implements AnchorpersonRepos{
       }
     );
 
-    AnchorpersonList anchorpersonList = AnchorpersonList.fromJson(jsonResponse['data']['allContacts']);
-    return anchorpersonList;
+    ContactList contactList = ContactList.fromJson(jsonResponse['data']['allContacts']);
+    return contactList;
   }
 
   @override
-  Future<Anchorperson> fetchAnchorpersonById(String anchorpersonId) async{
+  Future<Contact> fetchContactById(String contactId) async{
     String query = 
     """
     query(\$where: ContactWhereUniqueInput!) {
@@ -74,7 +74,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
 
     Map<String,dynamic> variables = {
       "where": {
-        "id": anchorpersonId
+        "id": contactId
       }
     };
 
@@ -92,7 +92,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
       }
     );
 
-    Anchorperson anchorperson = Anchorperson.fromJson(jsonResponse['data']['Contact']);
-    return anchorperson;
+    Contact contact = Contact.fromJson(jsonResponse['data']['Contact']);
+    return contact;
   }
 }
