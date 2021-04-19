@@ -6,16 +6,16 @@ import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
 
-abstract class AnchorpersonRepos {
-  Future<Contact> fetchAnchorpersonById(String anchorpersonId);
-  Future<ContactList> fetchAnchorpersonList();
+abstract class ContactRepos {
+  Future<Contact> fetchContactById(String contactId);
+  Future<ContactList> fetchContactList();
 }
 
-class AnchorpersonServices implements AnchorpersonRepos{
+class ContactServices implements ContactRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<ContactList> fetchAnchorpersonList() async {
+  Future<ContactList> fetchContactList() async {
     String query = 
     """
     query {
@@ -55,7 +55,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
   }
 
   @override
-  Future<Contact> fetchAnchorpersonById(String anchorpersonId) async{
+  Future<Contact> fetchContactById(String contactId) async{
     String query = 
     """
     query(\$where: ContactWhereUniqueInput!) {
@@ -74,7 +74,7 @@ class AnchorpersonServices implements AnchorpersonRepos{
 
     Map<String,dynamic> variables = {
       "where": {
-        "id": anchorpersonId
+        "id": contactId
       }
     };
 

@@ -5,10 +5,10 @@ import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
-import 'package:tv/services/anchorpersonService.dart';
+import 'package:tv/services/contactService.dart';
 
 abstract class AnchorpersonEvents{
-  Stream<AnchorpersonState> run(AnchorpersonRepos anchorpersonRepos);
+  Stream<AnchorpersonState> run(ContactRepos contactRepos);
 }
 
 class FetchAnchorpersonList extends AnchorpersonEvents {
@@ -18,11 +18,11 @@ class FetchAnchorpersonList extends AnchorpersonEvents {
   String toString() => 'FetchAnchorpersonList';
 
   @override
-  Stream<AnchorpersonState> run(AnchorpersonRepos anchorpersonRepos) async*{
+  Stream<AnchorpersonState> run(ContactRepos contactRepos) async*{
     print(this.toString());
     try{
       yield AnchorpersonLoading();
-      ContactList contactList = await anchorpersonRepos.fetchAnchorpersonList();
+      ContactList contactList = await contactRepos.fetchContactList();
       yield AnchorpersonListLoaded(contactList: contactList);
     } on SocketException {
       yield AnchorpersonError(
@@ -65,18 +65,18 @@ class FetchAnchorpersonList extends AnchorpersonEvents {
 }
 
 class FetchAnchorpersonById extends AnchorpersonEvents {
-  final String anchorpersonId;
-  FetchAnchorpersonById(this.anchorpersonId);
+  final String contactId;
+  FetchAnchorpersonById(this.contactId);
 
   @override
-  String toString() => 'FetchAnchorpersonById : { AnchorpersonId : $anchorpersonId }';
+  String toString() => 'FetchAnchorpersonById : { ContactId : $contactId }';
 
   @override
-  Stream<AnchorpersonState> run(AnchorpersonRepos anchorpersonRepos) async*{
+  Stream<AnchorpersonState> run(ContactRepos contactRepos) async*{
     print(this.toString());
     try{
       yield AnchorpersonLoading();
-      Contact contact = await anchorpersonRepos.fetchAnchorpersonById(anchorpersonId);
+      Contact contact = await contactRepos.fetchContactById(contactId);
       yield AnchorpersonLoaded(contact: contact);
     } on SocketException {
       yield AnchorpersonError(

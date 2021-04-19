@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/anchorperson/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/services/anchorpersonService.dart';
+import 'package:tv/services/contactService.dart';
 import 'package:tv/widgets/anchorpersonStoryWidget.dart';
 
 class AnchorpersonStoryPage extends StatefulWidget {
@@ -23,7 +23,7 @@ class _AnchorpersonStoryPageState extends State<AnchorpersonStoryPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => AnchorpersonBloc(anchorpersonRepos: AnchorpersonServices()),
+        create: (context) => AnchorpersonBloc(contactRepos: ContactServices()),
         child: AnchorpersonStoryWidget(anchorpersonId: widget.anchorpersonId,),
       ),
     );
