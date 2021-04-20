@@ -6,6 +6,7 @@ import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
@@ -17,12 +18,12 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
   @override
   void initState() {
-    _fetchContactList();
+    _fetchAnchorpersonOrHostContactList();
     super.initState();
   }
 
-  _fetchContactList() async {
-    context.read<ContactBloc>().add(FetchContactList());
+  _fetchAnchorpersonOrHostContactList() async {
+    context.read<ContactBloc>().add(FetchAnchorpersonOrHostContactList());
   }
 
   @override
@@ -35,20 +36,47 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
           final error = state.error;
           print('ContactError: ${error.message}');
           if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchContactList());
+            return error.renderWidget(onPressed: () => _fetchAnchorpersonOrHostContactList());
           } 
           
           return error.renderWidget();
         }
         if (state is ContactListLoaded) {
           ContactList contactList = state.contactList;
-          
-          return Padding(
-            padding: const EdgeInsets.only(
-              left: 24-7.5, right: 24-7.5,
-              top: 24-16.0, bottom: 24-16.0,
-            ),
-            child: _buildAnchorpersonList(contactList, width),
+          List<Contact> anchorpersonContactList = contactList.where(
+            (contact) => contact.isAnchorperson
+          ).toList();
+          List<Contact> hostContactList = contactList.where(
+            (contact) => contact.isHost
+          ).toList();
+
+          return ListView(
+            children: [
+              SizedBox(height: 24,),
+              Padding(
+                padding: const EdgeInsets.only(left: 24, right: 24,),
+                child: _buildContactTypeTitle('鏡主播', width),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 24-7.5, right: 24-7.5,
+                  top: 24-16.0, bottom: 24-16.0,
+                ),
+                child: _buildContactList(anchorpersonContactList, width),
+              ),
+              SizedBox(height: 24,),
+              Padding(
+                padding: const EdgeInsets.only(left: 24, right: 24,),
+                child: _buildContactTypeTitle('鏡主持', width),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  left: 24-7.5, right: 24-7.5,
+                  top: 24-16.0, bottom: 24-16.0,
+                ),
+                child: _buildContactList(hostContactList, width),
+              ),
+            ],
           );
         }
 
@@ -63,13 +91,36 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         child: CircularProgressIndicator(),
       );
 
-  Widget _buildAnchorpersonList(ContactList contactList, double width) {
+  Widget _buildContactTypeTitle(String title, double width) {
+    return Container(
+      width: width,
+      decoration: BoxDecoration(
+        color: Color(0xff004DBC),
+        borderRadius: BorderRadius.circular((4.0))
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              fontSize: 17, 
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ),
+      )
+    );
+  }
+
+  Widget _buildContactList(List<Contact> contactList, double width) {
     double imageWidth = width/2;
     double imageHeight = imageWidth / 1.333;
 
     return GridView.builder(
-      // shrinkWrap: true,
-      // physics: NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       padding: const EdgeInsets.all(0),
       itemCount: contactList.length,
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

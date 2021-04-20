@@ -11,18 +11,18 @@ abstract class ContactEvents{
   Stream<ContactState> run(ContactRepos contactRepos);
 }
 
-class FetchContactList extends ContactEvents {
-  FetchContactList();
+class FetchAnchorpersonOrHostContactList extends ContactEvents {
+  FetchAnchorpersonOrHostContactList();
 
   @override
-  String toString() => 'FetchContactList';
+  String toString() => 'FetchAnchorpersonOrHostContactList';
 
   @override
   Stream<ContactState> run(ContactRepos contactRepos) async*{
     print(this.toString());
     try{
       yield ContactLoading();
-      ContactList contactList = await contactRepos.fetchContactList();
+      ContactList contactList = await contactRepos.fetchAnchorpersonOrHostContactList();
       yield ContactListLoaded(contactList: contactList);
     } on SocketException {
       yield ContactError(

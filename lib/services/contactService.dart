@@ -8,20 +8,27 @@ import 'package:tv/models/graphqlBody.dart';
 
 abstract class ContactRepos {
   Future<Contact> fetchContactById(String contactId);
-  Future<ContactList> fetchContactList();
+  Future<ContactList> fetchAnchorpersonOrHostContactList();
 }
 
 class ContactServices implements ContactRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<ContactList> fetchContactList() async {
+  Future<ContactList> fetchAnchorpersonOrHostContactList() async {
     String query = 
     """
     query {
       allContacts(
         where: {
-          anchorperson: true
+          OR: [
+            {
+              anchorperson: true
+            }
+            {
+              host: true
+            }
+          ]
         }
       ) {
         id
@@ -30,6 +37,8 @@ class ContactServices implements ContactRepos{
           urlMobileSized
         }
         slug
+        anchorperson
+        host
       }
     }
     """;

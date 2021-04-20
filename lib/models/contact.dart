@@ -6,6 +6,9 @@ class Contact {
   final String photoUrl;
   final String slug;
 
+  final bool isAnchorperson;
+  final bool isHost;
+
   final String twitterUrl;
   final String facebookUrl;
   final String instatgramUrl;
@@ -16,6 +19,9 @@ class Contact {
     this.name,
     this.photoUrl,
     this.slug,
+
+    this.isAnchorperson,
+    this.isHost,
 
     this.twitterUrl,
     this.facebookUrl,
@@ -35,6 +41,9 @@ class Contact {
       name: json['name'],
       photoUrl: photoUrl,
       slug: json['slug'],
+
+      isAnchorperson: json['anchorperson']??false,
+      isHost: json['host']??false,
 
       twitterUrl: json['twitter'],
       facebookUrl: json['facebook'],
