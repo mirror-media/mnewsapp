@@ -39,7 +39,8 @@ enum MNewsSection {
   live,
   video,
   show,
-  anchorperson
+  anchorperson,
+  ombuds
 }
 
 const mNewsSectionList = [
@@ -62,6 +63,10 @@ const mNewsSectionList = [
   {
     Section.idKey: MNewsSection.anchorperson,
     Section.nameKey: '鏡主播'
+  },
+  {
+    Section.idKey: MNewsSection.ombuds,
+    Section.nameKey: '公評人'
   }
 ];
 
