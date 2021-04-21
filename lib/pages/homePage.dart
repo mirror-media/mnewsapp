@@ -6,6 +6,7 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/section/anchorpersonPage.dart';
 import 'package:tv/pages/section/livePage.dart';
 import 'package:tv/pages/section/newsPage.dart';
+import 'package:tv/pages/section/ombudsPage.dart';
 import 'package:tv/pages/section/showPage.dart';
 import 'package:tv/pages/section/videoPage.dart';
 import 'package:tv/widgets/homeDrawer.dart';
@@ -75,6 +76,9 @@ class _HomePageState extends State<HomePage> {
         break;
       case MNewsSection.anchorperson:
         return AnchorpersonPage();
+        break;
+      case MNewsSection.ombuds:
+        return OmbudsPage();
         break;
     }
     return Container();
