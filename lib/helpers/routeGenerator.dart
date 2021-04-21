@@ -5,6 +5,7 @@ import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/anchorpersonStoryPage.dart';
 import 'package:tv/pages/routeErrorPage.dart';
+import 'package:tv/pages/searchPage.dart';
 import 'package:tv/pages/settingPage.dart';
 import 'package:tv/pages/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -13,6 +14,7 @@ import 'package:tv/services/configService.dart';
 class RouteGenerator {
   static const String root = '/';
   static const String setting = '/setting';
+  static const String search = '/search';
   static const String story = '/story';
   static const String anchorpersonStory = '/anchorpersonStory';
   static const String showStory = '/showStory';
@@ -31,6 +33,11 @@ class RouteGenerator {
         return MaterialPageRoute(
           settings: settings,
           builder: (_) => SettingPage()
+        );
+      case search:
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (_) => SearchPage()
         );
       case story:
         Map args = settings.arguments;
@@ -97,6 +104,12 @@ class RouteGenerator {
   static void navigateToSetting(BuildContext context) {
     Navigator.of(context).pushNamed(
       setting,
+    );
+  }
+  
+  static void navigateToSearch(BuildContext context) {
+    Navigator.of(context).pushNamed(
+      search,
     );
   }
 
