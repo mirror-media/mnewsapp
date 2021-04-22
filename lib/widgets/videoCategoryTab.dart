@@ -7,6 +7,7 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
+import 'package:tv/widgets/videoTabContent.dart';
 
 class VideoCategoryTab extends StatefulWidget {
   @override
@@ -54,7 +55,10 @@ class _VideoCategoryTabState extends State<VideoCategoryTab> with TickerProvider
       );
 
       _tabWidgets.add(
-        Center(child: Text(category.slug))
+        VideoTabContent(
+          categorySlug: category.slug,
+          needCarousel: categoryList[i].isLatestCategory(),
+        )
       );
     }
 
