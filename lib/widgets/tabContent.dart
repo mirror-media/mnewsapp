@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
+import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
@@ -31,7 +32,7 @@ class _TabContentState extends State<TabContent> {
               create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: BuildEditorChoiceCarousel(),
+                child: BuildEditorChoiceCarousel(editorChoiceEvent: EditorChoiceEvents.fetchEditorChoiceList),
               ),
             ),
           ),

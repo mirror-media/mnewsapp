@@ -8,6 +8,11 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/widgets/carouselDisplayWidget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
+  final EditorChoiceEvents editorChoiceEvent;
+  BuildEditorChoiceCarousel({
+    @required this.editorChoiceEvent,
+  });
+
   @override
   _BuildEditorChoiceCarouselState createState() => _BuildEditorChoiceCarouselState();
 }
@@ -15,12 +20,12 @@ class BuildEditorChoiceCarousel extends StatefulWidget {
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
   @override
   void initState() {
-    _loadEditorChoiceList();
+    _loadEditorChoiceList(widget.editorChoiceEvent);
     super.initState();
   }
 
-  _loadEditorChoiceList() async {
-    context.read<EditorChoiceBloc>().add(EditorChoiceEvents.fetchEditorChoiceList);
+  _loadEditorChoiceList(EditorChoiceEvents editorChoiceEvent) async {
+    context.read<EditorChoiceBloc>().add(editorChoiceEvent);
   }
 
   @override
