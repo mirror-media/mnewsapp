@@ -16,8 +16,14 @@ class EditorChoiceServices implements EditorChoiceRepos{
   Future<StoryListItemList> fetchEditorChoiceList() async {
     String query = 
     """
-    query(\$where: EditorChoiceWhereInput, \$first: Int){
-      allEditorChoices(where: \$where, first: \$first, sortBy: [sortOrder_ASC, createdAt_DESC]) {
+    query(
+      \$where: EditorChoiceWhereInput, 
+      \$first: Int){
+      allEditorChoices(
+        where: \$where, 
+        first: \$first, 
+        sortBy: [sortOrder_ASC, createdAt_DESC]
+      ) {
         choice {
           id
           name
