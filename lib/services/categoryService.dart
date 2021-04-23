@@ -52,6 +52,8 @@ class CategoryServices implements CategoryRepos{
 
     /// cuz video page is in the home drawer sections
     categoryList.removeWhere((category) => category.slug == 'video');
+    /// do not display home slug in app
+    categoryList.removeWhere((category) => category.slug == 'home');
 
     String jsonFixed = await rootBundle.loadString(menuJson);
     final fixedMenu = json.decode(jsonFixed);
