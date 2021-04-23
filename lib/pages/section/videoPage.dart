@@ -8,7 +8,7 @@ class VideoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CategoriesBloc(categoryRepos: CategoryServices()),
+      create: (context) => CategoriesBloc(categoryRepos: CategoryServices(isVideo: true)),
       child: VideoCategoryTab(),
     );
   }

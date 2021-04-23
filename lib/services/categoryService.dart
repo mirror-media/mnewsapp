@@ -12,6 +12,9 @@ abstract class CategoryRepos {
 }
 
 class CategoryServices implements CategoryRepos{
+  final bool isVideo;
+  CategoryServices({this.isVideo = false});
+
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
@@ -55,7 +58,8 @@ class CategoryServices implements CategoryRepos{
     /// do not display home slug in app
     categoryList.removeWhere((category) => category.slug == 'home');
 
-    String jsonFixed = await rootBundle.loadString(menuJson);
+    String menuJsonPath = isVideo ? videoMenuJson : menuJson;
+    String jsonFixed = await rootBundle.loadString(menuJsonPath);
     final fixedMenu = json.decode(jsonFixed);
     CategoryList fixedCategoryList = CategoryList.fromJson(fixedMenu);
     fixedCategoryList.addAll(categoryList);

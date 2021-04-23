@@ -27,6 +27,10 @@ class Category {
     return id == 'latest';
   }
 
+  bool isFeaturedCategory() {
+    return id == 'featured';
+  }
+
   static bool checkIsLatestCategoryBySlug(String slug) {
     return slug == 'latest';
   }
