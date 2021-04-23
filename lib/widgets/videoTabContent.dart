@@ -11,10 +11,10 @@ import 'package:tv/widgets/videoTabStoryList.dart';
 
 class VideoTabContent extends StatefulWidget {
   final String categorySlug;
-  final bool needCarousel;
+  final bool isFeaturedSlug;
   VideoTabContent({
     @required this.categorySlug,
-    this.needCarousel = false,
+    this.isFeaturedSlug = false,
   });
 
   @override
@@ -26,13 +26,13 @@ class _VideoTabContentState extends State<VideoTabContent> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        if(widget.needCarousel)
+        if(widget.isFeaturedSlug)
           BlocProvider(
             create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
             child: BuildEditorChoiceStoryList(editorChoiceEvent: EditorChoiceEvents.fetchVideoEditorChoiceList),
           ),
         
-        if(!widget.needCarousel)
+        if(!widget.isFeaturedSlug)
           BlocProvider(
             create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices(postStyle: 'videoNews')),
             child: BuildVideoTabStoryList(
