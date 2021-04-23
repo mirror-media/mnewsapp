@@ -1,0 +1,14 @@
+[
+    {
+        "id": "featured",
+        "name": "精選",
+        "slug": "latest",
+        "sortOrder": 0
+    },
+    {
+        "id": "popular",
+        "name": "熱門",
+        "slug": "popular",
+        "sortOrder": 1
+    }
+]
