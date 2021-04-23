@@ -15,31 +15,33 @@ class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
 
   @override
   Stream<EditorChoiceState> mapEventToState(EditorChoiceEvents event) async* {
-    switch (event) {
-      case EditorChoiceEvents.fetchEditorChoiceList:
-        yield EditorChoiceLoading();
-        try {
+    yield EditorChoiceLoading();
+    try {
+      switch (event) {
+        case EditorChoiceEvents.fetchEditorChoiceList:
           editorChoiceList = await editorChoiceRepos.fetchEditorChoiceList();
-          yield EditorChoiceLoaded(editorChoiceList: editorChoiceList);
-        } on SocketException {
-          yield EditorChoiceError(
-            error: NoInternetException('No Internet'),
-          );
-        } on HttpException {
-          yield EditorChoiceError(
-            error: NoServiceFoundException('No Service Found'),
-          );
-        } on FormatException {
-          yield EditorChoiceError(
-            error: InvalidFormatException('Invalid Response format'),
-          );
-        } catch (e) {
-          yield EditorChoiceError(
-            error: UnknownException(e.toString()),
-          );
-        }
-
-        break;
+          break;
+        case EditorChoiceEvents.fetchVideoEditorChoiceList: 
+          editorChoiceList = await editorChoiceRepos.fetchVideoEditorChoiceList();
+          break;
+      }
+      yield EditorChoiceLoaded(editorChoiceList: editorChoiceList);
+    } on SocketException {
+      yield EditorChoiceError(
+        error: NoInternetException('No Internet'),
+      );
+    } on HttpException {
+      yield EditorChoiceError(
+        error: NoServiceFoundException('No Service Found'),
+      );
+    } on FormatException {
+      yield EditorChoiceError(
+        error: InvalidFormatException('Invalid Response format'),
+      );
+    } catch (e) {
+      yield EditorChoiceError(
+        error: UnknownException(e.toString()),
+      );
     }
   }
 }
