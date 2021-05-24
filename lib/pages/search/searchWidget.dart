@@ -8,6 +8,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/pages/search/searchNoResultWidget.dart';
 
 class SearchWidget extends StatefulWidget {
   @override
@@ -62,7 +63,13 @@ class _SearchWidgetState extends State<SearchWidget> {
             if (state is SearchLoaded) {
               StoryListItemList storyListItemList = state.storyListItemList;
               
-              return Expanded(child: _buildSearchList(context, storyListItemList));
+              return Expanded(
+                child: _buildSearchList(
+                  context, 
+                  storyListItemList,
+                  _controller.text
+                ),
+              );
             }
 
             // state is loading, or other 
@@ -132,9 +139,13 @@ class _SearchWidgetState extends State<SearchWidget> {
     );
   }
 
-  Widget _buildSearchList(BuildContext context, StoryListItemList storyListItemList) {
+  Widget _buildSearchList(
+    BuildContext context, 
+    StoryListItemList storyListItemList,
+    String keyword
+  ) {
     if(storyListItemList.length == 0) {
-      return Center(child: Text('no result'));
+      return SearchNoResultWidget(keyword: keyword,);
     }
 
     return ListView.separated(
