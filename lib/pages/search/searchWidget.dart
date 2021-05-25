@@ -17,14 +17,14 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  TextEditingController _controller;
+  TextEditingController _textController;
   ScrollController _listviewController;
   bool _isLoading;
   bool _isLoadingMax;
 
   @override
   void initState() {
-    _controller = TextEditingController();
+    _textController = TextEditingController();
     _listviewController = ScrollController();
     _isLoading = true;
     _isLoadingMax = false;
@@ -34,7 +34,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           _listviewController.position.pixels == _listviewController.position.maxScrollExtent &&
           !_isLoading
         ) {
-          _searchNextPageByKeyword(_controller.text);
+          _searchNextPageByKeyword(_textController.text);
         }
       }
     );
@@ -50,13 +50,13 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   _clearKeyword() {
-    _controller.clear();
+    _textController.clear();
     context.read<SearchBloc>().add(ClearKeyword());
   }
 
   @override
   void dispose() {
-    _controller.dispose();
+    _textController.dispose();
     _listviewController.dispose();
     super.dispose();
   }
@@ -83,7 +83,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               final error = state.error;
               print('SearchError: ${error.message}');
               if( error is NoInternetException) {
-                return Expanded(child: error.renderWidget(onPressed: () => _searchNewsStoryByKeyword(_controller.text)));
+                return Expanded(child: error.renderWidget(onPressed: () => _searchNewsStoryByKeyword(_textController.text)));
               } 
               
               return Expanded(child: error.renderWidget());
@@ -102,7 +102,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 child: _buildSearchList(
                   context, 
                   storyListItemList,
-                  _controller.text
+                  _textController.text
                 ),
               );
             }
@@ -115,7 +115,7 @@ class _SearchWidgetState extends State<SearchWidget> {
                 child: _buildSearchList(
                   context, 
                   storyListItemList,
-                  _controller.text,
+                  _textController.text,
                   isLoadingMore: true
                 ),
               );
@@ -134,7 +134,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       child: Theme(
         data: Theme.of(context).copyWith(primaryColor: Colors.grey,),
         child: TextField(
-          controller: _controller,
+          controller: _textController,
           style: TextStyle(
             color: Colors.black,
             fontSize: 16,
@@ -167,7 +167,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
           ),
           onSubmitted: (value) {
-            _searchNewsStoryByKeyword(_controller.text);
+            _searchNewsStoryByKeyword(_textController.text);
           }
         ),
       ),
@@ -182,7 +182,7 @@ class _SearchWidgetState extends State<SearchWidget> {
         color: Colors.grey,
       ),
       onPressed: () {
-        _searchNewsStoryByKeyword(_controller.text);
+        _searchNewsStoryByKeyword(_textController.text);
       },
     );
   }
