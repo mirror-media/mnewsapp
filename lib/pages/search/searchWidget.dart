@@ -49,6 +49,18 @@ class _SearchWidgetState extends State<SearchWidget> {
     context.read<SearchBloc>().add(SearchNextPageByKeyword(keyword));
   }
 
+  _clearKeyword() {
+    _controller.clear();
+    context.read<SearchBloc>().add(ClearKeyword());
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _listviewController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
@@ -145,7 +157,7 @@ class _SearchWidgetState extends State<SearchWidget> {
               ),
             ),
             suffixIcon: IconButton(
-              onPressed: () => _controller.clear(),
+              onPressed: () => _clearKeyword(),
               icon: Icon(Icons.clear),
             ),
             hintText: "請輸入關鍵字",
