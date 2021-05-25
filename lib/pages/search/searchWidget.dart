@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,15 +18,35 @@ class SearchWidget extends StatefulWidget {
 
 class _SearchWidgetState extends State<SearchWidget> {
   TextEditingController _controller;
+  ScrollController _listviewController;
+  bool _isLoading;
+  bool _isLoadingMax;
 
   @override
   void initState() {
     _controller = TextEditingController();
+    _listviewController = ScrollController();
+    _isLoading = true;
+    _isLoadingMax = false;
+    _listviewController.addListener(
+      () { 
+        if (!_isLoadingMax &&
+          _listviewController.position.pixels == _listviewController.position.maxScrollExtent &&
+          !_isLoading
+        ) {
+          _searchNextPageByKeyword(_controller.text);
+        }
+      }
+    );
     super.initState();
   }
 
   _searchNewsStoryByKeyword(String keyword) async {
     context.read<SearchBloc>().add(SearchNewsStoryByKeyword(keyword));
+  }
+
+  _searchNextPageByKeyword(String keyword) async {
+    context.read<SearchBloc>().add(SearchNextPageByKeyword(keyword));
   }
 
   @override
@@ -61,7 +82,9 @@ class _SearchWidgetState extends State<SearchWidget> {
             }
 
             if (state is SearchLoaded) {
+              _isLoading = false;
               StoryListItemList storyListItemList = state.storyListItemList;
+              _isLoadingMax = storyListItemList.length == storyListItemList.allStoryCount;
               
               return Expanded(
                 child: _buildSearchList(
@@ -72,6 +95,19 @@ class _SearchWidgetState extends State<SearchWidget> {
               );
             }
 
+            if (state is SearchLoadingMore) {
+              _isLoading = true;
+              StoryListItemList storyListItemList = state.storyListItemList;
+              
+              return Expanded(
+                child: _buildSearchList(
+                  context, 
+                  storyListItemList,
+                  _controller.text,
+                  isLoadingMore: true
+                ),
+              );
+            }
             // state is loading, or other 
             return _loadingWidget();
           }
@@ -142,16 +178,32 @@ class _SearchWidgetState extends State<SearchWidget> {
   Widget _buildSearchList(
     BuildContext context, 
     StoryListItemList storyListItemList,
-    String keyword
+    String keyword,
+    {
+      bool isLoadingMore = false,
+    }
   ) {
     if(storyListItemList.length == 0) {
       return SearchNoResultWidget(keyword: keyword,);
     }
 
     return ListView.separated(
+      controller: _listviewController,
       separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
       itemCount: storyListItemList.length,
       itemBuilder: (context, index) {
+        if(index == storyListItemList.length -1 && isLoadingMore) {
+          return Column(
+            children: [
+              _buildListItem(context, storyListItemList[index]),
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child:  Center(child: CupertinoActivityIndicator()),
+              ),
+            ]
+          );
+        }
+
         return _buildListItem(context, storyListItemList[index]);
       },
     );
