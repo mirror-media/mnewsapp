@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/blocs/search/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/pages/search/searchWidget.dart';
+import 'package:tv/services/searchService.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -11,7 +15,10 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: Center(child: Text('搜尋')),
+      body: BlocProvider(
+        create: (context) => SearchBloc(searchRepos: SearchServices()),
+        child: SearchWidget(),
+      ),
     );
   }
 
