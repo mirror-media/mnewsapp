@@ -119,3 +119,14 @@ class SearchNextPageByKeyword extends SearchEvents {
     }
   }
 }
+
+class ClearKeyword extends SearchEvents {
+  @override
+  String toString() => 'ClearKeyword';
+
+  @override
+  Stream<SearchState> run(SearchRepos searchRepos) async*{
+    print(this.toString());
+    yield SearchInitState();
+  }
+}
