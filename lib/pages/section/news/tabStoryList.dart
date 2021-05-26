@@ -10,19 +10,19 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 
-class BuildTabStoryList extends StatefulWidget {
+class TabStoryList extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
-  BuildTabStoryList({
+  TabStoryList({
     @required this.categorySlug,
     this.needCarousel = false
   });
 
   @override
-  _BuildTabStoryListState createState() => _BuildTabStoryListState();
+  _TabStoryListState createState() => _TabStoryListState();
 }
 
-class _BuildTabStoryListState extends State<BuildTabStoryList> {
+class _TabStoryListState extends State<TabStoryList> {
   @override
   void initState() {
     if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {

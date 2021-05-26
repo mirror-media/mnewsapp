@@ -41,7 +41,7 @@ class _TabContentState extends State<TabContent> {
           create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
           child: widget.categorySlug == 'popular'
           ? PopularTabStoryList()
-          : BuildTabStoryList(
+          : TabStoryList(
               categorySlug: widget.categorySlug,
               needCarousel: widget.needCarousel,
             ),
