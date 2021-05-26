@@ -78,3 +78,18 @@ class FetchNextPageByCategorySlug extends TabStoryListEvents {
     yield TabStoryListLoaded(storyListItemList: storyListItemList);
   }
 }
+
+class FetchPopularStoryList extends TabStoryListEvents {
+  FetchPopularStoryList();
+
+  @override
+  String toString() => 'FetchPopularStoryList';
+
+  @override
+  Stream<TabStoryListState> run(TabStoryListRepos tabStoryListRepos) async*{
+    print(this.toString());
+    yield TabStoryListLoading();
+    storyListItemList = await tabStoryListRepos.fetchPopularStoryList();
+    yield TabStoryListLoaded(storyListItemList: storyListItemList);
+  }
+}
