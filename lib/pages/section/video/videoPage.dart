@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/services/categoryService.dart';
-import 'package:tv/widgets/videoCategoryTab.dart';
+import 'package:tv/pages/section/video/videoCategoryTab.dart';
 
 class VideoPage extends StatelessWidget {
   @override

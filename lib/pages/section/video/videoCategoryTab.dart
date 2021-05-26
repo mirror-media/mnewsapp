@@ -10,7 +10,7 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/widgets/newsMarqueeWidget.dart';
-import 'package:tv/widgets/videoTabContent.dart';
+import 'package:tv/pages/section/video/videoTabContent.dart';
 
 class VideoCategoryTab extends StatefulWidget {
   @override
