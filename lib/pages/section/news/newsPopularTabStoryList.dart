@@ -9,12 +9,12 @@ import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 
-class PopularTabStoryList extends StatefulWidget {
+class NewsPopularTabStoryList extends StatefulWidget {
   @override
-  _PopularTabStoryListState createState() => _PopularTabStoryListState();
+  _NewsPopularTabStoryListState createState() => _NewsPopularTabStoryListState();
 }
 
-class _PopularTabStoryListState extends State<PopularTabStoryList> {
+class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
   @override
   void initState() {
     _fetchPopularStoryList();
@@ -31,7 +31,7 @@ class _PopularTabStoryListState extends State<PopularTabStoryList> {
       builder: (BuildContext context, TabStoryListState state) {
         if (state is TabStoryListError) {
           final error = state.error;
-          print('PopularTabStoryListError: ${error.message}');
+          print('NewsPopularTabStoryListError: ${error.message}');
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
