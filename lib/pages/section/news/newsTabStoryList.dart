@@ -9,6 +9,7 @@ import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 
 class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -135,7 +136,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
-                child: _buildListItem(context, storyListItemList[index]),
+                child: NewsStoryListItem(storyListItem: storyListItemList[index]),
               ),
               if(index == storyListItemList.length - 1 && isLoading)
                 _loadMoreWidget(),
@@ -186,59 +187,6 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
             ),
           ),
         ],
-      ),
-      onTap: () {
-        RouteGenerator.navigateToStory(context, storyListItem.slug);
-      }
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, StoryListItem storyListItem) {
-    var width = MediaQuery.of(context).size.width;
-    double imageSize = 33.3 * (width - 32) / 100;
-
-    return InkWell(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            CachedNetworkImage(
-              height: imageSize,
-              width: imageSize,
-              imageUrl: storyListItem.photoUrl,
-              placeholder: (context, url) => Container(
-                height: imageSize,
-                width: imageSize,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: imageSize,
-                width: imageSize,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
-            SizedBox(
-              width: 16,
-            ),
-            Expanded(
-              child: RichText(
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                text: TextSpan(
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 17.0,
-                    height: 1.5,
-                  ),
-                  text: storyListItem.name,
-                ),
-              ),
-            ),
-          ],
-        ),
       ),
       onTap: () {
         RouteGenerator.navigateToStory(context, storyListItem.slug);
