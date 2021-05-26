@@ -8,7 +8,7 @@ import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/popularTabStoryList.dart';
-import 'package:tv/pages/section/news/tabStoryList.dart';
+import 'package:tv/pages/section/news/newsTabStoryList.dart';
 
 class NewsTabContent extends StatefulWidget {
   final String categorySlug;
@@ -41,7 +41,7 @@ class _NewsTabContentState extends State<NewsTabContent> {
           create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
           child: widget.categorySlug == 'popular'
           ? PopularTabStoryList()
-          : TabStoryList(
+          : NewsTabStoryList(
               categorySlug: widget.categorySlug,
               needCarousel: widget.needCarousel,
             ),
