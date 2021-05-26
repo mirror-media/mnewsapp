@@ -12,12 +12,12 @@ import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/widgets/newsMarqueeWidget.dart';
 import 'package:tv/pages/section/news/tabContent.dart';
 
-class CategoryTab extends StatefulWidget {
+class NewsCategoryTab extends StatefulWidget {
   @override
-  _CategoryTabState createState() => _CategoryTabState();
+  _NewsCategoryTabState createState() => _NewsCategoryTabState();
 }
 
-class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin{
+class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderStateMixin{
   /// tab controller
   int _initialTabIndex;
   TabController _tabController;
