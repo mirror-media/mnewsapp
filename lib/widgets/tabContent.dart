@@ -7,6 +7,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceCarousel.dart';
+import 'package:tv/widgets/popularTabStoryList.dart';
 import 'package:tv/widgets/tabStoryList.dart';
 
 class TabContent extends StatefulWidget {
@@ -38,10 +39,12 @@ class _TabContentState extends State<TabContent> {
           ),
         BlocProvider(
           create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
-          child: BuildTabStoryList(
-            categorySlug: widget.categorySlug,
-            needCarousel: widget.needCarousel,
-          ),
+          child: widget.categorySlug == 'popular'
+          ? PopularTabStoryList()
+          : BuildTabStoryList(
+              categorySlug: widget.categorySlug,
+              needCarousel: widget.needCarousel,
+            ),
         ),
       ],
     );

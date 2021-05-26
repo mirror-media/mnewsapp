@@ -10,6 +10,7 @@ abstract class TabStoryListRepos {
   Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20});
   Future<StoryListItemList> fetchStoryListByCategorySlug(String slug);
   Future<StoryListItemList> fetchNextPageByCategorySlug(String slug, {int loadingMorePage = 20});
+  Future<StoryListItemList> fetchPopularStoryList();
 }
 
 class TabStoryListServices implements TabStoryListRepos{
@@ -140,5 +141,19 @@ class TabStoryListServices implements TabStoryListRepos{
     skip = skip + first;
     first = loadingMorePage;
     return await fetchStoryListByCategorySlug(slug);
+  }
+
+  @override
+  Future<StoryListItemList> fetchPopularStoryList() async{
+    String jsonUrl;
+    if(postStyle == 'videoNews') {
+      jsonUrl = videoPopularListUrl;
+    } else {
+      jsonUrl = newsPopularListUrl;
+    }
+
+    final jsonResponse = await _helper.getByUrl(jsonUrl);
+    StoryListItemList storyListItemList = StoryListItemList.fromJson(jsonResponse['report']);
+    return storyListItemList;
   }
 }
