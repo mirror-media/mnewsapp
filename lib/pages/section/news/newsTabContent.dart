@@ -10,19 +10,19 @@ import 'package:tv/widgets/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/popularTabStoryList.dart';
 import 'package:tv/pages/section/news/tabStoryList.dart';
 
-class TabContent extends StatefulWidget {
+class NewsTabContent extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
-  TabContent({
+  NewsTabContent({
     @required this.categorySlug,
     this.needCarousel = false,
   });
 
   @override
-  _TabContentState createState() => _TabContentState();
+  _NewsTabContentState createState() => _NewsTabContentState();
 }
 
-class _TabContentState extends State<TabContent> {
+class _NewsTabContentState extends State<NewsTabContent> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
