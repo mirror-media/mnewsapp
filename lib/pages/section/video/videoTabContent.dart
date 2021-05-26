@@ -7,8 +7,8 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceStoryList.dart';
-import 'package:tv/widgets/popularVideoTabStoryList.dart';
-import 'package:tv/widgets/videoTabStoryList.dart';
+import 'package:tv/pages/section/video/popularVideoTabStoryList.dart';
+import 'package:tv/pages/section/video/videoTabStoryList.dart';
 
 class VideoTabContent extends StatefulWidget {
   final String categorySlug;
