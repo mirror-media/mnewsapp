@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
-import 'package:tv/widgets/liveSite.dart';
+import 'package:tv/pages/section/live/liveSite.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class LivePage extends StatelessWidget {
