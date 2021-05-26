@@ -7,6 +7,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceStoryList.dart';
+import 'package:tv/widgets/popularVideoTabStoryList.dart';
 import 'package:tv/widgets/videoTabStoryList.dart';
 
 class VideoTabContent extends StatefulWidget {
@@ -35,7 +36,9 @@ class _VideoTabContentState extends State<VideoTabContent> {
         if(!widget.isFeaturedSlug)
           BlocProvider(
             create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices(postStyle: 'videoNews')),
-            child: BuildVideoTabStoryList(
+            child: widget.categorySlug == 'popular'
+            ? PupularVideoTabStoryList()
+            : BuildVideoTabStoryList(
               categorySlug: widget.categorySlug,
             ),
           ),
