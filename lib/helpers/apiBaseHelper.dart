@@ -64,18 +64,25 @@ dynamic returnResponse(http.Response response) {
 
       // properties responded by member graphql
       bool hasData = responseJson.containsKey('data') || 
-        responseJson.containsKey('items');
+        responseJson.containsKey('items') ||
+        // search response
+        (responseJson.containsKey('body') && responseJson['body'] != null && responseJson['body'].containsKey('hits')) ||
+        // popular json
+        responseJson.containsKey('report');
+      
       if(!hasData) {
         throw FormatException(response.body.toString());
       }
 
       return responseJson;
     case 400:
+    case 404:
       throw BadRequestException(response.body.toString());
     case 401:
     case 403:
       throw UnauthorisedException(response.body.toString());
     case 500:
+    case 502:
       throw InternalServerErrorException(response.body.toString());
     default:
       throw FetchDataException(
