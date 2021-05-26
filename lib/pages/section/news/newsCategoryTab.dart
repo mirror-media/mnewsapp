@@ -10,14 +10,14 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/widgets/newsMarqueeWidget.dart';
-import 'package:tv/widgets/tabContent.dart';
+import 'package:tv/pages/section/news/newsTabContent.dart';
 
-class CategoryTab extends StatefulWidget {
+class NewsCategoryTab extends StatefulWidget {
   @override
-  _CategoryTabState createState() => _CategoryTabState();
+  _NewsCategoryTabState createState() => _NewsCategoryTabState();
 }
 
-class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin{
+class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderStateMixin{
   /// tab controller
   int _initialTabIndex;
   TabController _tabController;
@@ -58,7 +58,7 @@ class _CategoryTabState extends State<CategoryTab> with TickerProviderStateMixin
       );
 
       _tabWidgets.add(
-        TabContent(
+        NewsTabContent(
           categorySlug: category.slug,
           needCarousel: categoryList[i].isLatestCategory(),
         ),

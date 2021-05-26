@@ -6,23 +6,47 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 
-class PopularTabStoryList extends StatefulWidget {
+class NewsTabStoryList extends StatefulWidget {
+  final String categorySlug;
+  final bool needCarousel;
+  NewsTabStoryList({
+    @required this.categorySlug,
+    this.needCarousel = false
+  });
+
   @override
-  _PopularTabStoryListState createState() => _PopularTabStoryListState();
+  _NewsTabStoryListState createState() => _NewsTabStoryListState();
 }
 
-class _PopularTabStoryListState extends State<PopularTabStoryList> {
+class _NewsTabStoryListState extends State<NewsTabStoryList> {
   @override
   void initState() {
-    _fetchPopularStoryList();
+    if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+      _fetchStoryList();
+    } else {
+      _fetchStoryListByCategorySlug();
+    }
     super.initState();
   }
-  
-  _fetchPopularStoryList() async {
-    context.read<TabStoryListBloc>().add(FetchPopularStoryList());
+
+  _fetchStoryList() async {
+    context.read<TabStoryListBloc>().add(FetchStoryList());
+  }
+
+  _fetchNextPage() async {
+    context.read<TabStoryListBloc>().add(FetchNextPage());
+  }
+
+  _fetchStoryListByCategorySlug() async {
+    context.read<TabStoryListBloc>().add(FetchStoryListByCategorySlug(widget.categorySlug));
+  }
+
+  _fetchNextPageByCategorySlug() async {
+    context.read<TabStoryListBloc>().add(FetchNextPageByCategorySlug(widget.categorySlug));
   }
 
   @override
@@ -31,7 +55,7 @@ class _PopularTabStoryListState extends State<PopularTabStoryList> {
       builder: (BuildContext context, TabStoryListState state) {
         if (state is TabStoryListError) {
           final error = state.error;
-          print('PopularTabStoryListError: ${error.message}');
+          print('TabStoryListError: ${error.message}');
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
@@ -57,6 +81,16 @@ class _PopularTabStoryListState extends State<PopularTabStoryList> {
 
           return _tabStoryList(
             storyListItemList: storyListItemList,
+            needCarousel: widget.needCarousel,
+          );
+        }
+
+        if (state is TabStoryListLoadingMore) {
+          StoryListItemList storyListItemList = state.storyListItemList;
+          return _tabStoryList(
+            storyListItemList: storyListItemList, 
+            needCarousel: widget.needCarousel,
+            isLoading: true
           );
         }
 
@@ -75,20 +109,37 @@ class _PopularTabStoryListState extends State<PopularTabStoryList> {
 
   Widget _tabStoryList({
     StoryListItemList storyListItemList,
+    bool needCarousel = false, bool isLoading = false
   }) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
-          if (index == 0) {
+          if(!isLoading && 
+          index == storyListItemList.length - 5 && 
+          storyListItemList.length < storyListItemList.allStoryCount) {
+            if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+              _fetchNextPage();
+            } else {
+              _fetchNextPageByCategorySlug();
+            }
+          }
+
+          if (index == 0 && !needCarousel) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: _buildTheFirstItem(context, storyListItemList[index]),
             );
           }
 
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: _buildListItem(context, storyListItemList[index]),
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: _buildListItem(context, storyListItemList[index]),
+              ),
+              if(index == storyListItemList.length - 1 && isLoading)
+                _loadMoreWidget(),
+            ],
           );
         },
         childCount: storyListItemList.length
@@ -192,6 +243,15 @@ class _PopularTabStoryListState extends State<PopularTabStoryList> {
       onTap: () {
         RouteGenerator.navigateToStory(context, storyListItem.slug);
       }
+    );
+  }
+
+  Widget _loadMoreWidget() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Center(
+        child: CupertinoActivityIndicator()
+      ),
     );
   }
 }

@@ -7,22 +7,22 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/widgets/editorChoiceCarousel.dart';
-import 'package:tv/widgets/popularTabStoryList.dart';
-import 'package:tv/widgets/tabStoryList.dart';
+import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
+import 'package:tv/pages/section/news/newsTabStoryList.dart';
 
-class TabContent extends StatefulWidget {
+class NewsTabContent extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
-  TabContent({
+  NewsTabContent({
     @required this.categorySlug,
     this.needCarousel = false,
   });
 
   @override
-  _TabContentState createState() => _TabContentState();
+  _NewsTabContentState createState() => _NewsTabContentState();
 }
 
-class _TabContentState extends State<TabContent> {
+class _NewsTabContentState extends State<NewsTabContent> {
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -40,8 +40,8 @@ class _TabContentState extends State<TabContent> {
         BlocProvider(
           create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
           child: widget.categorySlug == 'popular'
-          ? PopularTabStoryList()
-          : BuildTabStoryList(
+          ? NewsPopularTabStoryList()
+          : NewsTabStoryList(
               categorySlug: widget.categorySlug,
               needCarousel: widget.needCarousel,
             ),
