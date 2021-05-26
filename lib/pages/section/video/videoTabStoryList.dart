@@ -9,17 +9,17 @@ import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 
-class BuildVideoTabStoryList extends StatefulWidget {
+class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
-  BuildVideoTabStoryList({
+  VideoTabStoryList({
     @required this.categorySlug,
   });
 
   @override
-  _BuildVideoTabStoryListState createState() => _BuildVideoTabStoryListState();
+  _VideoTabStoryListState createState() => _VideoTabStoryListState();
 }
 
-class _BuildVideoTabStoryListState extends State<BuildVideoTabStoryList> {
+class _VideoTabStoryListState extends State<VideoTabStoryList> {
   @override
   void initState() {
     _fetchStoryListByCategorySlug();

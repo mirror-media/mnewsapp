@@ -38,7 +38,7 @@ class _VideoTabContentState extends State<VideoTabContent> {
             create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices(postStyle: 'videoNews')),
             child: widget.categorySlug == 'popular'
             ? PupularVideoTabStoryList()
-            : BuildVideoTabStoryList(
+            : VideoTabStoryList(
               categorySlug: widget.categorySlug,
             ),
           ),
