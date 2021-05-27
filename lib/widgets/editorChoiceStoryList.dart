@@ -8,6 +8,7 @@ import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class BuildEditorChoiceStoryList extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
@@ -53,7 +54,7 @@ class _BuildEditorChoiceStoryListState extends State<BuildEditorChoiceStoryList>
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  return Container();
+                  return TabContentNoResultWidget();
                 },
                 childCount: 1
               ),

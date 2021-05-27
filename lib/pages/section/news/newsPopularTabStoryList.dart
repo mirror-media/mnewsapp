@@ -7,6 +7,7 @@ import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
   @override
@@ -47,7 +48,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  return Container();
+                  return TabContentNoResultWidget();
                 },
                 childCount: 1,
               ),
