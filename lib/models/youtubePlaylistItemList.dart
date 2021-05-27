@@ -19,4 +19,18 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
 
     return youtubePlaylistItems;
   }
+
+  factory YoutubePlaylistItemList.fromPromotionVideosJson(List<dynamic> parsedJson) {
+    if (parsedJson == null) {
+      return null;
+    }
+
+    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList('');
+    List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromPromotionVideosJson(i)).toList();
+    parseList.forEach((element) {
+      youtubePlaylistItems.add(element);
+    });
+
+    return youtubePlaylistItems;
+  }
 }

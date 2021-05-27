@@ -1,4 +1,5 @@
 import 'package:tv/helpers/apiConstants.dart';
+import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class YoutubePlaylistItem {
   final String youtubeVideoId;
@@ -27,6 +28,20 @@ class YoutubePlaylistItem {
       name: json['snippet']['title'],
       photoUrl: photoUrl,
       publishedAt: json['snippet']['publishedAt'],
+    );
+  }
+
+  factory YoutubePlaylistItem.fromPromotionVideosJson(Map<String, dynamic> json) {
+    String ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
+
+    String photoUrl = mirrorNewsDefaultImageUrl;
+    photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
+
+    return YoutubePlaylistItem(
+      youtubeVideoId: ytId,
+      name: '',
+      photoUrl: photoUrl,
+      publishedAt: '',
     );
   }
 } 
