@@ -4,7 +4,7 @@ import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/anchorpersonStoryPage.dart';
-import 'package:tv/pages/routeErrorPage.dart';
+import 'package:tv/pages/error/routeErrorPage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/settingPage.dart';
 import 'package:tv/pages/showStoryPage.dart';

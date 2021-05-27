@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/widgets/error/mNewsErrorWidget.dart';
+import 'package:tv/pages/error/mNewsErrorWidget.dart';
 
 class NoSignalWidget extends StatelessWidget {
   final VoidCallback onPressed;
