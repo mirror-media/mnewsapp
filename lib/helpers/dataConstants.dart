@@ -9,6 +9,7 @@ const youtubeLink = 'https://www.youtube.com/';
 const String menuJson = 'assets/json/menu.json';
 const String videoMenuJson = 'assets/json/videoMenu.json';
 const String defaultNotificationListJson = 'assets/json/defaultNotificationList.json';
+const String tabContentNoResultPng = 'assets/image/tabContentNoResult.png';
 const String error400Png = 'assets/image/error404.png';
 const String error500Png = 'assets/image/error500.png';
 const String noSignalPng = 'assets/image/noSignal.png';

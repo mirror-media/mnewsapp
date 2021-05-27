@@ -75,6 +75,7 @@ flutter:
     - assets/json/menu.json
     - assets/json/videoMenu.json
     - assets/json/defaultNotificationList.json
+    - assets/image/tabContentNoResult.png
     - assets/image/error404.png
     - assets/image/error500.png
     - assets/image/noSignal.png
