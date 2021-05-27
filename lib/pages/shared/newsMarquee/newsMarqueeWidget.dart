@@ -7,7 +7,7 @@ import 'package:tv/blocs/newsMarquee/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItemList.dart';
-import 'package:tv/widgets/marqueeWidget.dart';
+import 'package:tv/pages/shared/newsMarquee/marqueeWidget.dart';
 
 class BuildNewsMarquee extends StatefulWidget {
   @override
