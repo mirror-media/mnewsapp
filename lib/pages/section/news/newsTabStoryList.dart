@@ -8,6 +8,7 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -71,7 +72,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  return Container();
+                  return TabContentNoResultWidget();
                 },
                 childCount: 1,
               ),

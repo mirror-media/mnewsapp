@@ -6,6 +6,7 @@ import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class PupularVideoTabStoryList extends StatefulWidget {
   @override
@@ -46,7 +47,7 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
                 (BuildContext context, int index) {
-                  return Container();
+                  return TabContentNoResultWidget();
                 },
                 childCount: 1,
               ),
