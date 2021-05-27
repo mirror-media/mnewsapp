@@ -6,7 +6,7 @@ import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
-import 'package:tv/widgets/editorChoiceCarousel.dart';
+import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
 import 'package:tv/pages/section/news/newsTabStoryList.dart';
 

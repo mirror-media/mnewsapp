@@ -5,7 +5,7 @@ import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/models/storyListItemList.dart';
-import 'package:tv/widgets/carouselDisplayWidget.dart';
+import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
