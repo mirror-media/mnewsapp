@@ -43,9 +43,12 @@ class YoutubeViewer extends StatefulWidget {
   _YoutubeViewerState createState() => _YoutubeViewerState();
 }
 
-class _YoutubeViewerState extends State<YoutubeViewer> {
+class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
   YoutubePlayerController _controller;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -96,6 +99,7 @@ class _YoutubeViewerState extends State<YoutubeViewer> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final player = YoutubePlayerIFrame();
     if(widget.isLive && Platform.isAndroid) {
       return Stack(
