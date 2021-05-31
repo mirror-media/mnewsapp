@@ -33,27 +33,21 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
       body: ListView(
         controller: _listviewController,
         children: [
-          // it's a trick, 
-          // use column to avoid dispose YoutubeViewer widget
-          Column(
-            children: [
-              YoutubeViewer(
-                widget.youtubePlaylistItem.youtubeVideoId
-              ),
-              SizedBox(height: 12),
-              Padding(
-                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: _buildTitleAndPublishedDate(),
-              ),
-              SizedBox(height: 48),
-              Padding(
-                padding: const EdgeInsets.only(left: 24.0, right: 24.0),
-                child: _buildMoreShowContent(
-                  title: '更多節目內容',
-                  youtubePlayListId: widget.youtubePlayListId
-                ),
-              ),
-            ],
+          YoutubeViewer(
+            widget.youtubePlaylistItem.youtubeVideoId
+          ),
+          SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _buildTitleAndPublishedDate(),
+          ),
+          SizedBox(height: 48),
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: _buildMoreShowContent(
+              title: '更多節目內容',
+              youtubePlayListId: widget.youtubePlayListId
+            ),
           ),
         ],
       ),

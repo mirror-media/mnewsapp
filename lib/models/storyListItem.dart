@@ -16,6 +16,10 @@ class StoryListItem {
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
+    if(json.containsKey('_source') && json['_source'] != null) {
+      json = json['_source'];
+    }
+
     String photoUrl = mirrorNewsDefaultImageUrl;
     if (json['heroImage'] != null && 
       json['heroImage']['urlMobileSized'] != null) {
