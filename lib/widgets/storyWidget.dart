@@ -188,7 +188,8 @@ class _StoryWidgetState extends State<StoryWidget> {
               story.categoryList[0].name,
               style: TextStyle(
                 fontSize: 15,
-                color: appBarColor,
+                color: storyWidgetColor,
+                fontWeight: FontWeight.w500,
               ),
             ),
           Text(
@@ -209,7 +210,11 @@ class _StoryWidgetState extends State<StoryWidget> {
       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
       child: Text(
         title,
-        style: TextStyle(fontFamily: 'PingFang TC', fontSize: 26),
+        style: TextStyle(
+          fontFamily: 'PingFang TC', 
+          fontSize: 26,
+          fontWeight: FontWeight.w500,
+        ),
       ),
     );
   }
