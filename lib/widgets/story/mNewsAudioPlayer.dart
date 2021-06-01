@@ -25,9 +25,9 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   Color _audioColor = Color(0xff014DB8);
   AudioPlayer _audioPlayer;
   bool get _checkIsPlaying => !(_audioPlayer.state == null ||
-      _audioPlayer.state == AudioPlayerState.COMPLETED ||
-      _audioPlayer.state == AudioPlayerState.STOPPED ||
-      _audioPlayer.state == AudioPlayerState.PAUSED);
+      _audioPlayer.state == PlayerState.COMPLETED ||
+      _audioPlayer.state == PlayerState.STOPPED ||
+      _audioPlayer.state == PlayerState.PAUSED);
   int _duration = 0;
 
   @override
@@ -67,12 +67,12 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
 
   _playAndPause() {
     if (_audioPlayer.state == null ||
-        _audioPlayer.state == AudioPlayerState.COMPLETED ||
-        _audioPlayer.state == AudioPlayerState.STOPPED) {
+        _audioPlayer.state == PlayerState.COMPLETED ||
+        _audioPlayer.state == PlayerState.STOPPED) {
       _start();
-    } else if (_audioPlayer.state == AudioPlayerState.PLAYING) {
+    } else if (_audioPlayer.state == PlayerState.PLAYING) {
       _pause();
-    } else if (_audioPlayer.state == AudioPlayerState.PAUSED) {
+    } else if (_audioPlayer.state == PlayerState.PAUSED) {
       _play();
     }
   }
@@ -86,9 +86,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   }
 
   @override
-  Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    
+  Widget build(BuildContext context) {    
     super.build(context);
     return Card(
       elevation: 10,
@@ -109,7 +107,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
             SizedBox(height: 8,),
             Row(
               children: [
-                StreamBuilder<AudioPlayerState>(
+                StreamBuilder<PlayerState>(
                     stream: _audioPlayer.onPlayerStateChanged,
                     builder: (context, snapshot) {
                       return InkWell(
