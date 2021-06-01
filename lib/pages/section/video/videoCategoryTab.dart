@@ -29,8 +29,8 @@ class _VideoCategoryTabState extends State<VideoCategoryTab> with TickerProvider
   void initState() {
     /// tab controller
     _initialTabIndex = 0;
-    _tabs = List<Tab>();
-    _tabWidgets = List<Widget>();
+    _tabs = List.empty(growable: true);
+    _tabWidgets = List.empty(growable: true);
 
     _loadCategoryList();
     super.initState();

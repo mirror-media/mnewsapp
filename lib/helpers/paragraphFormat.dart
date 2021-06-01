@@ -173,7 +173,7 @@ class ParagraphFormat {
   }
 
   List<String> _convertStrangedataList(ContentList contentList) {
-    List<String> resultList = List<String>();
+    List<String> resultList = List.empty(growable: true);
     if (contentList.length == 1 && contentList[0].data[0] == '[') {
       // api data is strange [[...]]
       String dataString =

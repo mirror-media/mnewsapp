@@ -221,7 +221,7 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   Widget _buildAuthors(Story story) {
     Color authorColor = Color(0xff757575);
-    List<Widget> authorItems = List();
+    List<Widget> authorItems = List.empty(growable: true);
 
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
@@ -365,7 +365,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   List<Widget> _addAuthorItems(PeopleList peopleList) {
-    List<Widget> authorItems = List();
+    List<Widget> authorItems = List.empty(growable: true);
 
     for (People author in peopleList) {
       authorItems.add(Padding(
@@ -384,7 +384,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   // only display unstyled paragraph type in brief
   Widget _buildBrief(ParagraphList articles) {
     if (articles.length > 0) {
-      List<Widget> articleWidgets = List();
+      List<Widget> articleWidgets = List.empty(growable: true);
 
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
@@ -488,7 +488,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     if (tags == null) {
       return Container();
     } else {
-      List<Widget> tagWidgets = List();
+      List<Widget> tagWidgets = List.empty(growable: true);
       for (int i = 0; i < tags.length; i++) {
         tagWidgets.add(
           Padding(

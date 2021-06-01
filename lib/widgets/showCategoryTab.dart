@@ -26,8 +26,8 @@ class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderSt
   void initState() {
     /// tab controller
     _initialTabIndex = 0;
-    _tabs = List<Tab>();
-    _tabWidgets = List<Widget>();
+    _tabs = List.empty(growable: true);
+    _tabWidgets = List.empty(growable: true);
 
     _loadCategoryList();
     super.initState();

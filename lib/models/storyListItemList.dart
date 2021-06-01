@@ -30,7 +30,7 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJsonList() {
-    List<Map> storyListItemMaps = List();
+    List<Map> storyListItemMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }
@@ -42,7 +42,7 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
   }
   
   String toJsonString() {
-    List<Map> storyListItemMaps = List();
+    List<Map> storyListItemMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }

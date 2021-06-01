@@ -29,7 +29,7 @@ class CategoryList extends CustomizedList<Category> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> categoryMaps = List();
+    List<Map> categoryMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }

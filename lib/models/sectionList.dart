@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:tv/models/customizedList.dart';
 import 'package:tv/models/section.dart';
 

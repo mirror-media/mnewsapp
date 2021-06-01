@@ -29,7 +29,7 @@ class PeopleList extends CustomizedList<People> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> peopleMaps = List();
+    List<Map> peopleMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }
@@ -41,7 +41,7 @@ class PeopleList extends CustomizedList<People> {
   }
 
   String toJsonString() {
-    List<Map> peopleMaps = List();
+    List<Map> peopleMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }
