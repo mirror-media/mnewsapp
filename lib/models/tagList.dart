@@ -29,7 +29,7 @@ class TagList extends CustomizedList<Tag> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> tagMaps = List();
+    List<Map> tagMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }
@@ -41,7 +41,7 @@ class TagList extends CustomizedList<Tag> {
   }
 
   String toJsonString() {
-    List<Map> tagMaps = List();
+    List<Map> tagMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }

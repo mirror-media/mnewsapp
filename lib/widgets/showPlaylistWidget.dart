@@ -22,7 +22,7 @@ class ShowPlaylistWidget extends StatefulWidget {
 class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   int _segmentedControlGroupValue = 0;
   Map<int, Widget> _tabs = Map();
-  List<Widget> _tabWidgets = List<Widget>();
+  List<Widget> _tabWidgets = List.empty(growable: true);
 
   @override
   void initState() {

@@ -67,7 +67,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
       }
     );
 
-    List<dynamic> parsedJson = List<dynamic>();
+    List<dynamic> parsedJson = List.empty(growable: true);
     for(int i=0; i<jsonResponse['data']['allEditorChoices'].length; i++) {
       parsedJson.add(jsonResponse['data']['allEditorChoices'][i]['choice']);
     }
@@ -131,7 +131,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
       }
     );
 
-    List<dynamic> parsedJson = List<dynamic>();
+    List<dynamic> parsedJson = List.empty(growable: true);
     for(int i=0; i<jsonResponse['data']['allVideoEditorChoices'].length; i++) {
       parsedJson.add(jsonResponse['data']['allVideoEditorChoices'][i]['videoEditor']);
     }

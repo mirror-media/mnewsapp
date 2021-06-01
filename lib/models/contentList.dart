@@ -14,7 +14,7 @@ class ContentList extends CustomizedList<Content> {
 
     ContentList contents = ContentList();
 
-    List parseList = List();
+    List parseList = List.empty(growable: true);
     for (int i = 0; i < parsedJson.length; i++) {
       parseList.add(Content.fromJson(parsedJson[i]));
     }

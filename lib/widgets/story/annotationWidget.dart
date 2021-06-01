@@ -16,7 +16,7 @@ class AnnotationWidget extends StatefulWidget {
 }
 
 class _AnnotationWidgetState extends State<AnnotationWidget> {
-  List<String> displayStringList = List<String>();
+  List<String> displayStringList = List.empty(growable: true);
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
 
   List<Widget> _renderWidgets(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    List<Widget> displayWidgets = List<Widget>();
+    List<Widget> displayWidgets = List.empty(growable: true);
     RegExp annotationExp = RegExp(
       r'__ANNOTATION__=(.*)',
       caseSensitive: false,

@@ -30,7 +30,7 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
 
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
-    List<Map> notificationSettingMaps = List();
+    List<Map> notificationSettingMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }
@@ -42,7 +42,7 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
   }
 
   String toJsonString() {
-    List<Map> notificationSettingMaps = List();
+    List<Map> notificationSettingMaps = List.empty(growable: true);
     if (l == null) {
       return null;
     }

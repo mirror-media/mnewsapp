@@ -121,7 +121,7 @@ class _NewsMarqueeState extends State<NewsMarquee> {
   }
 
   List<Widget> _buildList(double width, StoryListItemList newsList) {
-    List<Widget> resultList = List<Widget>();
+    List<Widget> resultList = List.empty(growable: true);
     for (int i = 0; i < newsList.length; i++) {
       resultList.add(InkWell(
         child: Padding(
