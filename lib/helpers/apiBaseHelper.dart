@@ -1,7 +1,7 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:http/http.dart' as http;
 import 'package:tv/helpers/apiException.dart';
 
 class ApiBaseHelper {
@@ -12,7 +12,8 @@ class ApiBaseHelper {
       Map<String,String> headers = const {'Cache-control': 'no-cache'},
     }
   ) async {
-    final response = await http.get(url, headers: headers);
+    Uri uri = Uri.parse(url);
+    final response = await http.get(uri, headers: headers);
     var responseJson = returnResponse(response);
     print('Api get done.');
     return responseJson;
@@ -23,7 +24,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String> headers}) async {
-    final response = await http.post(url, headers: headers, body: body);
+    Uri uri = Uri.parse(url);
+    final response = await http.post(uri, headers: headers, body: body);
     var responseJson = returnResponse(response);
     print('Api post done.');
     return responseJson;
@@ -34,7 +36,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> putByUrl(String url, dynamic body) async {
-    final response = await http.put(url, body: body);
+    Uri uri = Uri.parse(url);
+    final response = await http.put(uri, body: body);
     var responseJson = returnResponse(response);
     print('Api put done.');
     return responseJson;
@@ -45,7 +48,8 @@ class ApiBaseHelper {
   }
 
   Future<dynamic> deleteByUrl(String url) async {
-    final response = await http.delete(url);
+    Uri uri = Uri.parse(url);
+    final response = await http.delete(uri);
     var apiResponse = returnResponse(response);
     print('Api delete done.');
     return apiResponse;
