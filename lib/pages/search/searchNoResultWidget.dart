@@ -4,7 +4,7 @@ import 'package:tv/helpers/dataConstants.dart';
 class SearchNoResultWidget extends StatelessWidget {
   final String keyword;
   SearchNoResultWidget({
-    @required this.keyword,
+    required this.keyword,
   });
 
   @override

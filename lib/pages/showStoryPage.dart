@@ -14,8 +14,8 @@ class ShowStoryPage extends StatefulWidget {
   final String youtubePlayListId;
   final YoutubePlaylistItem youtubePlaylistItem;
   ShowStoryPage({
-    @required this.youtubePlayListId,
-    @required this.youtubePlaylistItem,
+    required this.youtubePlayListId,
+    required this.youtubePlaylistItem,
   });
 
   @override
@@ -54,7 +54,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
     );
   }
   
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
@@ -86,24 +86,30 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
             fontWeight: FontWeight.w500,
           ),
         ),
-        SizedBox(height: 12),
-        Text(
-          _dateTimeFormat.changeStringToDisplayString(
-            widget.youtubePlaylistItem.publishedAt, 
-            'yyyy-MM-ddTHH:mm:ssZ', 
-            'yyyy年MM月dd日'
+        if(widget.youtubePlaylistItem.publishedAt != null)
+        ...[
+          SizedBox(height: 12),
+          Text(
+            _dateTimeFormat.changeStringToDisplayString(
+              widget.youtubePlaylistItem.publishedAt!,
+              'yyyy-MM-ddTHH:mm:ssZ', 
+              'yyyy年MM月dd日'
+            ),
+            style: TextStyle(
+              color: Color(0xff757575),
+              fontSize: 15.0,
+              fontWeight: FontWeight.w400,
+            ),
           ),
-          style: TextStyle(
-            color: Color(0xff757575),
-            fontSize: 15.0,
-            fontWeight: FontWeight.w400,
-          ),
-        ),
+        ]
       ]
     );
   }
 
-  Widget _buildMoreShowContent({String title, String youtubePlayListId}) {
+  Widget _buildMoreShowContent({
+    required String title, 
+    required String youtubePlayListId
+  }) {
     return BlocProvider(
       create: (context) => YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
       child: ShowPlaylistTabContent(

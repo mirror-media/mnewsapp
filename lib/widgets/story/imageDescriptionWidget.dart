@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 class ImageDescriptionWidget extends StatelessWidget {
   final String imageUrl;
-  final String description;
+  final String? description;
   final double width;
   final double aspectRatio;
   final double textSize;
   ImageDescriptionWidget({
-    @required this.imageUrl,
-    @required this.description,
-    @required this.width,
+    required this.imageUrl,
+    required this.description,
+    required this.width,
     this.aspectRatio = 16 / 9,
     this.textSize = 16,
   });
@@ -45,7 +45,7 @@ class ImageDescriptionWidget extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 8.0),
               child: Text(
-                description,
+                description!,
                 style: TextStyle(fontSize: textSize, color: Colors.grey),
               ),
             ),

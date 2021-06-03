@@ -3,9 +3,9 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/error/mNewsErrorWidget.dart';
 
 class NoSignalWidget extends StatelessWidget {
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   NoSignalWidget({
-    @required this.onPressed,
+    required this.onPressed,
   });
 
   @override

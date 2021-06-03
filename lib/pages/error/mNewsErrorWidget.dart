@@ -4,11 +4,11 @@ class MNewsErrorWidget extends StatelessWidget {
   final String assetImagePath;
   final String title;
   final String buttonName;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   MNewsErrorWidget({
-    @required this.assetImagePath,
-    @required this.title,
-    @required this.buttonName,
+    required this.assetImagePath,
+    required this.title,
+    required this.buttonName,
     this.onPressed,
   });
 

@@ -110,13 +110,13 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
               ),
               onExpansionChanged: (bool value) {
                 _onExpansionChanged(
-                  notificationSettingList, 
+                  notificationSettingList as NotificationSettingList, 
                   listViewIndex, 
                   value
                 );
               },
               children: _renderCheckBoxChildren(
-                  context, notificationSettingList, listViewIndex),
+                  context, notificationSettingList as NotificationSettingList, listViewIndex),
             ),
           ),
         );
@@ -145,7 +145,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
       bool isRepeatable,
       int count,
       double ratio) {
-    List<NotificationSetting> checkboxList = notificationSettingList[index].notificationSettingList;
+    List<NotificationSetting> checkboxList = notificationSettingList[index].notificationSettingList!;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -159,7 +159,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
             onTap: () {
               _onCheckBoxChanged(
                 notificationSettingList, 
-                checkboxList, 
+                checkboxList as NotificationSettingList, 
                 checkboxIndex, 
                 isRepeatable
               );

@@ -8,9 +8,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class EmbeddedCodeWidget extends StatefulWidget {
   final String embeddedCoede;
-  final double aspectRatio;
+  final double? aspectRatio;
   EmbeddedCodeWidget({
-    @required this.embeddedCoede,
+    required this.embeddedCoede,
     this.aspectRatio,
   });
 
@@ -19,13 +19,13 @@ class EmbeddedCodeWidget extends StatefulWidget {
 }
 
 class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticKeepAliveClientMixin {
-  WebViewController _webViewController;
-  bool _screenIsReseted;
+  late WebViewController _webViewController;
+  late bool _screenIsReseted;
 
-  double _webViewWidth;
-  double _webViewHeight;
-  double _webViewAspectRatio;
-  double _webViewBottomPadding;
+  double? _webViewWidth;
+  double? _webViewHeight;
+  late double _webViewAspectRatio;
+  late double _webViewBottomPadding;
 
   @override
   bool get wantKeepAlive => true;
@@ -57,7 +57,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
         r'width="(.[0-9]*)"',
         caseSensitive: false,
       );
-      double facebookIframeWidth = double.parse(widthRegExp.firstMatch(widget.embeddedCoede).group(1));
+      double facebookIframeWidth = double.parse(widthRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
       scale = width/facebookIframeWidth;
     }
 
@@ -107,12 +107,12 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     return (webviewHeight + bottomPadding) >  height;
   }
 
-  double _getIframeHeight(double width, double height, double ratio, double bottomPadding) {
+  double _getIframeHeight(double width, double height, double? ratio, double? bottomPadding) {
     if(Platform.isIOS) {
-      return width / ratio + bottomPadding;
+      return width / ratio! + bottomPadding!;
     }
 
-    return _isHigherThanScreenHeight(width, height, ratio, bottomPadding) 
+    return _isHigherThanScreenHeight(width, height, ratio!, bottomPadding!) 
       ? height 
       : width / ratio + bottomPadding;
   }
@@ -187,16 +187,14 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                   }
                   _webViewBottomPadding = 0;
                 } else {
-                  if (_webViewController != null) {
-                    _webViewWidth = double.tryParse(
-                      await _webViewController
-                          .evaluateJavascript("document.documentElement.scrollWidth;"),
-                    );
-                    _webViewHeight = double.tryParse(
-                      await _webViewController
-                          .evaluateJavascript("document.documentElement.scrollHeight;"),
-                    );
-                  }
+                  _webViewWidth = double.tryParse(
+                    await _webViewController
+                        .evaluateJavascript("document.documentElement.scrollWidth;"),
+                  );
+                  _webViewHeight = double.tryParse(
+                    await _webViewController
+                        .evaluateJavascript("document.documentElement.scrollHeight;"),
+                  );
                 }
                 // reset the webview size
                 if(mounted && !_screenIsReseted) {
@@ -207,7 +205,9 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
                   } else {
                     setState(() {
                       _screenIsReseted = true;
-                      _webViewAspectRatio = _webViewWidth/_webViewHeight;
+                      if(_webViewWidth !=null && _webViewHeight!=null) {
+                        _webViewAspectRatio = _webViewWidth!/_webViewHeight!;
+                      }
                     });
                   }
                 }
@@ -268,7 +268,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
   }
 
   void _launchUrl(String embeddedCoede) async{
-    RegExp regExp;
+    RegExp? regExp;
     if(embeddedCoede.contains('instagram-media')) {
       // permalink="(https:\/\/www\.instagram\.com\/p\/\w+\/)
       regExp = new RegExp(
@@ -290,7 +290,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     }
 
     if(regExp != null) {
-      var url = regExp.firstMatch(embeddedCoede).group(1);
+      var url = regExp.firstMatch(embeddedCoede)!.group(1)!;
       url = Uri.decodeFull(url);
       print(url);
       if (await canLaunch(url)) {

@@ -16,19 +16,14 @@ class ShowCategoryTab extends StatefulWidget {
 
 class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderStateMixin{
   /// tab controller
-  int _initialTabIndex;
-  TabController _tabController;
+  int _initialTabIndex = 0;
+  TabController? _tabController;
 
-  List<Tab> _tabs;
-  List<Widget> _tabWidgets;
+  List<Tab> _tabs = List.empty(growable: true);
+  List<Widget> _tabWidgets = List.empty(growable: true);
 
   @override
   void initState() {
-    /// tab controller
-    _initialTabIndex = 0;
-    _tabs = List.empty(growable: true);
-    _tabWidgets = List.empty(growable: true);
-
     _loadCategoryList();
     super.initState();
   }
@@ -64,13 +59,13 @@ class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderSt
       vsync: this,
       length: categoryList.length,
       initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController.index,
+          _tabController == null ? _initialTabIndex : _tabController!.index,
     );
   }
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController?.dispose();
     super.dispose();
   }
 
@@ -79,7 +74,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderSt
     return BlocBuilder<CategoriesBloc, CategoriesState>(
       builder: (BuildContext context, CategoriesState state) {
         if (state is CategoriesError) {
-          final error = state.error;
+          final error = state.error!;
           print('ShowCategoriesError: ${error.message}');
           if( error is NoInternetException) {
             return error.renderWidget(onPressed: () => _loadCategoryList());
@@ -91,7 +86,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab> with TickerProviderSt
           CategoryList categoryList = state.categoryList;
           _initializeTabController(categoryList);
           
-          return _buildTabs(_tabs, _tabWidgets, _tabController);
+          return _buildTabs(_tabs, _tabWidgets, _tabController!);
         }
 
         // state is Init, loading, or other 

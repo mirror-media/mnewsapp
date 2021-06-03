@@ -6,8 +6,8 @@ class InfoBoxWidget extends StatelessWidget {
   final String title;
   final String description;
   InfoBoxWidget({
-    @required this.title,
-    @required this.description,
+    required this.title,
+    required this.description,
   });
   @override
   Widget build(BuildContext context) {

@@ -11,8 +11,8 @@ class ShowPlaylistWidget extends StatefulWidget {
   final ShowIntro showIntro;
   final ScrollController listviewController;
   ShowPlaylistWidget({
-    @required this.showIntro,
-    @required this.listviewController,s
+    required this.showIntro,
+    required this.listviewController,s
   });
 
   @override
@@ -26,11 +26,10 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
 
   @override
   void initState() {
-    if(widget.showIntro.playList01.youtubePlayListId != null &&
-    widget.showIntro.playList02.youtubePlayListId != null) {
+    if(widget.showIntro.playList01 != null &&
+    widget.showIntro.playList02 != null) {
       _initializeTabs(widget.showIntro);
     }
-    
     super.initState();
   }
 
@@ -40,7 +39,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
       0: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
           child: Text(
-            showIntro.playList01.name,
+            showIntro.playList01!.name,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
@@ -50,7 +49,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
       1: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
           child: Text(
-            showIntro.playList02.name,
+            showIntro.playList02!.name,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
@@ -59,8 +58,8 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
         ),
     };
     _tabWidgets = [
-      _buildTabWidget(showIntro.playList01),
-      _buildTabWidget(showIntro.playList02),
+      _buildTabWidget(showIntro.playList01!),
+      _buildTabWidget(showIntro.playList02!),
     ];
   }
 
@@ -68,12 +67,12 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
     // do not render anything
-    if(widget.showIntro.playList01.youtubePlayListId == null) {
+    if(widget.showIntro.playList01 == null) {
       return Container();
     }
     // just render play list 01
-    if(widget.showIntro.playList02.youtubePlayListId == null) {
-      return _buildTabWidget(widget.showIntro.playList01);
+    if(widget.showIntro.playList02 == null) {
+      return _buildTabWidget(widget.showIntro.playList01!);
     }
 
     return Center(child: _buildTabs(width));
@@ -91,7 +90,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
             selectedColor: Color(0xff004DBC),
             groupValue: _segmentedControlGroupValue,
             children: _tabs,
-            onValueChanged: (i) {
+            onValueChanged: (int i) {
               setState(() {
                 _segmentedControlGroupValue = i;
               });

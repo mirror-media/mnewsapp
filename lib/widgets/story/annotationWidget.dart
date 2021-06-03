@@ -8,7 +8,7 @@ import 'package:tv/models/annotation.dart';
 class AnnotationWidget extends StatefulWidget {
   final String data;
   AnnotationWidget({
-    @required this.data,
+    required this.data,
   });
 
   @override
@@ -52,7 +52,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
 
     for (int i = 0; i < displayStringList.length; i++) {
       if (annotationExp.hasMatch(displayStringList[i])) {
-        String body = annotationExp.firstMatch(displayStringList[i]).group(1);
+        String body = annotationExp.firstMatch(displayStringList[i])!.group(1)!;
         Annotation annotation = Annotation.parseResponseBody(body);
         if (annotation.isExpanded) {
           displayWidgets.add(

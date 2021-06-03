@@ -6,7 +6,7 @@ import 'package:tv/models/storyListItem.dart';
 class NewsStoryFirstItem extends StatelessWidget {
   final StoryListItem storyListItem;
   NewsStoryFirstItem({
-    @required this.storyListItem
+    required this.storyListItem
   });
 
   @override

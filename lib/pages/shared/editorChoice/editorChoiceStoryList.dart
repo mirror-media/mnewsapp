@@ -13,7 +13,7 @@ import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 class BuildEditorChoiceStoryList extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
   BuildEditorChoiceStoryList({
-    @required this.editorChoiceEvent,
+    required this.editorChoiceEvent,
   });
 
   @override
@@ -86,7 +86,7 @@ class _BuildEditorChoiceStoryListState extends State<BuildEditorChoiceStoryList>
   }
 
 Widget _tabStoryList({
-    StoryListItemList storyListItemList,
+    required StoryListItemList storyListItemList,
   }) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(

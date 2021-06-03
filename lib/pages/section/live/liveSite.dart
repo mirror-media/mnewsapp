@@ -110,7 +110,7 @@ class _LiveSiteState extends State<LiveSite> {
                           width: MediaQuery.of(context).size.width / 2,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10.0),
-                            child: new Image.network(
+                            child: Image.network(
                               YoutubePlayerController.getThumbnail(
                                   videoId: videoID,
                                   // todo: get thumbnail quality from list

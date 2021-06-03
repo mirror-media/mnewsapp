@@ -14,7 +14,7 @@ class NewsTabContent extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
   NewsTabContent({
-    @required this.categorySlug,
+    required this.categorySlug,
     this.needCarousel = false,
   });
 

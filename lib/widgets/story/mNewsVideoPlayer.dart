@@ -10,7 +10,7 @@ class MNewsVideoPlayer extends StatefulWidget {
   final bool autoPlay;
 
   /// Start video at a certain position
-  final Duration startAt;
+  final Duration? startAt;
 
   /// Whether or not the video should loop
   final bool looping;
@@ -22,9 +22,9 @@ class MNewsVideoPlayer extends StatefulWidget {
   final double aspectRatio;
 
   MNewsVideoPlayer({
-    Key key,
-    @required this.videourl,
-    @required this.aspectRatio,
+    Key? key,
+    required this.videourl,
+    required this.aspectRatio,
     this.autoPlay = false,
     this.startAt,
     this.looping = false,
@@ -35,9 +35,9 @@ class MNewsVideoPlayer extends StatefulWidget {
 }
 
 class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepAliveClientMixin {
-  VideoPlayerController _videoPlayerController;
-  ChewieController _chewieController;
-  Future<bool> _configChewieFuture;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+  late Future<bool> _configChewieFuture;
 
   @override
   bool get wantKeepAlive => true;
@@ -68,8 +68,8 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
 
   @override
   void dispose() {
-    _videoPlayerController?.dispose();
-    _chewieController?.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
     super.dispose();
   }
 
@@ -82,7 +82,7 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
       initialData: false,
       future: _configChewieFuture,
       builder: (context, snapshot) {
-        if(!snapshot.data) {
+        if(!snapshot.data!) {
           return Container(
             width: width,
             height: width/widget.aspectRatio,

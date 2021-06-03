@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 class AnchorpersonStoryWidget extends StatefulWidget {
   final String anchorpersonId;
   AnchorpersonStoryWidget({
-    @required this.anchorpersonId,
+    required this.anchorpersonId,
   });
 
   @override
@@ -115,7 +115,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.twitter,
-                  contact.twitterUrl
+                  contact.twitterUrl!
                 ),
               ),
             if(contact.facebookUrl != null)
@@ -123,7 +123,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.facebook,
-                  contact.facebookUrl
+                  contact.facebookUrl!
                 ),
               ),
             if(contact.instatgramUrl != null)
@@ -131,7 +131,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
                 padding: const EdgeInsets.only(left: 5, right: 5),
                 child: _thirdPartyMediaLinkButton(
                   FontAwesomeIcons.instagram,
-                  contact.instatgramUrl
+                  contact.instatgramUrl!
                 ),
               ),
           ]
@@ -165,7 +165,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
     );
   }
 
-  Widget _buildBioWidget(String bio) {
+  Widget _buildBioWidget(String? bio) {
     if(bio != null) {
       return Center(
         child: Padding(

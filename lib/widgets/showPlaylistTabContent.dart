@@ -15,9 +15,9 @@ class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
   final ScrollController listviewController;
   ShowPlaylistTabContent({
-    Key key,
-    @required this.youtubePlaylistInfo,
-    @required this.listviewController,
+    Key? key,
+    required this.youtubePlaylistInfo,
+    required this.listviewController,
   }) : super(key: key);
 
   @override
@@ -26,8 +26,8 @@ class ShowPlaylistTabContent extends StatefulWidget {
 
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   final int _fetchPlaylistMaxResult = 10;
-  bool _isLoading;
-  String _nextPagetoken;
+  late bool _isLoading;
+  String? _nextPagetoken;
 
   @override
   void initState() {
@@ -40,7 +40,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           !_isLoading &&
           _nextPagetoken != '' && _nextPagetoken != null
         ) {
-          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken);
+          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
         }
       }
     );
@@ -198,19 +198,22 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
                     text: youtubePlaylistItem.name,
                   ),
                 ),
-                SizedBox(height: 12),
-                Text(
-                  dateTimeFormat.changeStringToDisplayString(
-                    youtubePlaylistItem.publishedAt, 
-                    'yyyy-MM-ddTHH:mm:ssZ', 
-                    'yyyy年MM月dd日'
+                if(youtubePlaylistItem.publishedAt != null)
+                ...[
+                  SizedBox(height: 12),
+                  Text(
+                    dateTimeFormat.changeStringToDisplayString(
+                      youtubePlaylistItem.publishedAt!,
+                      'yyyy-MM-ddTHH:mm:ssZ', 
+                      'yyyy年MM月dd日'
+                    ),
+                    style: TextStyle(
+                      color: Color(0xff757575),
+                      fontSize: 14.0,
+                      fontWeight: FontWeight.w400,
+                    ),
                   ),
-                  style: TextStyle(
-                    color: Color(0xff757575),
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.w400,
-                  ),
-                ),
+                ],
               ],
             ),
           ),
