@@ -7,7 +7,7 @@ abstract class MNewException {
   var message;
   MNewException(this.message);
   
-  Widget renderWidget({VoidCallback onPressed});
+  Widget renderWidget({VoidCallback? onPressed});
 }
 
 class Error500Exception implements MNewException{
@@ -15,7 +15,7 @@ class Error500Exception implements MNewException{
   Error500Exception(this.message);
 
   @override
-  Widget renderWidget({VoidCallback onPressed}) => Error500Widget();
+  Widget renderWidget({VoidCallback? onPressed}) => Error500Widget();
 }
 
 class Error400Exception implements MNewException{
@@ -23,7 +23,7 @@ class Error400Exception implements MNewException{
   Error400Exception(this.message);
 
   @override
-  Widget renderWidget({VoidCallback onPressed}) => Error400Widget();
+  Widget renderWidget({VoidCallback? onPressed}) => Error400Widget();
 }
 
 class NoInternetException implements MNewException{
@@ -31,7 +31,7 @@ class NoInternetException implements MNewException{
   NoInternetException(this.message);
 
   @override
-  Widget renderWidget({VoidCallback onPressed}) => NoSignalWidget(onPressed: onPressed);
+  Widget renderWidget({VoidCallback? onPressed}) => NoSignalWidget(onPressed: onPressed);
 }
 
 class NoServiceFoundException extends Error500Exception{

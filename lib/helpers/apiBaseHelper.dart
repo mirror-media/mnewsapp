@@ -23,7 +23,7 @@ class ApiBaseHelper {
     getByUrl(baseUrl + endpoint);
   }
 
-  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String> headers}) async {
+  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String>? headers}) async {
     Uri uri = Uri.parse(url);
     final response = await http.post(uri, headers: headers, body: body);
     var responseJson = returnResponse(response);

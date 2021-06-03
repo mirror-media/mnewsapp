@@ -7,8 +7,8 @@ class StoryInitState extends StoryState {}
 class StoryLoading extends StoryState {}
 
 class StoryLoaded extends StoryState {
-  final Story story;
-  StoryLoaded({this.story});
+  final Story? story;
+  StoryLoaded({required this.story});
 }
 
 class StoryError extends StoryState {

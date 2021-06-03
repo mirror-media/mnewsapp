@@ -6,7 +6,7 @@ import 'package:tv/services/sectionService.dart';
 class SectionBloc extends Bloc<SectionEvents, SectionState> {
   final SectionRepos sectionRepos;
 
-  SectionBloc({this.sectionRepos}) : super(SectionInitState());
+  SectionBloc({required this.sectionRepos}) : super(SectionInitState());
 
   @override
   Stream<SectionState> mapEventToState(SectionEvents event) async* {

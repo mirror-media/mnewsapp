@@ -5,13 +5,13 @@ class YoutubePlaylistItem {
   final String youtubeVideoId;
   final String name;
   final String photoUrl;
-  final String publishedAt;
+  final String? publishedAt;
 
   YoutubePlaylistItem({
-    this.youtubeVideoId,
-    this.name,
-    this.photoUrl,
-    this.publishedAt,
+    required this.youtubeVideoId,
+    required this.name,
+    required this.photoUrl,
+    required this.publishedAt,
   });
 
   factory YoutubePlaylistItem.fromJson(Map<String, dynamic> json) {
@@ -32,16 +32,18 @@ class YoutubePlaylistItem {
   }
 
   factory YoutubePlaylistItem.fromPromotionVideosJson(Map<String, dynamic> json) {
-    String ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
+    String? ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
 
     String photoUrl = mirrorNewsDefaultImageUrl;
-    photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
+    if(ytId != null) {
+      photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
+    }
 
     return YoutubePlaylistItem(
-      youtubeVideoId: ytId,
+      youtubeVideoId: ytId ?? '',
       name: '',
       photoUrl: photoUrl,
-      publishedAt: '',
+      publishedAt: null,
     );
   }
 } 

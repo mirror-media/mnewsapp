@@ -4,9 +4,9 @@ import 'package:tv/widgets/story/quoteByFrameClipper.dart';
 
 class QuoteByWidget extends StatelessWidget {
   final String quote;
-  final String quoteBy;
+  final String? quoteBy;
   QuoteByWidget({
-    @required this.quote,
+    required this.quote,
     this.quoteBy,
   });
 
@@ -48,14 +48,18 @@ class QuoteByWidget extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              Text(
-                '—— $quoteBy',
-                style: TextStyle(
-                  fontSize: 18,
-                  color: quotebyColor,
+              if(quoteBy != null && quoteBy!='')
+              ...[
+                Text(
+                  '—— $quoteBy',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: quotebyColor,
+                  ),
                 ),
-              ),
-              SizedBox(width: 8.0),
+                SizedBox(width: 8.0),
+              ],
+
               Padding(
                 padding: const EdgeInsets.only(bottom: 4),
                 child: ClipPath(

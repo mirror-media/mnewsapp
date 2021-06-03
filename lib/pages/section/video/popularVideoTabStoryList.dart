@@ -73,7 +73,7 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
   }
 
   Widget _tabStoryList({
-    StoryListItemList storyListItemList,
+    required StoryListItemList storyListItemList,
   }) {
     return SliverList(
       delegate: SliverChildBuilderDelegate(

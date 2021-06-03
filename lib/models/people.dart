@@ -3,8 +3,8 @@ class People {
   String name;
 
   People({
-    this.slug,
-    this.name,
+    required this.slug,
+    required this.name,
   });
 
   factory People.fromJson(Map<String, dynamic> json) {

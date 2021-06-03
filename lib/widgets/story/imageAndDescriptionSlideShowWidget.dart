@@ -7,7 +7,7 @@ import 'package:tv/models/contentList.dart';
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final ContentList contentList;
   ImageAndDescriptionSlideShowWidget({
-    @required this.contentList,
+    required this.contentList,
   });
 
   @override
@@ -18,8 +18,8 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
 class _ImageAndDescriptionSlideShowWidgetState
     extends State<ImageAndDescriptionSlideShowWidget> {
   int currentPage = 1;
-  ContentList contentList;
-  CarouselOptions options;
+  late ContentList contentList;
+  late CarouselOptions options;
   CarouselController imageCarouselController = CarouselController();
   CarouselController textCarouselController = CarouselController();
 

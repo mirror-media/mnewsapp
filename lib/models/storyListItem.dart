@@ -1,18 +1,18 @@
 import 'package:tv/helpers/apiConstants.dart';
 
 class StoryListItem {
-  String id;
+  String? id;
   String name;
   String slug;
-  String style;
+  String? style;
   String photoUrl;
 
   StoryListItem({
-    this.id,
-    this.name,
-    this.slug,
-    this.style,
-    this.photoUrl,
+    required this.id,
+    required this.name,
+    required this.slug,
+    required this.style,
+    required this.photoUrl,
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {

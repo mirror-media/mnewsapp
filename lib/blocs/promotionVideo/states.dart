@@ -8,7 +8,7 @@ class PromotionVideoLoading extends PromotionVideoState {}
 
 class PromotionVideoLoaded extends PromotionVideoState {
   final YoutubePlaylistItemList youtubePlaylistItemList;
-  PromotionVideoLoaded({this.youtubePlaylistItemList});
+  PromotionVideoLoaded({required this.youtubePlaylistItemList});
 }
 
 class PromotionVideoError extends PromotionVideoState {

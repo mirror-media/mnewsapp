@@ -106,7 +106,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           child,
         ],
       ),
-      onTap: function
+      onTap: function as void Function()?
     );
   }
 

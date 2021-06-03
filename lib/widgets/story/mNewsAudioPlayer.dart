@@ -7,12 +7,12 @@ class MNewsAudioPlayer extends StatefulWidget {
   final String audioUrl;
 
   /// The title of audio
-  final String title;
+  final String? title;
 
   /// The description of audio
-  final String description;
+  final String? description;
   MNewsAudioPlayer({
-    @required this.audioUrl,
+    required this.audioUrl,
     this.title,
     this.description,
   });
@@ -23,9 +23,8 @@ class MNewsAudioPlayer extends StatefulWidget {
 
 class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepAliveClientMixin {
   Color _audioColor = Color(0xff014DB8);
-  AudioPlayer _audioPlayer;
-  bool get _checkIsPlaying => !(_audioPlayer.state == null ||
-      _audioPlayer.state == PlayerState.COMPLETED ||
+  late AudioPlayer _audioPlayer;
+  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
       _audioPlayer.state == PlayerState.STOPPED ||
       _audioPlayer.state == PlayerState.PAUSED);
   int _duration = 0;
@@ -66,8 +65,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   }
 
   _playAndPause() {
-    if (_audioPlayer.state == null ||
-        _audioPlayer.state == PlayerState.COMPLETED ||
+    if (_audioPlayer.state == PlayerState.COMPLETED ||
         _audioPlayer.state == PlayerState.STOPPED) {
       _start();
     } else if (_audioPlayer.state == PlayerState.PLAYING) {
@@ -79,9 +77,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
 
   @override
   void dispose() {
-    if (_audioPlayer.state != null) {
-      _audioPlayer.release();
-    }
+    _audioPlayer.release();
     super.dispose();
   }
 
@@ -97,7 +93,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              widget.title,
+              widget.title!,
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.w600,
@@ -149,7 +145,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
                       builder: (context, snapshot) {
                         double sliderPosition = snapshot.data == null
                             ? 0.0
-                            : snapshot.data.inMilliseconds.toDouble();
+                            : snapshot.data!.inMilliseconds.toDouble();
                         String position =
                             DateTimeFormat.stringDuration(snapshot.data);
                         String duration = DateTimeFormat.stringDuration(
@@ -169,10 +165,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
                                 activeColor: _audioColor,
                                 inactiveColor: Color(0xff979797),
                                 onChanged: (v) {
-                                  if (_audioPlayer.state != null) {
-                                    _audioPlayer
-                                        .seek(Duration(milliseconds: v.toInt()));
-                                  }
+                                   _audioPlayer.seek(Duration(milliseconds: v.toInt()));
                                 },
                               ),
                             Padding(

@@ -9,8 +9,8 @@ class AnchorpersonStoryPage extends StatefulWidget {
   final String anchorpersonId;
   final String anchorpersonName;
   AnchorpersonStoryPage({
-    @required this.anchorpersonId,
-    @required this.anchorpersonName,
+    required this.anchorpersonId,
+    required this.anchorpersonName,
   });
 
   @override
@@ -29,7 +29,7 @@ class _AnchorpersonStoryPageState extends State<AnchorpersonStoryPage> {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

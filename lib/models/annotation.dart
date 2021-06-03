@@ -3,21 +3,18 @@ import 'dart:convert';
 class Annotation {
   String text;
   String annotation;
-  String pureAnnotationText;
   bool isExpanded;
 
   Annotation({
-    this.text,
-    this.annotation,
-    this.pureAnnotationText,
-    this.isExpanded,
+    required this.text,
+    required this.annotation,
+    required this.isExpanded,
   });
 
   factory Annotation.fromJson(Map<String, dynamic> json) {
     return Annotation(
       text: json['text'],
       annotation: json['annotation'],
-      pureAnnotationText: json['pureAnnotationText'],
       isExpanded: json['isExpanded'] == null ? false : json['isExpanded'],
     );
   }
@@ -31,7 +28,6 @@ class Annotation {
   Map<String, dynamic> toJson() => {
         'text': text,
         'annotation': annotation,
-        'pureAnnotationText': pureAnnotationText,
         'isExpanded': isExpanded,
       };
 }

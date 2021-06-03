@@ -14,7 +14,7 @@ class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
   NewsTabStoryList({
-    @required this.categorySlug,
+    required this.categorySlug,
     this.needCarousel = false
   });
 
@@ -108,7 +108,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
   }
 
   Widget _tabStoryList({
-    StoryListItemList storyListItemList,
+    required StoryListItemList storyListItemList,
     bool needCarousel = false, bool isLoading = false
   }) {
     return SliverList(

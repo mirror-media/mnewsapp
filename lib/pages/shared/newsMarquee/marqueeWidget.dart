@@ -6,7 +6,7 @@ class MarqueeWidget extends StatefulWidget {
   final Duration animationDuration, backDuration, pauseDuration;
 
   MarqueeWidget({
-    @required this.child,
+    required this.child,
     this.direction: Axis.horizontal,
     this.animationDuration: const Duration(milliseconds: 10000),
     this.backDuration: const Duration(milliseconds: 800),

@@ -9,9 +9,9 @@ import 'package:tv/services/editorChoiceService.dart';
 
 class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
   final EditorChoiceRepos editorChoiceRepos;
-  StoryListItemList editorChoiceList;
+  StoryListItemList editorChoiceList = StoryListItemList();
 
-  EditorChoiceBloc({this.editorChoiceRepos}) : super(EditorChoiceInitState());
+  EditorChoiceBloc({required this.editorChoiceRepos}) : super(EditorChoiceInitState());
 
   @override
   Stream<EditorChoiceState> mapEventToState(EditorChoiceEvents event) async* {

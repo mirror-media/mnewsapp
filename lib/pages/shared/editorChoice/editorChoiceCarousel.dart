@@ -10,7 +10,7 @@ import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 class BuildEditorChoiceCarousel extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
   BuildEditorChoiceCarousel({
-    @required this.editorChoiceEvent,
+    required this.editorChoiceEvent,
   });
 
   @override
@@ -60,7 +60,7 @@ class EditorChoiceCarousel extends StatefulWidget {
   final StoryListItemList editorChoiceList;
   final double aspectRatio;
   EditorChoiceCarousel({
-    @required this.editorChoiceList,
+    required this.editorChoiceList,
     this.aspectRatio = 16/9,
   });
 
@@ -69,12 +69,11 @@ class EditorChoiceCarousel extends StatefulWidget {
 }
 
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
-  CarouselController _carouselController;
-  CarouselOptions _options;
+  CarouselController _carouselController = CarouselController();
+  late CarouselOptions _options;
 
   @override
   void initState() {
-    _carouselController = CarouselController();
     _options = CarouselOptions(
       viewportFraction: 1.0,
       aspectRatio: widget.aspectRatio,
@@ -94,8 +93,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
-    return widget.editorChoiceList == null ||
-            widget.editorChoiceList.length == 0
+    return widget.editorChoiceList.length == 0
         ? Container()
         : Stack(
             children: [

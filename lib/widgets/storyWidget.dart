@@ -25,7 +25,7 @@ import 'package:tv/widgets/story/youtubeViewer.dart';
 class StoryWidget extends StatefulWidget {
   final String slug;
   StoryWidget({
-    @required this.slug,
+    required this.slug,
   });
 
   @override
@@ -33,7 +33,7 @@ class StoryWidget extends StatefulWidget {
 }
 
 class _StoryWidgetState extends State<StoryWidget> {
-  String _currentSlug;
+  late String _currentSlug;
 
   @override
   void initState() {
@@ -42,7 +42,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     super.initState();
   }
 
-  bool _isNullOrEmpty(String input) {
+  bool _isNullOrEmpty(String? input) {
     return input == null || input == '';
   }
 
@@ -66,7 +66,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           return error.renderWidget();
         }
         if (state is StoryLoaded) {
-          Story story = state.story;
+          Story? story = state.story;
           if(story == null) {
             return Container();
           }
@@ -92,27 +92,27 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
         SizedBox(height: 10),
-        _buildStoryTitle(story.name),
+        _buildStoryTitle(story.name!),
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        if(story.brief.length > 0)
+        if(story.brief!.length > 0)
         ...[
-          _buildBrief(story.brief),
+          _buildBrief(story.brief!),
           SizedBox(height: 32),
         ],
-        _buildContent(story.contentApiData),
+        _buildContent(story.contentApiData!),
         SizedBox(height: 16),
-        Center(child: _buildUpdatedTime(story.updatedAt)),
+        Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
-        if(story.tags != null && story.tags.length > 0)
+        if(story.tags != null && story.tags!.length > 0)
         ...[
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        if(story.relatedStories.length > 0)
+        if(story.relatedStories!.length > 0)
         ...[
-          _buildRelatedWidget(width, story.relatedStories),
+          _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
       ],
@@ -125,11 +125,11 @@ class _StoryWidgetState extends State<StoryWidget> {
     return Column(
       children: [
         if (story.heroVideo != null)
-          _buildVideoWidget(story.heroVideo),
+          _buildVideoWidget(story.heroVideo!),
         if (story.heroImage != null && story.heroVideo == null)
           CachedNetworkImage(
             width: width,
-            imageUrl: story.heroImage,
+            imageUrl: story.heroImage!,
             placeholder: (context, url) => Container(
               height: height,
               width: width,
@@ -147,7 +147,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           Padding(
             padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
             child: Text(
-              story.heroCaption,
+              story.heroCaption!,
               style: TextStyle(
                 fontSize: 15, 
                 color: Color(0xff757575)
@@ -162,7 +162,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     String youtubeString = 'youtube';
     if(videoUrl.contains(youtubeString)) {
       if(videoUrl.contains(youtubeString)) {
-        videoUrl = YoutubeViewer.convertUrlToId(videoUrl);
+        videoUrl = YoutubeViewer.convertUrlToId(videoUrl)!;
       }
       return YoutubeViewer(videoUrl);
     }
@@ -181,11 +181,11 @@ class _StoryWidgetState extends State<StoryWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if(story.categoryList.length == 0)
+          if(story.categoryList!.length == 0)
             Container(),
-          if(story.categoryList.length > 0)
+          if(story.categoryList!.length > 0)
             Text(
-              story.categoryList[0].name,
+              story.categoryList![0].name,
               style: TextStyle(
                 fontSize: 15,
                 color: storyWidgetColor,
@@ -194,7 +194,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             ),
           Text(
             dateTimeFormat.changeStringToDisplayString(
-                story.publishTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+                story.publishTime!, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
             style: TextStyle(
               fontSize: 14,
               color: Color(0xff757575),
@@ -233,7 +233,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       ),
     );
 
-    if (story.writers.length > 0) {
+    if (story.writers!.length > 0) {
       authorItems.add(
         Text(
           "作者",
@@ -245,13 +245,13 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.writers));
+      authorItems.addAll(_addAuthorItems(story.writers!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (story.photographers.length > 0) {
+    if (story.photographers!.length > 0) {
       authorItems.add(
         Text(
           "攝影",
@@ -263,13 +263,13 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.photographers));
+      authorItems.addAll(_addAuthorItems(story.photographers!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (story.cameraOperators.length > 0) {
+    if (story.cameraOperators!.length > 0) {
       authorItems.add(
         Text(
           "影音",
@@ -281,13 +281,13 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.cameraOperators));
+      authorItems.addAll(_addAuthorItems(story.cameraOperators!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (story.designers.length > 0) {
+    if (story.designers!.length > 0) {
       authorItems.add(
         Text(
           "設計",
@@ -299,13 +299,13 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.designers));
+      authorItems.addAll(_addAuthorItems(story.designers!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (story.engineers.length > 0) {
+    if (story.engineers!.length > 0) {
       authorItems.add(
         Text(
           "工程",
@@ -317,13 +317,13 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.engineers));
+      authorItems.addAll(_addAuthorItems(story.engineers!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
-    if (story.vocals.length > 0) {
+    if (story.vocals!.length > 0) {
       authorItems.add(
         Text(
           "主播",
@@ -335,7 +335,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
       authorItems.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.engineers));
+      authorItems.addAll(_addAuthorItems(story.engineers!));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
@@ -352,7 +352,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         ),
       );
       authorItems.add(myVerticalDivider);
-      authorItems.add(Text(story.otherbyline));
+      authorItems.add(Text(story.otherbyline!));
     }
 
     return Padding(
@@ -388,10 +388,10 @@ class _StoryWidgetState extends State<StoryWidget> {
 
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
-          if (articles[i].contents.length > 0) {
+          if (articles[i].contents!.length > 0) {
             articleWidgets.add(
               ParseTheTextToHtmlWidget(
-                html: articles[i].contents[0].data, 
+                html: articles[i].contents![0].data, 
                 color: storyBriefTextColor,
               ),
             );
@@ -456,8 +456,8 @@ class _StoryWidgetState extends State<StoryWidget> {
         itemBuilder: (context, index) {
           Paragraph paragraph = storyContents[index];
           if (paragraph.contents != null && 
-              paragraph.contents.length > 0 &&
-              !_isNullOrEmpty(paragraph.contents[0].data)
+              paragraph.contents!.length > 0 &&
+              !_isNullOrEmpty(paragraph.contents![0].data)
           ) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
@@ -484,7 +484,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
   
-  Widget _buildTags(TagList tags) {
+  Widget _buildTags(TagList? tags) {
     if (tags == null) {
       return Container();
     } else {
@@ -597,7 +597,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       ),
       onTap: () {
         _currentSlug = story.slug;
-        StoryPage.of(context).slug = _currentSlug;
+        StoryPage.of(context)!.slug = _currentSlug;
         _loadStory(_currentSlug);
       },
     );

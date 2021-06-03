@@ -8,8 +8,8 @@ class CarouselDisplayWidget extends StatelessWidget {
   final StoryListItem storyListItem;
   final double width;
   CarouselDisplayWidget({
-    @required this.storyListItem,
-    @required this.width,
+    required this.storyListItem,
+    required this.width,
   });
 
   final double aspectRatio = 16/9;

@@ -9,24 +9,24 @@ class Contact {
   final bool isAnchorperson;
   final bool isHost;
 
-  final String twitterUrl;
-  final String facebookUrl;
-  final String instatgramUrl;
-  final String bio;
+  final String? twitterUrl;
+  final String? facebookUrl;
+  final String? instatgramUrl;
+  final String? bio;
 
   Contact({
-    this.id,
-    this.name,
-    this.photoUrl,
-    this.slug,
+    required this.id,
+    required this.name,
+    required this.photoUrl,
+    required this.slug,
 
-    this.isAnchorperson,
-    this.isHost,
+    required this.isAnchorperson,
+    required this.isHost,
 
-    this.twitterUrl,
-    this.facebookUrl,
-    this.instatgramUrl,
-    this.bio,
+    required this.twitterUrl,
+    required this.facebookUrl,
+    required this.instatgramUrl,
+    required this.bio,
   });
 
   factory Contact.fromJson(Map<String, dynamic> json) {

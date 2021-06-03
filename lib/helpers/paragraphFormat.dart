@@ -16,22 +16,26 @@ import 'package:tv/widgets/story/quoteByWidget.dart';
 import 'package:tv/widgets/story/youtubeWidget.dart';
 
 class ParagraphFormat {
-  Widget parseTheParagraph(Paragraph paragraph, BuildContext context) {
+  Widget parseTheParagraph(Paragraph? paragraph, BuildContext context) {
+    if(paragraph == null) {
+      return Container();
+    }
+
     switch (paragraph.type) {
       case 'header-one':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: '<h1>' + paragraph.contents[0].data + '</h1>'
+              html: '<h1>' + paragraph.contents![0].data + '</h1>'
             );
           }
           return Container();
         }
       case 'header-two':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: '<h2>' + paragraph.contents[0].data + '</h2>'
+              html: '<h2>' + paragraph.contents![0].data + '</h2>'
             );
           }
           return Container();
@@ -39,141 +43,127 @@ class ParagraphFormat {
       case 'code-block':
       case 'unstyled':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: paragraph.contents[0].data
+              html: paragraph.contents![0].data
             );
           }
           return Container();
         }
       case 'ordered-list-item':
         {
-          return buildOrderListWidget(paragraph.contents);
+          return buildOrderListWidget(paragraph.contents!);
         }
-        break;
       case 'unordered-list-item':
         {
-          return buildUnorderListWidget(paragraph.contents);
+          return buildUnorderListWidget(paragraph.contents!);
         }
-        break;
       case 'image':
         {
           var width = MediaQuery.of(context).size.width - 48;
-          if(paragraph.contents.length > 0 &&
-            paragraph.contents[0].data != null
-          ) {
+          if(paragraph.contents!.length > 0) {
             return ImageDescriptionWidget(
-              imageUrl: paragraph.contents[0].data,
-              description: paragraph.contents[0].description,
+              imageUrl: paragraph.contents![0].data,
+              description: paragraph.contents![0].description,
               width: width,
             );
           }
           
           return Container();
         }
-        break;
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
-            contentList: paragraph.contents
+            contentList: paragraph.contents!
           );
         }
-        break;
       case 'annotation':
         {
-          if (paragraph.contents.length > 0) {
-            return AnnotationWidget(data: paragraph.contents[0].data,);
+          if (paragraph.contents!.length > 0) {
+            return AnnotationWidget(data: paragraph.contents![0].data);
           }
           return Container();
         }
-        break;
       case 'blockquote':
         {
-          if (paragraph.contents.length > 0) {
-            return BlockQuoteWidget(content: paragraph.contents[0].data,);
+          if (paragraph.contents!.length > 0) {
+            return BlockQuoteWidget(content: paragraph.contents![0].data,);
           }
           return Container();
         }
-        break;
       case 'quoteby':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return QuoteByWidget(
-              quote: paragraph.contents[0].data,
-              quoteBy: paragraph.contents[0].description,
+              quote: paragraph.contents![0].data,
+              quoteBy: paragraph.contents![0].description,
             );
           }
           return Container();
         }
-        break;
       case 'infobox':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return InfoBoxWidget(
-              title: paragraph.contents[0].description,
-              description: paragraph.contents[0].data,
+              title: paragraph.contents![0].description!,
+              description: paragraph.contents![0].data,
             );
           }
           return Container();
         }
-        break;
       case 'video':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return MNewsVideoPlayer(
-              videourl: paragraph.contents[0].data,
+              videourl: paragraph.contents![0].data,
               aspectRatio: 16 / 9,
             );
           }
           return Container();
         }
-        break;
       case 'audio':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             List<String> titleAndDescription =
-                paragraph.contents[0].description.split(';');
+                paragraph.contents![0].description!.split(';');
             return MNewsAudioPlayer(
-              audioUrl: paragraph.contents[0].data,
+              audioUrl: paragraph.contents![0].data,
               title: titleAndDescription[0],
             );
           }
           return Container();
         }
-        break;
       case 'youtube':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             var width = MediaQuery.of(context).size.width - 48;
             return YoutubeWidget(
               width: width,
-              youtubeId: paragraph.contents[0].data,
-              description: paragraph.contents[0].description,
+              youtubeId: paragraph.contents![0].data,
+              description: paragraph.contents![0].description,
             );
           }
           return Container();
         }
       case 'embeddedcode':
         {
-          if (paragraph.contents.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return EmbeddedCodeWidget(
-              embeddedCoede: paragraph.contents[0].data,
-              aspectRatio:  paragraph.contents[0].aspectRatio,
+              embeddedCoede: paragraph.contents![0].data,
+              aspectRatio:  paragraph.contents![0].aspectRatio,
             );
           }
           return Container(); 
         }
-        break;
       default:
         {
           return Container();
         }
-        break;
     }
   }
 
-  List<String> _convertStrangedataList(ContentList contentList) {
-    List<String> resultList = List.empty(growable: true);
+  List<String?> _convertStrangeDataList(ContentList contentList) {
+    List<String?> resultList = List.empty(growable: true);
     if (contentList.length == 1 && contentList[0].data[0] == '[') {
       // api data is strange [[...]]
       String dataString =
@@ -188,7 +178,7 @@ class ParagraphFormat {
   }
 
   Widget buildOrderListWidget(ContentList contentList) {
-    List<String> dataList = _convertStrangedataList(contentList);
+    List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(
       shrinkWrap: true,
@@ -214,7 +204,7 @@ class ParagraphFormat {
   }
 
   Widget buildUnorderListWidget(ContentList contentList) {
-    List<String> dataList = _convertStrangedataList(contentList);
+    List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(
       shrinkWrap: true,

@@ -15,7 +15,7 @@ abstract class TabStoryListRepos {
 
 class TabStoryListServices implements TabStoryListRepos{
   ApiBaseHelper _helper = ApiBaseHelper();
-  String postStyle;
+  String? postStyle;
   int skip = 0, first = 20;
   final String query = 
   """
@@ -45,7 +45,7 @@ class TabStoryListServices implements TabStoryListRepos{
   }
   """;
   
-  TabStoryListServices({String postStyle, int first = 20}) {
+  TabStoryListServices({String? postStyle, int first = 20}) {
     this.postStyle = postStyle;
     this.first = first;
   }
@@ -111,7 +111,7 @@ class TabStoryListServices implements TabStoryListRepos{
     };
 
     if(postStyle != null) {
-      variables["where"].addAll({"style": postStyle});
+      variables["where"].addAll({"style": postStyle!});
     }
     
     GraphqlBody graphqlBody = GraphqlBody(

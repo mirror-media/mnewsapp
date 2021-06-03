@@ -9,18 +9,18 @@ import 'package:tv/widgets/storyWidget.dart';
 class StoryPage extends StatefulWidget {
   final String slug;
   StoryPage({
-    @required this.slug,
+    required this.slug,
   });
 
   @override
   _StoryPageState createState() => _StoryPageState();
 
-  static _StoryPageState of(BuildContext context) =>
+  static _StoryPageState? of(BuildContext context) =>
     context.findAncestorStateOfType<_StoryPageState>();
 }
 
 class _StoryPageState extends State<StoryPage> {
-  String _slug;
+  late String _slug;
   set slug(String value) => _slug = value;
 
   @override
@@ -40,7 +40,7 @@ class _StoryPageState extends State<StoryPage> {
     );
   }
 
-  Widget _buildBar(BuildContext context) {
+  PreferredSizeWidget _buildBar(BuildContext context) {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),

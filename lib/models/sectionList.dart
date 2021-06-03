@@ -6,10 +6,6 @@ class SectionList extends CustomizedList<Section> {
   SectionList();
 
   factory SectionList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     SectionList sections = SectionList();
     List parseList = parsedJson.map((i) => Section.fromJson(i)).toList();
     parseList.forEach((element) {

@@ -8,10 +8,6 @@ class ParagraphList extends CustomizedList<Paragraph> {
   ParagraphList();
 
   factory ParagraphList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     ParagraphList paragraphs = ParagraphList();
     List parseList = parsedJson.map((i) => Paragraph.fromJson(i)).toList();
     parseList.forEach((element) {

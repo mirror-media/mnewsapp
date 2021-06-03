@@ -8,7 +8,7 @@ class SearchBloc extends Bloc<SearchEvents, SearchState> {
   final SearchRepos searchRepos;
   StoryListItemList storyListItemList = StoryListItemList();
 
-  SearchBloc({this.searchRepos}) : super(SearchInitState());
+  SearchBloc({required this.searchRepos}) : super(SearchInitState());
 
   @override
   Stream<SearchState> mapEventToState(SearchEvents event) async* {

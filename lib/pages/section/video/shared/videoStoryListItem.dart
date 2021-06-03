@@ -6,7 +6,7 @@ import 'package:tv/models/storyListItem.dart';
 class VideoStoryListItem extends StatelessWidget {
   final StoryListItem storyListItem;
   VideoStoryListItem({
-    @required this.storyListItem,
+    required this.storyListItem,
   });
   
   @override
@@ -17,7 +17,7 @@ class VideoStoryListItem extends StatelessWidget {
       child: Column(
         children: [
           _displayStoryImage(
-            storyListItem.photoUrl, 
+            storyListItem.photoUrl,
             width,
           ),
           Padding(

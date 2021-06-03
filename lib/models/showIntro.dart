@@ -6,13 +6,13 @@ class ShowIntro {
   final String introduction;
   final String pictureUrl;
 
-  final YoutubePlaylistInfo playList01;
-  final YoutubePlaylistInfo playList02;
+  final YoutubePlaylistInfo? playList01;
+  final YoutubePlaylistInfo? playList02;
 
   ShowIntro({
-    this.name,
-    this.introduction,
-    this.pictureUrl,
+    required this.name,
+    required this.introduction,
+    required this.pictureUrl,
 
     this.playList01,
     this.playList02,
@@ -27,7 +27,7 @@ class ShowIntro {
 
     return ShowIntro(
       name: json['name'],
-      introduction: json['introduction'],
+      introduction: json['introduction']??'',
       pictureUrl: pictureUrl,
 
       playList01: YoutubePlaylistInfo.parseByShow(json['playList01'], '選單 A'),

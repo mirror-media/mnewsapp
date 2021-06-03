@@ -10,7 +10,7 @@ import 'package:tv/widgets/showPlaylistWidget.dart';
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
   BuildShowIntro({
-    @required this.showCategoryId,
+    required this.showCategoryId,
   });
 
   @override
@@ -56,7 +56,7 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
 class ShowIntroWidget extends StatelessWidget {
   final ShowIntro showIntro;
   ShowIntroWidget({
-    @required this.showIntro,
+    required this.showIntro,
   });
 
   @override
@@ -100,7 +100,7 @@ class ShowIntroWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: Text(
-            showIntro.introduction??'',
+            showIntro.introduction,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w400,

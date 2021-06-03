@@ -9,10 +9,6 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
   StoryListItemList();
 
   factory StoryListItemList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     StoryListItemList storyListItemList = StoryListItemList();
     List parseList = parsedJson.map((i) => StoryListItem.fromJson(i)).toList();
     parseList.forEach((element) {
@@ -31,11 +27,7 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
   // your custom methods
   List<Map<dynamic, dynamic>> toJsonList() {
     List<Map> storyListItemMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
-
-    for (StoryListItem storyListItem in l) {
+    for (StoryListItem storyListItem in this) {
       storyListItemMaps.add(storyListItem.toJson());
     }
     return storyListItemMaps;
@@ -43,11 +35,7 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
   
   String toJsonString() {
     List<Map> storyListItemMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
-
-    for (StoryListItem storyListItem in l) {
+    for (StoryListItem storyListItem in this) {
       storyListItemMaps.add(storyListItem.toJson());
     }
     return json.encode(storyListItemMaps);

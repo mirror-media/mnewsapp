@@ -8,8 +8,8 @@ class Section {
   final String name;
 
   Section({
-    this.id,
-    this.name
+    required this.id,
+    required this.name
   });
 
   factory Section.fromJson(Map<String, dynamic> json) {

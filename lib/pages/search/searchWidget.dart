@@ -17,15 +17,14 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  TextEditingController _textController;
-  ScrollController _listviewController;
-  bool _isLoading;
-  bool _isLoadingMax;
+  TextEditingController _textController = TextEditingController();
+  ScrollController _listviewController = ScrollController();
+  late bool _isLoading;
+  late bool _isLoadingMax;
 
   @override
   void initState() {
-    _textController = TextEditingController();
-    _listviewController = ScrollController();
+    
     _isLoading = true;
     _isLoadingMax = false;
     _listviewController.addListener(

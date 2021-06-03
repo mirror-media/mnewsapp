@@ -7,7 +7,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 class FbEmbeddedCodeWidget extends StatefulWidget {
   final String embeddedCoede;
   FbEmbeddedCodeWidget({
-    @required this.embeddedCoede,
+    required this.embeddedCoede,
   });
 
   @override
@@ -15,10 +15,10 @@ class FbEmbeddedCodeWidget extends StatefulWidget {
 }
 
 class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
-  WebViewController _webViewController;
+  late WebViewController _webViewController;
   String _htmlPage = '';
   double _ratio = 16/9;
-  RegExpMatch _regExpMatch;
+  RegExpMatch? _regExpMatch;
 
   @override
   void initState() {
@@ -35,7 +35,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
     _regExpMatch = regExp.firstMatch(widget.embeddedCoede);
 
     if(_regExpMatch != null) {
-      String fbUrl = _regExpMatch.group(1);
+      String fbUrl = _regExpMatch!.group(1)!;
       _htmlPage = 'https://www.facebook.com/plugins/post.php?href='+fbUrl;
       print(_htmlPage);
       RegExp widthRegExp = new RegExp(
@@ -46,8 +46,8 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
         r'height="(.[0-9]*)"',
         caseSensitive: false,
       );
-      double w = double.parse(widthRegExp.firstMatch(widget.embeddedCoede).group(1));
-      double h = double.parse(heightRegExp.firstMatch(widget.embeddedCoede).group(1));
+      double w = double.parse(widthRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
+      double h = double.parse(heightRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
       _ratio = w/h;
     }
     super.initState();
@@ -103,24 +103,22 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
               //userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
               javascriptMode: JavascriptMode.unrestricted,
               onPageFinished: (e) async{
-                if (_webViewController != null) {
-                  double w = double.tryParse(
-                    await _webViewController
-                        .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().width;'),
-                  );
-                  double h = double.tryParse(
-                    await _webViewController
-                        .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().height;'),
-                  );
+                double? w = double.tryParse(
+                  await _webViewController
+                      .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().width;'),
+                );
+                double? h = double.tryParse(
+                  await _webViewController
+                      .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().height;'),
+                );
 
-                  if(w != null && h != null) {
-                    double ratio = w/h;
-                    if(ratio != _ratio) {
-                      if(mounted) {
-                        setState(() {
-                          _ratio = ratio;
-                        });
-                      }
+                if(w != null && h != null) {
+                  double ratio = w/h;
+                  if(ratio != _ratio) {
+                    if(mounted) {
+                      setState(() {
+                        _ratio = ratio;
+                      });
                     }
                   }
                 }
@@ -138,7 +136,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
           InkWell(
             onTap: ()async{
               if(_regExpMatch != null) {
-                var url = _regExpMatch.group(1);
+                var url = _regExpMatch!.group(1)!;
                 url = Uri.decodeFull(url);
                 print(url);
                 if (await canLaunch(url)) {

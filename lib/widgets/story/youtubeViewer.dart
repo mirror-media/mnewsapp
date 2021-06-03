@@ -20,8 +20,7 @@ class YoutubeViewer extends StatefulWidget {
   /// Converts fully qualified YouTube Url to video id.
   ///
   /// If videoId is passed as url then no conversion is done.
-  static String convertUrlToId(String url, {bool trimWhitespaces = true}) {
-    assert(url?.isNotEmpty ?? false, 'Url cannot be empty');
+  static String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
     if (!url.contains("http") && (url.length == 11)) return url;
     if (trimWhitespaces) url = url.trim();
 
@@ -32,7 +31,7 @@ class YoutubeViewer extends StatefulWidget {
           r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
       RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
     ]) {
-      Match match = exp.firstMatch(url);
+      Match? match = exp.firstMatch(url);
       if (match != null && match.groupCount >= 1) return match.group(1);
     }
 
@@ -45,7 +44,7 @@ class YoutubeViewer extends StatefulWidget {
 
 class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
-  YoutubePlayerController _controller;
+  late YoutubePlayerController _controller;
 
   @override
   bool get wantKeepAlive => true;
@@ -58,7 +57,8 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
       params: YoutubePlayerParams(
         showControls: true,
         showFullscreenButton: true,
-        desktopMode: false, // false for platform design
+        // iOS can not trigger full screen when desktopMode is true
+        desktopMode: Platform.isAndroid, // false for platform design
         autoPlay: widget.autoPlay,
         enableCaption: true,
         showVideoAnnotations: false,

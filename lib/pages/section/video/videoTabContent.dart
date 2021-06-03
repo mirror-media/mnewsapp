@@ -14,7 +14,7 @@ class VideoTabContent extends StatefulWidget {
   final String categorySlug;
   final bool isFeaturedSlug;
   VideoTabContent({
-    @required this.categorySlug,
+    required this.categorySlug,
     this.isFeaturedSlug = false,
   });
 

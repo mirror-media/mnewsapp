@@ -7,7 +7,7 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 class BlockQuoteWidget extends StatelessWidget {
   final String content;
   BlockQuoteWidget({
-    @required this.content,
+    required this.content,
   });
 
   @override

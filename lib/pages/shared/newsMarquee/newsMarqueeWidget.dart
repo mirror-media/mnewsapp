@@ -59,7 +59,7 @@ class NewsMarquee extends StatefulWidget {
   final Duration animationDuration, backDuration, pauseDuration;
 
   NewsMarquee({
-    @required this.newsList,
+    required this.newsList,
     this.direction: Axis.horizontal,
     this.height: 48.0,
     this.animationDuration: const Duration(milliseconds: 3000),
@@ -72,8 +72,8 @@ class NewsMarquee extends StatefulWidget {
 }
 
 class _NewsMarqueeState extends State<NewsMarquee> {
-  CarouselController _carouselController;
-  CarouselOptions _options;
+  CarouselController? _carouselController;
+  late CarouselOptions _options;
 
   @override
   void initState() {

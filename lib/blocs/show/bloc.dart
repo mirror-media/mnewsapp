@@ -7,7 +7,7 @@ import 'package:tv/services/showService.dart';
 class ShowIntroBloc extends Bloc<ShowEvents, ShowState> {
   final ShowRepos showRepos;
 
-  ShowIntroBloc({this.showRepos}) : super(ShowInitState());
+  ShowIntroBloc({required this.showRepos}) : super(ShowInitState());
 
   @override
   Stream<ShowState> mapEventToState(ShowEvents event) async* {

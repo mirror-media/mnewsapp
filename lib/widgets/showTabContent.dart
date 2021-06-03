@@ -9,7 +9,7 @@ import 'package:tv/widgets/showIntroWidget.dart';
 class ShowTabContent extends StatefulWidget {
   final Category category;
   ShowTabContent({
-    @required this.category,
+    required this.category,
   });
 
   @override
@@ -24,7 +24,7 @@ class _ShowTabContentState extends State<ShowTabContent> {
       create: (context) => ShowIntroBloc(showRepos: ShowServices()),
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
-        child: BuildShowIntro(showCategoryId: widget.category.id,),
+        child: BuildShowIntro(showCategoryId: widget.category.id!,),
       ),
     );
   }

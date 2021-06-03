@@ -6,7 +6,7 @@ import 'package:tv/services/contactService.dart';
 class ContactBloc extends Bloc<ContactEvents, ContactState> {
   final ContactRepos contactRepos;
 
-  ContactBloc({this.contactRepos}) : super(ContactInitState());
+  ContactBloc({required this.contactRepos}) : super(ContactInitState());
 
   @override
   Stream<ContactState> mapEventToState(ContactEvents event) async* {

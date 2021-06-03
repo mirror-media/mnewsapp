@@ -7,7 +7,7 @@ import 'package:tv/services/configService.dart';
 class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
   final ConfigRepos configRepos;
 
-  ConfigBloc({this.configRepos}) : super(ConfigInitState());
+  ConfigBloc({required this.configRepos}) : super(ConfigInitState());
 
   @override
   Stream<ConfigState> mapEventToState(ConfigEvents event) async* {

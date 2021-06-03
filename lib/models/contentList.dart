@@ -8,10 +8,6 @@ class ContentList extends CustomizedList<Content> {
   ContentList();
 
   factory ContentList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     ContentList contents = ContentList();
 
     List parseList = List.empty(growable: true);

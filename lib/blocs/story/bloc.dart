@@ -6,7 +6,7 @@ import 'package:tv/services/storyService.dart';
 class StoryBloc extends Bloc<StoryEvents, StoryState> {
   final StoryRepos storyRepos;
 
-  StoryBloc({this.storyRepos}) : super(StoryInitState());
+  StoryBloc({required this.storyRepos}) : super(StoryInitState());
 
   @override
   Stream<StoryState> mapEventToState(StoryEvents event) async* {

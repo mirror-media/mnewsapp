@@ -9,10 +9,10 @@ class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
   final CategoryList categoryList;
-  CategoriesLoaded({this.categoryList});
+  CategoriesLoaded({required this.categoryList});
 }
 
 class CategoriesError extends CategoriesState {
-  final MNewException error;
+  final MNewException? error;
   CategoriesError({this.error});
 }

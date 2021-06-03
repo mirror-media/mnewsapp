@@ -41,12 +41,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
+  PreferredSizeWidget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
     return AppBar(
       elevation: 0.1,
       leading: IconButton(
         icon: Icon(Icons.menu),
-        onPressed: () => scaffoldkey.currentState.openDrawer()
+        onPressed: () => scaffoldkey.currentState!.openDrawer()
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
@@ -65,23 +65,16 @@ class _HomePageState extends State<HomePage> {
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();
-        break;
       case MNewsSection.live:
         return LivePage();
-        break;
       case MNewsSection.video:
         return VideoPage();
-        break;
       case MNewsSection.show:
         return ShowPage();
-        break;
       case MNewsSection.anchorperson:
         return AnchorpersonPage();
-        break;
       case MNewsSection.ombuds:
         return OmbudsPage();
-        break;
     }
-    return Container();
   }
 }

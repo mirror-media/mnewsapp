@@ -11,7 +11,7 @@ import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
   VideoTabStoryList({
-    @required this.categorySlug,
+    required this.categorySlug,
   });
 
   @override
@@ -90,7 +90,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
   }
 
   Widget _tabStoryList({
-    StoryListItemList storyListItemList,
+    required StoryListItemList storyListItemList,
     bool isLoading = false
   }) {
     return SliverList(
