@@ -8,12 +8,12 @@ class SearchLoading extends SearchState {}
 
 class SearchLoadingMore extends SearchState {
   final StoryListItemList storyListItemList;
-  SearchLoadingMore({this.storyListItemList});
+  SearchLoadingMore({required this.storyListItemList});
 }
 
 class SearchLoaded extends SearchState {
   final StoryListItemList storyListItemList;
-  SearchLoaded({this.storyListItemList});
+  SearchLoaded({required this.storyListItemList});
 }
 
 class SearchError extends SearchState {

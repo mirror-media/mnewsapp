@@ -12,9 +12,9 @@ import 'package:tv/services/categoryService.dart';
 
 class CategoriesBloc extends Bloc<CategoryEvents, CategoriesState> {
   final CategoryRepos categoryRepos;
-  CategoryList categoryList;
+  CategoryList categoryList = CategoryList();
 
-  CategoriesBloc({this.categoryRepos}) : super(CategoriesInitState());
+  CategoriesBloc({required this.categoryRepos}) : super(CategoriesInitState());
 
   @override
   Stream<CategoriesState> mapEventToState(CategoryEvents event) async* {

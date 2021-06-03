@@ -6,7 +6,7 @@ class ConfigLoading extends ConfigState {}
 
 class ConfigLoaded extends ConfigState {
   final bool isSuccess;
-  ConfigLoaded({this.isSuccess});
+  ConfigLoaded({required this.isSuccess});
 }
 
 class ConfigError extends ConfigState {

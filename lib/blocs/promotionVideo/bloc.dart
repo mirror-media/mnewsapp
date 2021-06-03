@@ -6,7 +6,7 @@ import 'package:tv/services/promotionVideosService.dart';
 class PromotionVideoBloc extends Bloc<PromotionVideoEvents, PromotionVideoState> {
   final PromotionVideosRepos promotionVideosRepos;
 
-  PromotionVideoBloc({this.promotionVideosRepos}) : super(PromotionVideoInitState());
+  PromotionVideoBloc({required this.promotionVideosRepos}) : super(PromotionVideoInitState());
 
   @override
   Stream<PromotionVideoState> mapEventToState(PromotionVideoEvents event) async* {

@@ -8,7 +8,7 @@ class NewsMarqueeLoading extends NewsMarqueeState {}
 
 class NewsMarqueeLoaded extends NewsMarqueeState {
   final StoryListItemList newsList;
-  NewsMarqueeLoaded({this.newsList});
+  NewsMarqueeLoaded({required this.newsList});
 }
 
 class NewsMarqueeError extends NewsMarqueeState {

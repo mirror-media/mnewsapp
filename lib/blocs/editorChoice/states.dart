@@ -8,7 +8,7 @@ class EditorChoiceLoading extends EditorChoiceState {}
 
 class EditorChoiceLoaded extends EditorChoiceState {
   final StoryListItemList editorChoiceList;
-  EditorChoiceLoaded({this.editorChoiceList});
+  EditorChoiceLoaded({required this.editorChoiceList});
 }
 
 class EditorChoiceError extends EditorChoiceState {

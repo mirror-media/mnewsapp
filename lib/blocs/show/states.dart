@@ -8,7 +8,7 @@ class ShowLoading extends ShowState {}
 
 class ShowIntroLoaded extends ShowState {
   final ShowIntro showIntro;
-  ShowIntroLoaded({this.showIntro});
+  ShowIntroLoaded({required this.showIntro});
 }
 
 class ShowError extends ShowState {

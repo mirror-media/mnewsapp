@@ -6,9 +6,9 @@ import 'package:tv/services/youtubePlaylistService.dart';
 
 class YoutubePlaylistBloc extends Bloc<YoutubePlaylistEvents, YoutubePlaylistState> {
   final YoutubePlaylistRepos youtubePlaylistRepos;
-  YoutubePlaylistItemList youtubePlaylistItemList;
+  YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList();
 
-  YoutubePlaylistBloc({this.youtubePlaylistRepos}) : super(YoutubePlaylistInitState());
+  YoutubePlaylistBloc({required this.youtubePlaylistRepos}) : super(YoutubePlaylistInitState());
 
   @override
   Stream<YoutubePlaylistState> mapEventToState(YoutubePlaylistEvents event) async* {

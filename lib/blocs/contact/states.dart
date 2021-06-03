@@ -9,12 +9,12 @@ class ContactLoading extends ContactState {}
 
 class ContactListLoaded extends ContactState {
   final ContactList contactList;
-  ContactListLoaded({this.contactList});
+  ContactListLoaded({required this.contactList});
 }
 
 class ContactLoaded extends ContactState {
   final Contact contact;
-  ContactLoaded({this.contact});
+  ContactLoaded({required this.contact});
 }
 
 class ContactError extends ContactState {

@@ -9,9 +9,9 @@ import 'package:tv/services/tabStoryListService.dart';
 
 class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
   final TabStoryListRepos tabStoryListRepos;
-  StoryListItemList storyListItemList;
+  StoryListItemList storyListItemList = StoryListItemList();
 
-  TabStoryListBloc({this.tabStoryListRepos}) : super(TabStoryListInitState());
+  TabStoryListBloc({required this.tabStoryListRepos}) : super(TabStoryListInitState());
 
   @override
   Stream<TabStoryListState> mapEventToState(TabStoryListEvents event) async* {

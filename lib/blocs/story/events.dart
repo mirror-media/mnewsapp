@@ -7,7 +7,6 @@ import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
 
 abstract class StoryEvents{
-  Story story;
   Stream<StoryState> run(StoryRepos storyRepos);
 }
 
@@ -23,7 +22,7 @@ class FetchPublishedStoryBySlug extends StoryEvents {
     print(this.toString());
     try{
       yield StoryLoading();
-      story = await storyRepos.fetchPublishedStoryBySlug(slug);
+      Story story = await storyRepos.fetchPublishedStoryBySlug(slug);
       yield StoryLoaded(story: story);
     } on SocketException {
       yield StoryError(

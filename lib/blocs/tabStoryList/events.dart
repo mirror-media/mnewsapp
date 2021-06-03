@@ -3,7 +3,7 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
 abstract class TabStoryListEvents{
-  StoryListItemList storyListItemList;
+  StoryListItemList storyListItemList = StoryListItemList();
   Stream<TabStoryListState> run(TabStoryListRepos tabStoryListRepos);
 }
 

@@ -10,7 +10,7 @@ class NotificationSettingLoading extends NotificationSettingState {}
 
 class NotificationSettingLoaded extends NotificationSettingState {
   final NotificationSettingList notificationSettingList;
-  NotificationSettingLoaded({this.notificationSettingList});
+  NotificationSettingLoaded({required this.notificationSettingList});
 }
 
 class NotificationSettingError extends NotificationSettingState {

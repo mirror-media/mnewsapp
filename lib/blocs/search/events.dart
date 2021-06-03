@@ -7,7 +7,7 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/searchService.dart';
 
 abstract class SearchEvents{
-  StoryListItemList storyListItemList;
+  StoryListItemList storyListItemList = StoryListItemList();
   Stream<SearchState> run(SearchRepos searchRepos);
 }
 

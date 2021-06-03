@@ -6,7 +6,7 @@ import 'package:tv/models/youtubePlaylistItemList.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 
 abstract class YoutubePlaylistEvents{
-  YoutubePlaylistItemList youtubePlaylistItemList;
+  YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList();
   Stream<YoutubePlaylistState> run(YoutubePlaylistRepos youtubePlaylistRepos);
 }
 
