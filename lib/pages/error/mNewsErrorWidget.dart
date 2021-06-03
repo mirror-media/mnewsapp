@@ -32,7 +32,7 @@ class MNewsErrorWidget extends StatelessWidget {
         SizedBox(height: 36),
         Padding(
           padding: EdgeInsets.only(left: width/3, right: width/3),
-          child: OutlineButton(
+          child: OutlinedButton(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
               child: Text(
@@ -43,8 +43,18 @@ class MNewsErrorWidget extends StatelessWidget {
                 ),
               ),
             ),
-            textColor: Color(0xff014DB8),
-            borderSide: BorderSide(color: Color(0xff014DB8)),
+            style: ButtonStyle(
+              textStyle: MaterialStateProperty.all(
+                TextStyle(
+                  color: Color(0xff014DB8),
+                ),
+              ),
+              side: MaterialStateProperty.all(
+                BorderSide(
+                  color: Color(0xff014DB8),
+                ),
+              ),
+            ),
             onPressed: onPressed
           ),
         ),
