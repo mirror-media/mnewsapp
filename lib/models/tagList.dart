@@ -8,10 +8,6 @@ class TagList extends CustomizedList<Tag> {
   TagList();
 
   factory TagList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     TagList tags = TagList();
     List parseList = parsedJson.map((i) => Tag.fromJson(i)).toList();
     parseList.forEach((element) {
@@ -30,11 +26,8 @@ class TagList extends CustomizedList<Tag> {
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
     List<Map> tagMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
 
-    for (Tag tag in l) {
+    for (Tag tag in this) {
       tagMaps.add(tag.toJson());
     }
     return tagMaps;
@@ -42,11 +35,8 @@ class TagList extends CustomizedList<Tag> {
 
   String toJsonString() {
     List<Map> tagMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
 
-    for (Tag tag in l) {
+    for (Tag tag in this) {
       tagMaps.add(tag.toJson());
     }
     return json.encode(tagMaps);

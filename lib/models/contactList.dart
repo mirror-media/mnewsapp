@@ -8,10 +8,6 @@ class ContactList extends CustomizedList<Contact> {
   ContactList();
 
   factory ContactList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     ContactList contacts = ContactList();
     List parseList = parsedJson.map((i) => Contact.fromJson(i)).toList();
     parseList.forEach((element) {

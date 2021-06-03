@@ -1,12 +1,12 @@
 class Category {
-  String id;
+  String? id;
   String name;
   String slug;
 
   Category({
-    this.id,
-    this.name,
-    this.slug,
+    required this.id,
+    required this.name,
+    required this.slug,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -31,7 +31,7 @@ class Category {
     return id == 'featured';
   }
 
-  static bool checkIsLatestCategoryBySlug(String slug) {
+  static bool checkIsLatestCategoryBySlug(String? slug) {
     return slug == 'latest';
   }
 

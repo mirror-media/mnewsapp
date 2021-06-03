@@ -8,29 +8,29 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
 
 class Story {
-  final String style;
-  final String name;
-  final ParagraphList brief;
-  final ParagraphList contentApiData;
-  final String publishTime;
-  final String updatedAt;
+  final String? style;
+  final String? name;
+  final ParagraphList? brief;
+  final ParagraphList? contentApiData;
+  final String? publishTime;
+  final String? updatedAt;
 
-  final String heroImage;
-  final String heroVideo;
-  final String heroCaption;
+  final String? heroImage;
+  final String? heroVideo;
+  final String? heroCaption;
 
-  final CategoryList categoryList;
+  final CategoryList? categoryList;
 
-  final PeopleList writers;
-  final PeopleList photographers;
-  final PeopleList cameraOperators;
-  final PeopleList designers;
-  final PeopleList engineers;
-  final PeopleList vocals;
-  final String otherbyline;
+  final PeopleList? writers;
+  final PeopleList? photographers;
+  final PeopleList? cameraOperators;
+  final PeopleList? designers;
+  final PeopleList? engineers;
+  final PeopleList? vocals;
+  final String? otherbyline;
 
-  final TagList tags;
-  final StoryListItemList relatedStories;
+  final TagList? tags;
+  final StoryListItemList? relatedStories;
 
   Story({
     this.style,
@@ -78,7 +78,7 @@ class Story {
       photoUrl = json['heroImage']['mobile'];
     }
 
-    String videoUrl;
+    String? videoUrl;
     if (json['heroVideo'] != null && 
       json['heroVideo']['url'] != null ) {
       videoUrl = json['heroVideo']['url'];

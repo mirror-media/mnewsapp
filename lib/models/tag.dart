@@ -3,8 +3,8 @@ class Tag {
   String name;
 
   Tag({
-    this.id,
-    this.name,
+    required this.id,
+    required this.name,
   });
 
   factory Tag.fromJson(Map<String, dynamic> json) {

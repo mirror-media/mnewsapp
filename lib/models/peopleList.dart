@@ -8,10 +8,6 @@ class PeopleList extends CustomizedList<People> {
   PeopleList();
 
   factory PeopleList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     PeopleList peoples = PeopleList();
     List parseList = parsedJson.map((i) => People.fromJson(i)).toList();
     parseList.forEach((element) {
@@ -30,11 +26,7 @@ class PeopleList extends CustomizedList<People> {
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
     List<Map> peopleMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
-
-    for (People people in l) {
+    for (People people in this) {
       peopleMaps.add(people.toJson());
     }
     return peopleMaps;
@@ -42,11 +34,7 @@ class PeopleList extends CustomizedList<People> {
 
   String toJsonString() {
     List<Map> peopleMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
-
-    for (People people in l) {
+    for (People people in this) {
       peopleMaps.add(people.toJson());
     }
     return json.encode(peopleMaps);

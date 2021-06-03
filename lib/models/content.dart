@@ -1,12 +1,12 @@
 class Content {
   String data;
-  double aspectRatio;
-  String description;
+  double? aspectRatio;
+  String? description;
 
   Content({
-    this.data,
-    this.aspectRatio,
-    this.description,
+    required this.data,
+    required this.aspectRatio,
+    required this.description,
   });
 
   factory Content.fromJson(dynamic json) {
@@ -53,8 +53,6 @@ class Content {
           description: json['quoteBy'],
         );
       }
-
-      return Content(data: null, aspectRatio: null, description: null);
     }
 
     return Content(

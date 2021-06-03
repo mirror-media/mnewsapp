@@ -1,17 +1,17 @@
 import 'package:tv/models/contentList.dart';
 
 class Paragraph {
-  String styles;
-  ContentList contents;
-  String type;
+  String? styles;
+  String? type;
+  ContentList? contents;
 
   Paragraph({
     this.styles,
-    this.contents,
     this.type,
+    this.contents,
   });
 
-  factory Paragraph.fromJson(Map<String, dynamic> json) {
+  factory Paragraph.fromJson(Map<String, dynamic>? json) {
     if(json == null) {
       return Paragraph();
     }

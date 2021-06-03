@@ -2,16 +2,12 @@ import 'package:tv/models/customizedList.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 
 class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
-  String nextPageToken;
+  String? nextPageToken;
   // constructor
-  YoutubePlaylistItemList(this.nextPageToken);
+  YoutubePlaylistItemList({this.nextPageToken});
 
   factory YoutubePlaylistItemList.fromJson(String nextPageToken, List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
-    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList(nextPageToken);
+    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList(nextPageToken: nextPageToken);
     List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromJson(i)).toList();
     parseList.forEach((element) {
       youtubePlaylistItems.add(element);
@@ -21,11 +17,7 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
   }
 
   factory YoutubePlaylistItemList.fromPromotionVideosJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
-    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList('');
+    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList();
     List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromPromotionVideosJson(i)).toList();
     parseList.forEach((element) {
       youtubePlaylistItems.add(element);

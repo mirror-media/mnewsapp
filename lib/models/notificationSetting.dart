@@ -6,21 +6,18 @@ class NotificationSetting {
   final String title;
   final String topic;
   bool value;
-  final NotificationSettingList notificationSettingList;
+  final NotificationSettingList? notificationSettingList;
 
   NotificationSetting({
-    this.type,
-    this.id,
-    this.title,
-    this.topic,
-    this.value,
-    this.notificationSettingList,
+    required this.type,
+    required this.id,
+    required this.title,
+    required this.topic,
+    required this.value,
+    required this.notificationSettingList,
   });
 
   factory NotificationSetting.fromJson(Map<String, dynamic> json) {
-    if (json == null) {
-      return null;
-    }
     return new NotificationSetting(
       type: json['type'],
       id: json['id'],

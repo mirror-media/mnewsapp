@@ -8,10 +8,6 @@ class CategoryList extends CustomizedList<Category> {
   CategoryList();
 
   factory CategoryList.fromJson(List<dynamic> parsedJson) {
-    if (parsedJson == null) {
-      return null;
-    }
-
     CategoryList categories = CategoryList();
     List parseList = parsedJson.map((i) => Category.fromJson(i)).toList();
     parseList.forEach((element) {
@@ -30,11 +26,8 @@ class CategoryList extends CustomizedList<Category> {
   // your custom methods
   List<Map<dynamic, dynamic>> toJson() {
     List<Map> categoryMaps = List.empty(growable: true);
-    if (l == null) {
-      return null;
-    }
 
-    for (Category category in l) {
+    for (Category category in this) {
       categoryMaps.add(category.toJson());
     }
     return categoryMaps;

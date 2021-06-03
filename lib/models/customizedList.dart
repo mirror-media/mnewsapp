@@ -1,14 +1,24 @@
 import 'dart:collection';
 
-abstract class CustomizedList<E> extends ListBase<E> {
-  List<E> l = [];
-  set length(int newLength) {
-    l.length = newLength;
+class CustomizedList<E> extends ListBase<E> {
+  List innerList = List.empty(growable: true);
+
+  int get length => innerList.length;
+
+  set length(int length) {
+    innerList.length = length;
   }
 
-  int get length => l.length;
-  E operator [](int index) => l[index];
-  void operator []=(int index, E value) {
-    l[index] = value;
+  void operator[]=(int index, E value) {
+    innerList[index] = value;
   }
+
+  E operator [](int index) => innerList[index];
+
+  // Though not strictly necessary, for performance reasons
+  // you should implement add and addAll.
+
+  void add(E value) => innerList.add(value);
+
+  void addAll(Iterable<E> all) => innerList.addAll(all);
 }
