@@ -27,15 +27,16 @@ class NotificationSettingServices implements NotificationSettingRepos{
   @override
   Future<NotificationSettingList> getNotificationSettingList() async{
     NotificationSettingList notificationSettingList;
+    NotificationSettingList? storageNotification;
     if (await _storage.ready) {
-      notificationSettingList =
-          NotificationSettingList.fromJson(_storage.getItem("notification"));
+      storageNotification = await _storage.getItem("notification");
     }
 
-    if (notificationSettingList == null) {
+    if (storageNotification == null) {
       notificationSettingList = await _fetchDefaultNotificationList();
       _storage.setItem("notification", notificationSettingList.toJson());
     } else {
+      notificationSettingList = NotificationSettingList.fromJson(_storage.getItem("notification"));
       NotificationSettingList notificationSettingListFromAsset = await _fetchDefaultNotificationList();
       checkAndSyncNotificationSettingList(
         notificationSettingListFromAsset,
@@ -62,11 +63,11 @@ class NotificationSettingServices implements NotificationSettingRepos{
   /// userList is from storage notification
   /// change the title and topic from assetList
   /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(NotificationSettingList assetList, NotificationSettingList userList) async{
+  checkAndSyncNotificationSettingList(NotificationSettingList? assetList, NotificationSettingList? userList) async{
     if(assetList != null) {
       assetList.forEach(
         (asset) { 
-          NotificationSetting user = userList?.getById(asset.id);
+          NotificationSetting? user = userList?.getById(asset.id);
           if(user != null && user.id == asset.id) {
             asset.value = user.value;
 
