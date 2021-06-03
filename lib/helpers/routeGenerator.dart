@@ -40,7 +40,7 @@ class RouteGenerator {
           builder: (_) => SearchPage()
         );
       case story:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
@@ -54,7 +54,7 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case anchorpersonStory:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
         if (args['anchorpersonId'] is String) {
           return MaterialPageRoute(
@@ -69,7 +69,7 @@ class RouteGenerator {
         // You can also throw an exception while in development.
         return _errorRoute(settings);
       case showStory:
-        Map args = settings.arguments;
+        Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
         if (
           args['youtubePlayListId'] is String &&
