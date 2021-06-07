@@ -1,4 +1,5 @@
 import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/models/baseModel.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class YoutubePlaylistItem {
@@ -16,10 +17,7 @@ class YoutubePlaylistItem {
 
   factory YoutubePlaylistItem.fromJson(Map<String, dynamic> json) {
     String photoUrl = mirrorNewsDefaultImageUrl;
-    if (json['snippet'] != null && 
-      json['snippet']['thumbnails'] != null &&
-      json['snippet']['thumbnails']['high'] != null &&
-      json['snippet']['thumbnails']['high']['url'] != null) {
+    if (BaseModel.checkJsonKeys(json, ['snippet', 'thumbnails', 'high', 'url'])) {
       photoUrl = json['snippet']['thumbnails']['high']['url'];
     }
 

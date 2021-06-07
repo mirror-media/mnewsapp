@@ -1,3 +1,5 @@
+import 'package:tv/models/baseModel.dart';
+
 class Tag {
   String id;
   String name;
@@ -9,13 +11,13 @@ class Tag {
 
   factory Tag.fromJson(Map<String, dynamic> json) {
     return Tag(
-      id: json['id'],
-      name: json['name'],
+      id: json[BaseModel.idKey],
+      name: json[BaseModel.nameKey],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
+        BaseModel.idKey: id,
+        BaseModel.nameKey: name,
       };
 }
