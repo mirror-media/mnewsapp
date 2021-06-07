@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tv/models/section.dart';
+import 'package:tv/models/baseModel.dart';
 
 /// url link
 const mNewsWebsiteLink = 'https://dev.mnews.tw/';
@@ -48,28 +48,28 @@ enum MNewsSection {
 
 const mNewsSectionList = [
   {
-    Section.idKey: MNewsSection.news,
-    Section.nameKey: '新聞'
+    BaseModel.idKey: MNewsSection.news,
+    BaseModel.nameKey: '新聞'
   },
   {
-    Section.idKey: MNewsSection.live,
-    Section.nameKey: '直播'
+    BaseModel.idKey: MNewsSection.live,
+    BaseModel.nameKey: '直播'
   },
   {
-    Section.idKey: MNewsSection.video,
-    Section.nameKey: '影音'
+    BaseModel.idKey: MNewsSection.video,
+    BaseModel.nameKey: '影音'
   },
   {
-    Section.idKey: MNewsSection.show,
-    Section.nameKey: '節目'
+    BaseModel.idKey: MNewsSection.show,
+    BaseModel.nameKey: '節目'
   },
   {
-    Section.idKey: MNewsSection.anchorperson,
-    Section.nameKey: '鏡主播'
+    BaseModel.idKey: MNewsSection.anchorperson,
+    BaseModel.nameKey: '鏡主播'
   },
   {
-    Section.idKey: MNewsSection.ombuds,
-    Section.nameKey: '公評人'
+    BaseModel.idKey: MNewsSection.ombuds,
+    BaseModel.nameKey: '公評人'
   }
 ];
 
