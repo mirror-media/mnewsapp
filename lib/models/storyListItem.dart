@@ -1,4 +1,5 @@
 import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/models/baseModel.dart';
 
 class StoryListItem {
   String? id;
@@ -16,33 +17,30 @@ class StoryListItem {
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
-    if(json.containsKey('_source') && json['_source'] != null) {
+    if(BaseModel.hasKey(json, '_source')) {
       json = json['_source'];
     }
 
     String photoUrl = mirrorNewsDefaultImageUrl;
-    if (json['heroImage'] != null && 
-      json['heroImage']['urlMobileSized'] != null) {
+    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
-    } else if (json['heroVideo'] != null && 
-      json['heroVideo']['coverPhoto'] != null && 
-      json['heroVideo']['coverPhoto']['urlMobileSized'] != null) {
+    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
     return StoryListItem(
-      id: json['id'],
-      name: json['name'],
-      slug: json['slug'],
+      id: json[BaseModel.idKey],
+      name: json[BaseModel.nameKey],
+      slug: json[BaseModel.slugKey],
       style: json['style'],
       photoUrl: photoUrl,
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'slug': slug,
+        BaseModel.idKey: id,
+        BaseModel.nameKey: name,
+        BaseModel.slugKey: slug,
         'style': style,
         'photoUrl': photoUrl,
       };

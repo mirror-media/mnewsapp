@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/peopleList.dart';
@@ -60,33 +61,31 @@ class Story {
 
   factory Story.fromJson(Map<String, dynamic> json) {
     ParagraphList brief = ParagraphList();
-    if(json["brief"] != null && 
-      jsonDecode(json["brief"])['apiData'] != '' && 
-      jsonDecode(json["brief"])['apiData'] != null) {
+    if(BaseModel.hasKey(json, 'brief') &&
+      BaseModel.hasKey(jsonDecode(json["brief"]), 'apiData') &&
+      jsonDecode(json["brief"])['apiData'] != '') {
       brief = ParagraphList.fromJson(jsonDecode(json["brief"])['apiData']);
     }
 
     ParagraphList contentApiData = ParagraphList();
-    if(json["contentApiData"] != null && 
+    if(BaseModel.hasKey(json, 'contentApiData') && 
       json["contentApiData"] != 'NaN') {
       contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
     }
 
     String photoUrl = mirrorNewsDefaultImageUrl;
-    if (json['heroImage'] != null && 
-      json['heroImage']['mobile'] != null) {
+    if (BaseModel.checkJsonKeys(json, ['heroImage', 'mobile'])) {
       photoUrl = json['heroImage']['mobile'];
     }
 
     String? videoUrl;
-    if (json['heroVideo'] != null && 
-      json['heroVideo']['url'] != null ) {
+    if (BaseModel.checkJsonKeys(json, ['heroVideo', 'url']) ) {
       videoUrl = json['heroVideo']['url'];
     }
 
     return Story(
       style: json['style'],
-      name: json['name'],
+      name: json[BaseModel.nameKey],
       brief: brief,
       contentApiData: contentApiData,
       publishTime: json['publishTime'],

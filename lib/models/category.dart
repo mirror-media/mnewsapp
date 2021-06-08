@@ -1,3 +1,5 @@
+import 'package:tv/models/baseModel.dart';
+
 class Category {
   String? id;
   String name;
@@ -11,16 +13,16 @@ class Category {
 
   factory Category.fromJson(Map<String, dynamic> json) {
     return Category(
-      id: json['id'],
-      name: json['name'],
-      slug: json['slug'],
+      id: json[BaseModel.idKey],
+      name: json[BaseModel.nameKey],
+      slug: json[BaseModel.slugKey],
     );
   }
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'name': name,
-        'slug': slug,
+        BaseModel.idKey: id,
+        BaseModel.nameKey: name,
+        BaseModel.slugKey: slug,
       };
 
   bool isLatestCategory() {

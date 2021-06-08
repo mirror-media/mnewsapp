@@ -1,4 +1,5 @@
 import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/models/baseModel.dart';
 
 class Contact {
   final String id;
@@ -31,16 +32,15 @@ class Contact {
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     String photoUrl = mirrorNewsDefaultImageUrl;
-    if (json['image'] != null && 
-      json['image']['urlMobileSized'] != null) {
+    if (BaseModel.checkJsonKeys(json, ['image', 'urlMobileSized'])) {
       photoUrl = json['image']['urlMobileSized'];
     }
     
     return Contact(
-      id: json['id'],
-      name: json['name'],
+      id: json[BaseModel.idKey],
+      name: json[BaseModel.nameKey],
       photoUrl: photoUrl,
-      slug: json['slug'],
+      slug: json[BaseModel.slugKey],
 
       isAnchorperson: json['anchorperson']??false,
       isHost: json['host']??false,

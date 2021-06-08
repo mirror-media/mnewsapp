@@ -1,3 +1,5 @@
+import 'package:tv/models/baseModel.dart';
+
 class Content {
   String data;
   double? aspectRatio;
@@ -11,13 +13,13 @@ class Content {
 
   factory Content.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {
-      if (json['mobile'] != null) {
+      if (BaseModel.checkJsonKeys(json, ['mobile'])) {
         return Content(
           data: json['mobile']['url'],
           aspectRatio: json['mobile']['width'] / json['mobile']['height'],
           description: json['title'],
         );
-      } else if (json['youtubeId'] != null) {
+      } else if (BaseModel.checkJsonKeys(json, ['youtubeId'])) {
         return Content(
           data: json['youtubeId'],
           aspectRatio: null,
@@ -25,14 +27,14 @@ class Content {
         );
       } 
       // audio or video
-      else if (json['url'] != null) {
+      else if (BaseModel.checkJsonKeys(json, ['url'])) {
         return Content(
           data: json['url'],
           aspectRatio: null,
           description: json['name'],
         );
       } 
-      else if (json['embeddedCode'] != null) {
+      else if (BaseModel.checkJsonKeys(json, ['embeddedCode'])) {
         return Content(
           data: json['embeddedCode'],
           aspectRatio: (json['width'] == null || json['height'] == null)
@@ -40,13 +42,13 @@ class Content {
             : double.parse(json['width'])/double.parse(json['height']),
           description: json['caption'],
         );
-      } else if (json['draftRawObj'] != null) {
+      } else if (BaseModel.checkJsonKeys(json, ['draftRawObj'])) {
         return Content(
           data: json['body'],
           aspectRatio: null,
           description: json['title'],
         );
-      } else if (json['quote'] != null) {
+      } else if (BaseModel.checkJsonKeys(json, ['quote'])) {
         return Content(
           data: json['quote'],
           aspectRatio: null,
