@@ -24,7 +24,7 @@ class StoryServices implements StoryRepos{
       ) {
         style
         name
-        brief
+        briefApiData
         contentApiData
         publishTime
         updatedAt
@@ -76,6 +76,7 @@ class StoryServices implements StoryRepos{
         }
         otherbyline
         tags {
+          id
           name
         }
         relatedPosts {

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/categoryList.dart';
@@ -61,10 +59,9 @@ class Story {
 
   factory Story.fromJson(Map<String, dynamic> json) {
     ParagraphList brief = ParagraphList();
-    if(BaseModel.hasKey(json, 'brief') &&
-      BaseModel.hasKey(jsonDecode(json["brief"]), 'apiData') &&
-      jsonDecode(json["brief"])['apiData'] != '') {
-      brief = ParagraphList.fromJson(jsonDecode(json["brief"])['apiData']);
+    if(BaseModel.hasKey(json, 'briefApiData') &&
+      json["briefApiData"] != 'NaN') {
+      brief = ParagraphList.parseResponseBody(json['briefApiData']);
     }
 
     ParagraphList contentApiData = ParagraphList();
