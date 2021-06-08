@@ -82,6 +82,7 @@ flutter:
     - assets/image/error500.png
     - assets/image/noSignal.png
     - assets/image/search/searchNoResult.png
+    - assets/image/ombuds/ombudsDefault.jpg
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

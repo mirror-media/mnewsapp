@@ -14,6 +14,7 @@ const String error400Png = 'assets/image/error404.png';
 const String error500Png = 'assets/image/error500.png';
 const String noSignalPng = 'assets/image/noSignal.png';
 const String searchNoResultPng = 'assets/image/search/searchNoResult.png';
+const String ombudsDefaultJpg = 'assets/image/ombuds/ombudsDefault.jpg';
 
 /// color
 const Color themeColor = Color(0xff003366);
