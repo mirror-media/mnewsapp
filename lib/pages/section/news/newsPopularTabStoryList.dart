@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
@@ -32,10 +33,27 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
         if (state is TabStoryListError) {
           final error = state.error;
           print('NewsPopularTabStoryListError: ${error.message}');
+          if( error is NoInternetException) {
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return error.renderWidget(
+                    onPressed: () => _fetchPopularStoryList(),
+                    isColumn: true
+                  );
+                },
+                childCount: 1,
+              ),
+            );
+          } 
+          
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return Container();
+                return error.renderWidget(
+                  isNoButton: true,
+                  isColumn: true
+                );
               },
               childCount: 1,
             ),
