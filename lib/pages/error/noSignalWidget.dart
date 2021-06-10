@@ -4,8 +4,10 @@ import 'package:tv/pages/error/mNewsErrorWidget.dart';
 
 class NoSignalWidget extends StatelessWidget {
   final VoidCallback? onPressed;
+  final bool isColumn;
   NoSignalWidget({
     required this.onPressed,
+    this.isColumn = false,
   });
 
   @override
@@ -15,6 +17,7 @@ class NoSignalWidget extends StatelessWidget {
       title: '沒有網際網路連線',
       buttonName: '重新整理',
       onPressed: onPressed,
+      isColumn: isColumn,
     );
   }
 }

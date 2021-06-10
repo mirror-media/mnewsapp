@@ -7,7 +7,10 @@ abstract class MNewException {
   var message;
   MNewException(this.message);
   
-  Widget renderWidget({VoidCallback? onPressed});
+  Widget renderWidget({
+    VoidCallback? onPressed,
+    bool isColumn = false,
+  });
 }
 
 class Error500Exception implements MNewException{
@@ -15,7 +18,11 @@ class Error500Exception implements MNewException{
   Error500Exception(this.message);
 
   @override
-  Widget renderWidget({VoidCallback? onPressed}) => Error500Widget();
+  Widget renderWidget({
+    VoidCallback? onPressed,
+    bool isNoButton = false,
+    bool isColumn = false,
+  }) => Error500Widget(isNoButton: isNoButton, isColumn: isColumn);
 }
 
 class Error400Exception implements MNewException{
@@ -23,7 +30,11 @@ class Error400Exception implements MNewException{
   Error400Exception(this.message);
 
   @override
-  Widget renderWidget({VoidCallback? onPressed}) => Error400Widget();
+  Widget renderWidget({
+    VoidCallback? onPressed,
+    bool isNoButton = false,
+    bool isColumn = false,
+  }) => Error400Widget(isNoButton: isNoButton, isColumn: isColumn);
 }
 
 class NoInternetException implements MNewException{
@@ -31,7 +42,10 @@ class NoInternetException implements MNewException{
   NoInternetException(this.message);
 
   @override
-  Widget renderWidget({VoidCallback? onPressed}) => NoSignalWidget(onPressed: onPressed);
+  Widget renderWidget({
+    VoidCallback? onPressed,
+    bool isColumn = false,
+  }) => NoSignalWidget(onPressed: onPressed, isColumn: isColumn);
 }
 
 class NoServiceFoundException extends Error500Exception{
