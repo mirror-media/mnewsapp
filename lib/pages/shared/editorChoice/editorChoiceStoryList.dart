@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
@@ -38,12 +39,29 @@ class _BuildEditorChoiceStoryListState extends State<BuildEditorChoiceStoryList>
         if (state is EditorChoiceError) {
           final error = state.error;
           print('EditorChoiceError: ${error.message}');
+          if( error is NoInternetException) {
+            return SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (BuildContext context, int index) {
+                  return error.renderWidget(
+                    onPressed: () => _loadEditorChoiceList(widget.editorChoiceEvent),
+                    isColumn: true
+                  );
+                },
+                childCount: 1,
+              ),
+            );
+          } 
+          
           return SliverList(
             delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index) {
-                return Container();
+                return error.renderWidget(
+                  isNoButton: true,
+                  isColumn: true
+                );
               },
-              childCount: 1
+              childCount: 1,
             ),
           );
         }
