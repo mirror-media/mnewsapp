@@ -69,10 +69,12 @@ class ContactServices implements ContactRepos{
     """
     query(\$where: ContactWhereUniqueInput!) {
       Contact(where: \$where) {
+        id
         name
         image {
           urlMobileSized
         }
+        slug
         twitter
         facebook
         instatgram
