@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/contactService.dart';
-import 'package:tv/widgets/anchorpersonStoryWidget.dart';
+import 'package:tv/pages/section/anchorperson/anchorpersonStoryWidget.dart';
 
 class AnchorpersonStoryPage extends StatefulWidget {
   final String anchorpersonId;
