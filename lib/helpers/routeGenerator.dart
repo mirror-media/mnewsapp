@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
-import 'package:tv/pages/anchorpersonStoryPage.dart';
+import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/settingPage.dart';
