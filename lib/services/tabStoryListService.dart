@@ -6,6 +6,7 @@ import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class TabStoryListRepos {
+  void reduceSkip(int reducedNumber);
   Future<StoryListItemList> fetchStoryList({bool withCount = true});
   Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20});
   Future<StoryListItemList> fetchStoryListByCategorySlug(String slug);
@@ -48,6 +49,11 @@ class TabStoryListServices implements TabStoryListRepos{
   TabStoryListServices({String? postStyle, int first = 20}) {
     this.postStyle = postStyle;
     this.first = first;
+  }
+
+  @override
+  void reduceSkip(int reducedNumber) {
+    skip = skip - reducedNumber;
   }
 
   @override

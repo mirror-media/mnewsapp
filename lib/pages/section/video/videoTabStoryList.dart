@@ -94,6 +94,15 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
           );
         }
 
+        if(state is TabStoryListLoadingMoreFail) {
+          StoryListItemList storyListItemList = state.storyListItemList;
+          _fetchNextPageByCategorySlug();
+          return _tabStoryList(
+            storyListItemList: storyListItemList, 
+            isLoading: true
+          );
+        }
+
         // state is Init, loading, or other 
         return SliverList(
           delegate: SliverChildBuilderDelegate(

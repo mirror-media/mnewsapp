@@ -118,6 +118,20 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           );
         }
 
+        if(state is TabStoryListLoadingMoreFail) {
+          StoryListItemList storyListItemList = state.storyListItemList;
+          if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+            _fetchNextPage();
+          } else {
+            _fetchNextPageByCategorySlug();
+          }
+          return _tabStoryList(
+            storyListItemList: storyListItemList, 
+            needCarousel: widget.needCarousel,
+            isLoading: true
+          );
+        }
+
         // state is Init, loading, or other 
         return SliverList(
           delegate: SliverChildBuilderDelegate(

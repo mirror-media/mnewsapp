@@ -11,6 +11,11 @@ class TabStoryListLoadingMore extends TabStoryListState {
   TabStoryListLoadingMore({required this.storyListItemList});
 }
 
+class TabStoryListLoadingMoreFail extends TabStoryListState {
+  final StoryListItemList storyListItemList;
+  TabStoryListLoadingMoreFail({required this.storyListItemList});
+}
+
 class TabStoryListLoaded extends TabStoryListState {
   final StoryListItemList storyListItemList;
   TabStoryListLoaded({required this.storyListItemList});
