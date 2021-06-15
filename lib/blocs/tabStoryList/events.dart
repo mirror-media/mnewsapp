@@ -166,13 +166,28 @@ class FetchNextPageByCategorySlug extends TabStoryListEvents {
   @override
   Stream<TabStoryListState> run(TabStoryListRepos tabStoryListRepos) async*{
     print(this.toString());
-    yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
-    StoryListItemList newStoryListItemList = await tabStoryListRepos.fetchNextPageByCategorySlug(
-      slug, 
-      loadingMorePage: loadingMorePage
-    );
-    storyListItemList.addAll(newStoryListItemList);
-    yield TabStoryListLoaded(storyListItemList: storyListItemList);
+    try {
+      yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
+      StoryListItemList newStoryListItemList = await tabStoryListRepos.fetchNextPageByCategorySlug(
+        slug, 
+        loadingMorePage: loadingMorePage
+      );
+      storyListItemList.addAll(newStoryListItemList);
+      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+    }  catch(e) {
+      Fluttertoast.showToast(
+        msg: "加載失敗",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
+      );
+      await Future.delayed(Duration(seconds: 5));
+      tabStoryListRepos.reduceSkip(loadingMorePage);
+      yield TabStoryListLoadingMoreFail(storyListItemList: storyListItemList);
+    }
   }
 }
 
