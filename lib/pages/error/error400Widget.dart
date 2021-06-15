@@ -15,7 +15,7 @@ class Error400Widget extends StatelessWidget {
   Widget build(BuildContext context) {
     if(isNoButton) {
       return MNewsNoButtonErrorWidget(
-        assetImagePath: error500Png,
+        assetImagePath: error400Png,
         title: '抱歉...訊號出了點問題',
         isColumn: isColumn,
       );
