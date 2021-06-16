@@ -7,7 +7,7 @@ import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/settingPage.dart';
-import 'package:tv/pages/showStoryPage.dart';
+import 'package:tv/pages/section/show/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/services/configService.dart';
 

@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
+import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
-import 'package:tv/widgets/showPlaylistTabContent.dart';
 
 class ShowPlaylistWidget extends StatefulWidget {
   final ShowIntro showIntro;

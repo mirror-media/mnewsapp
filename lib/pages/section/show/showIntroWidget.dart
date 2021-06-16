@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
 import 'package:tv/models/showIntro.dart';
-import 'package:tv/widgets/showPlaylistWidget.dart';
+import 'package:tv/pages/section/show/showPlaylistWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
