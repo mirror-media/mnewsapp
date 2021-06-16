@@ -52,30 +52,36 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
           return ListView(
             children: [
-              SizedBox(height: 24,),
-              Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24,),
-                child: _buildContactTypeTitle('鏡主播', width),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 24-7.5, right: 24-7.5,
-                  top: 24-16.0, bottom: 24-16.0,
+              if(anchorpersonContactList.length > 0)
+              ...[
+                SizedBox(height: 24,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, right: 24,),
+                  child: _buildContactTypeTitle('鏡主播', width),
                 ),
-                child: _buildContactList(anchorpersonContactList, width),
-              ),
-              SizedBox(height: 24,),
-              Padding(
-                padding: const EdgeInsets.only(left: 24, right: 24,),
-                child: _buildContactTypeTitle('鏡主持', width),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 24-7.5, right: 24-7.5,
-                  top: 24-16.0, bottom: 24-16.0,
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 24-7.5, right: 24-7.5,
+                    top: 24-16.0, bottom: 24-16.0,
+                  ),
+                  child: _buildContactList(anchorpersonContactList, width),
                 ),
-                child: _buildContactList(hostContactList, width),
-              ),
+              ],
+              if(hostContactList.length > 0)
+              ...[
+                SizedBox(height: 24,),
+                Padding(
+                  padding: const EdgeInsets.only(left: 24, right: 24,),
+                  child: _buildContactTypeTitle('鏡主持', width),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 24-7.5, right: 24-7.5,
+                    top: 24-16.0, bottom: 24-16.0,
+                  ),
+                  child: _buildContactList(hostContactList, width),
+                ),
+              ],
             ],
           );
         }
