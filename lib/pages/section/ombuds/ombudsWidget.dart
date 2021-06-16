@@ -44,7 +44,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             return error.renderWidget(onPressed: () => _loadOmbuds());
           } 
           
-          return error.renderWidget();
+          return error.renderWidget(isNoButton: true);
         }
         if (state is StoryLoaded) {
           Story? story = state.story;

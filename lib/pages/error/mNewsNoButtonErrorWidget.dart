@@ -12,10 +12,11 @@ class MNewsNoButtonErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
     if(isColumn) {
       return Column(
         children: [
-          SizedBox(height: 200),
+          SizedBox(height: height/3),
           Center(child: Image.asset(assetImagePath)),
           SizedBox(height: 16),
           Center(
@@ -33,7 +34,7 @@ class MNewsNoButtonErrorWidget extends StatelessWidget {
     }
     return ListView(
       children: [
-        SizedBox(height: 200),
+        SizedBox(height: height/3),
         Center(child: Image.asset(assetImagePath)),
         SizedBox(height: 16),
         Center(
