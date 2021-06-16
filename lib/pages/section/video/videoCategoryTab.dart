@@ -86,7 +86,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab> with TickerProvider
             return error.renderWidget(onPressed: () => _loadCategoryList());
           } 
           
-          return error.renderWidget();
+          return error.renderWidget(isNoButton: true);
         }
         if (state is CategoriesLoaded) {
           CategoryList categoryList = state.categoryList;

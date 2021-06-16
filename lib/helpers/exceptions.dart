@@ -9,6 +9,7 @@ abstract class MNewException {
   
   Widget renderWidget({
     VoidCallback? onPressed,
+    bool isNoButton = false,
     bool isColumn = false,
   });
 }
@@ -44,6 +45,7 @@ class NoInternetException implements MNewException{
   @override
   Widget renderWidget({
     VoidCallback? onPressed,
+    bool isNoButton = false,
     bool isColumn = false,
   }) => NoSignalWidget(onPressed: onPressed, isColumn: isColumn);
 }

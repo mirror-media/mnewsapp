@@ -86,7 +86,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderSt
             return error.renderWidget(onPressed: () => _loadCategoryList());
           } 
           
-          return error.renderWidget();
+          return error.renderWidget(isNoButton: true);
         }
         if (state is CategoriesLoaded) {
           CategoryList categoryList = state.categoryList;
