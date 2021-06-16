@@ -17,10 +17,12 @@ class MNewsErrorWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
     if(isColumn) {
       return Column(
         children: [
-          SizedBox(height: 200),
+          SizedBox(height: height/3),
           Center(child: Image.asset(assetImagePath)),
           SizedBox(height: 16),
           Center(
@@ -66,7 +68,7 @@ class MNewsErrorWidget extends StatelessWidget {
     }
     return ListView(
       children: [
-        SizedBox(height: 200),
+        SizedBox(height: height/3),
         Center(child: Image.asset(assetImagePath)),
         SizedBox(height: 16),
         Center(
