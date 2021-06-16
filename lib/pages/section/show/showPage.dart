@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/categories/bloc.dart';
+import 'package:tv/pages/section/show/showCategoryTab.dart';
 import 'package:tv/services/showService.dart';
-import 'package:tv/widgets/showCategoryTab.dart';
 
 class ShowPage extends StatelessWidget {
   @override

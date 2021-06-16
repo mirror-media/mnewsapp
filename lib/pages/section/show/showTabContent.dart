@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/bloc.dart';
 import 'package:tv/models/category.dart';
+import 'package:tv/pages/section/show/showIntroWidget.dart';
 import 'package:tv/services/showService.dart';
-import 'package:tv/widgets/showIntroWidget.dart';
 
 class ShowTabContent extends StatefulWidget {
   final Category category;

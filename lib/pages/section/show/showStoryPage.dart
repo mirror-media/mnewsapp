@@ -6,8 +6,8 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
+import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
-import 'package:tv/widgets/showPlaylistTabContent.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class ShowStoryPage extends StatefulWidget {
