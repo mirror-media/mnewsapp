@@ -39,7 +39,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
             return error.renderWidget(onPressed: () => _fetchAnchorpersonOrHostContactList());
           } 
           
-          return error.renderWidget();
+          return error.renderWidget(isNoButton: true);
         }
         if (state is ContactListLoaded) {
           ContactList contactList = state.contactList;
