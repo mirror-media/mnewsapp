@@ -4,6 +4,7 @@ import 'package:tv/blocs/show/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
+import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
 
@@ -36,7 +37,11 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
         if (state is ShowError) {
           final error = state.error;
           print('ShowError: ${error.message}');
-          return Container();
+          if( error is NoInternetException) {
+            return error.renderWidget(onPressed: () => _fetchShowIntro(widget.showCategoryId));
+          } 
+          
+          return error.renderWidget(isNoButton: true);
         }
         if (state is ShowIntroLoaded) {
           ShowIntro showIntro = state.showIntro;
