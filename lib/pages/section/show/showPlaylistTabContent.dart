@@ -91,6 +91,17 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             isLoading: true
           );
         }
+        if(state is YoutubePlaylistLoadingMoreFail) {
+          YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
+          _isLoading = false;
+          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
+          
+          return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList, 
+            isLoading: true
+          );
+        }
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
           _isLoading = false;
