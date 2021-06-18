@@ -79,7 +79,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       builder: (BuildContext context, YoutubePlaylistState state) {
         if (state is YoutubePlaylistError) {
           final error = state.error;
-          print('LiveSiteError: ${error.message}');
+          print('YoutubePlaylistError: ${error.message}');
           return Container();
         }
         if (state is YoutubePlaylistLoadingMore) {
