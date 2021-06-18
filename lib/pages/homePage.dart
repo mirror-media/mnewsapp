@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:localstorage/localstorage.dart';
 import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/blocs/section/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -10,6 +11,7 @@ import 'package:tv/pages/section/news/newsPage.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
+import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
@@ -18,7 +20,34 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final LocalStorage _storage = LocalStorage('setting');
   var _scaffoldkey = GlobalKey<ScaffoldState>();
+  
+  @override
+  void initState() {
+    _showGDPR();
+    super.initState();
+  }
+
+  _showGDPR() async{
+    if(await _storage.ready) {
+      bool? isFirstLaunch = await _storage.getItem("isFirstLaunch");
+      if(isFirstLaunch == null || isFirstLaunch) {
+        await Future.delayed(Duration(seconds: 1));
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (context) {
+            return AlertDialog(
+              contentPadding: const EdgeInsets.all(0.0),
+              content: GDPR(),
+            );
+          },
+        );
+        _storage.setItem("isFirstLaunch", false);
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
