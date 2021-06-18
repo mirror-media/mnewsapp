@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
@@ -73,22 +75,18 @@ class FetchSnippetByPlaylistIdAndPageToken extends YoutubePlaylistEvents {
       youtubePlaylistItemList.addAll(newYoutubePlaylistItemList);
       
       yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
-    } on SocketException {
-      yield YoutubePlaylistError(
-        error: NoInternetException('No Internet'),
+    } catch(e) {
+      Fluttertoast.showToast(
+        msg: "加載失敗",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0
       );
-    } on HttpException {
-      yield YoutubePlaylistError(
-        error: NoServiceFoundException('No Service Found'),
-      );
-    } on FormatException {
-      yield YoutubePlaylistError(
-        error: InvalidFormatException('Invalid Response format'),
-      );
-    } catch (e) {
-      yield YoutubePlaylistError(
-        error: UnknownException(e.toString()),
-      );
+      await Future.delayed(Duration(seconds: 5));
+      yield YoutubePlaylistLoadingMoreFail(youtubePlaylistItemList: youtubePlaylistItemList);
     }
   }
 }
