@@ -11,6 +11,11 @@ class YoutubePlaylistLoadingMore extends YoutubePlaylistState {
   YoutubePlaylistLoadingMore({required this.youtubePlaylistItemList});
 }
 
+class YoutubePlaylistLoadingMoreFail extends YoutubePlaylistState {
+  final YoutubePlaylistItemList youtubePlaylistItemList;
+  YoutubePlaylistLoadingMoreFail({required this.youtubePlaylistItemList});
+}
+
 class YoutubePlaylistLoaded extends YoutubePlaylistState {
   final YoutubePlaylistItemList youtubePlaylistItemList;
   YoutubePlaylistLoaded({required this.youtubePlaylistItemList});

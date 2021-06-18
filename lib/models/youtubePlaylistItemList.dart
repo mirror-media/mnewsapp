@@ -6,7 +6,7 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
   // constructor
   YoutubePlaylistItemList({this.nextPageToken});
 
-  factory YoutubePlaylistItemList.fromJson(String nextPageToken, List<dynamic> parsedJson) {
+  factory YoutubePlaylistItemList.fromJson(String? nextPageToken, List<dynamic> parsedJson) {
     YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList(nextPageToken: nextPageToken);
     List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromJson(i)).toList();
     parseList.forEach((element) {
