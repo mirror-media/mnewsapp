@@ -38,6 +38,10 @@ class _PromotionVideosState extends State<PromotionVideos> {
         if (state is PromotionVideoLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
 
+          if(youtubePlaylistItemList.length == 0) {
+            return Container();
+          }
+
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
