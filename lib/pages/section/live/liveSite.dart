@@ -40,6 +40,10 @@ class _LiveSiteState extends State<LiveSite> {
         }
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
+          
+          if(youtubePlaylistItemList.length == 0) {
+            return Container();
+          }
 
           return Column(
             children: [
