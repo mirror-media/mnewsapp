@@ -1,5 +1,5 @@
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 
 abstract class YoutubePlaylistRepos {
@@ -20,7 +20,7 @@ class YoutubePlaylistServices implements YoutubePlaylistRepos{
   @override
   Future<YoutubePlaylistItemList> fetchSnippetByPlaylistId(String playlistId, {int maxResults = 5}) async{
     final jsonResponse = await _helper.getByUrl(
-      youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults'
+      baseConfig!.youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults'
     );
 
     YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList.fromJson(
@@ -33,7 +33,7 @@ class YoutubePlaylistServices implements YoutubePlaylistRepos{
   @override
   Future<YoutubePlaylistItemList> fetchSnippetByPlaylistIdAndPageToken(String playlistId, String pageToken, {int maxResults = 5}) async{
     final jsonResponse = await _helper.getByUrl(
-      youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&pageToken=$pageToken&maxResults=$maxResults'
+      baseConfig!.youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&pageToken=$pageToken&maxResults=$maxResults'
     );
 
     YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList.fromJson(

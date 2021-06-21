@@ -1,4 +1,4 @@
-import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
 
 class Contact {
@@ -31,7 +31,7 @@ class Contact {
   });
 
   factory Contact.fromJson(Map<String, dynamic> json) {
-    String photoUrl = mirrorNewsDefaultImageUrl;
+    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['image', 'urlMobileSized'])) {
       photoUrl = json['image']['urlMobileSized'];
     }

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -79,7 +79,7 @@ class TabStoryListServices implements TabStoryListRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"
@@ -127,7 +127,7 @@ class TabStoryListServices implements TabStoryListRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"
@@ -153,9 +153,9 @@ class TabStoryListServices implements TabStoryListRepos{
   Future<StoryListItemList> fetchPopularStoryList() async{
     String jsonUrl;
     if(postStyle == 'videoNews') {
-      jsonUrl = videoPopularListUrl;
+      jsonUrl = baseConfig!.videoPopularListUrl;
     } else {
-      jsonUrl = newsPopularListUrl;
+      jsonUrl = baseConfig!.newsPopularListUrl;
     }
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);

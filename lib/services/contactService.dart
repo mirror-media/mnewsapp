@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -52,7 +52,7 @@ class ContactServices implements ContactRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"
@@ -96,7 +96,7 @@ class ContactServices implements ContactRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"

@@ -1,4 +1,4 @@
-import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
 
 class StoryListItem {
@@ -21,7 +21,7 @@ class StoryListItem {
       json = json['_source'];
     }
 
-    String photoUrl = mirrorNewsDefaultImageUrl;
+    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
     } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {

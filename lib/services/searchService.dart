@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class SearchRepos {
@@ -25,7 +25,7 @@ class SearchServices implements SearchRepos{
     };
 
     final jsonResponse = await _helper.postByUrl(
-      searchApi,
+      baseConfig!.searchApi,
       jsonEncode(query),
       headers: {
         "Content-Type": "application/json"

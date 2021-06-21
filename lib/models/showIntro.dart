@@ -1,4 +1,4 @@
-import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 
@@ -20,7 +20,7 @@ class ShowIntro {
   });
 
   factory ShowIntro.fromJson(Map<String, dynamic> json) {
-    String pictureUrl = mirrorNewsDefaultImageUrl;
+    String pictureUrl = baseConfig!.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['picture', 'urlMobileSized'])) {
       pictureUrl = json['picture']['urlMobileSized'];
     }
