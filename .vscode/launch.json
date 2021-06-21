@@ -5,9 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "mnewsapp",
+            "name": "Run prod",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "program": "lib/main_prod.dart",
+        },
+        {
+            "name": "Run dev",
+            "request": "launch",
+            "type": "dart",
+            "program": "lib/main_dev.dart",
         }
     ]
 }
