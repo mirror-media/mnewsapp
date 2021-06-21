@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tv/helpers/apiConstants.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -74,10 +74,10 @@ class GDPR extends StatelessWidget {
                 ),
               ),
               onTap: () async{
-                if (await canLaunch(ombudsAppealUrl)) {
-                  await launch(ombudsAppealUrl);
+                if (await canLaunch(baseConfig!.privacyPolicyUrl)) {
+                  await launch(baseConfig!.privacyPolicyUrl);
                 } else {
-                  throw 'Could not launch $ombudsAppealUrl';
+                  throw 'Could not launch ${baseConfig!.privacyPolicyUrl}';
                 }
               }
             ),

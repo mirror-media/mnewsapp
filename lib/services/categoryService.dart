@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -44,7 +44,7 @@ class CategoryServices implements CategoryRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"

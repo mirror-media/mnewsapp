@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -60,7 +60,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"
@@ -124,7 +124,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"

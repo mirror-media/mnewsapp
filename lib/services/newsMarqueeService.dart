@@ -1,7 +1,7 @@
 import 'dart:convert';
 
+import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -50,7 +50,7 @@ class NewsMarqueeServices implements NewsMarqueeRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      graphqlApi,
+      baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
       headers: {
         "Content-Type": "application/json"

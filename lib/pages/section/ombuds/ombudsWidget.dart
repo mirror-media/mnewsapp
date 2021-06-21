@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
-import 'package:tv/helpers/apiConstants.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
@@ -232,10 +232,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
         ),
         onPressed: () async{
-          if (await canLaunch(ombudsAppealUrl)) {
-            await launch(ombudsAppealUrl);
+          if (await canLaunch(baseConfig!.ombudsAppealUrl)) {
+            await launch(baseConfig!.ombudsAppealUrl);
           } else {
-            throw 'Could not launch $ombudsAppealUrl';
+            throw 'Could not launch ${baseConfig!.ombudsAppealUrl}';
           }
         }
       ),
@@ -283,10 +283,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               title1: '影音',
               title2: '紀錄',
               onTap:  () async{
-                if (await canLaunch(ombudsvideoRecorderUrl)) {
-                  await launch(ombudsvideoRecorderUrl);
+                if (await canLaunch(baseConfig!.ombudsvideoRecorderUrl)) {
+                  await launch(baseConfig!.ombudsvideoRecorderUrl);
                 } else {
-                  throw 'Could not launch $ombudsvideoRecorderUrl';
+                  throw 'Could not launch ${baseConfig!.ombudsvideoRecorderUrl}';
                 }
               }
             ),
@@ -309,10 +309,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               title1: '季報',
               title2: '年報',
               onTap:  () async{
-                if (await canLaunch(ombudsReportsUrl)) {
-                  await launch(ombudsReportsUrl);
+                if (await canLaunch(baseConfig!.ombudsReportsUrl)) {
+                  await launch(baseConfig!.ombudsReportsUrl);
                 } else {
-                  throw 'Could not launch $ombudsReportsUrl';
+                  throw 'Could not launch ${baseConfig!.ombudsReportsUrl}';
                 }
               }
             ),
