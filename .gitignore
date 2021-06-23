@@ -43,3 +43,9 @@ app.*.map.json
 # for internal constants
 lib/helpers/devApiConstants.dart
 lib/helpers/prodApiConstants.dart
+
+# android key
+android/prod/prod.properties
+android/prod/MirrorNews.jks
+android/dev/dev.properties
+android/dev/MirrorNewsDev.jks

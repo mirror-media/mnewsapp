@@ -25,6 +25,18 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
+def devKeystoreProperties = new Properties()
+def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
+if (devKeystorePropertiesFile.exists()) {
+    devKeystoreProperties.load(new FileInputStream(devKeystorePropertiesFile))
+}
+
+def prodKeystoreProperties = new Properties()
+def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
+if (prodKeystorePropertiesFile.exists()) {
+    prodKeystoreProperties.load(new FileInputStream(prodKeystorePropertiesFile))
+}
+
 android {
     compileSdkVersion 29
 
@@ -34,6 +46,7 @@ android {
 
     lintOptions {
         disable 'InvalidPackage'
+        checkReleaseBuilds false
     }
 
     defaultConfig {
@@ -45,12 +58,40 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
+    
+    signingConfigs {
+        dev {
+            keyAlias devKeystoreProperties['keyAlias']
+            keyPassword devKeystoreProperties['keyPassword']
+            storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
+            storePassword devKeystoreProperties['storePassword']
+        }
+        prod {
+            keyAlias prodKeystoreProperties['keyAlias']
+            keyPassword prodKeystoreProperties['keyPassword']
+            storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
+            storePassword prodKeystoreProperties['storePassword']
+        }
+    }
+
+    flavorDimensions 'flavors'
+    productFlavors {
+        dev {
+            dimension "flavors"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+        }
+        prod {
+            dimension "flavors"
+        }
+    }
 
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.debug
+            productFlavors.dev.signingConfig signingConfigs.dev
+            productFlavors.prod.signingConfig signingConfigs.prod
         }
     }
 }
