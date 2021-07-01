@@ -59,6 +59,11 @@ dependencies:
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
 
+  # firebase
+  firebase_core: "^1.3.0"
+  # firebase cloud messaging
+  firebase_messaging: "^10.0.2"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
