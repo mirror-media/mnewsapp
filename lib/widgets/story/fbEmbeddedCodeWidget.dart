@@ -22,6 +22,8 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+
     // username refer to https://www.facebook.com/help/105399436216001
     // facebook url ex.
     // https://www.facebook.com/ facebookapp              / posts                                / 10160138384851729
