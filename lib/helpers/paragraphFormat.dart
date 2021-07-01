@@ -105,7 +105,7 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return InfoBoxWidget(
-              title: paragraph.contents![0].description!,
+              title: paragraph.contents![0].description??'',
               description: paragraph.contents![0].data,
             );
           }
