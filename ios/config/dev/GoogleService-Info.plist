@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>1046058395507-t550781f1og1943giuhue1l0pp1bvf8t.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.1046058395507-t550781f1og1943giuhue1l0pp1bvf8t</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCPJEG24VJSPBLJIeRhzKWBsKB0JSnEk94</string>
+	<key>GCM_SENDER_ID</key>
+	<string>1046058395507</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mirrortv.mnews.dev</string>
+	<key>PROJECT_ID</key>
+	<string>mirror-tv-dev</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mirror-tv-dev.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:1046058395507:ios:4f168e544d4784ae4e4706</string>
+</dict>
+</plist>

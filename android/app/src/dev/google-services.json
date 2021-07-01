@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "1046058395507",
+    "project_id": "mirror-tv-dev",
+    "storage_bucket": "mirror-tv-dev.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1046058395507:android:a686830bba482a844e4706",
+        "android_client_info": {
+          "package_name": "com.mirrortv.mnews.dev"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1046058395507-ji8kbvjeqhohj7ddac8r4akam84aurqj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDiwZxyFbAFsRqESrMM2V7j4m74rAgO8EQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1046058395507-ji8kbvjeqhohj7ddac8r4akam84aurqj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1046058395507-htr0km15epb3k3e5oj47ge2hip0q09ri.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.mnews.tv.dev"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
