@@ -58,25 +58,36 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
   }
 }
 
-class ShowIntroWidget extends StatelessWidget {
+class ShowIntroWidget extends StatefulWidget {
   final ShowIntro showIntro;
   ShowIntroWidget({
     required this.showIntro,
   });
 
   @override
+  _ShowIntroWidgetState createState() => _ShowIntroWidgetState();
+}
+
+class _ShowIntroWidgetState extends State<ShowIntroWidget> {
+  ScrollController _listviewController = ScrollController();
+
+  @override
+  void dispose() {
+    _listviewController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    ScrollController listviewController = ScrollController();
     double width = MediaQuery.of(context).size.width;
     double height = width/375*140;
 
     return ListView(
-      controller: listviewController,
-      //crossAxisAlignment: CrossAxisAlignment.start,
+      controller: _listviewController,
       children: [
         CachedNetworkImage(
           width: width,
-          imageUrl: showIntro.pictureUrl,
+          imageUrl: widget.showIntro.pictureUrl,
           placeholder: (context, url) => Container(
             height: height,
             width: width,
@@ -94,7 +105,7 @@ class ShowIntroWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: Text(
-            showIntro.name,
+            widget.showIntro.name,
             style: TextStyle(
               fontSize: 22,
               fontWeight: FontWeight.w500,
@@ -105,7 +116,7 @@ class ShowIntroWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: Text(
-            showIntro.introduction,
+            widget.showIntro.introduction,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w400,
@@ -115,7 +126,7 @@ class ShowIntroWidget extends StatelessWidget {
         SizedBox(height: 48),
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
-          child: ShowPlaylistWidget(showIntro: showIntro, listviewController: listviewController,),
+          child: ShowPlaylistWidget(showIntro: widget.showIntro, listviewController: _listviewController,),
         ),
       ]
     );
