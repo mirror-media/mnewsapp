@@ -92,15 +92,18 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.title!,
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-                color: _audioColor,
+            if(widget.title != null) 
+            ...[
+              Text(
+                widget.title!,
+                style: TextStyle(
+                  fontSize: 24,
+                  fontWeight: FontWeight.w600,
+                  color: _audioColor,
+                ),
               ),
-            ),
-            SizedBox(height: 8,),
+              SizedBox(height: 8,),
+            ],
             Row(
               children: [
                 StreamBuilder<PlayerState>(

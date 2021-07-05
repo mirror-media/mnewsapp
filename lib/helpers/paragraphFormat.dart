@@ -105,7 +105,7 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return InfoBoxWidget(
-              title: paragraph.contents![0].description!,
+              title: paragraph.contents![0].description??'',
               description: paragraph.contents![0].data,
             );
           }
@@ -124,11 +124,14 @@ class ParagraphFormat {
       case 'audio':
         {
           if (paragraph.contents!.length > 0) {
-            List<String> titleAndDescription =
-                paragraph.contents![0].description!.split(';');
+            String? titleAndDescription;
+            if(paragraph.contents![0].description != null) {
+              titleAndDescription = paragraph.contents![0].description!.split(';')[0];
+            }
+                
             return MNewsAudioPlayer(
               audioUrl: paragraph.contents![0].data,
-              title: titleAndDescription[0],
+              title: titleAndDescription,
             );
           }
           return Container();

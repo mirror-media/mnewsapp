@@ -32,6 +32,8 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
 
   @override
   void initState() {
+    if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    
     _screenIsReseted = false;
     _webViewAspectRatio = widget.aspectRatio ?? 16 / 9;
     _webViewBottomPadding = 16;
