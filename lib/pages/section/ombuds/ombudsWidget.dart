@@ -13,6 +13,7 @@ import 'package:tv/pages/section/ombuds/ombudsButton.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
 class OmbudsWidget extends StatefulWidget {
   @override
@@ -113,7 +114,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     String youtubeString = 'youtube';
     if(videoUrl.contains(youtubeString)) {
       if(videoUrl.contains(youtubeString)) {
-        videoUrl = YoutubeViewer.convertUrlToId(videoUrl)!;
+        videoUrl = YoutubePlayerController.convertUrlToId(videoUrl)!;
       }
       return YoutubeViewer(videoUrl);
     }
