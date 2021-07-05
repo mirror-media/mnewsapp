@@ -42,7 +42,8 @@ class Content {
             : double.parse(json['width'])/double.parse(json['height']),
           description: json['caption'],
         );
-      } else if (BaseModel.checkJsonKeys(json, ['draftRawObj'])) {
+      } else if (BaseModel.checkJsonKeys(json, ['draftRawObj'])
+      || BaseModel.checkJsonKeys(json, ['title'])) {
         return Content(
           data: json['body'],
           aspectRatio: null,
