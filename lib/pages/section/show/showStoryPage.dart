@@ -27,6 +27,12 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
   DateTimeFormat _dateTimeFormat = DateTimeFormat();
 
   @override
+  void dispose() {
+    _listviewController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
