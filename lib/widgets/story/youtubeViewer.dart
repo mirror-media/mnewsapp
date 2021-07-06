@@ -23,14 +23,13 @@ class YoutubeViewer extends StatefulWidget {
 
 class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
-  late YoutubePlayerController _controller;
+  late final YoutubePlayerController _controller;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    super.initState();
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoID,
       params: YoutubePlayerParams(
@@ -39,23 +38,27 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
         // iOS can not trigger full screen when desktopMode is true
         desktopMode: Platform.isAndroid, // false for platform design
         autoPlay: widget.autoPlay,
-        enableCaption: true,
+        enableCaption: false,
         showVideoAnnotations: false,
         enableJavaScript: true,
         privacyEnhanced: true,
         playsInline: true, // iOS only
+        useHybridComposition: true,
       ),
     )..listen((value) {
-        if (value.isReady && !value.hasPlayed) {
-          _controller
-            ..hidePauseOverlay()
-            ..hideTopMenu();
-          if(widget.autoPlay) {
-            _controller.play();
-          }
+      if (value.isReady && !value.hasPlayed) {
+        _controller
+          ..hidePauseOverlay()
+          ..hideTopMenu();
+        if(widget.autoPlay) {
+          _controller.play();
         }
-      });
-
+      }
+      if (value.hasPlayed) {
+        _controller..hideEndScreen();
+      }
+    });
+    
     // Uncomment below for device orientation
     _controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
@@ -74,15 +77,24 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
       });
       log('Exited Fullscreen');
     };
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final player = YoutubePlayerIFrame();
+    
     if(widget.isLive && Platform.isAndroid) {
       return Stack(
         children: [
+          player,
           YoutubePlayerControllerProvider(
             controller: _controller,
             child: player,
