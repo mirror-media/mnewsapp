@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class YoutubeWidget extends StatefulWidget {
   final double width;
@@ -15,17 +15,14 @@ class YoutubeWidget extends StatefulWidget {
   _YoutubeWidgetState createState() => _YoutubeWidgetState();
 }
 
-class _YoutubeWidgetState extends State<YoutubeWidget> with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
+class _YoutubeWidgetState extends State<YoutubeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        YoutubeViewer(widget.youtubeId),
+        YoutubePlayer(widget.youtubeId),
         if (widget.description != null && widget.description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
