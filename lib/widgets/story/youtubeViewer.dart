@@ -17,41 +17,19 @@ class YoutubeViewer extends StatefulWidget {
     }
   );
 
-  /// Converts fully qualified YouTube Url to video id.
-  ///
-  /// If videoId is passed as url then no conversion is done.
-  static String? convertUrlToId(String url, {bool trimWhitespaces = true}) {
-    if (!url.contains("http") && (url.length == 11)) return url;
-    if (trimWhitespaces) url = url.trim();
-
-    for (var exp in [
-      RegExp(
-          r"^https:\/\/(?:www\.|m\.)?youtube\.com\/watch\?v=([_\-a-zA-Z0-9]{11}).*$"),
-      RegExp(
-          r"^https:\/\/(?:www\.|m\.)?youtube(?:-nocookie)?\.com\/embed\/([_\-a-zA-Z0-9]{11}).*$"),
-      RegExp(r"^https:\/\/youtu\.be\/([_\-a-zA-Z0-9]{11}).*$")
-    ]) {
-      Match? match = exp.firstMatch(url);
-      if (match != null && match.groupCount >= 1) return match.group(1);
-    }
-
-    return null;
-  }
-
   @override
   _YoutubeViewerState createState() => _YoutubeViewerState();
 }
 
 class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
-  late YoutubePlayerController _controller;
+  late final YoutubePlayerController _controller;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    super.initState();
     _controller = YoutubePlayerController(
       initialVideoId: widget.videoID,
       params: YoutubePlayerParams(
@@ -60,23 +38,27 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
         // iOS can not trigger full screen when desktopMode is true
         desktopMode: Platform.isAndroid, // false for platform design
         autoPlay: widget.autoPlay,
-        enableCaption: true,
+        enableCaption: false,
         showVideoAnnotations: false,
         enableJavaScript: true,
         privacyEnhanced: true,
         playsInline: true, // iOS only
+        useHybridComposition: true,
       ),
     )..listen((value) {
-        if (value.isReady && !value.hasPlayed) {
-          _controller
-            ..hidePauseOverlay()
-            ..hideTopMenu();
-          if(widget.autoPlay) {
-            _controller.play();
-          }
+      if (value.isReady && !value.hasPlayed) {
+        _controller
+          ..hidePauseOverlay()
+          ..hideTopMenu();
+        if(widget.autoPlay) {
+          _controller.play();
         }
-      });
-
+      }
+      if (value.hasPlayed) {
+        _controller..hideEndScreen();
+      }
+    });
+    
     // Uncomment below for device orientation
     _controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
@@ -95,15 +77,24 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
       });
       log('Exited Fullscreen');
     };
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.close();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     final player = YoutubePlayerIFrame();
+    
     if(widget.isLive && Platform.isAndroid) {
       return Stack(
         children: [
+          player,
           YoutubePlayerControllerProvider(
             controller: _controller,
             child: player,

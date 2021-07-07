@@ -8,7 +8,7 @@ import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
-import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class ShowStoryPage extends StatefulWidget {
   final String youtubePlayListId;
@@ -39,7 +39,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
       body: ListView(
         controller: _listviewController,
         children: [
-          YoutubeViewer(
+          YoutubePlayer(
             widget.youtubePlaylistItem.youtubeVideoId
           ),
           SizedBox(height: 12),
