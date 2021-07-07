@@ -3,6 +3,7 @@ import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 import 'package:tv/widgets/story/fbEmbeddedCodeWidget.dart';
+import 'package:tv/widgets/story/googleFormEmbeddedCodeWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
@@ -129,6 +130,10 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget> with AutomaticK
     // or it will be getting screen overflow.
     if(widget.embeddedCoede.contains('www.facebook.com/plugins') && Platform.isAndroid){
       return FbEmbeddedCodeWidget(embeddedCoede: widget.embeddedCoede,);
+    }
+
+    if(widget.embeddedCoede.contains('docs.google.com/forms')){
+      return GoogleFormEmbeddedCodeWidget(embeddedCoede: widget.embeddedCoede,);
     }
 
     return Container(
