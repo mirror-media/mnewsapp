@@ -86,16 +86,23 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           child: _understandMoreBlock(),
         ),
         SizedBox(height: 40,),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-          child: _appealBlock(width),
+
+        Container(
+          width: width,
+          color: Color(0xffF4F5F6),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+            child: Column(
+              children: [
+                SizedBox(height: 28,),
+                _appealBlock(width),
+                SizedBox(height: 28,),
+                _ombudsIntroBlock(width),
+                SizedBox(height: 28,),
+              ],
+            ),
+          ),
         ),
-        SizedBox(height: 28,),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-          child: _ombudsIntroBlock(width),
-        ),
-        SizedBox(height: 28,),
       ]
     );
   }
@@ -182,63 +189,84 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   }
 
   Widget _appealBlock(double width) {
-    return Container(
-      width: width,
-      color: Colors.grey[300],
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 20.0),
-        child: Column(
-          children: [
-            Text(
-              '新聞申訴方式',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.w500,
-                color: themeColor,
-              ),
-            ),
-            SizedBox(height: 12),
-            _appealButton(width),
-          ]
+    return Column(
+      children: [
+        Text(
+          '我要向公評人申訴',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff004DBC),
+          ),
         ),
-      ),
+        SizedBox(height: 24),
+        Text(
+          '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵；如果您對於我們的客服有意見，請按下方的向客服申訴鍵。',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff014DB8),
+          ),
+        ),
+        SizedBox(height: 36),
+        _appealButton(
+          width, 
+          '向公評人申訴', 
+          () => RouteGenerator.navigateToStory(context, 'complaint'),
+        ),
+        SizedBox(height: 12),
+        _appealButton(
+          width, 
+          '向客服申訴', 
+          () async{
+            final Uri emailLaunchUri = Uri(
+              scheme: 'mailto',
+              path: mNewsMail,
+            );
+
+            if (await canLaunch(emailLaunchUri.toString())) {
+              await launch(emailLaunchUri.toString());
+            } else {
+              throw 'Could not launch $mNewsMail';
+            }
+          }
+        ),
+      ]
     );
   }
 
-  Widget _appealButton(double width) {
+  Widget _appealButton(
+    double width,
+    String title,
+    VoidCallback? onPressed,
+  ) {
     return Container(
       width: width,
       child: OutlinedButton(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
           child: Text(
-            '我要申訴',
+            title,
             style: TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
-              color: themeColor,
+              color: Color(0xff014DB8),
             ),
           ),
         ),
         style: ButtonStyle(
           textStyle: MaterialStateProperty.all(
             TextStyle(
-              color: themeColor,
+              color: Color(0xff014DB8),
             ),
           ),
           side: MaterialStateProperty.all(
             BorderSide(
-              color: themeColor
+              color: Color(0xff014DB8),
             ),
           ),
         ),
-        onPressed: () async{
-          if (await canLaunch(baseConfig!.ombudsAppealUrl)) {
-            await launch(baseConfig!.ombudsAppealUrl);
-          } else {
-            throw 'Could not launch ${baseConfig!.ombudsAppealUrl}';
-          }
-        }
+        onPressed: onPressed,
       ),
     );
   }
@@ -261,13 +289,13 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             OmbudsButton(
               width: ombudsWidth,
               imageLocationString: phonePng,
-              title1: '申述',
+              title1: '申訴',
               title2: '流程',
               onTap: () => RouteGenerator.navigateToStory(context, 'complaint'),
             ),
           ],
         ),
-        SizedBox(height: 12),
+        SizedBox(height: 24),
         Row(
           children: [
             OmbudsButton(
@@ -280,42 +308,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             SizedBox(width: 8),
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: videoRecorderPng,
-              title1: '影音',
-              title2: '紀錄',
-              onTap:  () async{
-                if (await canLaunch(baseConfig!.ombudsvideoRecorderUrl)) {
-                  await launch(baseConfig!.ombudsvideoRecorderUrl);
-                } else {
-                  throw 'Could not launch ${baseConfig!.ombudsvideoRecorderUrl}';
-                }
-              }
-            ),
-          ],
-        ),
-        SizedBox(height: 12),
-        Row(
-          children: [
-            OmbudsButton(
-              width: ombudsWidth,
               imageLocationString: faqPng,
               title1: '常見問題',
               title2: 'FAQ',
               onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
-            ),
-            SizedBox(width: 8),
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: reportPng,
-              title1: '季報',
-              title2: '年報',
-              onTap:  () async{
-                if (await canLaunch(baseConfig!.ombudsReportsUrl)) {
-                  await launch(baseConfig!.ombudsReportsUrl);
-                } else {
-                  throw 'Could not launch ${baseConfig!.ombudsReportsUrl}';
-                }
-              }
             ),
           ],
         ),

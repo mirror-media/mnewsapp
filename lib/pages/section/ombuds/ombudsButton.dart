@@ -33,7 +33,7 @@ class OmbudsButton extends StatelessWidget {
           ),
           Container(
             width: width,
-            color: Colors.grey[300],
+            color: Colors.white,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
