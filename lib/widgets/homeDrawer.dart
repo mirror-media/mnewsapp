@@ -158,8 +158,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ],
               ),
               sectionId == sectionList[index].id,
-              (){
+              () async{
                 _changeSection(sectionList[index].id);
+                await Future.delayed(Duration(milliseconds: 500));
+                Navigator.of(context).pop();
               }
             ),
             _dividerBlock(),
