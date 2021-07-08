@@ -50,7 +50,7 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _moreInfo(BuildContext context) {
-    return Column(
+    return Wrap(
       children: [
         Divider(),
         SizedBox(height: 8),
