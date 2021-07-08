@@ -4,7 +4,7 @@ class NotificationSetting {
   final String type;
   final String id;
   final String title;
-  final String topic;
+  final String? topic;
   bool value;
   final NotificationSettingList? notificationSettingList;
 
@@ -24,8 +24,9 @@ class NotificationSetting {
       title: json['title'],
       topic: json['topic'],
       value: json['value'],
-      notificationSettingList:
-          NotificationSettingList.fromJson(json['notificationSettingList']),
+      notificationSettingList: json['notificationSettingList'] != null
+        ? NotificationSettingList.fromJson(json['notificationSettingList'])
+        : null,
     );
   }
 

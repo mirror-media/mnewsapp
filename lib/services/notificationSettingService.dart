@@ -29,7 +29,10 @@ class NotificationSettingServices implements NotificationSettingRepos{
     NotificationSettingList notificationSettingList;
     NotificationSettingList? storageNotification;
     if (await _storage.ready) {
-      storageNotification = await _storage.getItem("notification");
+      var notificationMapList = await _storage.getItem("notification");
+      storageNotification = notificationMapList != null
+        ? NotificationSettingList.fromJson(notificationMapList)
+        : null;
     }
 
     if (storageNotification == null) {
@@ -69,6 +72,10 @@ class NotificationSettingServices implements NotificationSettingRepos{
         (asset) { 
           NotificationSetting? user = userList?.getById(asset.id);
           if(user != null && user.id == asset.id) {
+            // if(user.topic != asset.topic && user.value) {
+            //   _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+            //   _firebaseMessangingHelper.subscribeToTopic(asset.topic);
+            // }
             asset.value = user.value;
 
             if(asset.notificationSettingList != null || user.notificationSettingList != null) {
@@ -81,6 +88,17 @@ class NotificationSettingServices implements NotificationSettingRepos{
         }
       );
     }
+
+    // if(userList != null) {
+    //   userList.forEach(
+    //     (user) { 
+    //       NotificationSetting asset = assetList?.getById(user.id);
+    //       if(asset == null && user.topic != null && user.value) {
+    //         _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
+    //       }
+    //     }
+    //   );
+    // }
   }
 
   @override
@@ -91,6 +109,7 @@ class NotificationSettingServices implements NotificationSettingRepos{
   ) {
     notificationSettingList[index].value = value;
     _storage.setItem("notification", notificationSettingList.toJson());
+    //_firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[index]);
     return notificationSettingList;
   }
 
@@ -111,6 +130,7 @@ class NotificationSettingServices implements NotificationSettingRepos{
       checkboxList[index].value = true;
     }
     _storage.setItem("notification", notificationSettingList.toJson());
+    //_firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
     return notificationSettingList;
   }
 }
