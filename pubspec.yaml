@@ -64,6 +64,14 @@ dependencies:
   # firebase cloud messaging
   firebase_messaging: "^10.0.2"
 
+  # generate app icons
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/image/appIcon/mNewsIcon.jpg"
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
