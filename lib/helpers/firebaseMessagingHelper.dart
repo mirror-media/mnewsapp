@@ -1,5 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   // If you're going to use other Firebase services in the background, such as Firestore,
@@ -13,7 +15,7 @@ class FirebaseMessagingHelper {
 
   FirebaseMessagingHelper();
 
-  configFirebaseMessaging() async{
+  configFirebaseMessaging(BuildContext context) async{
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -27,11 +29,18 @@ class FirebaseMessagingHelper {
     print('User granted permission: ${settings.authorizationStatus}');
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    
+
+    RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
+    if (initialMessage != null && initialMessage.data.containsKey('news_story_slug')) {
+      RouteGenerator.navigateToStory(context, initialMessage.data['news_story_slug']);
+    }
+
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print(message);
+      if (message.data.containsKey('news_story_slug')) {
+        RouteGenerator.navigateToStory(context, message.data['news_story_slug']);
+      }
     });
   }
 

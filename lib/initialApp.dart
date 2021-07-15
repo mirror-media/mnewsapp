@@ -21,7 +21,7 @@ class _InitialAppState extends State<InitialApp> {
   }
 
   _loadingConfig() async{
-    context.read<ConfigBloc>().add(ConfigEvents.loadingConfig);
+    context.read<ConfigBloc>().add(LoadingConfig(context));
   }
 
   @override

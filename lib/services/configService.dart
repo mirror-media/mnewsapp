@@ -1,17 +1,18 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:tv/helpers/firebaseMessagingHelper.dart';
 
 abstract class ConfigRepos {
-  Future<bool> loadTheConfig();
+  Future<bool> loadTheConfig(BuildContext context);
 }
 
 class ConfigServices implements ConfigRepos{
   @override
-  Future<bool> loadTheConfig() async{
+  Future<bool> loadTheConfig(BuildContext context) async{
     await Firebase.initializeApp();
     
     FirebaseMessagingHelper firebaseMessagingHelper = FirebaseMessagingHelper();
-    await firebaseMessagingHelper.configFirebaseMessaging();
+    await firebaseMessagingHelper.configFirebaseMessaging(context);
     return true;
   }
 }
