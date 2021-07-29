@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -14,6 +15,8 @@ class NewsMarqueeServices implements NewsMarqueeRepos{
 
   @override
   Future<StoryListItemList> fetchNewsList() async {
+    final key = 'fetchNewsMarqueeList';
+
     String query = 
     """
     query (
@@ -49,9 +52,11 @@ class NewsMarqueeServices implements NewsMarqueeRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: newsMarqueeCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

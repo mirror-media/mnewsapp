@@ -1,8 +1,11 @@
 import 'dart:convert';
 import 'dart:async';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
+import 'package:mime/mime.dart';
 import 'package:tv/helpers/apiException.dart';
+import 'package:tv/helpers/mNewsCacheManager.dart';
 
 class ApiBaseHelper {
 
@@ -19,6 +22,58 @@ class ApiBaseHelper {
     return responseJson;
   }
 
+  /// Get the json file from cache first.
+  /// If there is no json file from cache, 
+  /// fetch the json file from get api and save the json file to cache.
+  Future<dynamic> getByCacheAndAutoCache(
+    String url, 
+    {
+      Duration maxAge = const Duration(days: 30),
+      Map<String,String> headers = const {'Cache-control': 'no-cache'},
+    }
+  ) async {
+    MNewsCacheManager mNewsCacheManager = MNewsCacheManager();
+    final cacheFile = await mNewsCacheManager.getFileFromCache(url);
+    if ( cacheFile == null ||
+      cacheFile.validTill.isBefore(DateTime.now())
+    ) {
+      Uri uri = Uri.parse(url);
+      final response = await http.get(uri, headers: headers);
+      var responseJson = returnResponse(response);
+
+      try {
+        // save cache file
+        mNewsCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
+      } catch(e) {
+        print('error: $e');
+      }
+
+      print('Api post done.');
+      return responseJson;
+    }
+
+    var file = cacheFile.file;
+    if (await file.exists()) {
+      var mimeStr = lookupMimeType(file.path);
+      String res;
+      if(mimeStr == 'application/json') {
+        res = await file.readAsString();
+      }
+      else {
+        res = file.path;
+      }
+      
+      final response = http.Response(
+        res, 
+        200,
+        headers: { HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8' },
+      );
+
+      return returnResponse(response);
+    }
+    return returnResponse(http.Response('', 404));
+  }
+
   Future<dynamic> get(String baseUrl, String endpoint) async {
     getByUrl(baseUrl + endpoint);
   }
@@ -29,6 +84,60 @@ class ApiBaseHelper {
     var responseJson = returnResponse(response);
     print('Api post done.');
     return responseJson;
+  }
+
+  /// Get the json file from cache first.
+  /// If there is no json file from cache, 
+  /// fetch the json file from get api and save the json file to cache.
+  Future<dynamic> postByCacheAndAutoCache(
+    String fileKey,
+    String url, 
+    dynamic body, 
+    {
+      Duration maxAge = const Duration(days: 30),
+      Map<String,String> headers = const {'Cache-control': 'no-cache'},
+    }
+  ) async {
+    MNewsCacheManager mNewsCacheManager = MNewsCacheManager();
+    final cacheFile = await mNewsCacheManager.getFileFromCache(fileKey);
+    if ( cacheFile == null ||
+      cacheFile.validTill.isBefore(DateTime.now())
+    ) {
+      Uri uri = Uri.parse(url);
+      final response = await http.post(uri, headers: headers, body: body);
+      var responseJson = returnResponse(response);
+
+      try {
+        // save cache file
+        mNewsCacheManager.putFile(fileKey, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
+      } catch(e) {
+        print('error: $e');
+      }
+
+      print('Api post done.');
+      return responseJson;
+    }
+
+    var file = cacheFile.file;
+    if (await file.exists()) {
+      var mimeStr = lookupMimeType(file.path);
+      String res;
+      if(mimeStr == 'application/json') {
+        res = await file.readAsString();
+      }
+      else {
+        res = file.path;
+      }
+      
+      final response = http.Response(
+        res, 
+        200,
+        headers: { HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8' },
+      );
+
+      return returnResponse(response);
+    }
+    return returnResponse(http.Response('', 404));
   }
 
   Future<dynamic> post(String baseUrl, String endpoint, dynamic body) async {

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/showIntro.dart';
@@ -16,6 +17,8 @@ class ShowServices implements CategoryRepos, ShowRepos{
 
   @override
   Future<CategoryList> fetchCategoryList() async {
+    final key = 'fetchShowCategoryList';
+
     String query = 
     """
     query {
@@ -37,9 +40,11 @@ class ShowServices implements CategoryRepos, ShowRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: showCategoryCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }
@@ -51,6 +56,8 @@ class ShowServices implements CategoryRepos, ShowRepos{
 
   @override
   Future<ShowIntro> fetchShowIntroById(String id) async{
+    final key = 'fetchShowIntroById?id=$id';
+
     String query = 
     """
     query (
@@ -82,9 +89,11 @@ class ShowServices implements CategoryRepos, ShowRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: showIntroCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

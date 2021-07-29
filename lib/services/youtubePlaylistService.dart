@@ -1,5 +1,6 @@
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 
 abstract class YoutubePlaylistRepos {
@@ -19,8 +20,9 @@ class YoutubePlaylistServices implements YoutubePlaylistRepos{
   
   @override
   Future<YoutubePlaylistItemList> fetchSnippetByPlaylistId(String playlistId, {int maxResults = 5}) async{
-    final jsonResponse = await _helper.getByUrl(
-      baseConfig!.youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults'
+    final jsonResponse = await _helper.getByCacheAndAutoCache(
+      baseConfig!.youtubeApi+'/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults',
+      maxAge: youtubePlayListCacheDuration
     );
 
     YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList.fromJson(
