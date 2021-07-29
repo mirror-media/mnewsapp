@@ -9,10 +9,7 @@ class AnchorpersonPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ContactBloc(contactRepos: ContactServices()),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: AnchorpersonListWidget(),
-      ),
+      child: AnchorpersonListWidget(),
     );
   }
 }
