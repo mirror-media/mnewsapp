@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/story.dart';
 
@@ -14,6 +15,8 @@ class StoryServices implements StoryRepos{
   
   @override
   Future<Story> fetchPublishedStoryBySlug(String slug) async{
+    final key = 'fetchPublishedStoryBySlug?slug=$slug';
+
     final String query = 
     """
     query (
@@ -103,9 +106,11 @@ class StoryServices implements StoryRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: newsStoryCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

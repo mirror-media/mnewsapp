@@ -1,7 +1,9 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -16,6 +18,8 @@ class ContactServices implements ContactRepos{
 
   @override
   Future<ContactList> fetchAnchorpersonOrHostContactList() async {
+    final key = 'fetchAnchorpersonOrHostContactList';
+
     String query = 
     """
     query {
@@ -51,9 +55,11 @@ class ContactServices implements ContactRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: anchorPersonListCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }
@@ -65,6 +71,8 @@ class ContactServices implements ContactRepos{
 
   @override
   Future<Contact> fetchContactById(String contactId) async{
+    final key = 'fetchContactById?contactId=$contactId';
+
     String query = 
     """
     query(\$where: ContactWhereUniqueInput!) {
@@ -95,9 +103,11 @@ class ContactServices implements ContactRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: anchorPersonCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -19,6 +20,8 @@ class CategoryServices implements CategoryRepos{
 
   @override
   Future<CategoryList> fetchCategoryList() async {
+    final key = 'fetchCategoryList';
+
     String query = 
     """
     query {
@@ -43,9 +46,11 @@ class CategoryServices implements CategoryRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: categoryCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -15,6 +16,8 @@ class EditorChoiceServices implements EditorChoiceRepos{
 
   @override
   Future<StoryListItemList> fetchEditorChoiceList() async {
+    final key = 'fetchEditorChoiceList';
+
     String query = 
     """
     query(
@@ -59,9 +62,11 @@ class EditorChoiceServices implements EditorChoiceRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: editorChoiceCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }
@@ -77,6 +82,8 @@ class EditorChoiceServices implements EditorChoiceRepos{
 
   @override
   Future<StoryListItemList> fetchVideoEditorChoiceList() async{
+    final key = 'fetchVideoEditorChoiceList';
+
     String query = 
     """
     query(
@@ -123,9 +130,11 @@ class EditorChoiceServices implements EditorChoiceRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       baseConfig!.graphqlApi,
       jsonEncode(graphqlBody.toJson()),
+      maxAge: videoEditorChoiceCacheDuration,
       headers: {
         "Content-Type": "application/json"
       }

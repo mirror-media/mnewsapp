@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -58,6 +59,11 @@ class TabStoryListServices implements TabStoryListRepos{
 
   @override
   Future<StoryListItemList> fetchStoryList({bool withCount = true}) async {
+    String key = 'fetchStoryList?skip=$skip&first=$first';
+    if(postStyle != null) {
+      key = key + '&postStyle=$postStyle';
+    }
+
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
@@ -78,13 +84,26 @@ class TabStoryListServices implements TabStoryListRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+    late final jsonResponse;
+    if(skip > 40) {
+      jsonResponse = await _helper.postByUrl(
+        baseConfig!.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      );
+    } else {
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        baseConfig!.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      );
+    }
 
     StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
     if(withCount) {
@@ -103,6 +122,11 @@ class TabStoryListServices implements TabStoryListRepos{
 
   @override
   Future<StoryListItemList> fetchStoryListByCategorySlug(String slug, {bool withCount = true}) async {
+    String key = 'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
+    if(postStyle != null) {
+      key = key + '&postStyle=$postStyle';
+    }
+
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
@@ -126,13 +150,26 @@ class TabStoryListServices implements TabStoryListRepos{
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByUrl(
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+    late final jsonResponse;
+    if(skip > 40) {
+      jsonResponse = await _helper.postByUrl(
+        baseConfig!.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      );
+    } else {
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        baseConfig!.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {
+          "Content-Type": "application/json"
+        }
+      );
+    }
 
     StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
     if(withCount) {
