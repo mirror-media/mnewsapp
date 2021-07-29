@@ -131,13 +131,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
             _drawerButton(
               Row(
                 children: [
-                  if(sectionList[index].id == MNewsSection.anchorperson)
-                  ...[
-                    Icon(
-                      Icons.mic_none,
-                    ),
-                    SizedBox(width: 8),
-                  ],
                   Text(
                     sectionList[index].name,
                     style: TextStyle(
