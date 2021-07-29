@@ -22,10 +22,7 @@ class _ShowTabContentState extends State<ShowTabContent> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ShowIntroBloc(showRepos: ShowServices()),
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: BuildShowIntro(showCategoryId: widget.category.id!,),
-      ),
+      child: BuildShowIntro(showCategoryId: widget.category.id!,),
     );
   }
 }
