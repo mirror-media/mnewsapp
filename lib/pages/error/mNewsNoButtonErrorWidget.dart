@@ -16,7 +16,7 @@ class MNewsNoButtonErrorWidget extends StatelessWidget {
     if(isColumn) {
       return Column(
         children: [
-          SizedBox(height: height/3),
+          SizedBox(height: height/6),
           Center(child: Image.asset(assetImagePath)),
           SizedBox(height: 16),
           Center(

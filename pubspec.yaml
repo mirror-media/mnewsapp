@@ -96,17 +96,6 @@ flutter:
     - assets/json/menu.json
     - assets/json/videoMenu.json
     - assets/json/defaultNotificationList.json
-    - assets/image/tabContentNoResult.png
-    - assets/image/error404.png
-    - assets/image/error500.png
-    - assets/image/noSignal.png
-    - assets/image/search/searchNoResult.png
-    - assets/image/ombuds/ombudsDefault.jpg
-    - assets/image/ombuds/tv.png
-    - assets/image/ombuds/phone.png
-    - assets/image/ombuds/paper.png
-    - assets/image/ombuds/FAQ.png
-    - assets/image/ombuds/mail.png
     - assets/image/
 
   # An image asset can refer to one or more resolution-specific "variants", see
