@@ -107,6 +107,7 @@ flutter:
     - assets/image/ombuds/paper.png
     - assets/image/ombuds/FAQ.png
     - assets/image/ombuds/mail.png
+    - assets/image/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
