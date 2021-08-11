@@ -75,27 +75,30 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-
+    
     super.build(context);
     return FutureBuilder<bool>(
       initialData: false,
       future: _configChewieFuture,
       builder: (context, snapshot) {
-        if(!snapshot.data!) {
-          return Container(
-            width: width,
-            height: width/widget.aspectRatio,
-            child: Center(child: CircularProgressIndicator())
-          );
-        }
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if(!snapshot.data!) {
+              return Container(
+                width: constraints.maxWidth,
+                height: constraints.maxWidth/widget.aspectRatio,
+                child: Center(child: CircularProgressIndicator())
+              );
+            }
 
-        return Container(
-          width: width,
-          height: width/_videoPlayerController.value.aspectRatio,
-          child: Chewie(
-            controller: _chewieController,
-          ),
+            return Container(
+              width: constraints.maxWidth,
+              height: constraints.maxWidth/_videoPlayerController.value.aspectRatio,
+              child: Chewie(
+                controller: _chewieController,
+              ),
+            );
+          }
         );
       }
     );
