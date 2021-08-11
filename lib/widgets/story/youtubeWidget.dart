@@ -2,11 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class YoutubeWidget extends StatefulWidget {
-  final double width;
   final String youtubeId;
   final String? description;
   YoutubeWidget({
-    required this.width,
     required this.youtubeId,
     this.description,
   });

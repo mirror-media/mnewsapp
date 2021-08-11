@@ -139,9 +139,7 @@ class ParagraphFormat {
       case 'youtube':
         {
           if (paragraph.contents!.length > 0) {
-            var width = MediaQuery.of(context).size.width - 48;
             return YoutubeWidget(
-              width: width,
               youtubeId: paragraph.contents![0].data,
               description: paragraph.contents![0].description,
             );
