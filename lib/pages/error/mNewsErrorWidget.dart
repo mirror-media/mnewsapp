@@ -68,7 +68,7 @@ class MNewsErrorWidget extends StatelessWidget {
     }
     return ListView(
       children: [
-        SizedBox(height: height/3),
+        SizedBox(height: height/4.5),
         Center(child: Image.asset(assetImagePath)),
         SizedBox(height: 16),
         Center(
