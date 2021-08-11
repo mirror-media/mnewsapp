@@ -211,17 +211,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
             _thirdPartyMediaLinkButton(
               FontAwesomeIcons.youtube , 
               '鏡電視 YouTube 頻道', 
-              'https://www.youtube.com/channel/UCYkldEK001GxR884OZMFnRw'
+              'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'
             ),
             _thirdPartyMediaLinkButton(
               FontAwesomeIcons.facebookSquare , 
               '鏡電視 粉絲專頁', 
-              'https://www.facebook.com/mirrormediamg/'
+              'https://www.facebook.com/mnewstw'
             ),
             _thirdPartyMediaLinkButton(
               FontAwesomeIcons.instagram , 
               '鏡電視 Instagram', 
-              'https://www.instagram.com/mirror_media/?hl=zh-tw'
+              'https://www.instagram.com/mnewstw/'
             ),
           ]
         ),

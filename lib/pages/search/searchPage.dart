@@ -19,6 +19,7 @@ class _SearchPageState extends State<SearchPage> {
         create: (context) => SearchBloc(searchRepos: SearchServices()),
         child: SearchWidget(),
       ),
+      resizeToAvoidBottomInset: false,
     );
   }
 

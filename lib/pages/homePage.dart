@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
-      title: Text('鏡新聞'),
+      title: Image(image:AssetImage(logoPng)),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
