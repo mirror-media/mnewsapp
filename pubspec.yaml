@@ -96,7 +96,8 @@ flutter:
     - assets/json/menu.json
     - assets/json/videoMenu.json
     - assets/json/defaultNotificationList.json
-    - assets/image/
+    - assets/image/ombuds/
+    - assets/image/search/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.

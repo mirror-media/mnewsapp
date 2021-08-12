@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:localstorage/localstorage.dart';
-import 'package:tv/blocs/section/bloc.dart';
-import 'package:tv/blocs/section/states.dart';
+import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
@@ -55,8 +54,8 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldkey,
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
-      body: BlocBuilder<SectionBloc, SectionState>(
-        builder: (BuildContext context, SectionState state) {
+      body: BlocBuilder<SectionCubit, SectionStateCubit>(
+        builder: (BuildContext context, SectionStateCubit state) {
           if (state is SectionError) {
             final error = state.error;
             print('SectionError: ${error.message}');

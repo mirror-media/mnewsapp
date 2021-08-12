@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/section/bloc.dart';
-import 'package:tv/blocs/section/events.dart';
-import 'package:tv/blocs/section/states.dart';
+import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/sectionList.dart';
@@ -15,8 +13,10 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
+  final sectionCubit = SectionCubit();
   _changeSection(MNewsSection sectionId) {
-    context.read<SectionBloc>().add(ChangeSection(sectionId));
+    //context.read<SectionBloc>().add(ChangeSection(sectionId));
+    context.read<SectionCubit>().loaded(sectionId);
   }
 
   @override
@@ -24,8 +24,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
     //var height = MediaQuery.of(context).size.height;
     var padding = MediaQuery.of(context).padding;
 
-    return BlocBuilder<SectionBloc, SectionState>(
-      builder: (BuildContext context, SectionState state) {
+    return BlocBuilder<SectionCubit, SectionStateCubit>(
+      builder: (BuildContext context, SectionStateCubit state) {
         if (state is SectionError) {
           final error = state.error;
           print('SectionError: ${error.message}');
@@ -153,7 +153,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               sectionId == sectionList[index].id,
               () async{
                 _changeSection(sectionList[index].id);
-                await Future.delayed(Duration(milliseconds: 500));
+                await Future.delayed(Duration(milliseconds: 150));
                 Navigator.of(context).pop();
               }
             ),
