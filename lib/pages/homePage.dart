@@ -79,7 +79,11 @@ class _HomePageState extends State<HomePage> {
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
-      title: Image(image:AssetImage(logoPng)),
+      title: Image(
+        image:AssetImage(logoPng),
+        width: 120,
+        height:36,
+      ),
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
