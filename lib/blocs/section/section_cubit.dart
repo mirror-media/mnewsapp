@@ -6,7 +6,10 @@ part 'section_state.dart';
 class SectionCubit extends Cubit<SectionStateCubit> {
   SectionCubit() : super(SectionInitState());
 
-  void loaded(MNewsSection sectionId) => emit(SectionLoaded(sectionId: sectionId));
+  void changeSection(MNewsSection sectionId) {
+    print('ChangeSection { SectionId: $sectionId }');
+    emit(SectionLoaded(sectionId: sectionId));
+  }
 
   @override
   void onError(Object error, StackTrace stackTrace) {
