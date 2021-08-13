@@ -96,6 +96,7 @@ flutter:
     - assets/json/menu.json
     - assets/json/videoMenu.json
     - assets/json/defaultNotificationList.json
+    - assets/image/
     - assets/image/ombuds/
     - assets/image/search/
 
