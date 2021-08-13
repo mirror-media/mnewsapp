@@ -15,8 +15,7 @@ class HomeDrawer extends StatefulWidget {
 class _HomeDrawerState extends State<HomeDrawer> {
   final sectionCubit = SectionCubit();
   _changeSection(MNewsSection sectionId) {
-    //context.read<SectionBloc>().add(ChangeSection(sectionId));
-    context.read<SectionCubit>().loaded(sectionId);
+    context.read<SectionCubit>().changeSection(sectionId);
   }
 
   @override
