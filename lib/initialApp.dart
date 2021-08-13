@@ -3,10 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
-import 'package:tv/blocs/section/bloc.dart';
 import 'package:tv/pages/configPage.dart';
 import 'package:tv/pages/homePage.dart';
-import 'package:tv/services/sectionService.dart';
+
+import 'blocs/section/section_cubit.dart';
 
 class InitialApp extends StatefulWidget {
   @override
@@ -35,7 +35,7 @@ class _InitialAppState extends State<InitialApp> {
         }
         if (state is ConfigLoaded) {
           return BlocProvider(
-            create: (context) => SectionBloc(sectionRepos: SectionServices()),
+            create: (_) => SectionCubit(),
             child: HomePage(),
           );
         }

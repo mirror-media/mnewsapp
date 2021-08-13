@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
