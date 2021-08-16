@@ -4,11 +4,15 @@ class Category {
   String? id;
   String name;
   String slug;
+  bool? isFeatured;
+  int sortOrder;
 
   Category({
     required this.id,
     required this.name,
     required this.slug,
+    required this.isFeatured,
+    required this.sortOrder,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -16,6 +20,8 @@ class Category {
       id: json[BaseModel.idKey],
       name: json[BaseModel.nameKey],
       slug: json[BaseModel.slugKey],
+      isFeatured: json['isFeatured'] ?? true,
+      sortOrder: json['sortOrder'] ?? 0,
     );
   }
 

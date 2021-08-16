@@ -5,8 +5,8 @@ import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
-import 'package:tv/models/graphqlBody.dart';
 
 abstract class CategoryRepos {
   Future<CategoryList> fetchCategoryList();
@@ -20,48 +20,23 @@ class CategoryServices implements CategoryRepos{
 
   @override
   Future<CategoryList> fetchCategoryList() async {
-    final key = 'fetchCategoryList';
 
-    String query = 
-    """
-    query {
-      allCategories(
-        where: {
-          isFeatured: true
-        },
-        sortBy: [sortOrder_ASC]
-      ) {
-        id
-        name
-        slug
-      }
-    }
-    """;
-
-    Map<String,String> variables = {};
-
-    GraphqlBody graphqlBody = GraphqlBody(
-      operationName: null,
-      query: query,
-      variables: variables,
-    );
-
-    final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
+    final jsonResponse = await _helper.getByCacheAndAutoCache(
+      baseConfig!.categoriesUrl,
       maxAge: categoryCacheDuration,
       headers: {
-        "Content-Type": "application/json"
+        "Accept": "application/json"
       }
     );
 
-    CategoryList categoryList = CategoryList.fromJson(jsonResponse['data']['allCategories']);
+    CategoryList categoryList = CategoryList.fromJson(jsonResponse['allCategories']);
 
     /// cuz video page is in the home drawer sections
     categoryList.removeWhere((category) => category.slug == 'video');
     /// do not display home slug in app
     categoryList.removeWhere((category) => category.slug == 'home');
+
+    categoryList.sort((Category a, Category b) => a.sortOrder.compareTo(b.sortOrder));
 
     String menuJsonPath = isVideo ? videoMenuJson : menuJson;
     String jsonFixed = await rootBundle.loadString(menuJsonPath);

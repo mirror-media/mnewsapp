@@ -4,6 +4,8 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/customizedList.dart';
 
 class CategoryList extends CustomizedList<Category> {
+  static CategoryList _instance = new CategoryList();
+
   // constructor
   CategoryList();
 
@@ -14,6 +16,7 @@ class CategoryList extends CustomizedList<Category> {
       categories.add(element);
     });
 
+    _instance = categories;
     return categories;
   }
 
@@ -21,6 +24,10 @@ class CategoryList extends CustomizedList<Category> {
     final jsonData = json.decode(body);
 
     return CategoryList.fromJson(jsonData);
+  }
+
+  factory CategoryList.get(){
+    return _instance;
   }
 
   // your custom methods

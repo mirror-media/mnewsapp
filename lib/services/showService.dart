@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/showIntro.dart';
@@ -17,40 +18,17 @@ class ShowServices implements CategoryRepos, ShowRepos{
 
   @override
   Future<CategoryList> fetchCategoryList() async {
-    final key = 'fetchShowCategoryList';
 
-    String query = 
-    """
-    query {
-      allShows(
-        sortBy: [sortOrder_ASC]
-      ) {
-        id
-        name
-        slug
-      }
-    }
-    """;
-
-    Map<String,String> variables = {};
-
-    GraphqlBody graphqlBody = GraphqlBody(
-      operationName: null,
-      query: query,
-      variables: variables,
+    final jsonResponse = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
     );
 
-    final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: showCategoryCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
-
-    CategoryList categoryList = CategoryList.fromJson(jsonResponse['data']['allShows']);
+    CategoryList categoryList = CategoryList.fromJson(jsonResponse['allShows']);
+    categoryList.sort((Category a, Category b) => a.sortOrder.compareTo(b.sortOrder));
     return categoryList;
   }
 

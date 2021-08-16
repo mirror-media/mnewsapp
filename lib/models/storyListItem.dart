@@ -7,6 +7,8 @@ class StoryListItem {
   String slug;
   String? style;
   String photoUrl;
+  List<AllPostsCategory>? category;
+  String publishTime;
 
   StoryListItem({
     required this.id,
@@ -14,6 +16,8 @@ class StoryListItem {
     required this.slug,
     required this.style,
     required this.photoUrl,
+    this.category,
+    required this.publishTime,
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
@@ -34,6 +38,35 @@ class StoryListItem {
       slug: json[BaseModel.slugKey],
       style: json['style'],
       photoUrl: photoUrl,
+      publishTime: json['publishTime']
+    );
+  }
+
+  factory StoryListItem.fromJsonGCP(Map<String, dynamic> json) {
+    if(BaseModel.hasKey(json, '_source')) {
+      json = json['_source'];
+    }
+
+    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
+    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
+      photoUrl = json['heroImage']['urlMobileSized'];
+    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
+      photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
+    }
+
+    List<AllPostsCategory>? allPostsCategory;
+    if(json['categories'] != null) {
+      allPostsCategory = (json['categories'] as List).map((v) => AllPostsCategory.fromJson(v)).toList();
+    }
+
+    return StoryListItem(
+      id: json[BaseModel.idKey],
+      name: json[BaseModel.nameKey],
+      slug: json[BaseModel.slugKey],
+      style: json['style'],
+      photoUrl: photoUrl,
+      category: allPostsCategory,
+      publishTime: json['publishTime']
     );
   }
 
@@ -52,5 +85,19 @@ class StoryListItem {
   bool operator ==(covariant StoryListItem other) {
     // compare this to other
     return this.slug == other.slug;
+  }
+}
+
+class AllPostsCategory{
+  String id;
+  String name;
+
+  AllPostsCategory({
+    required this.id,
+    required this.name
+  });
+
+  factory AllPostsCategory.fromJson(Map<String, dynamic> json){
+    return AllPostsCategory(id: json['id'], name: json['name']);
   }
 }
