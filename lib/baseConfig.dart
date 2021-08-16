@@ -113,4 +113,76 @@ class BaseConfig {
         return dev.categoriesUrl;
     }
   }
+
+  String get androidAdMobAppId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidAdMobAppId;
+      case BuildFlavor.development:
+        return dev.androidAdMobAppId;
+    }
+  }
+
+  String get androidBannerAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get androidNativeAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidNativeAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidNativeAdUnitId;
+    }
+  }
+
+  String get androidInterstitialAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidInterstitialAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidInterstitialAdUnitId;
+    }
+  }
+
+  String get iOSAdMobAppId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.iOSAdMobAppId;
+      case BuildFlavor.development:
+        return dev.iOSAdMobAppId;
+    }
+  }
+
+  String get iOSBannerAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.iOSBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.iOSBannerAdUnitId;
+    }
+  }
+
+  String get iOSNativeAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.iOSNativeAdUnitId;
+      case BuildFlavor.development:
+        return dev.iOSNativeAdUnitId;
+    }
+  }
+
+  String get iOSInterstitialAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.iOSInterstitialAdUnitId;
+      case BuildFlavor.development:
+        return dev.iOSInterstitialAdUnitId;
+    }
+  }
 }

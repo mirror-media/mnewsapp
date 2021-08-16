@@ -1,14 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
 import 'package:tv/pages/section/news/newsTabStoryList.dart';
+
+import '../../../baseConfig.dart';
 
 class NewsTabContent extends StatefulWidget {
   final String categorySlug;
@@ -23,6 +27,8 @@ class NewsTabContent extends StatefulWidget {
 }
 
 class _NewsTabContentState extends State<NewsTabContent> {
+
+
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
