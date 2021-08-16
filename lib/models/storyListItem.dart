@@ -1,5 +1,6 @@
 import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
+import 'package:tv/models/categoryList.dart';
 
 class StoryListItem {
   String? id;
@@ -7,6 +8,7 @@ class StoryListItem {
   String slug;
   String? style;
   String photoUrl;
+  CategoryList? categoryList;
 
   StoryListItem({
     required this.id,
@@ -14,6 +16,7 @@ class StoryListItem {
     required this.slug,
     required this.style,
     required this.photoUrl,
+    this.categoryList,
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
@@ -28,12 +31,18 @@ class StoryListItem {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
+    CategoryList? allPostsCategory;
+    if(json['categories'] != null) {
+      allPostsCategory = CategoryList.fromJson(json['categories']);
+    }
+
     return StoryListItem(
       id: json[BaseModel.idKey],
       name: json[BaseModel.nameKey],
       slug: json[BaseModel.slugKey],
       style: json['style'],
       photoUrl: photoUrl,
+      categoryList: allPostsCategory
     );
   }
 

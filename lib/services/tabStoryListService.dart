@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
+import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -33,8 +34,10 @@ class TabStoryListServices implements TabStoryListRepos{
       first: \$first, 
       sortBy: [ publishTime_DESC ]
     ) {
+      id
       slug
       name
+      publishTime
       heroImage {
         urlMobileSized
       }
@@ -171,9 +174,54 @@ class TabStoryListServices implements TabStoryListRepos{
       );
     }
 
+    final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
+    );
+
     StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+
     if(withCount) {
       newsList.allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+    }
+
+    /// Get featured posts from json
+    StoryListItemList newsListFromGCP = StoryListItemList.fromJsonGCP(jsonResponseFromGCP['allPosts']);
+    final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
+    );
+
+    CategoryList _categoryList = CategoryList.fromJson(jsonResponseGCP['allCategories']);
+    String? _categoryId = _categoryList.firstWhere((element) => element.slug == slug).id;
+
+
+    if(newsListFromGCP.isNotEmpty){
+      // Remove the post which category id is not equal to the current slug
+      newsListFromGCP.removeWhere((storyListItem){
+        bool _notThisSlug = true;
+        var storyListItemCategory = storyListItem.categoryList;
+        if(storyListItemCategory != null && _categoryId != null){
+          storyListItemCategory.forEach((allPostsCategory) {
+            if(allPostsCategory.id == _categoryId)
+              _notThisSlug = false;
+          });
+        }
+        return _notThisSlug;
+      });
+    }
+
+    if(newsListFromGCP.isNotEmpty){
+      // Remove featured post from the list which get from CMS
+      newsList.removeWhere((storyListItem) => storyListItem.id == newsListFromGCP.first.id);
+      // Put featured post at the top of the list
+      newsList.insert(0, newsListFromGCP.first);
     }
 
     return newsList;

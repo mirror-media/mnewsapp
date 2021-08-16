@@ -18,6 +18,16 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
     return storyListItemList;
   }
 
+  factory StoryListItemList.fromJsonGCP(List<dynamic> parsedJson) {
+    StoryListItemList storyListItemList = StoryListItemList();
+    List parseList = parsedJson.map((i) => StoryListItem.fromJson(i)).toList();
+    parseList.forEach((element) {
+      storyListItemList.add(element);
+    });
+
+    return storyListItemList;
+  }
+
   factory StoryListItemList.parseResponseBody(String body) {
     final jsonData = json.decode(body);
 
