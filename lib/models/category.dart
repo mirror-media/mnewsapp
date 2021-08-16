@@ -3,9 +3,9 @@ import 'package:tv/models/baseModel.dart';
 class Category {
   String? id;
   String name;
-  String slug;
+  String? slug;
   bool? isFeatured;
-  int sortOrder;
+  int? sortOrder;
 
   Category({
     required this.id,

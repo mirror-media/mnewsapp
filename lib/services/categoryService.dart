@@ -36,7 +36,7 @@ class CategoryServices implements CategoryRepos{
     /// do not display home slug in app
     categoryList.removeWhere((category) => category.slug == 'home');
 
-    categoryList.sort((Category a, Category b) => a.sortOrder.compareTo(b.sortOrder));
+    categoryList.sort((Category a, Category b) => a.sortOrder!.compareTo(b.sortOrder!));
 
     String menuJsonPath = isVideo ? videoMenuJson : menuJson;
     String jsonFixed = await rootBundle.loadString(menuJsonPath);

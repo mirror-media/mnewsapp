@@ -1,13 +1,15 @@
 import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
 
+import 'category.dart';
+
 class StoryListItem {
   String? id;
   String name;
   String slug;
   String? style;
   String photoUrl;
-  List<AllPostsCategory>? category;
+  List<Category>? category;
   String publishTime;
 
   StoryListItem({
@@ -54,9 +56,9 @@ class StoryListItem {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
-    List<AllPostsCategory>? allPostsCategory;
+    List<Category>? allPostsCategory;
     if(json['categories'] != null) {
-      allPostsCategory = (json['categories'] as List).map((v) => AllPostsCategory.fromJson(v)).toList();
+      allPostsCategory = (json['categories'] as List).map((v) => Category.fromJson(v)).toList();
     }
 
     return StoryListItem(
@@ -85,19 +87,5 @@ class StoryListItem {
   bool operator ==(covariant StoryListItem other) {
     // compare this to other
     return this.slug == other.slug;
-  }
-}
-
-class AllPostsCategory{
-  String id;
-  String name;
-
-  AllPostsCategory({
-    required this.id,
-    required this.name
-  });
-
-  factory AllPostsCategory.fromJson(Map<String, dynamic> json){
-    return AllPostsCategory(id: json['id'], name: json['name']);
   }
 }

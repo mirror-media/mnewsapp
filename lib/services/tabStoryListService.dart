@@ -191,8 +191,15 @@ class TabStoryListServices implements TabStoryListRepos{
 
     /// Get featured posts from json
     StoryListItemList newsListFromGCP = StoryListItemList.fromJsonGCP(jsonResponseFromGCP['allPosts']);
-    // Get this slug's id from category instance
-    CategoryList _categoryList = CategoryList.get();
+    final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
+    );
+
+    CategoryList _categoryList = CategoryList.fromJson(jsonResponseGCP['allCategories']);
     String? _categoryId = _categoryList.firstWhere((element) => element.slug == slug).id;
 
 

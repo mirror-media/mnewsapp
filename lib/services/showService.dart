@@ -28,7 +28,7 @@ class ShowServices implements CategoryRepos, ShowRepos{
     );
 
     CategoryList categoryList = CategoryList.fromJson(jsonResponse['allShows']);
-    categoryList.sort((Category a, Category b) => a.sortOrder.compareTo(b.sortOrder));
+    categoryList.sort((Category a, Category b) => a.sortOrder!.compareTo(b.sortOrder!));
     return categoryList;
   }
 
