@@ -54,7 +54,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderSt
 
       _tabWidgets.add(
         NewsTabContent(
-          categorySlug: category.slug,
+          categorySlug: category.slug!,
           needCarousel: categoryList[i].isLatestCategory(),
         ),
       );

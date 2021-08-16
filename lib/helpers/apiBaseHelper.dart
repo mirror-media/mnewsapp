@@ -48,7 +48,7 @@ class ApiBaseHelper {
         print('error: $e');
       }
 
-      print('Api post done.');
+      print('Api get done.');
       return responseJson;
     }
 
@@ -181,7 +181,11 @@ dynamic returnResponse(http.Response response) {
         // search response
         (responseJson.containsKey('body') && responseJson['body'] != null && responseJson['body'].containsKey('hits')) ||
         // popular json
-        responseJson.containsKey('report');
+        responseJson.containsKey('report') ||
+          // category json
+        responseJson.containsKey('allCategories') ||
+        responseJson.containsKey('allPosts') ||
+        responseJson.containsKey('allShows');
       
       if(!hasData) {
         throw FormatException(response.body.toString());

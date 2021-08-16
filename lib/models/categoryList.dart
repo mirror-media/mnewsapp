@@ -4,15 +4,13 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/customizedList.dart';
 
 class CategoryList extends CustomizedList<Category> {
+
   // constructor
   CategoryList();
 
   factory CategoryList.fromJson(List<dynamic> parsedJson) {
     CategoryList categories = CategoryList();
-    List parseList = parsedJson.map((i) => Category.fromJson(i)).toList();
-    parseList.forEach((element) {
-      categories.add(element);
-    });
+    categories.innerList = parsedJson.map((i) => Category.fromJson(i)).toList();
 
     return categories;
   }
