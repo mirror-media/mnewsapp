@@ -104,4 +104,13 @@ class BaseConfig {
         return dev.privacyPolicyUrl;
     }
   }
+
+  String get categoriesUrl {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.categoriesUrl;
+      case BuildFlavor.development:
+        return dev.categoriesUrl;
+    }
+  }
 }

@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
+import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class TabStoryListRepos {
@@ -171,9 +173,53 @@ class TabStoryListServices implements TabStoryListRepos{
       );
     }
 
+    final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
+    );
+
     StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+
     if(withCount) {
       newsList.allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+    }
+
+    /// Get featured posts from json
+    StoryListItemList newsListFromGCP = StoryListItemList.fromJson(jsonResponseFromGCP['allPosts']);
+    final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
+    );
+
+    CategoryList _categoryList = CategoryList.fromJson(jsonResponseGCP['allCategories']);
+    String? _categoryId = _categoryList.firstWhere((element) => element.slug == slug).id;
+
+    // Find the featured post which category id is equal to the current id
+    StoryListItem? _featuredStory;
+    for(int i = 0; i < newsListFromGCP.length; i++){
+      if(newsListFromGCP[i].categoryList != null){
+        for(int j = 0; j < newsListFromGCP[i].categoryList!.length; j++){
+          if(newsListFromGCP[i].categoryList![j].id == _categoryId){
+            _featuredStory = newsListFromGCP[i];
+            break;
+          }
+        }
+      }
+      if(_featuredStory != null)
+        break;
+    }
+
+    if(_featuredStory != null){
+      // Remove featured post from the list which get from CMS
+      newsList.removeWhere((storyListItem) => storyListItem.id == _featuredStory!.id);
+      // Put featured post at the top of the list
+      newsList.insert(0, _featuredStory);
     }
 
     return newsList;

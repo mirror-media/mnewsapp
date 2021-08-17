@@ -54,7 +54,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab> with TickerProvider
 
       _tabWidgets.add(
         VideoTabContent(
-          categorySlug: category.slug,
+          categorySlug: category.slug!,
           isFeaturedSlug: categoryList[i].isFeaturedCategory(),
         )
       );

@@ -17,40 +17,16 @@ class ShowServices implements CategoryRepos, ShowRepos{
 
   @override
   Future<CategoryList> fetchCategoryList() async {
-    final key = 'fetchShowCategoryList';
 
-    String query = 
-    """
-    query {
-      allShows(
-        sortBy: [sortOrder_ASC]
-      ) {
-        id
-        name
-        slug
-      }
-    }
-    """;
-
-    Map<String,String> variables = {};
-
-    GraphqlBody graphqlBody = GraphqlBody(
-      operationName: null,
-      query: query,
-      variables: variables,
+    final jsonResponse = await _helper.getByCacheAndAutoCache(
+        baseConfig!.categoriesUrl,
+        maxAge: categoryCacheDuration,
+        headers: {
+          "Accept": "application/json"
+        }
     );
 
-    final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: showCategoryCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
-
-    CategoryList categoryList = CategoryList.fromJson(jsonResponse['data']['allShows']);
+    CategoryList categoryList = CategoryList.fromJson(jsonResponse['allShows']);
     return categoryList;
   }
 
