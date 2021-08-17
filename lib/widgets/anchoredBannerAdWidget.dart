@@ -33,6 +33,7 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> with Au
         onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
       ),
     );
+    _loadingAnchoredBanner = true;
     return banner.load();
   }
 

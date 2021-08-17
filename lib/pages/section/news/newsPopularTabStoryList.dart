@@ -9,6 +9,7 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
   @override
@@ -91,22 +92,39 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
   }) {
+    List<Widget> _storyListWithAd = [];
+    int _howManyAds = 0;
+    for(int i = 0; i < storyListItemList.length; i++) {
+      if (i % 6 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget());
+        _howManyAds++;
+      }
+      else if (i == 0) {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
+            )
+        );
+        if(storyListItemList.length == 1){
+          _storyListWithAd.add(InlineBannerAdWidget());
+          _howManyAds++;
+        }
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: NewsStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if (index == 0) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: NewsStoryFirstItem(storyListItem: storyListItemList[index]),
-            );
-          }
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: NewsStoryListItem(storyListItem: storyListItemList[index]),
-          );
-        },
-        childCount: storyListItemList.length
+        (BuildContext context, int index) => _storyListWithAd[index],
+        childCount: _storyListWithAd.length
       ),
     );
   }
