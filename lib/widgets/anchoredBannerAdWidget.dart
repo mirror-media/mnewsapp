@@ -24,17 +24,17 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>{
       adUnitId: adHelper!.bannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$BannerAd loaded.');
+          print('AnchoredBannerAd loaded.');
           setState(() {
             _anchoredBanner = ad as BannerAd?;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$BannerAd failedToLoad: $error');
+          print('AnchoredBannerAd failedToLoad: $error');
           ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
+        onAdOpened: (Ad ad) => print('AnchoredBannerAd onAdOpened.'),
+        onAdClosed: (Ad ad) => print('AnchoredBannerAd onAdClosed.'),
       ),
     );
     return banner.load();
