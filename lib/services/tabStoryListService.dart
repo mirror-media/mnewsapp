@@ -35,10 +35,8 @@ class TabStoryListServices implements TabStoryListRepos{
       first: \$first, 
       sortBy: [ publishTime_DESC ]
     ) {
-      id
       slug
       name
-      publishTime
       heroImage {
         urlMobileSized
       }
@@ -190,7 +188,7 @@ class TabStoryListServices implements TabStoryListRepos{
     }
 
     /// Get featured posts from json
-    StoryListItemList newsListFromGCP = StoryListItemList.fromJsonGCP(jsonResponseFromGCP['allPosts']);
+    StoryListItemList newsListFromGCP = StoryListItemList.fromJson(jsonResponseFromGCP['allPosts']);
     final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
         baseConfig!.categoriesUrl,
         maxAge: categoryCacheDuration,
@@ -202,35 +200,26 @@ class TabStoryListServices implements TabStoryListRepos{
     CategoryList _categoryList = CategoryList.fromJson(jsonResponseGCP['allCategories']);
     String? _categoryId = _categoryList.firstWhere((element) => element.slug == slug).id;
 
-
-    if(newsListFromGCP.isNotEmpty){
-      // Remove the post which category id is not equal to the current slug
-      newsListFromGCP.removeWhere((storyListItem){
-        bool _notThisSlug = true;
-        var storyListItemCategory = storyListItem.category;
-        if(storyListItemCategory != null && _categoryId != null){
-          storyListItemCategory.forEach((allPostsCategory) {
-            if(allPostsCategory.id == _categoryId)
-              _notThisSlug = false;
-          });
+    // Find the featured post which category id is equal to the current id
+    StoryListItem? _featuredStory;
+    for(int i = 0; i < newsListFromGCP.length; i++){
+      if(newsListFromGCP[i].categoryList != null){
+        for(int j = 0; j < newsListFromGCP[i].categoryList!.length; j++){
+          if(newsListFromGCP[i].categoryList![j].id == _categoryId){
+            _featuredStory = newsListFromGCP[i];
+            break;
+          }
         }
-        return _notThisSlug;
-      });
+      }
+      if(_featuredStory != null)
+        break;
     }
 
-    if(newsListFromGCP.isNotEmpty){
-      if(newsListFromGCP.length > 1){
-        // When featured post more than one, put latest post at the top of the list
-        newsListFromGCP.sort((StoryListItem a, StoryListItem b){
-          DateTime publishedTimeA = DateTime.parse(a.publishTime);
-          DateTime publishedTimeB = DateTime.parse(b.publishTime);
-          return publishedTimeB.compareTo(publishedTimeA);
-        });
-      }
+    if(_featuredStory != null){
       // Remove featured post from the list which get from CMS
-      newsList.removeWhere((storyListItem) => storyListItem.id == newsListFromGCP.first.id);
+      newsList.removeWhere((storyListItem) => storyListItem.id == _featuredStory!.id);
       // Put featured post at the top of the list
-      newsList.insert(0, newsListFromGCP.first);
+      newsList.insert(0, _featuredStory);
     }
 
     return newsList;

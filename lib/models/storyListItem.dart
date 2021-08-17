@@ -1,7 +1,6 @@
 import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
-
-import 'category.dart';
+import 'package:tv/models/categoryList.dart';
 
 class StoryListItem {
   String? id;
@@ -9,8 +8,7 @@ class StoryListItem {
   String slug;
   String? style;
   String photoUrl;
-  List<Category>? category;
-  String publishTime;
+  CategoryList? categoryList;
 
   StoryListItem({
     required this.id,
@@ -18,8 +16,7 @@ class StoryListItem {
     required this.slug,
     required this.style,
     required this.photoUrl,
-    this.category,
-    required this.publishTime,
+    this.categoryList,
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
@@ -34,31 +31,9 @@ class StoryListItem {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
-    return StoryListItem(
-      id: json[BaseModel.idKey],
-      name: json[BaseModel.nameKey],
-      slug: json[BaseModel.slugKey],
-      style: json['style'],
-      photoUrl: photoUrl,
-      publishTime: json['publishTime']
-    );
-  }
-
-  factory StoryListItem.fromJsonGCP(Map<String, dynamic> json) {
-    if(BaseModel.hasKey(json, '_source')) {
-      json = json['_source'];
-    }
-
-    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
-      photoUrl = json['heroImage']['urlMobileSized'];
-    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
-      photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
-    }
-
-    List<Category>? allPostsCategory;
+    CategoryList? allPostsCategory;
     if(json['categories'] != null) {
-      allPostsCategory = (json['categories'] as List).map((v) => Category.fromJson(v)).toList();
+      allPostsCategory = CategoryList.fromJson(json['categories']);
     }
 
     return StoryListItem(
@@ -67,8 +42,7 @@ class StoryListItem {
       slug: json[BaseModel.slugKey],
       style: json['style'],
       photoUrl: photoUrl,
-      category: allPostsCategory,
-      publishTime: json['publishTime']
+      categoryList: allPostsCategory
     );
   }
 
