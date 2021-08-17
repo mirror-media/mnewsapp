@@ -5,7 +5,6 @@ import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/models/category.dart';
 import 'package:tv/models/categoryList.dart';
 
 abstract class CategoryRepos {
@@ -35,8 +34,6 @@ class CategoryServices implements CategoryRepos{
     categoryList.removeWhere((category) => category.slug == 'video');
     /// do not display home slug in app
     categoryList.removeWhere((category) => category.slug == 'home');
-
-    categoryList.sort((Category a, Category b) => a.sortOrder!.compareTo(b.sortOrder!));
 
     String menuJsonPath = isVideo ? videoMenuJson : menuJson;
     String jsonFixed = await rootBundle.loadString(menuJsonPath);
