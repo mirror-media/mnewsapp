@@ -10,6 +10,7 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -149,12 +150,60 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
     required StoryListItemList storyListItemList,
     bool needCarousel = false, bool isLoading = false
   }) {
+    List<Widget> _storyListWithAd = [];
+    int _howManyAds = 0;
+    if(!needCarousel){
+      for(int i = 0; i < storyListItemList.length; i++) {
+        if (i % 6 == 1) {
+          _storyListWithAd.add(InlineBannerAdWidget());
+          _howManyAds++;
+        }
+        else if (i == 0) {
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
+              )
+          );
+          if(storyListItemList.length == 1){
+            _storyListWithAd.add(InlineBannerAdWidget());
+            _howManyAds++;
+          }
+        }
+        else {
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryListItem(
+                    storyListItem: storyListItemList[i - _howManyAds]),
+              )
+          );
+        }
+      }
+    }
+    else{
+      for(int i = 0; i < storyListItemList.length; i++){
+        if(i % 6 == 0){
+          _storyListWithAd.add(InlineBannerAdWidget());
+          _howManyAds++;
+        }
+        else{
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryListItem(storyListItem: storyListItemList[i - _howManyAds]),
+              )
+          );
+        }
+      }
+    }
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
           if(!isLoading && 
-          index == storyListItemList.length - 5 && 
-          storyListItemList.length < storyListItemList.allStoryCount) {
+          index == _storyListWithAd.length - 5 &&
+              storyListItemList.length < storyListItemList.allStoryCount) {
             if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
               _fetchNextPage();
             } else {
@@ -163,24 +212,18 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           }
 
           if (index == 0 && !needCarousel) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: NewsStoryFirstItem(storyListItem: storyListItemList[index]),
-            );
+            return _storyListWithAd[index];
           }
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NewsStoryListItem(storyListItem: storyListItemList[index]),
-              ),
-              if(index == storyListItemList.length - 1 && isLoading)
+              _storyListWithAd[index],
+              if(index == _storyListWithAd.length - 1 && isLoading)
                 _loadMoreWidget(),
             ],
           );
         },
-        childCount: storyListItemList.length
+        childCount: _storyListWithAd.length,
       ),
     );
   }
