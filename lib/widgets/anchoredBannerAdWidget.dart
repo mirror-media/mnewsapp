@@ -10,28 +10,16 @@ class AnchoredBannerAdWidget extends StatefulWidget {
 class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>{
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
-  late Future _loadAd;
 
   @override
   void initState() {
     super.initState();
-    _loadAd = _createAnchoredBanner(context);
+    _createAnchoredBanner(context);
   }
 
   Future<void> _createAnchoredBanner(BuildContext context) async {
-    final AnchoredAdaptiveBannerAdSize? size =
-    await AdSize.getAnchoredAdaptiveBannerAdSize(
-      Orientation.portrait,
-      MediaQuery.of(context).size.width.truncate(),
-    );
-
-    if (size == null) {
-      print('Unable to get height of anchored banner.');
-      return;
-    }
-
     final BannerAd banner = BannerAd(
-      size: size,
+      size: AdSize.banner,
       request: AdRequest(),
       adUnitId: adHelper!.bannerAdUnitId,
       listener: BannerAdListener(
@@ -58,22 +46,20 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>{
       _loadingAnchoredBanner = true;
       _createAnchoredBanner(context);
     }
-    return FutureBuilder(
-      future: _loadAd,
-      builder: (context, AsyncSnapshot snapshot){
 
-      },
-    );
     if(_anchoredBanner != null){
       return Container(
+        alignment: Alignment.center,
         width: _anchoredBanner!.size.width.toDouble(),
         height: _anchoredBanner!.size.height.toDouble(),
         child: AdWidget(ad: _anchoredBanner!),
+        margin: EdgeInsets.only(bottom: 18),
       );
     }
     else{
       return Container();
     }
+
   }
 
   @override

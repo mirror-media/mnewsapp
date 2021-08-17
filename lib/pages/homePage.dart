@@ -10,6 +10,7 @@ import 'package:tv/pages/section/news/newsPage.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
+import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
@@ -62,7 +63,14 @@ class _HomePageState extends State<HomePage> {
             return Container();
           } else {
             MNewsSection sectionId = state.sectionId;
-            return _buildBody(sectionId);
+            return Column(
+              children: [
+                Expanded(
+                  child: _buildBody(sectionId),
+                ),
+                AnchoredBannerAdWidget(),
+              ],
+            );
           }
         }
       ),

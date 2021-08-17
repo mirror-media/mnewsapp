@@ -18,11 +18,16 @@ class _InitialAppState extends State<InitialApp> {
   @override
   void initState() {
     _loadingConfig();
+    _initGoogleMobileAds();
     super.initState();
   }
 
   _loadingConfig() async{
     context.read<ConfigBloc>().add(LoadingConfig(context));
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    return MobileAds.instance.initialize();
   }
 
   @override
