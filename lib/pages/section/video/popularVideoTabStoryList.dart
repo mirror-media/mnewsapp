@@ -8,13 +8,14 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
-class PupularVideoTabStoryList extends StatefulWidget {
+class PopularVideoTabStoryList extends StatefulWidget {
   @override
-  _PupularVideoTabStoryListState createState() => _PupularVideoTabStoryListState();
+  _PopularVideoTabStoryListState createState() => _PopularVideoTabStoryListState();
 }
 
-class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
+class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
   @override
   void initState() {
     _fetchPopularStoryList();
@@ -31,7 +32,7 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
       builder: (BuildContext context, TabStoryListState state) {
         if (state is TabStoryListError) {
           final error = state.error;
-          print('PupularVideoTabStoryListError: ${error.message}');
+          print('PopularVideoTabStoryListError: ${error.message}');
           if( error is NoInternetException) {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -93,15 +94,32 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
   }) {
+    List<Widget> _storyListWithAd = [];
+    int _howManyAds = 0;
+    for(int i = 0; i < storyListItemList.length; i++) {
+      if (i % 4 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget());
+        _howManyAds++;
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: VideoStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
+    if(storyListItemList.length == 1 || storyListItemList.length == 5
+        || storyListItemList.length == 8){
+      _storyListWithAd.add(InlineBannerAdWidget());
+      _howManyAds++;
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: VideoStoryListItem(storyListItem: storyListItemList[index]),
-          );
-        },
-        childCount: storyListItemList.length
+        (BuildContext context, int index)  => _storyListWithAd[index],
+        childCount: _storyListWithAd.length
       ),
     );
   }
