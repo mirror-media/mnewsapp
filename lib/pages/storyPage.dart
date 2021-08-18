@@ -4,6 +4,7 @@ import 'package:share/share.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/storyService.dart';
+import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/storyWidget.dart';
 
 class StoryPage extends StatefulWidget {
@@ -35,7 +36,14 @@ class _StoryPageState extends State<StoryPage> {
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => StoryBloc(storyRepos: StoryServices()),
-        child: StoryWidget(slug: _slug)
+        child: Column(
+          children: [
+            Expanded(
+              child: StoryWidget(slug: _slug),
+            ),
+            AnchoredBannerAdWidget(),
+          ],
+        )
       ),
     );
   }
