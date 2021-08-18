@@ -8,6 +8,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -120,6 +121,28 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
     required StoryListItemList storyListItemList,
     bool isLoading = false
   }) {
+    List<Widget> _storyListWithAd = [];
+    int _howManyAds = 0;
+    for(int i = 0; i < storyListItemList.length; i++) {
+      if (i % 4 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget());
+        _howManyAds++;
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: VideoStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
+    if(storyListItemList.length == 1 || storyListItemList.length == 5
+        || storyListItemList.length == 8){
+      _storyListWithAd.add(InlineBannerAdWidget());
+      _howManyAds++;
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
         (BuildContext context, int index) {
@@ -131,16 +154,13 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: VideoStoryListItem(storyListItem: storyListItemList[index]),
-              ),
-              if(index == storyListItemList.length - 1 && isLoading)
+              _storyListWithAd[index],
+              if(index == _storyListWithAd.length - 1 && isLoading)
                 _loadMoreWidget(),
             ],
           );
         },
-        childCount: storyListItemList.length
+        childCount: _storyListWithAd.length
       ),
     );
   }
