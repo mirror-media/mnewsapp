@@ -4,9 +4,11 @@ import 'package:tv/blocs/show/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
@@ -123,7 +125,8 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
             ),
           ),
         ),
-        SizedBox(height: 48),
+        InlineBannerAdWidget(adUnitId: adHelper!.showAT1AdUnitId),
+        SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),
           child: ShowPlaylistWidget(showIntro: widget.showIntro, listviewController: _listviewController,),
