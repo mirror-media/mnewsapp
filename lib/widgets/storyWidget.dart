@@ -22,6 +22,7 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'inlineBannerAdWidget.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
@@ -89,6 +90,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
+        InlineBannerAdWidget(),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -107,11 +109,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
+        InlineBannerAdWidget(),
         if(story.relatedStories!.length > 0)
         ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
+        InlineBannerAdWidget(),
       ],
     );
   }
@@ -445,14 +449,31 @@ class _StoryWidgetState extends State<StoryWidget> {
   
   Widget _buildContent(ParagraphList storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
+    int _numOfAds = 0;
+    if(storyContents.length > 0)
+      _numOfAds = 1;
+    else if(storyContents.length >= 5 && storyContents.length < 10)
+      _numOfAds = 2;
+    else if(storyContents.length >= 10)
+      _numOfAds = 3;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: storyContents.length,
+        itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          Paragraph paragraph = storyContents[index];
+          if(index == 1 || index == 6 || index == 12){
+            return InlineBannerAdWidget();
+          }
+          int _trueIndex = index;
+          if(index > 1 && index < 6)
+            _trueIndex--;
+          else if(index > 6 && index < 12)
+            _trueIndex = _trueIndex - 2;
+          else if(index > 12)
+            _trueIndex = _trueIndex - 3;
+          Paragraph paragraph = storyContents[_trueIndex];
           if (paragraph.contents != null && 
               paragraph.contents!.length > 0 &&
               !_isNullOrEmpty(paragraph.contents![0].data)
