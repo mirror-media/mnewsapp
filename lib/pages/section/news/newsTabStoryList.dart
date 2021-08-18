@@ -211,10 +211,6 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
             }
           }
 
-          if (index == 0 && !needCarousel) {
-            return _storyListWithAd[index];
-          }
-
           return Column(
             children: [
               _storyListWithAd[index],
