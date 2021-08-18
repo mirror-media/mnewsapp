@@ -8,6 +8,7 @@ import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 import 'package:tv/pages/section/live/liveSite.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class LivePage extends StatelessWidget {
@@ -29,15 +30,21 @@ class LivePage extends StatelessWidget {
               mute: true,
             ),
 
+            InlineBannerAdWidget(),
+
             BlocProvider(
               create: (context) => YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
               child: LiveSite()
             ),
 
+            InlineBannerAdWidget(),
+
             BlocProvider(
               create: (context) => PromotionVideoBloc(promotionVideosRepos: PromotionVideosServices()),
               child: PromotionVideos()
             ),
+
+            InlineBannerAdWidget(),
 
             SizedBox(height: 24),
           ],
