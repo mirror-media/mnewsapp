@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
@@ -97,10 +98,22 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
   }) {
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
+    int _whichAd = 1;
     for(int i = 0; i < storyListItemList.length; i++) {
       if (i % 6 == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget());
         _howManyAds++;
+        if(_whichAd == 1){
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT1AdUnitId));
+          _whichAd++;
+        }
+        else if(_whichAd == 2){
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT2AdUnitId));
+          _whichAd++;
+        }
+        else{
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT3AdUnitId));
+          _whichAd = 1;
+        }
       }
       else if (i == 0) {
         _storyListWithAd.add(
@@ -120,9 +133,16 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
         );
       }
     }
-    if(storyListItemList.length == 1 || storyListItemList.length == 6
-        || storyListItemList.length == 11){
-      _storyListWithAd.add(InlineBannerAdWidget());
+    if(storyListItemList.length == 1){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT1AdUnitId));
+      _howManyAds++;
+    }
+    else if(storyListItemList.length == 6){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT2AdUnitId));
+      _howManyAds++;
+    }
+    else if(storyListItemList.length == 11){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT3AdUnitId));
       _howManyAds++;
     }
     return SliverList(

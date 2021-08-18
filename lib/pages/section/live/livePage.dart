@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
@@ -29,21 +30,21 @@ class LivePage extends StatelessWidget {
               isLive: true,
             ),
 
-            InlineBannerAdWidget(),
+            InlineBannerAdWidget(adUnitId: adHelper!.liveAT1AdUnitId,),
 
             BlocProvider(
               create: (context) => YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
               child: LiveSite()
             ),
 
-            InlineBannerAdWidget(),
+            InlineBannerAdWidget(adUnitId: adHelper!.liveAT2AdUnitId),
 
             BlocProvider(
               create: (context) => PromotionVideoBloc(promotionVideosRepos: PromotionVideosServices()),
               child: PromotionVideos()
             ),
 
-            InlineBannerAdWidget(),
+            InlineBannerAdWidget(adUnitId: adHelper!.liveAT3AdUnitId),
 
             SizedBox(height: 24),
           ],

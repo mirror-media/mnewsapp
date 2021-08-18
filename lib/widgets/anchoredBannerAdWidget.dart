@@ -21,7 +21,7 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>{
     final BannerAd banner = BannerAd(
       size: AdSize.banner,
       request: AdRequest(),
-      adUnitId: adHelper!.bannerAdUnitId,
+      adUnitId: adHelper!.stickyBannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('AnchoredBannerAd loaded.');

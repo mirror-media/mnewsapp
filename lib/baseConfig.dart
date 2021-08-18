@@ -123,7 +123,16 @@ class BaseConfig {
     }
   }
 
-  String get androidBannerAdUnitId {
+  String get androidInterstitialAdUnitId {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidInterstitialAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidInterstitialAdUnitId;
+    }
+  }
+
+  String get tvAndRos320x50ST{
     switch(_flavor) {
       case BuildFlavor.production:
         return prod.androidBannerAdUnitId;
@@ -132,21 +141,345 @@ class BaseConfig {
     }
   }
 
-  String get androidNativeAdUnitId {
+  String get tvAndHome300x250AT1{
     switch(_flavor) {
       case BuildFlavor.production:
-        return prod.androidNativeAdUnitId;
+        return prod.androidBannerAdUnitId;
       case BuildFlavor.development:
-        return dev.androidNativeAdUnitId;
+        return dev.androidBannerAdUnitId;
     }
   }
 
-  String get androidInterstitialAdUnitId {
+  String get tvAndHome300x250AT2{
     switch(_flavor) {
       case BuildFlavor.production:
-        return prod.androidInterstitialAdUnitId;
+        return prod.androidBannerAdUnitId;
       case BuildFlavor.development:
-        return dev.androidInterstitialAdUnitId;
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndHome300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndPol300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndPol300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndPol300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndInt300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndInt300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndInt300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndFin300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndFin300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndFin300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndSoc300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndSoc300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndSoc300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLif300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLif300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLif300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndEnt300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndEnt300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndEnt300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndUnc300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndUnc300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndUnc300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250HD{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250E1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndStory300x250FT{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLive300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLive300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndLive300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndVdo300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndVdo300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndVdo300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndShow300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvAndShow300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
     }
   }
 
@@ -159,30 +492,363 @@ class BaseConfig {
     }
   }
 
-  String get iOSBannerAdUnitId {
-    switch(_flavor) {
-      case BuildFlavor.production:
-        return prod.iOSBannerAdUnitId;
-      case BuildFlavor.development:
-        return dev.iOSBannerAdUnitId;
-    }
-  }
-
-  String get iOSNativeAdUnitId {
-    switch(_flavor) {
-      case BuildFlavor.production:
-        return prod.iOSNativeAdUnitId;
-      case BuildFlavor.development:
-        return dev.iOSNativeAdUnitId;
-    }
-  }
-
   String get iOSInterstitialAdUnitId {
     switch(_flavor) {
       case BuildFlavor.production:
         return prod.iOSInterstitialAdUnitId;
       case BuildFlavor.development:
         return dev.iOSInterstitialAdUnitId;
+    }
+  }
+
+  String get tvIosRos320x50ST{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosHome300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosHome300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosHome300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosPol300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosPol300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosPol300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosInt300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosInt300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosInt300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosFin300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosFin300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosFin300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosSoc300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosSoc300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosSoc300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLif300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLif300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLif300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosEnt300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosEnt300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosEnt300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosUnc300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosUnc300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosUnc300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250HD{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250E1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosStory300x250FT{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLive300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLive300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosLive300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosVdo300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosVdo300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosVdo300x250AT3{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosShow300x250AT1{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
+    }
+  }
+
+  String get tvIosShow300x250AT2{
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.androidBannerAdUnitId;
+      case BuildFlavor.development:
+        return dev.androidBannerAdUnitId;
     }
   }
 }

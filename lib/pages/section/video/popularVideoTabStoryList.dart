@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
@@ -96,9 +97,21 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
   }) {
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
+    int _whichAd = 1;
     for(int i = 0; i < storyListItemList.length; i++) {
       if (i % 4 == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget());
+        if(_whichAd == 1){
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT1AdUnitId));
+          _whichAd++;
+        }
+        else if(_whichAd == 2){
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT2AdUnitId));
+          _whichAd++;
+        }
+        else{
+          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT3AdUnitId));
+          _whichAd = 1;
+        }
         _howManyAds++;
       }
       else {
@@ -111,9 +124,16 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
         );
       }
     }
-    if(storyListItemList.length == 1 || storyListItemList.length == 5
-        || storyListItemList.length == 8){
-      _storyListWithAd.add(InlineBannerAdWidget());
+    if(storyListItemList.length == 1){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT1AdUnitId));
+      _howManyAds++;
+    }
+    else if(storyListItemList.length == 5){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT2AdUnitId));
+      _howManyAds++;
+    }
+    else if(storyListItemList.length == 8){
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT3AdUnitId));
       _howManyAds++;
     }
     return SliverList(

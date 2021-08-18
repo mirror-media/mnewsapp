@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -90,7 +91,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: adHelper!.storyHDAdUnitId,),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -113,13 +114,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: adHelper!.storyE1AdUnitId),
         if(story.relatedStories!.length > 0)
         ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: adHelper!.storyFTAdUnitId),
       ],
     );
   }
@@ -466,8 +467,14 @@ class _StoryWidgetState extends State<StoryWidget> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          if(index == 1 || index == 6 || index == 12){
-            return InlineBannerAdWidget();
+          if(index == 1){
+            return InlineBannerAdWidget(adUnitId: adHelper!.storyAT1AdUnitId);
+          }
+          else if(index == 6){
+            return InlineBannerAdWidget(adUnitId: adHelper!.storyAT2AdUnitId);
+          }
+          else if(index == 12){
+            return InlineBannerAdWidget(adUnitId: adHelper!.storyAT3AdUnitId);
           }
           int _trueIndex = index;
           if(index > 1 && index < 6)

@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/helpers/adHelper.dart';
 
 class InlineBannerAdWidget extends StatefulWidget {
+  final String adUnitId;
+  InlineBannerAdWidget({ required this.adUnitId});
   @override
   _InlineBannerAdWidgetState createState() => _InlineBannerAdWidgetState();
 }
@@ -10,10 +11,12 @@ class InlineBannerAdWidget extends StatefulWidget {
 class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>{
   BannerAd? _inlineBanner;
   bool _loadingInlineBanner = false;
+  late String _currentAdUnitId;
 
   @override
   void initState() {
     super.initState();
+    _currentAdUnitId = widget.adUnitId;
     _createInlineBanner(context);
   }
 
@@ -21,7 +24,7 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>{
     final BannerAd banner = BannerAd(
       size: AdSize.mediumRectangle,
       request: AdRequest(),
-      adUnitId: adHelper!.bannerAdUnitId,
+      adUnitId: _currentAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('InlineBannerAd loaded.');
