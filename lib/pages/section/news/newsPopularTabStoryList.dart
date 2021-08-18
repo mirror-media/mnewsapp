@@ -106,10 +106,6 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
               child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
             )
         );
-        if(storyListItemList.length == 1){
-          _storyListWithAd.add(InlineBannerAdWidget());
-          _howManyAds++;
-        }
       }
       else {
         _storyListWithAd.add(
@@ -120,6 +116,11 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
             )
         );
       }
+    }
+    if(storyListItemList.length == 1 || storyListItemList.length == 6
+        || storyListItemList.length == 11){
+      _storyListWithAd.add(InlineBannerAdWidget());
+      _howManyAds++;
     }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
