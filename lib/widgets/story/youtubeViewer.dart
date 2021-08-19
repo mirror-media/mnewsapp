@@ -9,11 +9,13 @@ class YoutubeViewer extends StatefulWidget {
   final String videoID;
   final bool autoPlay;
   final bool isLive;
+  final bool mute;
   YoutubeViewer(
     this.videoID,
     {
       this.autoPlay = false,
       this.isLive = false,
+      this.mute = false,
     }
   );
 
@@ -44,6 +46,7 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
         privacyEnhanced: true,
         playsInline: true, // iOS only
         useHybridComposition: true,
+        mute: widget.mute,
       ),
     )..listen((value) {
       if (value.isReady && !value.hasPlayed) {
