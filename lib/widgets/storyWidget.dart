@@ -97,7 +97,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        if(story.brief!.length > 0)
+        if(story.brief!.length > 0 && widget.slug != 'standards' && widget.slug != 'faq')
         ...[
           _buildBrief(story.brief!),
           SizedBox(height: 32),
