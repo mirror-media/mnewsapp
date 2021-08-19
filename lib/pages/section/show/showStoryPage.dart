@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:share/share.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class ShowStoryPage extends StatefulWidget {
@@ -47,7 +49,17 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _buildTitleAndPublishedDate(),
           ),
-          SizedBox(height: 48),
+          InlineBannerAdWidget(adUnitId: adHelper!.showAT2AdUnitId),
+          SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: Text('更多節目內容',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _buildMoreShowContent(
