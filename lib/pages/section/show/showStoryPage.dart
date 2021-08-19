@@ -50,6 +50,15 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
           SizedBox(height: 48),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
+            child: Text('更多節目內容',
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _buildMoreShowContent(
               title: '更多節目內容',
               youtubePlayListId: widget.youtubePlayListId
