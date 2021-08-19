@@ -26,6 +26,7 @@ class LivePage extends StatelessWidget {
               mNewsLiveYoutubeId,
               autoPlay: true,
               isLive: true,
+              mute: true,
             ),
 
             BlocProvider(

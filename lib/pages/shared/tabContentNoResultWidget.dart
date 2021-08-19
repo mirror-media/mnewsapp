@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:tv/helpers/dataConstants.dart';
 
 class TabContentNoResultWidget extends StatelessWidget {
@@ -8,7 +9,7 @@ class TabContentNoResultWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: height/10),
-        Center(child: Image.asset(tabContentNoResultPng)),
+        Center(child: SvgPicture.asset(tabContentNoResultSvg)),
       ],
     );
   }
