@@ -71,8 +71,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // 24 is padding 12*2, 12 is gap, 52 is IconButton size
-              _keywordTextField(width - 24 - 12 - 52),
-              _searchButton(),
+              _keywordTextField(width - 24),
             ],
           ),
         ),
@@ -170,19 +169,6 @@ class _SearchWidgetState extends State<SearchWidget> {
           }
         ),
       ),
-    );
-  }
-
-  Widget _searchButton() {
-    return IconButton(
-      iconSize: 36,
-      icon: Icon(
-        Icons.search,
-        color: Colors.grey,
-      ),
-      onPressed: () {
-        _searchNewsStoryByKeyword(_textController.text);
-      },
     );
   }
 

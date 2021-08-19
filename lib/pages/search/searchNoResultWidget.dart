@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tv/helpers/dataConstants.dart';
 
 class SearchNoResultWidget extends StatelessWidget {
@@ -12,7 +13,7 @@ class SearchNoResultWidget extends StatelessWidget {
     return Column(
       children: [
         SizedBox(height: 60),
-        Image.asset(searchNoResultPng),
+        SvgPicture.asset(searchNoResultSvg),
         SizedBox(height: 24),
         Text(
           '您的搜尋「$keyword」',

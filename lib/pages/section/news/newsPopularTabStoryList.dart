@@ -47,15 +47,12 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
                 childCount: 1,
               ),
             );
-          } 
-          
+          }
+
           return SliverList(
             delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return error.renderWidget(
-                  isNoButton: true,
-                  isColumn: true
-                );
+                  (BuildContext context, int index) {
+                return TabContentNoResultWidget();
               },
               childCount: 1,
             ),

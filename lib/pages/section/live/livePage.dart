@@ -28,6 +28,7 @@ class LivePage extends StatelessWidget {
               mNewsLiveYoutubeId,
               autoPlay: true,
               isLive: true,
+              mute: true,
             ),
 
             InlineBannerAdWidget(adUnitId: adHelper!.liveAT1AdUnitId,),
