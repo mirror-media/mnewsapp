@@ -97,7 +97,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        if(story.brief!.length > 0 && widget.slug != 'standards' && widget.slug != 'faq')
+        if(story.brief!.length > 0)
         ...[
           _buildBrief(story.brief!),
           SizedBox(height: 32),
@@ -388,7 +388,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       List<Widget> articleWidgets = List.empty(growable: true);
 
       for (int i = 0; i < articles.length; i++) {
-        if (articles[i].type == 'unstyled') {
+        if (articles[i].type == 'unstyled'  && articles[i].contents![0].data != '') {
           if (articles[i].contents!.length > 0) {
             articleWidgets.add(
               ParseTheTextToHtmlWidget(
