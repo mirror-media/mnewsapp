@@ -55,7 +55,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget _buildDrawerHeader(EdgeInsets padding) {
     return Container(
       height: 84.0 + padding.top,
-      child: DrawerHeader(
+      // Add color back
+      color: drawerColor,
+      //Temporarily remove the login and setting buttons
+      /*child: DrawerHeader(
         margin: null,
         decoration: BoxDecoration(
           color: drawerColor,
@@ -88,7 +91,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ]
         ),
-      ),
+      ),*/
     );
   }
 

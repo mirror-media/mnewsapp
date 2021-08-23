@@ -70,6 +70,8 @@ class TabStoryListServices implements TabStoryListRepos{
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
+        "slug_not_in": ["biography", "standards", "complaint", "press-self-regulation",
+          "faq", "law", "privacy", "webauthorization", "aboutus"],
       },
       "skip": skip,
       "first": first,
