@@ -143,7 +143,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          '公評人簡介',
+          '外部公評人翁秀琪',
           style: TextStyle(
             fontSize: 20,
             color: themeColor,
@@ -299,12 +299,24 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           children: [
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: paperPng,
-              title1: '新聞製作',
-              title2: '準則',
-              onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
+              imageLocationString: hammerPng,
+              title1: '外部公評人',
+              title2: '設置章程',
+              onTap: () => RouteGenerator.navigateToStory(context, 'law'),
             ),
             SizedBox(width: 8),
+            OmbudsButton(
+              width: ombudsWidth,
+              imageLocationString: paperPng,
+              title1: '新聞自律 /',
+              title2: '他律規範',
+              onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
+            ),
+          ],
+        ),
+        SizedBox(height: 24),
+        Row(
+          children: [
             OmbudsButton(
               width: ombudsWidth,
               imageLocationString: faqPng,
