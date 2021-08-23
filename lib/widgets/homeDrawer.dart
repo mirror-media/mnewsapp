@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/sectionList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
