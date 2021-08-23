@@ -127,7 +127,6 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        _buildLiveTitle(widget.youtubePlaylistInfo.name),
         SizedBox(height: 24),
         ListView.separated(
           //controller: widget.listviewController,
@@ -146,16 +145,6 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         if(isLoading)
           _loadMoreWidget(),
       ],
-    );
-  }
-
-  Widget _buildLiveTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 22,
-        fontWeight: FontWeight.w500,
-      ),
     );
   }
 

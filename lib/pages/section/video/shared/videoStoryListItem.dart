@@ -73,7 +73,7 @@ class VideoStoryListItem extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
-                width: 40.0 + 8.0,
+                width: 40.0 + 10.0,
                 color: Colors.black45,
                 child: Padding(
                   padding: const EdgeInsets.all(4.0),

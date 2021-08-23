@@ -97,11 +97,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        if(story.brief!.length > 0)
-        ...[
-          _buildBrief(story.brief!),
-          SizedBox(height: 32),
-        ],
+        _buildBrief(story.brief!),
         _buildContent(story.contentApiData!),
         SizedBox(height: 16),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
@@ -389,7 +385,8 @@ class _StoryWidgetState extends State<StoryWidget> {
 
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
-          if (articles[i].contents!.length > 0) {
+          if (articles[i].contents!.length > 0 &&
+              !_isNullOrEmpty(articles[i].contents![0].data)) {
             articleWidgets.add(
               ParseTheTextToHtmlWidget(
                 html: articles[i].contents![0].data, 
@@ -410,7 +407,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         return Container();
       }
       return Padding(
-        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 32.0),
         child: Column(
           children: [
             ClipPath(
