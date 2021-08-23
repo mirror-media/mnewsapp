@@ -2,9 +2,11 @@
 
 import 'dart:io';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/show/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/showIntro.dart';
+import 'package:tv/services/adService.dart';
 import 'package:tv/services/showService.dart';
 
 abstract class ShowEvents{
@@ -23,7 +25,8 @@ class FetchShowIntro extends ShowEvents {
     try{
       yield ShowLoading();
       ShowIntro showIntro = await showRepos.fetchShowIntroById(showCategoryId);
-      yield ShowIntroLoaded(showIntro: showIntro);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('show1');
+      yield ShowIntroLoaded(showIntro: showIntro, bannerAdList: _bannerAdList);
     } on SocketException {
       yield ShowError(
         error: NoInternetException('No Internet'),

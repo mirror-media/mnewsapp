@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 
 abstract class YoutubePlaylistState {}
@@ -18,7 +19,8 @@ class YoutubePlaylistLoadingMoreFail extends YoutubePlaylistState {
 
 class YoutubePlaylistLoaded extends YoutubePlaylistState {
   final YoutubePlaylistItemList youtubePlaylistItemList;
-  YoutubePlaylistLoaded({required this.youtubePlaylistItemList});
+  final List<BannerAd> bannerAdList;
+  YoutubePlaylistLoaded({required this.youtubePlaylistItemList, required this.bannerAdList});
 }
 
 class YoutubePlaylistError extends YoutubePlaylistState {

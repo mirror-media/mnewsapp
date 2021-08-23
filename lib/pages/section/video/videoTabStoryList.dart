@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
-import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
@@ -71,6 +71,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
         }
         if (state is TabStoryListLoaded) {
           StoryListItemList storyListItemList = state.storyListItemList;
+          List<BannerAd>? bannerAdList = state.bannerAdList;
 
           if(storyListItemList.length == 0) {
             return SliverList(
@@ -85,6 +86,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
 
           return _tabStoryList(
             storyListItemList: storyListItemList,
+            bannerAdList: bannerAdList
           );
         }
 
@@ -92,7 +94,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
           StoryListItemList storyListItemList = state.storyListItemList;
           return _tabStoryList(
             storyListItemList: storyListItemList, 
-            isLoading: true
+            isLoading: true,
           );
         }
 
@@ -101,7 +103,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
           _fetchNextPageByCategorySlug();
           return _tabStoryList(
             storyListItemList: storyListItemList, 
-            isLoading: true
+            isLoading: true,
           );
         }
 
@@ -120,25 +122,18 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
 
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
-    bool isLoading = false
+    bool isLoading = false,
+    List<BannerAd>? bannerAdList
   }) {
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
     int _whichAd = 1;
     for(int i = 0; i < storyListItemList.length; i++) {
-      if (i % 4 == 1) {
-        if(_whichAd == 1){
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT1AdUnitId));
-          _whichAd++;
-        }
-        else if(_whichAd == 2){
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT2AdUnitId));
-          _whichAd++;
-        }
-        else{
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT3AdUnitId));
-          _whichAd = 1;
-        }
+      if (i % 4 == 1 && bannerAdList != null) {
+        _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[_whichAd],));
+        _whichAd++;
+        if(_whichAd == 3)
+          _whichAd = 0;
         _howManyAds++;
       }
       else {
@@ -151,16 +146,16 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
         );
       }
     }
-    if(storyListItemList.length == 1){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT1AdUnitId));
+    if(storyListItemList.length == 1 && bannerAdList != null){
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[0],));
       _howManyAds++;
     }
-    else if(storyListItemList.length == 5){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT2AdUnitId));
+    else if(storyListItemList.length == 5 && bannerAdList != null){
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[1],));
       _howManyAds++;
     }
-    else if(storyListItemList.length == 8){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.vdoAT3AdUnitId));
+    else if(storyListItemList.length == 8 && bannerAdList != null){
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[2],));
       _howManyAds++;
     }
     return SliverList(

@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class TabStoryListState {}
@@ -18,7 +19,8 @@ class TabStoryListLoadingMoreFail extends TabStoryListState {
 
 class TabStoryListLoaded extends TabStoryListState {
   final StoryListItemList storyListItemList;
-  TabStoryListLoaded({required this.storyListItemList});
+  final List<BannerAd> bannerAdList;
+  TabStoryListLoaded({required this.storyListItemList, required this.bannerAdList,});
 }
 
 class TabStoryListError extends TabStoryListState {

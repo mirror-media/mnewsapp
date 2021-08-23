@@ -3,11 +3,13 @@
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
+import 'package:tv/services/adService.dart';
 import 'package:tv/services/categoryService.dart';
 
 class CategoriesBloc extends Bloc<CategoryEvents, CategoriesState> {
@@ -23,7 +25,8 @@ class CategoriesBloc extends Bloc<CategoryEvents, CategoriesState> {
         yield CategoriesLoading();
         try {
           categoryList = await categoryRepos.fetchCategoryList();
-          yield CategoriesLoaded(categoryList: categoryList);
+          List<BannerAd> _bannerAdList = await AdService().createInlineBanner('video');
+          yield CategoriesLoaded(categoryList: categoryList, bannerAdList: _bannerAdList);
         } on SocketException {
           yield CategoriesError(
             error: NoInternetException('No Internet'),

@@ -1,9 +1,11 @@
 import 'dart:io';
 
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/story.dart';
+import 'package:tv/services/adService.dart';
 import 'package:tv/services/storyService.dart';
 
 abstract class StoryEvents{
@@ -23,7 +25,8 @@ class FetchPublishedStoryBySlug extends StoryEvents {
     try{
       yield StoryLoading();
       Story story = await storyRepos.fetchPublishedStoryBySlug(slug);
-      yield StoryLoaded(story: story);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('story');
+      yield StoryLoaded(story: story, bannerAdList: _bannerAdList);
     } on SocketException {
       yield StoryError(
         error: NoInternetException('No Internet'),

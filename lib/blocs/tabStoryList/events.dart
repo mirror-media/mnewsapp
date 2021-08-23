@@ -2,10 +2,12 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/services/adService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
 abstract class TabStoryListEvents{
@@ -23,7 +25,8 @@ class FetchStoryList extends TabStoryListEvents {
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchStoryList();
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('news');
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, bannerAdList: _bannerAdList);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),
@@ -76,12 +79,13 @@ class FetchNextPage extends TabStoryListEvents {
   Stream<TabStoryListState> run(TabStoryListRepos tabStoryListRepos) async*{
     print(this.toString());
     try {
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('news');
       yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
       StoryListItemList newStoryListItemList = await tabStoryListRepos.fetchNextPage(
         loadingMorePage: loadingMorePage
       );
       storyListItemList.addAll(newStoryListItemList);
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, bannerAdList: _bannerAdList);
     } catch(e) {
       Fluttertoast.showToast(
         msg: "加載失敗",
@@ -113,7 +117,8 @@ class FetchStoryListByCategorySlug extends TabStoryListEvents {
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchStoryListByCategorySlug(slug);
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('news',slug: storyListItemList[0].slug);
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, bannerAdList: _bannerAdList);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),
@@ -173,7 +178,8 @@ class FetchNextPageByCategorySlug extends TabStoryListEvents {
         loadingMorePage: loadingMorePage
       );
       storyListItemList.addAll(newStoryListItemList);
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('news',slug: storyListItemList[0].slug);
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, bannerAdList: _bannerAdList);
     }  catch(e) {
       Fluttertoast.showToast(
         msg: "加載失敗",
@@ -203,7 +209,8 @@ class FetchPopularStoryList extends TabStoryListEvents {
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchPopularStoryList();
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('news');
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, bannerAdList: _bannerAdList);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),

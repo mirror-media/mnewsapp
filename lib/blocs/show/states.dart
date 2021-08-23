@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/models/showIntro.dart';
 
 abstract class ShowState {}
@@ -8,7 +9,8 @@ class ShowLoading extends ShowState {}
 
 class ShowIntroLoaded extends ShowState {
   final ShowIntro showIntro;
-  ShowIntroLoaded({required this.showIntro});
+  final List<BannerAd> bannerAdList;
+  ShowIntroLoaded({required this.showIntro, required this.bannerAdList});
 }
 
 class ShowError extends ShowState {

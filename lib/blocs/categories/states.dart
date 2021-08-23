@@ -1,3 +1,4 @@
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
 
@@ -9,7 +10,8 @@ class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
   final CategoryList categoryList;
-  CategoriesLoaded({required this.categoryList});
+  final List<BannerAd> bannerAdList;
+  CategoriesLoaded({required this.categoryList, required this.bannerAdList});
 }
 
 class CategoriesError extends CategoriesState {

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/show/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
-import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
@@ -47,9 +47,11 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
         }
         if (state is ShowIntroLoaded) {
           ShowIntro showIntro = state.showIntro;
+          List<BannerAd> bannerAdList = state.bannerAdList;
 
           return ShowIntroWidget(
             showIntro: showIntro,
+            bannerAdList: bannerAdList
           );
         }
 
@@ -62,8 +64,10 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
 
 class ShowIntroWidget extends StatefulWidget {
   final ShowIntro showIntro;
+  final List<BannerAd> bannerAdList;
   ShowIntroWidget({
     required this.showIntro,
+    required this.bannerAdList,
   });
 
   @override
@@ -125,7 +129,7 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
             ),
           ),
         ),
-        InlineBannerAdWidget(adUnitId: adHelper!.showAT1AdUnitId),
+        InlineBannerAdWidget(bannerAd: widget.bannerAdList[0],),
         SizedBox(height: 24),
         Padding(
           padding: const EdgeInsets.only(left: 24, right: 24),

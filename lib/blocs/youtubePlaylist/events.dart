@@ -2,9 +2,11 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/services/adService.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 
 abstract class YoutubePlaylistEvents{
@@ -27,7 +29,8 @@ class FetchSnippetByPlaylistId extends YoutubePlaylistEvents {
       yield YoutubePlaylistLoading();
       youtubePlaylistItemList = 
           await youtubePlaylistRepos.fetchSnippetByPlaylistId(playlistId, maxResults: maxResults);
-      yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('show2');
+      yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList, bannerAdList: _bannerAdList);
     } on SocketException {
       yield YoutubePlaylistError(
         error: NoInternetException('No Internet'),
@@ -73,8 +76,9 @@ class FetchSnippetByPlaylistIdAndPageToken extends YoutubePlaylistEvents {
       );
       youtubePlaylistItemList.nextPageToken = newYoutubePlaylistItemList.nextPageToken;
       youtubePlaylistItemList.addAll(newYoutubePlaylistItemList);
-      
-      yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
+
+      List<BannerAd> _bannerAdList = await AdService().createInlineBanner('show2');
+      yield YoutubePlaylistLoaded(youtubePlaylistItemList: youtubePlaylistItemList, bannerAdList: _bannerAdList);
     } catch(e) {
       Fluttertoast.showToast(
         msg: "加載失敗",

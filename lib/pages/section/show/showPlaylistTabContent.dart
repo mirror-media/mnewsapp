@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
@@ -27,7 +28,8 @@ class ShowPlaylistTabContent extends StatefulWidget {
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   final int _fetchPlaylistMaxResult = 10;
   late bool _isLoading;
-  String? _nextPagetoken;
+  String? _nextPageToken;
+  late List<BannerAd> _bannerAdList;
 
   @override
   void initState() {
@@ -38,9 +40,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       () { 
         if (widget.listviewController.position.pixels == widget.listviewController.position.maxScrollExtent &&
           !_isLoading &&
-          _nextPagetoken != '' && _nextPagetoken != null
+          _nextPageToken != '' && _nextPageToken != null
         ) {
-          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
+          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPageToken!);
         }
       }
     );
@@ -70,7 +72,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
 
  _initPagetokenAndIsLoading() {
    _isLoading = true;
-   _nextPagetoken = '';
+   _nextPageToken = '';
  }
 
   @override
@@ -94,7 +96,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         if(state is YoutubePlaylistLoadingMoreFail) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
           _isLoading = false;
-          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
+          _nextPageToken = youtubePlaylistItemList.nextPageToken;
           
           return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -105,7 +107,8 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         if (state is YoutubePlaylistLoaded) {
           YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
           _isLoading = false;
-          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
+          _nextPageToken = youtubePlaylistItemList.nextPageToken;
+          _bannerAdList = state.bannerAdList;
 
           return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -121,7 +124,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
 
   Widget _buildYoutubePlaylistItemList(
     String youtubePlayListId,
-    YoutubePlaylistItemList youtubePlaylistItemList, 
+    YoutubePlaylistItemList youtubePlaylistItemList,
     { bool isLoading = false }
   ) {
     return Column(
@@ -222,7 +225,8 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       onTap: () => RouteGenerator.navigateToShowStory(
         context, 
         youtubePlayListId,
-        youtubePlaylistItem
+        youtubePlaylistItem,
+        _bannerAdList
       ),
     );
   }

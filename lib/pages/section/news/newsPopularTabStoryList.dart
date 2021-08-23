@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
-import 'package:tv/helpers/adHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
@@ -60,6 +60,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
         }
         if (state is TabStoryListLoaded) {
           StoryListItemList storyListItemList = state.storyListItemList;
+          List<BannerAd>? bannerAdList = state.bannerAdList;
 
           if(storyListItemList.length == 0) {
             return SliverList(
@@ -74,6 +75,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
 
           return _tabStoryList(
             storyListItemList: storyListItemList,
+            bannerAdList: bannerAdList,
           );
         }
 
@@ -92,25 +94,18 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
 
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
+    required List<BannerAd> bannerAdList
   }) {
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
     int _whichAd = 1;
     for(int i = 0; i < storyListItemList.length; i++) {
       if (i % 6 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[_whichAd],));
+        _whichAd++;
+        if(_whichAd == 3)
+          _whichAd = 0;
         _howManyAds++;
-        if(_whichAd == 1){
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT1AdUnitId));
-          _whichAd++;
-        }
-        else if(_whichAd == 2){
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT2AdUnitId));
-          _whichAd++;
-        }
-        else{
-          _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT3AdUnitId));
-          _whichAd = 1;
-        }
       }
       else if (i == 0) {
         _storyListWithAd.add(
@@ -131,15 +126,15 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
       }
     }
     if(storyListItemList.length == 1){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT1AdUnitId));
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[0],));
       _howManyAds++;
     }
     else if(storyListItemList.length == 6){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT2AdUnitId));
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[1],));
       _howManyAds++;
     }
     else if(storyListItemList.length == 11){
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: adHelper!.homeAT3AdUnitId));
+      _storyListWithAd.add(InlineBannerAdWidget(bannerAd: bannerAdList[2],));
       _howManyAds++;
     }
     return SliverList(
