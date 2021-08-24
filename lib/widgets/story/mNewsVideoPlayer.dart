@@ -21,12 +21,16 @@ class MNewsVideoPlayer extends StatefulWidget {
   /// Will fallback to fitting within the space allowed.
   final double aspectRatio;
 
+  /// Whether or not the video muted
+  final bool muted;
+
   MNewsVideoPlayer({
     Key? key,
     required this.videourl,
     required this.aspectRatio,
     this.autoPlay = false,
     this.startAt,
+    this.muted = false,
     this.looping = false,
   }) : super(key: key);
 
@@ -56,8 +60,10 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
         videoPlayerController: _videoPlayerController,
         aspectRatio: _videoPlayerController.value.aspectRatio,
         autoInitialize: true,
-        customControls: MaterialControls(),
+        autoPlay: widget.autoPlay,
       );
+      if(widget.muted)
+        _chewieController.setVolume(0.0);
     } catch(e) {
       // TODO: need to return error
       return false;

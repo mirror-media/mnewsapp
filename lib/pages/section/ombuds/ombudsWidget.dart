@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/blocs/video/video_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/story.dart';
+import 'package:tv/models/video.dart';
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
@@ -30,6 +32,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
 
   _loadOmbuds() async {
     context.read<StoryBloc>().add(FetchPublishedStoryBySlug('biography'));
+    context.read<VideoCubit>().fetchVideoByName('ombuds_office_main_video');
   }
   
   @override
@@ -107,12 +110,25 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   }
 
   Widget _buildHeroWidget(double width, Story story) {
-    if(story.heroVideo != null) {
-      return _buildVideoWidget(story.heroVideo!);
-    }
+    return BlocBuilder<VideoCubit, VideoState>(
+        builder: (BuildContext context, VideoState state){
+          if (state is VideoError) {
+            final error = state.error;
+            print('OmbudsVideoError: ${error.message}');
+            return Container();
+          }
+          if (state is VideoLoaded) {
+            Video? video = state.video;
+            if(video == null) {
+              return Container();
+            }
 
-    return Image.asset(
-      ombudsDefaultJpg,
+            return _buildVideoWidget(video.url);
+          }
+
+          // state is Init, loading, or other
+          return _loadingWidget();
+        }
     );
   }
 
@@ -127,7 +143,9 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     
     return MNewsVideoPlayer(
       videourl: videoUrl,
+      autoPlay: true,
       aspectRatio: 16 / 9,
+      muted: true,
     );
   }
 
