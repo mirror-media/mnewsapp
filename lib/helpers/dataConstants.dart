@@ -22,6 +22,8 @@ const String paperPng = 'assets/image/ombuds/paper.png';
 const String faqPng = 'assets/image/ombuds/FAQ.png';
 const String mailPng = 'assets/image/ombuds/mail.png';
 const String logoPng = 'assets/image/logo.png';
+const String hammerPng = 'assets/image/ombuds/hammer.png';
+
 
 /// color
 const Color themeColor = Color(0xff003366);
