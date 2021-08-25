@@ -23,6 +23,8 @@ const String faqPng = 'assets/image/ombuds/FAQ.png';
 const String mailPng = 'assets/image/ombuds/mail.png';
 const String logoPng = 'assets/image/logo.png';
 const String hammerPng = 'assets/image/ombuds/hammer.png';
+const String adUnitIdJson = 'assets/json/adUnitId.json';
+
 
 
 /// color
