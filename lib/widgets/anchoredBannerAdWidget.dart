@@ -1,6 +1,8 @@
+import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/helpers/adHelper.dart';
+
+import '../baseConfig.dart';
 
 class AnchoredBannerAdWidget extends StatefulWidget {
   final bool isKeepAlive;
@@ -13,11 +15,21 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> with Au
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
 
+  String get stickyBannerAdUnitId {
+    if (Platform.isAndroid) {
+      return baseConfig!.tvAndRos320x50ST;
+    } else if (Platform.isIOS) {
+      return baseConfig!.tvIosRos320x50ST;
+    } else {
+      throw new UnsupportedError("Unsupported platform");
+    }
+  }
+
   Future<void> _createAnchoredBanner(BuildContext context) async {
     final BannerAd banner = BannerAd(
       size: AdSize.banner,
       request: AdRequest(),
-      adUnitId: AdHelper().stickyBannerAdUnitId,
+      adUnitId: stickyBannerAdUnitId,
       listener: BannerAdListener(
         onAdLoaded: (Ad ad) {
           print('$BannerAd loaded.');
