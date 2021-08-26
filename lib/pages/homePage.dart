@@ -8,6 +8,7 @@ import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
+import 'package:tv/pages/section/programList/programListPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
 import 'package:tv/widgets/gDPR.dart';
@@ -107,6 +108,8 @@ class _HomePageState extends State<HomePage> {
         return AnchorpersonPage();
       case MNewsSection.ombuds:
         return OmbudsPage();
+      case MNewsSection.programList:
+        return ProgramListPage();
     }
   }
 }
