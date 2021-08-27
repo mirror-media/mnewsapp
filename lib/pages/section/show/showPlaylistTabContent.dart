@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
@@ -14,10 +15,12 @@ import 'package:tv/models/youtubePlaylistItemList.dart';
 class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
   final ScrollController listviewController;
+  final AdUnitId adUnitId;
   ShowPlaylistTabContent({
     Key? key,
     required this.youtubePlaylistInfo,
     required this.listviewController,
+    required this.adUnitId,
   }) : super(key: key);
 
   @override
@@ -222,7 +225,8 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       onTap: () => RouteGenerator.navigateToShowStory(
         context, 
         youtubePlayListId,
-        youtubePlaylistItem
+        youtubePlaylistItem,
+        widget.adUnitId
       ),
     );
   }
