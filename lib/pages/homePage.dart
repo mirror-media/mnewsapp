@@ -4,6 +4,7 @@ import 'package:localstorage/localstorage.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
@@ -66,7 +67,7 @@ class _HomePageState extends State<HomePage> {
             return Column(
               children: [
                 Expanded(
-                  child: _buildBody(sectionId),
+                  child: _buildBody(sectionId,adUnitId: state.adUnitId),
                 ),
                 AnchoredBannerAdWidget(),
               ],
@@ -101,12 +102,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(MNewsSection sectionId) {
+  Widget _buildBody(MNewsSection sectionId,{AdUnitId? adUnitId}) {
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();
       case MNewsSection.live:
-        return LivePage();
+        return LivePage(adUnitId: adUnitId,);
       case MNewsSection.video:
         return VideoPage();
       case MNewsSection.show:
