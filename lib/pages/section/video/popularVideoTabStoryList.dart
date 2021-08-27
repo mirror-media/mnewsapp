@@ -5,6 +5,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
@@ -16,6 +17,7 @@ class PopularVideoTabStoryList extends StatefulWidget {
 }
 
 class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
+  late AdUnitId _adUnitId;
   @override
   void initState() {
     _fetchPopularStoryList();
@@ -23,7 +25,7 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
   }
 
   _fetchPopularStoryList() async {
-    context.read<TabStoryListBloc>().add(FetchPopularStoryList());
+    context.read<TabStoryListBloc>().add(FetchPopularStoryList(isVideo: true));
   }
 
   @override
@@ -70,6 +72,9 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
             );
           }
 
+          if(state.adUnitId != null)
+            _adUnitId = state.adUnitId!;
+
           return _tabStoryList(
             storyListItemList: storyListItemList,
           );
@@ -92,11 +97,16 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
     required StoryListItemList storyListItemList,
   }) {
     List<Widget> _storyListWithAd = [];
+    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
     int _howManyAds = 0;
+    int _adCounter = 0;
     for(int i = 0; i < storyListItemList.length; i++) {
       if (i % 4 == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget());
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adPositions[_adCounter],),);
         _howManyAds++;
+        _adCounter++;
+        if (_adCounter == 3)
+          _adCounter = 0;
       }
       else {
         _storyListWithAd.add(
@@ -108,15 +118,22 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
         );
       }
     }
-    if(storyListItemList.length == 1 || storyListItemList.length == 5
-        || storyListItemList.length == 8){
-      _storyListWithAd.add(InlineBannerAdWidget());
+    if (storyListItemList.length == 1) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId),);
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 5) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 8) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
       _howManyAds++;
     }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index)  => _storyListWithAd[index],
-        childCount: _storyListWithAd.length
+              (BuildContext context, int index)  => _storyListWithAd[index],
+          childCount: _storyListWithAd.length
       ),
     );
   }
