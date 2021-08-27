@@ -1,0 +1,140 @@
+{
+  "android": {
+    "news": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "pol": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "int": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "fin": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "soc": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "lif": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "unc": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "ent": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "others": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "story" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "hdAdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "e1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "ftAdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "live" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "video" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    },
+    "show" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/6300978111",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/6300978111"
+    }
+  },
+  "ios": {
+    "news": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "pol": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "int": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "fin": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "soc": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "lif": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "unc": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "ent": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "others": {
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "story" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "hdAdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "e1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "ftAdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "live" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "video" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at3AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    },
+    "show" :{
+      "at1AdUnitId": "ca-app-pub-3940256099942544/2934735716",
+      "at2AdUnitId": "ca-app-pub-3940256099942544/2934735716"
+    }
+  }
+}

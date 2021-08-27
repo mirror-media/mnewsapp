@@ -1,10 +1,14 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/apiException.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
@@ -17,13 +21,20 @@ class FetchStoryList extends TabStoryListEvents {
   @override
   String toString() => 'FetchStoryList';
 
+  final bool isVideo;
+
+  FetchStoryList({this.isVideo = false});
+
   @override
   Stream<TabStoryListState> run(TabStoryListRepos tabStoryListRepos) async*{
     print(this.toString());
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchStoryList();
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      String jsonFixed = await rootBundle.loadString(adUnitIdJson);
+      final fixedAdUnitId = json.decode(jsonFixed);
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,isVideo ? 'video':'news');
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, adUnitId: adUnitId);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),
@@ -101,8 +112,9 @@ class FetchNextPage extends TabStoryListEvents {
 
 class FetchStoryListByCategorySlug extends TabStoryListEvents {
   final String slug;
+  final bool isVideo;
 
-  FetchStoryListByCategorySlug(this.slug);
+  FetchStoryListByCategorySlug(this.slug,{this.isVideo = false});
 
   @override
   String toString() => 'FetchStoryListByCategorySlug { slug: $slug }';
@@ -113,7 +125,16 @@ class FetchStoryListByCategorySlug extends TabStoryListEvents {
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchStoryListByCategorySlug(slug);
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      String jsonFixed = await rootBundle.loadString(adUnitIdJson);
+      final fixedAdUnitId = json.decode(jsonFixed);
+      AdUnitId adUnitId;
+      if(isVideo){
+        adUnitId = AdUnitId.fromJson(fixedAdUnitId,'video');
+      }
+      else{
+        adUnitId = AdUnitId.fromJson(fixedAdUnitId,slug);
+      }
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, adUnitId: adUnitId);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),
@@ -192,7 +213,8 @@ class FetchNextPageByCategorySlug extends TabStoryListEvents {
 }
 
 class FetchPopularStoryList extends TabStoryListEvents {
-  FetchPopularStoryList();
+  bool isVideo;
+  FetchPopularStoryList({this.isVideo = false});
 
   @override
   String toString() => 'FetchPopularStoryList';
@@ -203,7 +225,10 @@ class FetchPopularStoryList extends TabStoryListEvents {
     try {
       yield TabStoryListLoading();
       storyListItemList = await tabStoryListRepos.fetchPopularStoryList();
-      yield TabStoryListLoaded(storyListItemList: storyListItemList);
+      String jsonFixed = await rootBundle.loadString(adUnitIdJson);
+      final fixedAdUnitId = json.decode(jsonFixed);
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,isVideo ? 'video':'news');
+      yield TabStoryListLoaded(storyListItemList: storyListItemList, adUnitId: adUnitId);
     } on SocketException {
       yield TabStoryListError(
         error: NoInternetException('No Internet'),

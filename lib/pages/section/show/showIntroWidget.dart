@@ -5,8 +5,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
@@ -19,7 +21,6 @@ class BuildShowIntro extends StatefulWidget {
 }
 
 class _BuildShowIntroState extends State<BuildShowIntro> {
-
   @override
   void initState() {
     _fetchShowIntro(widget.showCategoryId);
@@ -45,9 +46,11 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
         }
         if (state is ShowIntroLoaded) {
           ShowIntro showIntro = state.showIntro;
+          AdUnitId adUnitId = state.adUnitId;
 
           return ShowIntroWidget(
             showIntro: showIntro,
+            adUnitId: adUnitId,
           );
         }
 
@@ -60,8 +63,10 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
 
 class ShowIntroWidget extends StatefulWidget {
   final ShowIntro showIntro;
+  final AdUnitId adUnitId;
   ShowIntroWidget({
     required this.showIntro,
+    required this.adUnitId
   });
 
   @override
@@ -83,52 +88,57 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
     double height = width/375*140;
 
     return ListView(
-      controller: _listviewController,
-      children: [
-        CachedNetworkImage(
-          width: width,
-          imageUrl: widget.showIntro.pictureUrl,
-          placeholder: (context, url) => Container(
-            height: height,
+        controller: _listviewController,
+        children: [
+          CachedNetworkImage(
             width: width,
-            color: Colors.grey,
+            imageUrl: widget.showIntro.pictureUrl,
+            placeholder: (context, url) => Container(
+              height: height,
+              width: width,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: height,
+              width: width,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.cover,
           ),
-          errorWidget: (context, url, error) => Container(
-            height: height,
-            width: width,
-            color: Colors.grey,
-            child: Icon(Icons.error),
-          ),
-          fit: BoxFit.cover,
-        ),
-        SizedBox(height: 32),
-        Padding(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          child: Text(
-            widget.showIntro.name,
-            style: TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w500,
+          SizedBox(height: 32),
+          Padding(
+            padding: const EdgeInsets.only(left: 24, right: 24),
+            child: Text(
+              widget.showIntro.name,
+              style: TextStyle(
+                fontSize: 22,
+                fontWeight: FontWeight.w500,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 12),
-        Padding(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          child: Text(
-            widget.showIntro.introduction,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w400,
+          SizedBox(height: 12),
+          Padding(
+            padding: const EdgeInsets.only(left: 24, right: 24),
+            child: Text(
+              widget.showIntro.introduction,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w400,
+              ),
             ),
           ),
-        ),
-        SizedBox(height: 48),
-        Padding(
-          padding: const EdgeInsets.only(left: 24, right: 24),
-          child: ShowPlaylistWidget(showIntro: widget.showIntro, listviewController: _listviewController,),
-        ),
-      ]
+          InlineBannerAdWidget(adUnitId: widget.adUnitId.at1AdUnitId,),
+          SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.only(left: 24, right: 24),
+            child: ShowPlaylistWidget(
+              showIntro: widget.showIntro,
+              listviewController: _listviewController,
+              adUnitId: widget.adUnitId,
+            ),
+          ),
+        ]
     );
   }
 }

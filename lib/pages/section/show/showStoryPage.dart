@@ -4,18 +4,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class ShowStoryPage extends StatefulWidget {
   final String youtubePlayListId;
   final YoutubePlaylistItem youtubePlaylistItem;
+  final AdUnitId adUnitId;
   ShowStoryPage({
     required this.youtubePlayListId,
     required this.youtubePlaylistItem,
+    required this.adUnitId,
   });
 
   @override
@@ -47,7 +51,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _buildTitleAndPublishedDate(),
           ),
-          SizedBox(height: 48),
+          InlineBannerAdWidget(adUnitId: widget.adUnitId.at2AdUnitId,),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text('更多節目內容',
@@ -133,6 +137,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
           youtubePlayListId: youtubePlayListId,
         ),
         listviewController: _listviewController,
+        adUnitId: widget.adUnitId,
       ),
     );
   }

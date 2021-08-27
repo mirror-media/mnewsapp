@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
@@ -10,9 +11,11 @@ import 'package:tv/services/youtubePlaylistService.dart';
 class ShowPlaylistWidget extends StatefulWidget {
   final ShowIntro showIntro;
   final ScrollController listviewController;
+  final AdUnitId adUnitId;
   ShowPlaylistWidget({
     required this.showIntro,
-    required this.listviewController,s
+    required this.listviewController,
+    required this.adUnitId,
   });
 
   @override
@@ -109,6 +112,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
       child: ShowPlaylistTabContent(
         youtubePlaylistInfo: youtubePlaylistInfo,
         listviewController: widget.listviewController,
+        adUnitId: widget.adUnitId,
       ),
     );
   }

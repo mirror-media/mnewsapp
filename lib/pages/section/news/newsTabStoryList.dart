@@ -5,11 +5,13 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -24,6 +26,8 @@ class NewsTabStoryList extends StatefulWidget {
 }
 
 class _NewsTabStoryListState extends State<NewsTabStoryList> {
+  late AdUnitId _adUnitId;
+
   @override
   void initState() {
     if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
@@ -91,6 +95,8 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
         }
         if (state is TabStoryListLoaded) {
           StoryListItemList storyListItemList = state.storyListItemList;
+          if(state.adUnitId != null)
+            _adUnitId = state.adUnitId!;
 
           if(storyListItemList.length == 0) {
             return SliverList(
@@ -114,7 +120,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           return _tabStoryList(
             storyListItemList: storyListItemList, 
             needCarousel: widget.needCarousel,
-            isLoading: true
+            isLoading: true,
           );
         }
 
@@ -147,14 +153,94 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
 
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
-    bool needCarousel = false, bool isLoading = false
+    bool needCarousel = false, bool isLoading = false,
   }) {
+    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    List<Widget> _storyListWithAd = [];
+    int _howManyAds = 0;
+    int _adCounter = 0;
+    if(!needCarousel){
+      for(int i = 0; i < storyListItemList.length; i++) {
+        if (i % 6 == 1) {
+          _storyListWithAd.add(InlineBannerAdWidget(
+            adUnitId: _adPositions[_adCounter],
+          ));
+          _howManyAds++;
+          _adCounter++;
+          if(_adCounter == 3)
+            _adCounter = 0;
+        }
+        else if (i == 0) {
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
+              )
+          );
+        }
+        else {
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryListItem(
+                    storyListItem: storyListItemList[i - _howManyAds]),
+              )
+          );
+        }
+      }
+      if (storyListItemList.length == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+        _howManyAds++;
+      }
+      else if (storyListItemList.length == 6) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+        _howManyAds++;
+      }
+      else if (storyListItemList.length == 11) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
+        _howManyAds++;
+      }
+    }
+    else{
+      for(int i = 0; i < storyListItemList.length; i++){
+        if(i % 6 == 0){
+          _storyListWithAd.add(InlineBannerAdWidget(
+            adUnitId: _adPositions[_adCounter],
+          ));
+          _howManyAds++;
+          _adCounter++;
+          if(_adCounter == 3)
+            _adCounter = 0;
+        }
+        else{
+          _storyListWithAd.add(
+              Padding(
+                padding: const EdgeInsets.only(bottom: 16.0),
+                child: NewsStoryListItem(storyListItem: storyListItemList[i - _howManyAds]),
+              )
+          );
+        }
+      }
+      if (storyListItemList.length == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+        _howManyAds++;
+      }
+      else if (storyListItemList.length == 7) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId,),);
+        _howManyAds++;
+      }
+      else if (storyListItemList.length == 12) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId,),);
+        _howManyAds++;
+      }
+    }
+
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if(!isLoading && 
-          index == storyListItemList.length - 5 && 
-          storyListItemList.length < storyListItemList.allStoryCount) {
+            (BuildContext context, int index) {
+          if(!isLoading &&
+              index == _storyListWithAd.length - 5 &&
+              storyListItemList.length < storyListItemList.allStoryCount) {
             if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
               _fetchNextPage();
             } else {
@@ -163,24 +249,18 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           }
 
           if (index == 0 && !needCarousel) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: NewsStoryFirstItem(storyListItem: storyListItemList[index]),
-            );
+            return _storyListWithAd[index];
           }
 
           return Column(
             children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NewsStoryListItem(storyListItem: storyListItemList[index]),
-              ),
-              if(index == storyListItemList.length - 1 && isLoading)
+              _storyListWithAd[index],
+              if(index == _storyListWithAd.length - 1 && isLoading)
                 _loadMoreWidget(),
             ],
           );
         },
-        childCount: storyListItemList.length
+        childCount: _storyListWithAd.length,
       ),
     );
   }
