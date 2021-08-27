@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:tv/widgets/customPicker.dart';
 
 class ProgramListWidget extends StatefulWidget{
   @override
@@ -25,17 +26,13 @@ class _ProgramListWidgetState extends State<ProgramListWidget>{
               ),
               onPressed: (){
                 _isDefault = false;
-                DatePicker.showDatePicker(context,
-                  minTime: DateTime.now(),
-                  maxTime: DateTime.now().add(const Duration(days: 7)),
-                  currentTime: DateTime.now(),
+                DatePicker.showPicker(context,
+                  pickerModel: CustomPicker(
+                      currentTime: DateTime.now(),
+                      maxTime: DateTime.now().add(const Duration(days: 6)),
+                    locale: LocaleType.zh
+                  ),
                   locale: LocaleType.zh,
-                  onChanged: (date){
-                    setState(() {
-                      _selectedDate = date;
-                      _buttonText = '${_selectedDate.year}年${_selectedDate.month}月${_selectedDate.day}日';
-                    });
-                  },
                   onConfirm: (date){
                     setState(() {
                       _selectedDate = date;
