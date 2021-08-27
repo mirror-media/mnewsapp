@@ -1,3 +1,4 @@
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 
 abstract class TabStoryListState {}
@@ -18,7 +19,8 @@ class TabStoryListLoadingMoreFail extends TabStoryListState {
 
 class TabStoryListLoaded extends TabStoryListState {
   final StoryListItemList storyListItemList;
-  TabStoryListLoaded({required this.storyListItemList});
+  final AdUnitId? adUnitId;
+  TabStoryListLoaded({required this.storyListItemList, this.adUnitId});
 }
 
 class TabStoryListError extends TabStoryListState {
