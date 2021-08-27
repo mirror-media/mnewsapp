@@ -113,4 +113,13 @@ class BaseConfig {
         return dev.categoriesUrl;
     }
   }
+
+  String get programListUrl {
+    switch(_flavor) {
+      case BuildFlavor.production:
+        return prod.categoriesUrl;
+      case BuildFlavor.development:
+        return dev.categoriesUrl;
+    }
+  }
 }
