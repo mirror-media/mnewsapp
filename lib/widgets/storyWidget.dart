@@ -8,6 +8,7 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
@@ -22,6 +23,7 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'inlineBannerAdWidget.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
@@ -35,6 +37,7 @@ class StoryWidget extends StatefulWidget {
 
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
+  late AdUnitId _adUnitId;
 
   @override
   void initState() {
@@ -72,6 +75,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             return Container();
           }
 
+          _adUnitId = state.adUnitId;
           return _storyContent(width, story);
         }
 
@@ -89,6 +93,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
+        InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -107,11 +112,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
+        InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
         if(story.relatedStories!.length > 0)
         ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
+        InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
       ],
     );
   }
@@ -445,14 +452,37 @@ class _StoryWidgetState extends State<StoryWidget> {
   
   Widget _buildContent(ParagraphList storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
+    int _numOfAds = 0;
+    if(storyContents.length > 0)
+      _numOfAds = 1;
+    else if(storyContents.length >= 5 && storyContents.length < 10)
+      _numOfAds = 2;
+    else if(storyContents.length >= 10)
+      _numOfAds = 3;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
-        itemCount: storyContents.length,
+        itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          Paragraph paragraph = storyContents[index];
+          if(index == 1){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
+          }
+          else if(index == 6){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
+          }
+          else if(index == 12){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
+          }
+          int _trueIndex = index;
+          if(index > 1 && index < 6)
+            _trueIndex--;
+          else if(index > 6 && index < 12)
+            _trueIndex = _trueIndex - 2;
+          else if(index > 12)
+            _trueIndex = _trueIndex - 3;
+          Paragraph paragraph = storyContents[_trueIndex];
           if (paragraph.contents != null && 
               paragraph.contents!.length > 0 &&
               !_isNullOrEmpty(paragraph.contents![0].data)

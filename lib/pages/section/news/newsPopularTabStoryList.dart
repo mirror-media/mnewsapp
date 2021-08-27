@@ -5,10 +5,12 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
   @override
@@ -16,12 +18,13 @@ class NewsPopularTabStoryList extends StatefulWidget {
 }
 
 class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
+  late AdUnitId _adUnitId;
   @override
   void initState() {
     _fetchPopularStoryList();
     super.initState();
   }
-  
+
   _fetchPopularStoryList() async {
     context.read<TabStoryListBloc>().add(FetchPopularStoryList());
   }
@@ -70,12 +73,15 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
             );
           }
 
+          if(state.adUnitId != null)
+            _adUnitId = state.adUnitId!;
+
           return _tabStoryList(
             storyListItemList: storyListItemList,
           );
         }
 
-        // state is Init, loading, or other 
+        // state is Init, loading, or other
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
@@ -91,22 +97,54 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
   }) {
+    List<Widget> _storyListWithAd = [];
+    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    int _howManyAds = 0;
+    int _adCounter = 0;
+    for (int i = 0; i < storyListItemList.length; i++) {
+      if (i % 6 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adPositions[_adCounter],),);
+        _howManyAds++;
+        _adCounter++;
+        if (_adCounter == 3)
+          _adCounter = 0;
+      }
+      else if (i == 0) {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: NewsStoryFirstItem(
+                  storyListItem: storyListItemList[i]),
+            )
+        );
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: NewsStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
+    if (storyListItemList.length == 1) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId));
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 6) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 11) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
+      _howManyAds++;
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if (index == 0) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: NewsStoryFirstItem(storyListItem: storyListItemList[index]),
-            );
-          }
-
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: NewsStoryListItem(storyListItem: storyListItemList[index]),
-          );
-        },
-        childCount: storyListItemList.length
+              (BuildContext context,
+              int index) => _storyListWithAd[index],
+          childCount: _storyListWithAd.length
       ),
     );
   }

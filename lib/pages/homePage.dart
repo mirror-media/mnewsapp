@@ -4,12 +4,14 @@ import 'package:localstorage/localstorage.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
+import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
@@ -62,7 +64,14 @@ class _HomePageState extends State<HomePage> {
             return Container();
           } else {
             MNewsSection sectionId = state.sectionId;
-            return _buildBody(sectionId);
+            return Column(
+              children: [
+                Expanded(
+                  child: _buildBody(sectionId,adUnitId: state.adUnitId),
+                ),
+                AnchoredBannerAdWidget(),
+              ],
+            );
           }
         }
       ),
@@ -93,12 +102,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(MNewsSection sectionId) {
+  Widget _buildBody(MNewsSection sectionId,{AdUnitId? adUnitId}) {
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();
       case MNewsSection.live:
-        return LivePage();
+        return LivePage(adUnitId: adUnitId,);
       case MNewsSection.video:
         return VideoPage();
       case MNewsSection.show:

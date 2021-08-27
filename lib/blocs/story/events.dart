@@ -1,8 +1,12 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/apiException.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
 
@@ -23,7 +27,10 @@ class FetchPublishedStoryBySlug extends StoryEvents {
     try{
       yield StoryLoading();
       Story story = await storyRepos.fetchPublishedStoryBySlug(slug);
-      yield StoryLoaded(story: story);
+      String jsonFixed = await rootBundle.loadString(adUnitIdJson);
+      final fixedAdUnitId = json.decode(jsonFixed);
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'story');
+      yield StoryLoaded(story: story, adUnitId: adUnitId);
     } on SocketException {
       yield StoryError(
         error: NoInternetException('No Internet'),

@@ -5,9 +5,11 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -20,6 +22,8 @@ class VideoTabStoryList extends StatefulWidget {
 }
 
 class _VideoTabStoryListState extends State<VideoTabStoryList> {
+  late AdUnitId _adUnitId;
+
   @override
   void initState() {
     _fetchStoryListByCategorySlug();
@@ -27,7 +31,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
   }
 
   _fetchStoryListByCategorySlug() async {
-    context.read<TabStoryListBloc>().add(FetchStoryListByCategorySlug(widget.categorySlug));
+    context.read<TabStoryListBloc>().add(FetchStoryListByCategorySlug(widget.categorySlug, isVideo: true));
   }
 
   _fetchNextPageByCategorySlug() async {
@@ -81,6 +85,9 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
             );
           }
 
+          if(state.adUnitId != null)
+            _adUnitId = state.adUnitId!;
+
           return _tabStoryList(
             storyListItemList: storyListItemList,
           );
@@ -120,27 +127,66 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
     required StoryListItemList storyListItemList,
     bool isLoading = false
   }) {
+    List<Widget> _storyListWithAd = [];
+    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    int _howManyAds = 0;
+    int _adCounter = 0;
+    for(int i = 0; i < storyListItemList.length; i++) {
+      if (i % 4 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(
+          adUnitId: _adPositions[_adCounter],
+        ));
+        _howManyAds++;
+        _adCounter++;
+        if(_adCounter == 3)
+          _adCounter = 0;
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: VideoStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
+    if (storyListItemList.length == 1) {
+      _storyListWithAd.add(InlineBannerAdWidget(
+        adUnitId: _adUnitId.at1AdUnitId,
+      ));
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 5) {
+      _storyListWithAd.add(InlineBannerAdWidget(
+        adUnitId: _adUnitId.at2AdUnitId,
+      ));
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 8) {
+      _storyListWithAd.add(InlineBannerAdWidget(
+        adUnitId: _adUnitId.at3AdUnitId,
+      ));
+      _howManyAds++;
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          if(!isLoading && 
-          index == storyListItemList.length - 5 && 
-          storyListItemList.length < storyListItemList.allStoryCount) {
-            _fetchNextPageByCategorySlug();
-          }
+              (BuildContext context, int index) {
+            if(!isLoading &&
+                index == storyListItemList.length - 5 &&
+                storyListItemList.length < storyListItemList.allStoryCount) {
+              _fetchNextPageByCategorySlug();
+            }
 
-          return Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: VideoStoryListItem(storyListItem: storyListItemList[index]),
-              ),
-              if(index == storyListItemList.length - 1 && isLoading)
-                _loadMoreWidget(),
-            ],
-          );
-        },
-        childCount: storyListItemList.length
+            return Column(
+              children: [
+                _storyListWithAd[index],
+                if(index == _storyListWithAd.length - 1 && isLoading)
+                  _loadMoreWidget(),
+              ],
+            );
+          },
+          childCount: _storyListWithAd.length
       ),
     );
   }

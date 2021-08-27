@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
@@ -17,11 +18,16 @@ class _InitialAppState extends State<InitialApp> {
   @override
   void initState() {
     _loadingConfig();
+    _initGoogleMobileAds();
     super.initState();
   }
 
   _loadingConfig() async{
     context.read<ConfigBloc>().add(LoadingConfig(context));
+  }
+
+  Future<InitializationStatus> _initGoogleMobileAds() {
+    return MobileAds.instance.initialize();
   }
 
   @override

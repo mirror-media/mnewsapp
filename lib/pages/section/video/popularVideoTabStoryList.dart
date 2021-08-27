@@ -5,16 +5,19 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
-class PupularVideoTabStoryList extends StatefulWidget {
+class PopularVideoTabStoryList extends StatefulWidget {
   @override
-  _PupularVideoTabStoryListState createState() => _PupularVideoTabStoryListState();
+  _PopularVideoTabStoryListState createState() => _PopularVideoTabStoryListState();
 }
 
-class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
+class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
+  late AdUnitId _adUnitId;
   @override
   void initState() {
     _fetchPopularStoryList();
@@ -22,7 +25,7 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
   }
 
   _fetchPopularStoryList() async {
-    context.read<TabStoryListBloc>().add(FetchPopularStoryList());
+    context.read<TabStoryListBloc>().add(FetchPopularStoryList(isVideo: true));
   }
 
   @override
@@ -31,7 +34,7 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
       builder: (BuildContext context, TabStoryListState state) {
         if (state is TabStoryListError) {
           final error = state.error;
-          print('PupularVideoTabStoryListError: ${error.message}');
+          print('PopularVideoTabStoryListError: ${error.message}');
           if( error is NoInternetException) {
             return SliverList(
               delegate: SliverChildBuilderDelegate(
@@ -69,6 +72,9 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
             );
           }
 
+          if(state.adUnitId != null)
+            _adUnitId = state.adUnitId!;
+
           return _tabStoryList(
             storyListItemList: storyListItemList,
           );
@@ -90,15 +96,44 @@ class _PupularVideoTabStoryListState extends State<PupularVideoTabStoryList> {
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
   }) {
+    List<Widget> _storyListWithAd = [];
+    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    int _howManyAds = 0;
+    int _adCounter = 0;
+    for(int i = 0; i < storyListItemList.length; i++) {
+      if (i % 4 == 1) {
+        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adPositions[_adCounter],),);
+        _howManyAds++;
+        _adCounter++;
+        if (_adCounter == 3)
+          _adCounter = 0;
+      }
+      else {
+        _storyListWithAd.add(
+            Padding(
+              padding: const EdgeInsets.only(bottom: 16.0),
+              child: VideoStoryListItem(
+                  storyListItem: storyListItemList[i - _howManyAds]),
+            )
+        );
+      }
+    }
+    if (storyListItemList.length == 1) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId),);
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 5) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+      _howManyAds++;
+    }
+    else if (storyListItemList.length == 8) {
+      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
+      _howManyAds++;
+    }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-        (BuildContext context, int index) {
-          return Padding(
-            padding: const EdgeInsets.only(bottom: 16.0),
-            child: VideoStoryListItem(storyListItem: storyListItemList[index]),
-          );
-        },
-        childCount: storyListItemList.length
+              (BuildContext context, int index)  => _storyListWithAd[index],
+          childCount: _storyListWithAd.length
       ),
     );
   }

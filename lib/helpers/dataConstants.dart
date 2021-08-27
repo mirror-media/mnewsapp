@@ -23,6 +23,8 @@ const String faqPng = 'assets/image/ombuds/FAQ.png';
 const String mailPng = 'assets/image/ombuds/mail.png';
 const String logoPng = 'assets/image/logo.png';
 const String hammerPng = 'assets/image/ombuds/hammer.png';
+const String adUnitIdJson = 'assets/json/adUnitId.json';
+
 
 
 /// color
@@ -86,3 +88,11 @@ const mNewsSectionList = [
 /// live
 const String mNewsLiveYoutubeId = 'coYw-eVU0Ks';
 const String mNewsLiveSiteYoutubePlayListId = 'PLT6yxVwBEbi2dWegLu37V63_tP-nI6em_';
+
+/// google admob
+const androidAdMobAppId = 'ca-app-pub-3940256099942544~3347511713';
+const androidAnchoredBannerAdUnitId = 'ca-app-pub-3940256099942544/6300978111';
+const androidInterstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
+const iOSAdMobAppId = 'ca-app-pub-3940256099942544~1458002511';
+const iOSAnchoredBannerAdUnitId = 'ca-app-pub-3940256099942544/2934735716';
+const iOSInterstitialAdUnitId = 'ca-app-pub-3940256099942544/4411468910';
