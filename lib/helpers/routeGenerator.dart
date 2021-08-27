@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
@@ -73,13 +74,15 @@ class RouteGenerator {
         // Validation of correct data type
         if (
           args['youtubePlayListId'] is String &&
-          args['youtubePlaylistItem'] is YoutubePlaylistItem
+          args['youtubePlaylistItem'] is YoutubePlaylistItem &&
+          args['adUnitId'] is AdUnitId
         ) {
           return MaterialPageRoute(
             settings: settings,
             builder: (context) => ShowStoryPage(
               youtubePlayListId: args['youtubePlayListId'],
               youtubePlaylistItem: args['youtubePlaylistItem'],
+              adUnitId: args['adUnitId'],
             )
           );
         }
@@ -139,13 +142,15 @@ class RouteGenerator {
   static void navigateToShowStory(
     BuildContext context, 
     String youtubePlayListId,
-    YoutubePlaylistItem youtubePlaylistItem
+    YoutubePlaylistItem youtubePlaylistItem,
+    AdUnitId adUnitId
   ) {
     Navigator.of(context).pushNamed(
       showStory,
       arguments: {
         'youtubePlayListId': youtubePlayListId,
         'youtubePlaylistItem': youtubePlaylistItem,
+        'adUnitId': adUnitId
       },
     );
   }

@@ -1,9 +1,13 @@
 
 
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/services.dart';
 import 'package:tv/blocs/show/states.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/services/showService.dart';
 
@@ -23,7 +27,10 @@ class FetchShowIntro extends ShowEvents {
     try{
       yield ShowLoading();
       ShowIntro showIntro = await showRepos.fetchShowIntroById(showCategoryId);
-      yield ShowIntroLoaded(showIntro: showIntro);
+      String jsonFixed = await rootBundle.loadString(adUnitIdJson);
+      final fixedAdUnitId = json.decode(jsonFixed);
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'show');
+      yield ShowIntroLoaded(showIntro: showIntro, adUnitId: adUnitId);
     } on SocketException {
       yield ShowError(
         error: NoInternetException('No Internet'),
