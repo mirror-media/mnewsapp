@@ -8,6 +8,7 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
+import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
@@ -36,6 +37,7 @@ class StoryWidget extends StatefulWidget {
 
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
+  late AdUnitId _adUnitId;
 
   @override
   void initState() {
@@ -73,6 +75,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             return Container();
           }
 
+          _adUnitId = state.adUnitId;
           return _storyContent(width, story);
         }
 
@@ -90,7 +93,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -109,13 +112,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
         if(story.relatedStories!.length > 0)
         ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(),
+        InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
       ],
     );
   }
@@ -463,8 +466,14 @@ class _StoryWidgetState extends State<StoryWidget> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          if(index == 1 || index == 6 || index == 12){
-            return InlineBannerAdWidget();
+          if(index == 1){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
+          }
+          else if(index == 6){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
+          }
+          else if(index == 12){
+            return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
           }
           int _trueIndex = index;
           if(index > 1 && index < 6)

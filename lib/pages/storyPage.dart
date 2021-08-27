@@ -35,16 +35,16 @@ class _StoryPageState extends State<StoryPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-        create: (context) => StoryBloc(storyRepos: StoryServices()),
-        child: Column(
-          children: [
-            Expanded(
-              child: StoryWidget(slug: _slug),
-            ),
-            AnchoredBannerAdWidget(isKeepAlive: false,),
-          ],
-        ),
-      ),
+          create: (context) => StoryBloc(storyRepos: StoryServices()),
+          child: Column(
+            children: [
+              Expanded(
+                child: StoryWidget(slug: _slug),
+              ),
+              AnchoredBannerAdWidget(isKeepAlive: false,),
+            ],
+          )
+      )
     );
   }
 
