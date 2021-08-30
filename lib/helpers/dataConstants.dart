@@ -55,7 +55,8 @@ enum MNewsSection {
   video,
   show,
   anchorperson,
-  ombuds
+  ombuds,
+  programList
 }
 
 const mNewsSectionList = [
@@ -82,6 +83,10 @@ const mNewsSectionList = [
   {
     BaseModel.idKey: MNewsSection.ombuds,
     BaseModel.nameKey: '公評人'
+  },
+  {
+    BaseModel.idKey: MNewsSection.programList,
+    BaseModel.nameKey: '節目表'
   }
 ];
 

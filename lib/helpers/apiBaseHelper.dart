@@ -13,11 +13,12 @@ class ApiBaseHelper {
     String url,
     {
       Map<String,String> headers = const {'Cache-control': 'no-cache'},
+      bool skipCheck = false
     }
   ) async {
     Uri uri = Uri.parse(url);
     final response = await http.get(uri, headers: headers);
-    var responseJson = returnResponse(response);
+    var responseJson = returnResponse(response, skipCheck: skipCheck);
     print('Api get done.');
     return responseJson;
   }
@@ -169,25 +170,28 @@ class ApiBaseHelper {
   }
 }
 
-dynamic returnResponse(http.Response response) {
+dynamic returnResponse(http.Response response, {bool skipCheck=false}) {
   switch (response.statusCode) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
       var responseJson = json.decode(utf8Json);
 
+      bool hasData = false;
       // properties responded by member graphql
-      bool hasData = responseJson.containsKey('data') || 
-        responseJson.containsKey('items') ||
-        // search response
-        (responseJson.containsKey('body') && responseJson['body'] != null && responseJson['body'].containsKey('hits')) ||
-        // popular json
-        responseJson.containsKey('report') ||
-          // category json
-        responseJson.containsKey('allCategories') ||
-        responseJson.containsKey('allPosts') ||
-        responseJson.containsKey('allShows');
+      if(!skipCheck){
+        hasData = responseJson.containsKey('data') ||
+            responseJson.containsKey('items') ||
+            // search response
+            (responseJson.containsKey('body') && responseJson['body'] != null && responseJson['body'].containsKey('hits')) ||
+            // popular json
+            responseJson.containsKey('report') ||
+            // category json
+            responseJson.containsKey('allCategories') ||
+            responseJson.containsKey('allPosts') ||
+            responseJson.containsKey('allShows');
+      }
       
-      if(!hasData) {
+      if(!hasData && !skipCheck) {
         throw FormatException(response.body.toString());
       }
 
