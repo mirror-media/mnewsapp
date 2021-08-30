@@ -117,9 +117,9 @@ class BaseConfig {
   String get programListUrl {
     switch(_flavor) {
       case BuildFlavor.production:
-        return prod.categoriesUrl;
+        return prod.programListUrl;
       case BuildFlavor.development:
-        return dev.categoriesUrl;
+        return dev.programListUrl;
     }
   }
 }
