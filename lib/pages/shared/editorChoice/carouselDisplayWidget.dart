@@ -80,7 +80,7 @@ class CarouselDisplayWidget extends StatelessWidget {
       color: editorChoiceTitleBackgroundColor,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 5.0),
           child: RichText(
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
