@@ -19,7 +19,7 @@ class InterstitialAdWidget{
         request: AdRequest(),
         adLoadCallback: InterstitialAdLoadCallback(
           onAdLoaded: (InterstitialAd ad) {
-            print('$ad loaded');
+            print('InterstitialAd loaded');
             _interstitialAd = ad;
             _numInterstitialLoadAttempts = 0;
           },
@@ -41,10 +41,7 @@ class InterstitialAdWidget{
       return;
     }
     _interstitialAd!.fullScreenContentCallback = FullScreenContentCallback(
-      onAdShowedFullScreenContent: (InterstitialAd ad) =>
-          print('ad onAdShowedFullScreenContent.'),
       onAdDismissedFullScreenContent: (InterstitialAd ad) {
-        print('$ad onAdDismissedFullScreenContent.');
         ad.dispose();
         createInterstitialAd();
       },
