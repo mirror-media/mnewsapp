@@ -15,6 +15,7 @@ import 'package:tv/pages/section/video/videoPage.dart';
 import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
+import 'package:tv/widgets/interstitialAdWidget.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -24,7 +25,8 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final LocalStorage _storage = LocalStorage('setting');
   var _scaffoldkey = GlobalKey<ScaffoldState>();
-  
+  InterstitialAdWidget interstitial = InterstitialAdWidget();
+
   @override
   void initState() {
     _showGDPR();
@@ -47,6 +49,11 @@ class _HomePageState extends State<HomePage> {
           },
         );
         _storage.setItem("isFirstLaunch", false);
+      }
+      else {
+        interstitial.createInterstitialAd();
+        await Future.delayed(Duration(seconds: 1));
+        interstitial.showInterstitialAd();
       }
     }
   }
