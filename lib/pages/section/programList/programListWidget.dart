@@ -44,7 +44,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget>{
         }
         if(state is ProgramListLoaded){
           return Padding(
-            padding: EdgeInsets.fromLTRB(20, 16, 20, 24),
+            padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: Column(
               children: [
                 _buildChooseButton(),
