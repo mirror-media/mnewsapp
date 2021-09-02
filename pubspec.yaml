@@ -78,6 +78,8 @@ dependencies:
 
   # google mobile ad
   google_mobile_ads: ^0.13.3
+  # shared_preferences
+  shared_preferences: ^2.0.7
 
 flutter_icons:
   android: "launcher_icon"
