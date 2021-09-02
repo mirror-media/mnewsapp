@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share/share.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/story/bloc.dart';
+import 'package:tv/blocs/story/events.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/storyService.dart';
 import 'package:tv/widgets/anchoredBannerAdWidget.dart';
@@ -24,10 +25,10 @@ class StoryPage extends StatefulWidget {
 class _StoryPageState extends State<StoryPage> {
   late String _slug;
   set slug(String value) => _slug = value;
+  StoryBloc _bloc = StoryBloc(storyRepos: StoryServices());
 
-  // 1 is middle, 2 is big
-  int _initTextSize = 1;
-  int _selectTextSize = 1;
+  double _initTextSize = 20;
+  double _selectTextSize = 20;
 
   @override
   void initState() {
@@ -38,11 +39,11 @@ class _StoryPageState extends State<StoryPage> {
 
   _getTextSizeSetting() async{
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    if(prefs.getInt('textSize') == null){
-      await prefs.setInt('textSize', 1);
+    if(prefs.getDouble('textSize') == null){
+      await prefs.setDouble('textSize', 20);
     }
     else{
-      _initTextSize = prefs.getInt('textSize')!;
+      _initTextSize = prefs.getDouble('textSize')!;
       _selectTextSize = _initTextSize;
     }
   }
@@ -52,7 +53,7 @@ class _StoryPageState extends State<StoryPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
-          create: (context) => StoryBloc(storyRepos: StoryServices()),
+          create: (context) => _bloc,
           child: Column(
             children: [
               Expanded(
@@ -82,7 +83,15 @@ class _StoryPageState extends State<StoryPage> {
                 builder: (context){
                   return textSizeSheet();
                 }
-            );
+            )
+            .then((value) async{
+              if(_selectTextSize != _initTextSize){
+                SharedPreferences prefs = await SharedPreferences.getInstance();
+                await prefs.setDouble('textSize', _selectTextSize);
+                _initTextSize = _selectTextSize;
+                _bloc.add(FetchPublishedStoryBySlug(_slug));
+            }
+            });
           },
         ),
         IconButton(
@@ -104,7 +113,8 @@ class _StoryPageState extends State<StoryPage> {
           BorderSide bigButtonBorder;
           Color middleButtonColor;
           Color bigButtonColor;
-          if(_selectTextSize == 1){
+          // 20 is middle, 24 is big
+          if(_selectTextSize == 20){
             middleButtonBorder = BorderSide(
                 color: Color(0xE5004DBC),
                 width: 2
@@ -172,9 +182,9 @@ class _StoryPageState extends State<StoryPage> {
                           ),
                         ),
                         onPressed: (){
-                          if(_selectTextSize != 1){
+                          if(_selectTextSize != 20){
                             myState(() {
-                              _selectTextSize = 1;
+                              _selectTextSize = 20;
                             });
                           }
                         }
@@ -205,9 +215,9 @@ class _StoryPageState extends State<StoryPage> {
                           ),
                         ),
                         onPressed: (){
-                          if(_selectTextSize != 2){
+                          if(_selectTextSize != 24){
                             myState(() {
-                              _selectTextSize = 2;
+                              _selectTextSize = 24;
                             });
                           }
                         }

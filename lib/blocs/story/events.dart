@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -30,7 +31,9 @@ class FetchPublishedStoryBySlug extends StoryEvents {
       String jsonFixed = await rootBundle.loadString(adUnitIdJson);
       final fixedAdUnitId = json.decode(jsonFixed);
       AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'story');
-      yield StoryLoaded(story: story, adUnitId: adUnitId);
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      double textSize = prefs.getDouble('textSize') ?? 20;
+      yield StoryLoaded(story: story, adUnitId: adUnitId, textSize: textSize);
     } on SocketException {
       yield StoryError(
         error: NoInternetException('No Internet'),
