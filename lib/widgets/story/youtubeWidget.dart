@@ -4,16 +4,21 @@ import 'package:tv/widgets/story/youtubePlayer.dart';
 class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
   final String? description;
-  YoutubeWidget({
-    required this.youtubeId,
-    this.description,
-  });
+  final double textSize;
+  YoutubeWidget(
+      {required this.youtubeId, this.description, this.textSize = 20});
 
   @override
   _YoutubeWidgetState createState() => _YoutubeWidgetState();
 }
 
 class _YoutubeWidgetState extends State<YoutubeWidget> {
+  late double textSize;
+  @override
+  void initState() {
+    super.initState();
+    textSize = widget.textSize;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +31,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
             padding: const EdgeInsets.only(top: 8.0),
             child: Text(
               widget.description!,
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+              style: TextStyle(fontSize: textSize - 4, color: Colors.grey),
             ),
           ),
       ],

@@ -7,9 +7,8 @@ import 'package:tv/models/annotation.dart';
 
 class AnnotationWidget extends StatefulWidget {
   final String data;
-  AnnotationWidget({
-    required this.data,
-  });
+  final double textSize;
+  AnnotationWidget({required this.data, this.textSize = 20});
 
   @override
   _AnnotationWidgetState createState() => _AnnotationWidgetState();
@@ -17,10 +16,12 @@ class AnnotationWidget extends StatefulWidget {
 
 class _AnnotationWidgetState extends State<AnnotationWidget> {
   List<String> displayStringList = List.empty(growable: true);
+  late double textSize;
 
   @override
   void initState() {
     _parsingTheData();
+    textSize = widget.textSize;
     super.initState();
   }
 
@@ -60,7 +61,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               annotation.text,
               hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
-                fontSize: 20,
+                fontSize: textSize,
                 height: 1.8,
               ),
             ),
@@ -73,7 +74,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   Text(
                     '(註)',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: textSize,
                       height: 1.8,
                       color: annotationColor,
                     ),
@@ -135,7 +136,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                     annotation.annotation,
                     hyperlinkColor: Colors.blue[900],
                     textStyle: TextStyle(
-                      fontSize: 20,
+                      fontSize: textSize,
                       height: 1.8,
                     ),
                   ),
@@ -151,7 +152,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
               annotation.text,
               hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
-                fontSize: 20,
+                fontSize: textSize,
                 height: 1.8,
               ),
             ),
@@ -164,7 +165,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   Text(
                     '(註)',
                     style: TextStyle(
-                      fontSize: 20,
+                      fontSize: textSize,
                       height: 1.8,
                       color: annotationColor,
                     ),
@@ -205,7 +206,7 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
             displayStringList[i],
             hyperlinkColor: Colors.blue[900],
             textStyle: TextStyle(
-              fontSize: 20,
+              fontSize: textSize,
               height: 1.8,
             ),
           ),
