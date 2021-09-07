@@ -212,7 +212,9 @@ class ParagraphFormat {
               ),
             ),
             SizedBox(width: 16),
-            Expanded(child: ParseTheTextToHtmlWidget(html: dataList[index])),
+            Expanded(
+                child: ParseTheTextToHtmlWidget(
+                    html: dataList[index], fontSize: textSize)),
           ],
         );
       },
