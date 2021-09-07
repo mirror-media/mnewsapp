@@ -16,7 +16,7 @@ import 'package:tv/widgets/story/quoteByWidget.dart';
 import 'package:tv/widgets/story/youtubeWidget.dart';
 
 class ParagraphFormat {
-  Widget parseTheParagraph(Paragraph? paragraph, BuildContext context) {
+  Widget parseTheParagraph(Paragraph? paragraph, BuildContext context, double textSize) {
     if(paragraph == null) {
       return Container();
     }
@@ -26,7 +26,8 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: '<h1>' + paragraph.contents![0].data + '</h1>'
+              html: '<h1>' + paragraph.contents![0].data + '</h1>',
+              fontSize: textSize,
             );
           }
           return Container();
@@ -35,7 +36,8 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: '<h2>' + paragraph.contents![0].data + '</h2>'
+              html: '<h2>' + paragraph.contents![0].data + '</h2>',
+              fontSize: textSize,
             );
           }
           return Container();
@@ -45,7 +47,8 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return ParseTheTextToHtmlWidget(
-              html: paragraph.contents![0].data
+              html: paragraph.contents![0].data,
+              fontSize: textSize,
             );
           }
           return Container();
@@ -66,6 +69,7 @@ class ParagraphFormat {
               imageUrl: paragraph.contents![0].data,
               description: paragraph.contents![0].description,
               width: width,
+              textSize: textSize - 4,
             );
           }
           

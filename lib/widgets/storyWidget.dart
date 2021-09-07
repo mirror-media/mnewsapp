@@ -38,6 +38,7 @@ class StoryWidget extends StatefulWidget {
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
   late AdUnitId _adUnitId;
+  late double _textSize;
 
   @override
   void initState() {
@@ -76,6 +77,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           }
 
           _adUnitId = state.adUnitId;
+          _textSize = state.textSize;
           return _storyContent(width, story);
         }
 
@@ -153,7 +155,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             child: Text(
               story.heroCaption!,
               style: TextStyle(
-                fontSize: 15, 
+                fontSize: _textSize - 5,
                 color: Color(0xff757575)
               ),
             ),
@@ -398,6 +400,7 @@ class _StoryWidgetState extends State<StoryWidget> {
               ParseTheTextToHtmlWidget(
                 html: articles[i].contents![0].data, 
                 color: storyBriefTextColor,
+                fontSize: _textSize,
               ),
             );
           }
@@ -489,7 +492,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           ) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
-              child: paragraphFormat.parseTheParagraph(paragraph, context),
+              child: paragraphFormat.parseTheParagraph(paragraph, context, _textSize),
             );
           }
           
