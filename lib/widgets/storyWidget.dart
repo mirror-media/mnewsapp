@@ -39,6 +39,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
   late AdUnitId _adUnitId;
   late double _textSize;
+  late Story _story;
 
   @override
   void initState() {
@@ -59,8 +60,9 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<StoryBloc, StoryState>(
-        builder: (BuildContext context, StoryState state) {
+    return BlocConsumer<StoryBloc, StoryState>(listener: (context, state) {
+      _textSize = state.textSize ?? 20;
+    }, builder: (BuildContext context, StoryState state) {
       if (state is StoryError) {
         final error = state.error;
         print('NewsCategoriesError: ${error.message}');
@@ -75,10 +77,13 @@ class _StoryWidgetState extends State<StoryWidget> {
         if (story == null) {
           return Container();
         }
-
+        _story = story;
         _adUnitId = state.adUnitId;
         _textSize = state.textSize;
         return _storyContent(width, story);
+      } else if (state is TextSizeChanged) {
+        _textSize = state.textSize;
+        return _storyContent(width, _story);
       }
 
       // state is Init, loading, or other

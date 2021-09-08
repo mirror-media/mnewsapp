@@ -6,9 +6,9 @@ import 'package:tv/models/contentList.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final ContentList contentList;
-  ImageAndDescriptionSlideShowWidget({
-    required this.contentList,
-  });
+  final double textSize;
+  ImageAndDescriptionSlideShowWidget(
+      {required this.contentList, this.textSize = 20});
 
   @override
   _ImageAndDescriptionSlideShowWidgetState createState() =>
@@ -22,6 +22,7 @@ class _ImageAndDescriptionSlideShowWidgetState
   late CarouselOptions options;
   CarouselController imageCarouselController = CarouselController();
   CarouselController textCarouselController = CarouselController();
+  late double textSize;
 
   Widget backArrowWidget = Icon(
     Icons.arrow_back_ios,
@@ -48,14 +49,20 @@ class _ImageAndDescriptionSlideShowWidgetState
   @override
   void initState() {
     contentList = widget.contentList;
+    textSize = widget.textSize;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(ImageAndDescriptionSlideShowWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    textSize = widget.textSize;
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 48;
     double imageHeight = width / 16 * 9;
-
     options = CarouselOptions(
       viewportFraction: 1,
       aspectRatio: 16 / 9,
@@ -111,7 +118,7 @@ class _ImageAndDescriptionSlideShowWidgetState
                 currentPage.toString(),
                 style: TextStyle(
                   color: slideShowColor,
-                  fontSize: 20,
+                  fontSize: textSize,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -119,7 +126,7 @@ class _ImageAndDescriptionSlideShowWidgetState
               Text(
                 imageSilders.length.toString(),
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: textSize,
                   fontWeight: FontWeight.w400,
                 ),
               ),
@@ -155,7 +162,7 @@ class _ImageAndDescriptionSlideShowWidgetState
             text: TextSpan(
               style: TextStyle(
                   color: Color(0xff757575),
-                  fontSize: 15,
+                  fontSize: textSize - 5,
                   fontWeight: FontWeight.w400),
               text: content.description,
             ),

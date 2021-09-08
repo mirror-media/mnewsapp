@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final LocalStorage _storage = LocalStorage('setting');
   var _scaffoldkey = GlobalKey<ScaffoldState>();
   InterstitialAdWidget interstitial = InterstitialAdWidget();
 
@@ -34,26 +33,25 @@ class _HomePageState extends State<HomePage> {
   }
 
   _showGDPR() async {
-    if (await _storage.ready) {
-      bool? isFirstLaunch = await _storage.getItem("isFirstLaunch");
-      if (isFirstLaunch == null || isFirstLaunch) {
-        await Future.delayed(Duration(seconds: 1));
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (context) {
-            return AlertDialog(
-              contentPadding: const EdgeInsets.all(0.0),
-              content: GDPR(),
-            );
-          },
-        );
-        _storage.setItem("isFirstLaunch", false);
-      } else {
-        interstitial.createInterstitialAd();
-        await Future.delayed(Duration(seconds: 1));
-        interstitial.showInterstitialAd();
-      }
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool? isFirstLaunch = prefs.getBool("isFirstLaunch");
+    if (isFirstLaunch == null || isFirstLaunch) {
+      await Future.delayed(Duration(seconds: 1));
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) {
+          return AlertDialog(
+            contentPadding: const EdgeInsets.all(0.0),
+            content: GDPR(),
+          );
+        },
+      );
+      await prefs.setBool("isFirstLaunch", false);
+    } else {
+      interstitial.createInterstitialAd();
+      await Future.delayed(Duration(seconds: 1));
+      interstitial.showInterstitialAd();
     }
   }
 

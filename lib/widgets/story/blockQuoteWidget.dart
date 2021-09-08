@@ -6,9 +6,8 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 
 class BlockQuoteWidget extends StatelessWidget {
   final String content;
-  BlockQuoteWidget({
-    required this.content,
-  });
+  final double textSize;
+  BlockQuoteWidget({required this.content, this.textSize = 20});
 
   @override
   Widget build(BuildContext context) {
@@ -28,6 +27,7 @@ class BlockQuoteWidget extends StatelessWidget {
           child: ParseTheTextToHtmlWidget(
             html: content,
             color: blockquoteColor,
+            fontSize: textSize,
           ),
         ),
         SizedBox(width: 8),

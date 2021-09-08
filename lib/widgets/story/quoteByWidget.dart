@@ -5,10 +5,8 @@ import 'package:tv/widgets/story/quoteByFrameClipper.dart';
 class QuoteByWidget extends StatelessWidget {
   final String quote;
   final String? quoteBy;
-  QuoteByWidget({
-    required this.quote,
-    this.quoteBy,
-  });
+  final double textSize;
+  QuoteByWidget({required this.quote, this.quoteBy, this.textSize = 20});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +17,7 @@ class QuoteByWidget extends StatelessWidget {
         child: Text(
           quote,
           style: TextStyle(
-            fontSize: 20,
+            fontSize: textSize,
             height: 1.8,
           ),
         ),
@@ -51,7 +49,7 @@ class QuoteByWidget extends StatelessWidget {
               Text(
                 '—— $quoteBy',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: textSize - 2,
                   color: quotebyColor,
                 ),
               ),

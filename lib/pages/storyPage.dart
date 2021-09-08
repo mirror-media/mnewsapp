@@ -86,7 +86,7 @@ class _StoryPageState extends State<StoryPage> {
                 SharedPreferences prefs = await SharedPreferences.getInstance();
                 await prefs.setDouble('textSize', _selectTextSize);
                 _initTextSize = _selectTextSize;
-                _bloc.add(FetchPublishedStoryBySlug(_slug));
+                _bloc.add(ChangeTextSize(_selectTextSize));
               }
             });
           },

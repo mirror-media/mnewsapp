@@ -11,11 +11,12 @@ class MNewsAudioPlayer extends StatefulWidget {
 
   /// The description of audio
   final String? description;
-  MNewsAudioPlayer({
-    required this.audioUrl,
-    this.title,
-    this.description,
-  });
+  final double textSize;
+  MNewsAudioPlayer(
+      {required this.audioUrl,
+      this.title,
+      this.description,
+      this.textSize = 20});
 
   @override
   _MNewsAudioPlayerState createState() => _MNewsAudioPlayerState();
@@ -29,6 +30,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
       _audioPlayer.state == PlayerState.STOPPED ||
       _audioPlayer.state == PlayerState.PAUSED);
   int _duration = 0;
+  late double _textSize;
 
   @override
   bool get wantKeepAlive => true;
@@ -36,6 +38,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
   @override
   void initState() {
     _initAudioPlayer();
+    _textSize = widget.textSize;
     super.initState();
   }
 
@@ -83,6 +86,12 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
   }
 
   @override
+  void didUpdateWidget(MNewsAudioPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _textSize = widget.textSize;
+  }
+
+  @override
   Widget build(BuildContext context) {
     super.build(context);
     return Card(
@@ -97,7 +106,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
               Text(
                 widget.title!,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: _textSize + 4,
                   fontWeight: FontWeight.w600,
                   color: _audioColor,
                 ),

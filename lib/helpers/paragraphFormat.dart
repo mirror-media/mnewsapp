@@ -56,11 +56,11 @@ class ParagraphFormat {
         }
       case 'ordered-list-item':
         {
-          return buildOrderListWidget(paragraph.contents!);
+          return buildOrderListWidget(paragraph.contents!, textSize);
         }
       case 'unordered-list-item':
         {
-          return buildUnorderListWidget(paragraph.contents!);
+          return buildUnorderListWidget(paragraph.contents!, textSize);
         }
       case 'image':
         {
@@ -79,12 +79,15 @@ class ParagraphFormat {
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
-              contentList: paragraph.contents!);
+              contentList: paragraph.contents!, textSize: textSize);
         }
       case 'annotation':
         {
           if (paragraph.contents!.length > 0) {
-            return AnnotationWidget(data: paragraph.contents![0].data);
+            return AnnotationWidget(
+              data: paragraph.contents![0].data,
+              textSize: textSize,
+            );
           }
           return Container();
         }
@@ -93,6 +96,7 @@ class ParagraphFormat {
           if (paragraph.contents!.length > 0) {
             return BlockQuoteWidget(
               content: paragraph.contents![0].data,
+              textSize: textSize,
             );
           }
           return Container();
@@ -103,6 +107,7 @@ class ParagraphFormat {
             return QuoteByWidget(
               quote: paragraph.contents![0].data,
               quoteBy: paragraph.contents![0].description,
+              textSize: textSize,
             );
           }
           return Container();
@@ -113,6 +118,7 @@ class ParagraphFormat {
             return InfoBoxWidget(
               title: paragraph.contents![0].description ?? '',
               description: paragraph.contents![0].data,
+              textSize: textSize,
             );
           }
           return Container();
@@ -139,6 +145,7 @@ class ParagraphFormat {
             return MNewsAudioPlayer(
               audioUrl: paragraph.contents![0].data,
               title: titleAndDescription,
+              textSize: textSize,
             );
           }
           return Container();
@@ -149,6 +156,7 @@ class ParagraphFormat {
             return YoutubeWidget(
               youtubeId: paragraph.contents![0].data,
               description: paragraph.contents![0].description,
+              textSize: textSize,
             );
           }
           return Container();
@@ -185,7 +193,7 @@ class ParagraphFormat {
     return resultList;
   }
 
-  Widget buildOrderListWidget(ContentList contentList) {
+  Widget buildOrderListWidget(ContentList contentList, double textSize) {
     List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(
@@ -199,19 +207,21 @@ class ParagraphFormat {
             Text(
               (index + 1).toString() + '.',
               style: TextStyle(
-                fontSize: 20,
+                fontSize: textSize,
                 height: 1.8,
               ),
             ),
             SizedBox(width: 16),
-            Expanded(child: ParseTheTextToHtmlWidget(html: dataList[index])),
+            Expanded(
+                child: ParseTheTextToHtmlWidget(
+                    html: dataList[index], fontSize: textSize)),
           ],
         );
       },
     );
   }
 
-  Widget buildUnorderListWidget(ContentList contentList) {
+  Widget buildUnorderListWidget(ContentList contentList, double textSize) {
     List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(
@@ -234,7 +244,11 @@ class ParagraphFormat {
               ),
             ),
             SizedBox(width: 16),
-            Expanded(child: ParseTheTextToHtmlWidget(html: dataList[index])),
+            Expanded(
+                child: ParseTheTextToHtmlWidget(
+              html: dataList[index],
+              fontSize: textSize,
+            )),
           ],
         );
       },

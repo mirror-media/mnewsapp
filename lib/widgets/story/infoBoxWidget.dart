@@ -5,9 +5,11 @@ import 'package:tv/helpers/dataConstants.dart';
 class InfoBoxWidget extends StatelessWidget {
   final String title;
   final String description;
+  final double textSize;
   InfoBoxWidget({
     required this.title,
     required this.description,
+    this.textSize = 20,
   });
   @override
   Widget build(BuildContext context) {
@@ -22,7 +24,7 @@ class InfoBoxWidget extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontSize: 20,
+                  fontSize: textSize,
                   color: infoBoxTitleColor,
                   fontWeight: FontWeight.bold,
                 ),
@@ -33,7 +35,7 @@ class InfoBoxWidget extends StatelessWidget {
               description,
               hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
-                fontSize: 20,
+                fontSize: textSize,
                 height: 1.8,
                 //color: color,
               ),
