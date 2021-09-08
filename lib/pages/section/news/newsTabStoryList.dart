@@ -155,22 +155,23 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
     required StoryListItemList storyListItemList,
     bool needCarousel = false, bool isLoading = false,
   }) {
-    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    // List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
-    int _adCounter = 0;
+    // int _adCounter = 0;
     if(!needCarousel){
       for(int i = 0; i < storyListItemList.length; i++) {
-        if (i % 6 == 1) {
-          _storyListWithAd.add(InlineBannerAdWidget(
-            adUnitId: _adPositions[_adCounter],
-          ));
-          _howManyAds++;
-          _adCounter++;
-          if(_adCounter == 3)
-            _adCounter = 0;
-        }
-        else if (i == 0) {
+        // if (i % 6 == 1) {
+        //   _storyListWithAd.add(InlineBannerAdWidget(
+        //     adUnitId: _adPositions[_adCounter],
+        //   ));
+        //   _howManyAds++;
+        //   _adCounter++;
+        //   if(_adCounter == 3)
+        //     _adCounter = 0;
+        // }
+        // else 
+        if (i == 0) {
           _storyListWithAd.add(
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
@@ -188,51 +189,51 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           );
         }
       }
-      if (storyListItemList.length == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
-        _howManyAds++;
-      }
-      else if (storyListItemList.length == 6) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
-        _howManyAds++;
-      }
-      else if (storyListItemList.length == 11) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
-        _howManyAds++;
-      }
+      // if (storyListItemList.length == 1) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+      //   _howManyAds++;
+      // }
+      // else if (storyListItemList.length == 6) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+      //   _howManyAds++;
+      // }
+      // else if (storyListItemList.length == 11) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
+      //   _howManyAds++;
+      // }
     }
     else{
       for(int i = 0; i < storyListItemList.length; i++){
-        if(i % 6 == 0){
-          _storyListWithAd.add(InlineBannerAdWidget(
-            adUnitId: _adPositions[_adCounter],
-          ));
-          _howManyAds++;
-          _adCounter++;
-          if(_adCounter == 3)
-            _adCounter = 0;
-        }
-        else{
+        // if(i % 6 == 0){
+        //   _storyListWithAd.add(InlineBannerAdWidget(
+        //     adUnitId: _adPositions[_adCounter],
+        //   ));
+        //   _howManyAds++;
+        //   _adCounter++;
+        //   if(_adCounter == 3)
+        //     _adCounter = 0;
+        // }
+        // else{
           _storyListWithAd.add(
               Padding(
                 padding: const EdgeInsets.only(bottom: 16.0),
                 child: NewsStoryListItem(storyListItem: storyListItemList[i - _howManyAds]),
               )
           );
-        }
+        // }
       }
-      if (storyListItemList.length == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
-        _howManyAds++;
-      }
-      else if (storyListItemList.length == 7) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId,),);
-        _howManyAds++;
-      }
-      else if (storyListItemList.length == 12) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId,),);
-        _howManyAds++;
-      }
+      // if (storyListItemList.length == 1) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+      //   _howManyAds++;
+      // }
+      // else if (storyListItemList.length == 7) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId,),);
+      //   _howManyAds++;
+      // }
+      // else if (storyListItemList.length == 12) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId,),);
+      //   _howManyAds++;
+      // }
     }
 
     return SliverList(

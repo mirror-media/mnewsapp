@@ -128,7 +128,7 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
               ),
             ),
           ),
-          InlineBannerAdWidget(adUnitId: widget.adUnitId.at1AdUnitId,),
+          // InlineBannerAdWidget(adUnitId: widget.adUnitId.at1AdUnitId,),
           SizedBox(height: 24),
           Padding(
             padding: const EdgeInsets.only(left: 24, right: 24),

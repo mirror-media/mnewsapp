@@ -59,7 +59,7 @@ class _StoryPageState extends State<StoryPage> {
               Expanded(
                 child: StoryWidget(slug: _slug),
               ),
-              AnchoredBannerAdWidget(isKeepAlive: false,),
+              // AnchoredBannerAdWidget(isKeepAlive: false,),
             ],
           )
       )

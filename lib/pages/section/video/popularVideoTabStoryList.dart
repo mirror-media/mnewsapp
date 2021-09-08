@@ -97,18 +97,18 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
     required StoryListItemList storyListItemList,
   }) {
     List<Widget> _storyListWithAd = [];
-    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    // List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
     int _howManyAds = 0;
-    int _adCounter = 0;
+    // int _adCounter = 0;
     for(int i = 0; i < storyListItemList.length; i++) {
-      if (i % 4 == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adPositions[_adCounter],),);
-        _howManyAds++;
-        _adCounter++;
-        if (_adCounter == 3)
-          _adCounter = 0;
-      }
-      else {
+      // if (i % 4 == 1) {
+      //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adPositions[_adCounter],),);
+      //   _howManyAds++;
+      //   _adCounter++;
+      //   if (_adCounter == 3)
+      //     _adCounter = 0;
+      // }
+      // else {
         _storyListWithAd.add(
             Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
@@ -116,20 +116,20 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
                   storyListItem: storyListItemList[i - _howManyAds]),
             )
         );
-      }
+      // }
     }
-    if (storyListItemList.length == 1) {
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId),);
-      _howManyAds++;
-    }
-    else if (storyListItemList.length == 5) {
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
-      _howManyAds++;
-    }
-    else if (storyListItemList.length == 8) {
-      _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
-      _howManyAds++;
-    }
+    // if (storyListItemList.length == 1) {
+    //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId),);
+    //   _howManyAds++;
+    // }
+    // else if (storyListItemList.length == 5) {
+    //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
+    //   _howManyAds++;
+    // }
+    // else if (storyListItemList.length == 8) {
+    //   _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
+    //   _howManyAds++;
+    // }
     return SliverList(
       delegate: SliverChildBuilderDelegate(
               (BuildContext context, int index)  => _storyListWithAd[index],

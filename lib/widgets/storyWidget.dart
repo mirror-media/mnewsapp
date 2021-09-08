@@ -95,7 +95,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
-        InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
+        // InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -114,13 +114,13 @@ class _StoryWidgetState extends State<StoryWidget> {
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
+        // InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
         if(story.relatedStories!.length > 0)
         ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
+        // InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
       ],
     );
   }
@@ -456,12 +456,12 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget _buildContent(ParagraphList storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
-    if(storyContents.length > 0)
-      _numOfAds = 1;
-    else if(storyContents.length >= 5 && storyContents.length < 10)
-      _numOfAds = 2;
-    else if(storyContents.length >= 10)
-      _numOfAds = 3;
+    // if(storyContents.length > 0)
+    //   _numOfAds = 1;
+    // else if(storyContents.length >= 5 && storyContents.length < 10)
+    //   _numOfAds = 2;
+    // else if(storyContents.length >= 10)
+    //   _numOfAds = 3;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.builder(
@@ -469,22 +469,22 @@ class _StoryWidgetState extends State<StoryWidget> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          if(index == 1){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
-          }
-          else if(index == 6){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
-          }
-          else if(index == 12){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
-          }
+          // if(index == 1){
+          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
+          // }
+          // else if(index == 6){
+          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
+          // }
+          // else if(index == 12){
+          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
+          // }
           int _trueIndex = index;
-          if(index > 1 && index < 6)
-            _trueIndex--;
-          else if(index > 6 && index < 12)
-            _trueIndex = _trueIndex - 2;
-          else if(index > 12)
-            _trueIndex = _trueIndex - 3;
+          // if(index > 1 && index < 6)
+          //   _trueIndex--;
+          // else if(index > 6 && index < 12)
+          //   _trueIndex = _trueIndex - 2;
+          // else if(index > 12)
+          //   _trueIndex = _trueIndex - 3;
           Paragraph paragraph = storyContents[_trueIndex];
           if (paragraph.contents != null && 
               paragraph.contents!.length > 0 &&
