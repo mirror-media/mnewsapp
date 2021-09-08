@@ -88,6 +88,11 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+    if (_textSize != widget.textSize) {
+      setState(() {
+        _textSize = widget.textSize;
+      });
+    }
     return Card(
       elevation: 10,
       color: Color(0xffD8EAEB),
