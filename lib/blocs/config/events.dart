@@ -3,7 +3,7 @@ import 'package:tv/blocs/config/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/services/configService.dart';
 
-abstract class ConfigEvents{
+abstract class ConfigEvents {
   Stream<ConfigState> run(ConfigRepos configRepos);
 }
 
@@ -15,9 +15,9 @@ class LoadingConfig extends ConfigEvents {
   String toString() => 'LoadingConfig';
 
   @override
-  Stream<ConfigState> run(ConfigRepos configRepos) async*{
+  Stream<ConfigState> run(ConfigRepos configRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield ConfigLoading();
       bool isSuccess = await configRepos.loadTheConfig(context);
       yield ConfigLoaded(isSuccess: isSuccess);

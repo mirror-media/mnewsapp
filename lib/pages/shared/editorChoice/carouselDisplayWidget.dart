@@ -12,7 +12,7 @@ class CarouselDisplayWidget extends StatelessWidget {
     required this.width,
   });
 
-  final double aspectRatio = 16/9;
+  final double aspectRatio = 16 / 9;
 
   @override
   Widget build(BuildContext context) {

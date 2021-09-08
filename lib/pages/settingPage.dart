@@ -17,23 +17,21 @@ class _SettingPageState extends State<SettingPage> {
     return Scaffold(
       appBar: _buildBar(context),
       body: SafeArea(
-        child: CustomScrollView(
-          slivers: [
-            SliverToBoxAdapter(
-              child: BlocProvider(
-                create: (context) => NotificationSettingBloc(notificationSettingRepos: NotificationSettingServices()),
-                child: NotificationSettingWidget(),
-              ),
+        child: CustomScrollView(slivers: [
+          SliverToBoxAdapter(
+            child: BlocProvider(
+              create: (context) => NotificationSettingBloc(
+                  notificationSettingRepos: NotificationSettingServices()),
+              child: NotificationSettingWidget(),
             ),
-            SliverFillRemaining(
-              hasScrollBody: false,
-              child: Align(
+          ),
+          SliverFillRemaining(
+            hasScrollBody: false,
+            child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(height: 120, child: _moreInfo(context))
-              ),
-            ),
-          ]
-        ),
+                child: Container(height: 120, child: _moreInfo(context))),
+          ),
+        ]),
       ),
     );
   }
@@ -50,50 +48,42 @@ class _SettingPageState extends State<SettingPage> {
   }
 
   Widget _moreInfo(BuildContext context) {
-    return Wrap(
-      children: [
-        Divider(),
-        SizedBox(height: 8),
-        InkWell(
+    return Wrap(children: [
+      Divider(),
+      SizedBox(height: 8),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.apps,
-                  color: Color(0xff757575),
-                ),
-                SizedBox(width: 12),
-                Text(
-                  '看更多應用程式',
-                  style: TextStyle(color: Color(0xff757575), fontSize: 16.0),
-                ),
-              ]
-            ),
+            child: Row(children: [
+              Icon(
+                Icons.apps,
+                color: Color(0xff757575),
+              ),
+              SizedBox(width: 12),
+              Text(
+                '看更多應用程式',
+                style: TextStyle(color: Color(0xff757575), fontSize: 16.0),
+              ),
+            ]),
           ),
-          onTap: () {}
-        ),
-        InkWell(
+          onTap: () {}),
+      InkWell(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-            child: Row(
-              children: [
-                Icon(
-                  Icons.info,
-                  color: Color(0xff757575),
-                ),
-                SizedBox(width: 12),
-                Text(
-                  '鏡電視行動應用程式資訊',
-                  style: TextStyle(color: Color(0xff757575), fontSize: 16.0),
-                ),
-              ]
-            ),
+            child: Row(children: [
+              Icon(
+                Icons.info,
+                color: Color(0xff757575),
+              ),
+              SizedBox(width: 12),
+              Text(
+                '鏡電視行動應用程式資訊',
+                style: TextStyle(color: Color(0xff757575), fontSize: 16.0),
+              ),
+            ]),
           ),
-          onTap: () {}
-        ),
-        SizedBox(height: 8),
-      ]
-    );
+          onTap: () {}),
+      SizedBox(height: 8),
+    ]);
   }
 }

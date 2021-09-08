@@ -42,9 +42,9 @@ class NotificationSettingList extends CustomizedList<NotificationSetting> {
   }
 
   NotificationSetting? getById(String? id) {
-    try{
+    try {
       return this.firstWhere((element) => element.id == id);
-    } catch(e) {
+    } catch (e) {
       return null;
     }
   }

@@ -13,7 +13,7 @@ class Error400Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(isNoButton) {
+    if (isNoButton) {
       return MNewsNoButtonErrorWidget(
         assetImagePath: error400Png,
         title: '抱歉...訊號出了點問題',

@@ -10,15 +10,14 @@ abstract class StoryRepos {
   Future<Story> fetchPublishedStoryBySlug(String slug);
 }
 
-class StoryServices implements StoryRepos{
+class StoryServices implements StoryRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
-  
+
   @override
-  Future<Story> fetchPublishedStoryBySlug(String slug) async{
+  Future<Story> fetchPublishedStoryBySlug(String slug) async {
     final key = 'fetchPublishedStoryBySlug?slug=$slug';
 
-    final String query = 
-    """
+    final String query = """
     query (
       \$where: PostWhereInput,
     ) {
@@ -94,10 +93,7 @@ class StoryServices implements StoryRepos{
     """;
 
     Map<String, dynamic> variables = {
-      "where": {
-        "state": "published",
-        "slug": slug
-      },
+      "where": {"state": "published", "slug": slug},
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -107,22 +103,17 @@ class StoryServices implements StoryRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: newsStoryCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
-    
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: newsStoryCacheDuration,
+        headers: {"Content-Type": "application/json"});
+
     Story story;
     try {
       story = Story.fromJson(jsonResponse['data']['allPosts'][0]);
-    } catch(e) {
-      throw FormatException(e.toString()); 
+    } catch (e) {
+      throw FormatException(e.toString());
     }
-    
+
     return story;
   }
 }

@@ -9,9 +9,7 @@ class QuoteByTopFrameClipper extends CustomClipper<Path> {
     Rect topLeftTop = Rect.fromLTRB(0, 0, size.height, borderWidth);
     Rect topLeftLeft = Rect.fromLTRB(0, 0, borderWidth, size.height);
 
-    Path path = Path()
-      ..addRect(topLeftTop)
-      ..addRect(topLeftLeft);
+    Path path = Path()..addRect(topLeftTop)..addRect(topLeftLeft);
     return path;
   }
 
@@ -25,12 +23,12 @@ class QuoteByBottomFrameClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    Rect bottomRightBottom = Rect.fromLTRB(size.width - size.height, size.height - borderWidth, size.width, size.height);
-    Rect bottomRightRight = Rect.fromLTRB(size.width - borderWidth, 0, size.width, size.height);
+    Rect bottomRightBottom = Rect.fromLTRB(size.width - size.height,
+        size.height - borderWidth, size.width, size.height);
+    Rect bottomRightRight =
+        Rect.fromLTRB(size.width - borderWidth, 0, size.width, size.height);
 
-    Path path = Path()
-      ..addRect(bottomRightBottom)
-      ..addRect(bottomRightRight);
+    Path path = Path()..addRect(bottomRightBottom)..addRect(bottomRightRight);
     return path;
   }
 

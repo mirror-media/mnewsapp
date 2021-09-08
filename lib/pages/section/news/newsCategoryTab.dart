@@ -17,7 +17,8 @@ class NewsCategoryTab extends StatefulWidget {
   _NewsCategoryTabState createState() => _NewsCategoryTabState();
 }
 
-class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderStateMixin{
+class _NewsCategoryTabState extends State<NewsCategoryTab>
+    with TickerProviderStateMixin {
   /// tab controller
   int _initialTabIndex = 0;
   TabController? _tabController;
@@ -78,31 +79,29 @@ class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderSt
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<CategoriesBloc, CategoriesState>(
-      builder: (BuildContext context, CategoriesState state) {
-        if (state is CategoriesError) {
-          final error = state.error!;
-          print('NewsCategoriesError: ${error.message}');
-          if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _loadCategoryList());
-          } 
-          
-          return error.renderWidget(isNoButton: true);
-        }
-        if (state is CategoriesLoaded) {
-          CategoryList categoryList = state.categoryList;
-          _initializeTabController(categoryList);
-          
-          return _buildTabs(_tabs, _tabWidgets, _tabController!);
+        builder: (BuildContext context, CategoriesState state) {
+      if (state is CategoriesError) {
+        final error = state.error!;
+        print('NewsCategoriesError: ${error.message}');
+        if (error is NoInternetException) {
+          return error.renderWidget(onPressed: () => _loadCategoryList());
         }
 
-        // state is Init, loading, or other 
-        return _loadingWidget();
+        return error.renderWidget(isNoButton: true);
       }
-    );
+      if (state is CategoriesLoaded) {
+        CategoryList categoryList = state.categoryList;
+        _initializeTabController(categoryList);
+
+        return _buildTabs(_tabs, _tabWidgets, _tabController!);
+      }
+
+      // state is Init, loading, or other
+      return _loadingWidget();
+    });
   }
 
-  Widget _loadingWidget() =>
-      Center(
+  Widget _loadingWidget() => Center(
         child: CircularProgressIndicator(),
       );
 
@@ -125,7 +124,8 @@ class _NewsCategoryTabState extends State<NewsCategoryTab> with TickerProviderSt
           ),
         ),
         BlocProvider(
-          create: (context) => NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
+          create: (context) =>
+              NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
           child: Padding(
             padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
             child: BuildNewsMarquee(),

@@ -3,13 +3,16 @@ import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
 import 'package:tv/services/promotionVideosService.dart';
 
-class PromotionVideoBloc extends Bloc<PromotionVideoEvents, PromotionVideoState> {
+class PromotionVideoBloc
+    extends Bloc<PromotionVideoEvents, PromotionVideoState> {
   final PromotionVideosRepos promotionVideosRepos;
 
-  PromotionVideoBloc({required this.promotionVideosRepos}) : super(PromotionVideoInitState());
+  PromotionVideoBloc({required this.promotionVideosRepos})
+      : super(PromotionVideoInitState());
 
   @override
-  Stream<PromotionVideoState> mapEventToState(PromotionVideoEvents event) async* {
+  Stream<PromotionVideoState> mapEventToState(
+      PromotionVideoEvents event) async* {
     yield* event.run(promotionVideosRepos);
   }
 }

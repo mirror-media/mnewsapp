@@ -10,15 +10,14 @@ abstract class NewsMarqueeRepos {
   Future<StoryListItemList> fetchNewsList();
 }
 
-class NewsMarqueeServices implements NewsMarqueeRepos{
+class NewsMarqueeServices implements NewsMarqueeRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<StoryListItemList> fetchNewsList() async {
     final key = 'fetchNewsMarqueeList';
 
-    String query = 
-    """
+    String query = """
     query (
       \$where: PostWhereInput,
       \$first: Int,
@@ -53,16 +52,12 @@ class NewsMarqueeServices implements NewsMarqueeRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: newsMarqueeCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: newsMarqueeCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
-    StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);    
+    StoryListItemList newsList =
+        StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
     return newsList;
   }
 }

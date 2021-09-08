@@ -33,10 +33,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
   }
 
-  _showGDPR() async{
-    if(await _storage.ready) {
+  _showGDPR() async {
+    if (await _storage.ready) {
       bool? isFirstLaunch = await _storage.getItem("isFirstLaunch");
-      if(isFirstLaunch == null || isFirstLaunch) {
+      if (isFirstLaunch == null || isFirstLaunch) {
         await Future.delayed(Duration(seconds: 1));
         showDialog(
           context: context,
@@ -49,8 +49,7 @@ class _HomePageState extends State<HomePage> {
           },
         );
         _storage.setItem("isFirstLaunch", false);
-      }
-      else {
+      } else {
         interstitial.createInterstitialAd();
         await Future.delayed(Duration(seconds: 1));
         interstitial.showInterstitialAd();
@@ -65,40 +64,39 @@ class _HomePageState extends State<HomePage> {
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
       body: BlocBuilder<SectionCubit, SectionStateCubit>(
-        builder: (BuildContext context, SectionStateCubit state) {
-          if (state is SectionError) {
-            final error = state.error;
-            print('SectionError: ${error.message}');
-            return Container();
-          } else {
-            MNewsSection sectionId = state.sectionId;
-            return Column(
-              children: [
-                Expanded(
-                  child: _buildBody(sectionId,adUnitId: state.adUnitId),
-                ),
-                AnchoredBannerAdWidget(),
-              ],
-            );
-          }
+          builder: (BuildContext context, SectionStateCubit state) {
+        if (state is SectionError) {
+          final error = state.error;
+          print('SectionError: ${error.message}');
+          return Container();
+        } else {
+          MNewsSection sectionId = state.sectionId;
+          return Column(
+            children: [
+              Expanded(
+                child: _buildBody(sectionId, adUnitId: state.adUnitId),
+              ),
+              AnchoredBannerAdWidget(),
+            ],
+          );
         }
-      ),
+      }),
     );
   }
 
-  PreferredSizeWidget _buildBar(BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
+  PreferredSizeWidget _buildBar(
+      BuildContext context, GlobalKey<ScaffoldState> scaffoldkey) {
     return AppBar(
       elevation: 0.1,
       leading: IconButton(
-        icon: Icon(Icons.menu),
-        onPressed: () => scaffoldkey.currentState!.openDrawer()
-      ),
+          icon: Icon(Icons.menu),
+          onPressed: () => scaffoldkey.currentState!.openDrawer()),
       backgroundColor: appBarColor,
       centerTitle: true,
       title: Image(
-        image:AssetImage(logoPng),
+        image: AssetImage(logoPng),
         width: 120,
-        height:36,
+        height: 36,
       ),
       actions: <Widget>[
         IconButton(
@@ -110,12 +108,14 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(MNewsSection sectionId,{AdUnitId? adUnitId}) {
+  Widget _buildBody(MNewsSection sectionId, {AdUnitId? adUnitId}) {
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();
       case MNewsSection.live:
-        return LivePage(adUnitId: adUnitId,);
+        return LivePage(
+          adUnitId: adUnitId,
+        );
       case MNewsSection.video:
         return VideoPage();
       case MNewsSection.show:

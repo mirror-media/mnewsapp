@@ -28,27 +28,26 @@ class _BuildNewsMarqueeState extends State<BuildNewsMarquee> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsMarqueeBloc, NewsMarqueeState>(
-      builder: (BuildContext context, NewsMarqueeState state) {
-        if (state is NewsMarqueeError) {
-          final error = state.error;
-          print('NewsMarqueeError: ${error.message}');
-          return Container();
-        }
-        if (state is NewsMarqueeLoaded) {
-          StoryListItemList newsList = state.newsList;
-
-          if(newsList.length == 0) {
-            return Container();
-          }
-          return NewsMarquee(
-            newsList: newsList,
-          );
-        }
-
-        // state is Init, loading, or other 
+        builder: (BuildContext context, NewsMarqueeState state) {
+      if (state is NewsMarqueeError) {
+        final error = state.error;
+        print('NewsMarqueeError: ${error.message}');
         return Container();
       }
-    );
+      if (state is NewsMarqueeLoaded) {
+        StoryListItemList newsList = state.newsList;
+
+        if (newsList.length == 0) {
+          return Container();
+        }
+        return NewsMarquee(
+          newsList: newsList,
+        );
+      }
+
+      // state is Init, loading, or other
+      return Container();
+    });
   }
 }
 

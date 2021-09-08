@@ -20,12 +20,12 @@ class ParagraphList extends CustomizedList<Paragraph> {
   factory ParagraphList.parseResponseBody(String body) {
     try {
       final jsonData = json.decode(body);
-      if(jsonData == "" || jsonData == null) {
+      if (jsonData == "" || jsonData == null) {
         return ParagraphList();
       }
 
       return ParagraphList.fromJson(jsonData);
-    } catch (e){
+    } catch (e) {
       return ParagraphList();
     }
   }

@@ -6,9 +6,12 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
   // constructor
   YoutubePlaylistItemList({this.nextPageToken});
 
-  factory YoutubePlaylistItemList.fromJson(String? nextPageToken, List<dynamic> parsedJson) {
-    YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList(nextPageToken: nextPageToken);
-    List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromJson(i)).toList();
+  factory YoutubePlaylistItemList.fromJson(
+      String? nextPageToken, List<dynamic> parsedJson) {
+    YoutubePlaylistItemList youtubePlaylistItems =
+        YoutubePlaylistItemList(nextPageToken: nextPageToken);
+    List parseList =
+        parsedJson.map((i) => YoutubePlaylistItem.fromJson(i)).toList();
     parseList.forEach((element) {
       youtubePlaylistItems.add(element);
     });
@@ -16,9 +19,12 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
     return youtubePlaylistItems;
   }
 
-  factory YoutubePlaylistItemList.fromPromotionVideosJson(List<dynamic> parsedJson) {
+  factory YoutubePlaylistItemList.fromPromotionVideosJson(
+      List<dynamic> parsedJson) {
     YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList();
-    List parseList = parsedJson.map((i) => YoutubePlaylistItem.fromPromotionVideosJson(i)).toList();
+    List parseList = parsedJson
+        .map((i) => YoutubePlaylistItem.fromPromotionVideosJson(i))
+        .toList();
     parseList.forEach((element) {
       youtubePlaylistItems.add(element);
     });

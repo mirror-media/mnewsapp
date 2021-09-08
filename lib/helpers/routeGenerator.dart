@@ -32,24 +32,19 @@ class RouteGenerator {
         );
       case setting:
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => SettingPage()
-        );
+            settings: settings, builder: (_) => SettingPage());
       case search:
         return MaterialPageRoute(
-          settings: settings,
-          builder: (_) => SearchPage()
-        );
+            settings: settings, builder: (_) => SearchPage());
       case story:
         Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
         if (args['slug'] is String) {
           return MaterialPageRoute(
-            settings: settings,
-            builder: (context) => StoryPage(
-              slug: args['slug'],
-            )
-          );
+              settings: settings,
+              builder: (context) => StoryPage(
+                    slug: args['slug'],
+                  ));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -59,12 +54,11 @@ class RouteGenerator {
         // Validation of correct data type
         if (args['anchorpersonId'] is String) {
           return MaterialPageRoute(
-            settings: settings,
-            builder: (context) => AnchorpersonStoryPage(
-              anchorpersonId: args['anchorpersonId'],
-              anchorpersonName: args['anchorpersonName'],
-            )
-          );
+              settings: settings,
+              builder: (context) => AnchorpersonStoryPage(
+                    anchorpersonId: args['anchorpersonId'],
+                    anchorpersonName: args['anchorpersonName'],
+                  ));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -72,19 +66,16 @@ class RouteGenerator {
       case showStory:
         Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
-        if (
-          args['youtubePlayListId'] is String &&
-          args['youtubePlaylistItem'] is YoutubePlaylistItem &&
-          args['adUnitId'] is AdUnitId
-        ) {
+        if (args['youtubePlayListId'] is String &&
+            args['youtubePlaylistItem'] is YoutubePlaylistItem &&
+            args['adUnitId'] is AdUnitId) {
           return MaterialPageRoute(
-            settings: settings,
-            builder: (context) => ShowStoryPage(
-              youtubePlayListId: args['youtubePlayListId'],
-              youtubePlaylistItem: args['youtubePlaylistItem'],
-              adUnitId: args['adUnitId'],
-            )
-          );
+              settings: settings,
+              builder: (context) => ShowStoryPage(
+                    youtubePlayListId: args['youtubePlayListId'],
+                    youtubePlaylistItem: args['youtubePlaylistItem'],
+                    adUnitId: args['adUnitId'],
+                  ));
         }
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
@@ -97,11 +88,10 @@ class RouteGenerator {
 
   static Route<dynamic> _errorRoute(RouteSettings settings) {
     return MaterialPageRoute(
-      settings: settings,
-      builder: (_) {
-        return RouteErrorPage();
-      }
-    );
+        settings: settings,
+        builder: (_) {
+          return RouteErrorPage();
+        });
   }
 
   static void navigateToSetting(BuildContext context) {
@@ -109,7 +99,7 @@ class RouteGenerator {
       setting,
     );
   }
-  
+
   static void navigateToSearch(BuildContext context) {
     Navigator.of(context).pushNamed(
       search,
@@ -126,7 +116,7 @@ class RouteGenerator {
   }
 
   static void navigateToAnchorpersonStory(
-    BuildContext context, 
+    BuildContext context,
     String anchorpersonId,
     String anchorpersonName,
   ) {
@@ -140,11 +130,10 @@ class RouteGenerator {
   }
 
   static void navigateToShowStory(
-    BuildContext context, 
-    String youtubePlayListId,
-    YoutubePlaylistItem youtubePlaylistItem,
-    AdUnitId adUnitId
-  ) {
+      BuildContext context,
+      String youtubePlayListId,
+      YoutubePlaylistItem youtubePlaylistItem,
+      AdUnitId adUnitId) {
     Navigator.of(context).pushNamed(
       showStory,
       arguments: {
@@ -157,7 +146,7 @@ class RouteGenerator {
 
   static void printRouteSettings(BuildContext context) {
     var route = ModalRoute.of(context);
-    if(route!=null){
+    if (route != null) {
       print('route is current: ${route.isCurrent}');
       print('route name: ${route.settings.name}');
       print('route arg: ${route.settings.arguments.toString()}');

@@ -6,7 +6,7 @@ import 'package:tv/pages/error/noSignalWidget.dart';
 abstract class MNewException {
   var message;
   MNewException(this.message);
-  
+
   Widget renderWidget({
     VoidCallback? onPressed,
     bool isNoButton = false,
@@ -14,7 +14,7 @@ abstract class MNewException {
   });
 }
 
-class Error500Exception implements MNewException{
+class Error500Exception implements MNewException {
   var message;
   Error500Exception(this.message);
 
@@ -23,10 +23,11 @@ class Error500Exception implements MNewException{
     VoidCallback? onPressed,
     bool isNoButton = false,
     bool isColumn = false,
-  }) => Error500Widget(isNoButton: isNoButton, isColumn: isColumn);
+  }) =>
+      Error500Widget(isNoButton: isNoButton, isColumn: isColumn);
 }
 
-class Error400Exception implements MNewException{
+class Error400Exception implements MNewException {
   var message;
   Error400Exception(this.message);
 
@@ -35,10 +36,11 @@ class Error400Exception implements MNewException{
     VoidCallback? onPressed,
     bool isNoButton = false,
     bool isColumn = false,
-  }) => Error400Widget(isNoButton: isNoButton, isColumn: isColumn);
+  }) =>
+      Error400Widget(isNoButton: isNoButton, isColumn: isColumn);
 }
 
-class NoInternetException implements MNewException{
+class NoInternetException implements MNewException {
   var message;
   NoInternetException(this.message);
 
@@ -47,17 +49,18 @@ class NoInternetException implements MNewException{
     VoidCallback? onPressed,
     bool isNoButton = false,
     bool isColumn = false,
-  }) => NoSignalWidget(onPressed: onPressed, isColumn: isColumn);
+  }) =>
+      NoSignalWidget(onPressed: onPressed, isColumn: isColumn);
 }
 
-class NoServiceFoundException extends Error500Exception{
+class NoServiceFoundException extends Error500Exception {
   NoServiceFoundException(message) : super(message);
 }
 
-class InvalidFormatException extends Error400Exception{
+class InvalidFormatException extends Error400Exception {
   InvalidFormatException(message) : super(message);
 }
 
-class UnknownException extends Error400Exception{
+class UnknownException extends Error400Exception {
   UnknownException(message) : super(message);
 }

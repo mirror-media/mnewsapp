@@ -11,15 +11,14 @@ abstract class EditorChoiceRepos {
   Future<StoryListItemList> fetchVideoEditorChoiceList();
 }
 
-class EditorChoiceServices implements EditorChoiceRepos{
+class EditorChoiceServices implements EditorChoiceRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<StoryListItemList> fetchEditorChoiceList() async {
     final key = 'fetchEditorChoiceList';
 
-    String query = 
-    """
+    String query = """
     query(
       \$where: EditorChoiceWhereInput, 
       \$first: Int){
@@ -49,9 +48,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
-        "choice": {
-          "state": "published"
-        }
+        "choice": {"state": "published"}
       },
       "first": 10
     };
@@ -63,29 +60,23 @@ class EditorChoiceServices implements EditorChoiceRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: editorChoiceCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: editorChoiceCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
     List<dynamic> parsedJson = List.empty(growable: true);
-    for(int i=0; i<jsonResponse['data']['allEditorChoices'].length; i++) {
+    for (int i = 0; i < jsonResponse['data']['allEditorChoices'].length; i++) {
       parsedJson.add(jsonResponse['data']['allEditorChoices'][i]['choice']);
     }
-    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);    
+    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);
     return editorChoiceList;
   }
 
   @override
-  Future<StoryListItemList> fetchVideoEditorChoiceList() async{
+  Future<StoryListItemList> fetchVideoEditorChoiceList() async {
     final key = 'fetchVideoEditorChoiceList';
 
-    String query = 
-    """
+    String query = """
     query(
       \$where: VideoEditorChoiceWhereInput, 
       \$first: Int
@@ -116,10 +107,7 @@ class EditorChoiceServices implements EditorChoiceRepos{
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
-        "videoEditor": {
-          "state": "published",
-          "style": "videoNews"
-        }
+        "videoEditor": {"state": "published", "style": "videoNews"}
       },
       "first": 10
     };
@@ -131,20 +119,18 @@ class EditorChoiceServices implements EditorChoiceRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: videoEditorChoiceCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: videoEditorChoiceCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
     List<dynamic> parsedJson = List.empty(growable: true);
-    for(int i=0; i<jsonResponse['data']['allVideoEditorChoices'].length; i++) {
-      parsedJson.add(jsonResponse['data']['allVideoEditorChoices'][i]['videoEditor']);
+    for (int i = 0;
+        i < jsonResponse['data']['allVideoEditorChoices'].length;
+        i++) {
+      parsedJson
+          .add(jsonResponse['data']['allVideoEditorChoices'][i]['videoEditor']);
     }
-    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);    
+    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);
     return editorChoiceList;
   }
 }

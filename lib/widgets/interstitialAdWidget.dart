@@ -3,15 +3,14 @@ import 'dart:io';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/helpers/dataConstants.dart';
 
-class InterstitialAdWidget{
-
+class InterstitialAdWidget {
   InterstitialAd? _interstitialAd;
   int _numInterstitialLoadAttempts = 0;
   static const int maxFailedLoadAttempts = 3;
 
-  void createInterstitialAd(){
+  void createInterstitialAd() {
     String adUnitId = iOSInterstitialAdUnitId;
-    if(Platform.isAndroid){
+    if (Platform.isAndroid) {
       adUnitId = androidInterstitialAdUnitId;
     }
     InterstitialAd.load(
@@ -31,8 +30,7 @@ class InterstitialAdWidget{
               createInterstitialAd();
             }
           },
-        )
-    );
+        ));
   }
 
   void showInterstitialAd() {

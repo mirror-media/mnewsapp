@@ -10,7 +10,8 @@ class AnchoredBannerAdWidget extends StatefulWidget {
   _AnchoredBannerAdWidgetState createState() => _AnchoredBannerAdWidgetState();
 }
 
-class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> with AutomaticKeepAliveClientMixin{
+class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>
+    with AutomaticKeepAliveClientMixin {
   BannerAd? _anchoredBanner;
   bool _loadingAnchoredBanner = false;
 
@@ -56,7 +57,7 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> with Au
       _createAnchoredBanner(context);
     }
 
-    if(_anchoredBanner != null){
+    if (_anchoredBanner != null) {
       return Container(
         alignment: Alignment.center,
         width: _anchoredBanner!.size.width.toDouble(),
@@ -64,15 +65,13 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> with Au
         child: AdWidget(ad: _anchoredBanner!),
         margin: EdgeInsets.only(bottom: 18),
       );
-    }
-    else{
+    } else {
       return Container();
     }
-
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _anchoredBanner?.dispose();
   }

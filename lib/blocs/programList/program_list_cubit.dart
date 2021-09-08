@@ -12,9 +12,9 @@ part 'program_list_state.dart';
 class ProgramListCubit extends Cubit<ProgramListState> {
   ProgramListCubit() : super(ProgramListInitial());
 
-  void fetchProgramList() async{
+  void fetchProgramList() async {
     print('FetchProgramList');
-    try{
+    try {
       ProgramList programList = await ProgramListServices().fetchProgramList();
       emit(ProgramListLoaded(programList: programList));
     } on SocketException {
@@ -26,31 +26,31 @@ class ProgramListCubit extends Cubit<ProgramListState> {
         error: NoServiceFoundException('No Service Found'),
       ));
     } on FormatException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: InvalidFormatException('Invalid Response format'),
       ));
     } on FetchDataException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: NoInternetException('Error During Communication'),
       ));
     } on BadRequestException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: Error400Exception('Invalid Request'),
       ));
     } on UnauthorisedException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: Error400Exception('Unauthorised'),
       ));
     } on InvalidInputException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: Error400Exception('Invalid Input'),
       ));
     } on InternalServerErrorException {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: Error500Exception('Internal Server Error'),
       ));
     } catch (e) {
-      emit (ProgramListError(
+      emit(ProgramListError(
         error: UnknownException(e.toString()),
       ));
     }

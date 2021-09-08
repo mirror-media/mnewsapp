@@ -8,16 +8,14 @@ BaseConfig? _baseConfig;
 
 class BaseConfig {
   final BuildFlavor _flavor;
-  BaseConfig(
-    this._flavor
-  );
+  BaseConfig(this._flavor);
 
   /// Sets up the top-level [baseConfig] getter on the first call only.
   static void init({required flavor}) => _baseConfig ??= BaseConfig(flavor);
 
   String get graphqlApi {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.graphqlApi;
       case BuildFlavor.development:
         return dev.graphqlApi;
@@ -25,8 +23,8 @@ class BaseConfig {
   }
 
   String get searchApi {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.searchApi;
       case BuildFlavor.development:
         return dev.searchApi;
@@ -34,8 +32,8 @@ class BaseConfig {
   }
 
   String get youtubeApi {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.youtubeApi;
       case BuildFlavor.development:
         return dev.youtubeApi;
@@ -43,8 +41,8 @@ class BaseConfig {
   }
 
   String get mirrorNewsDefaultImageUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.mirrorNewsDefaultImageUrl;
       case BuildFlavor.development:
         return dev.mirrorNewsDefaultImageUrl;
@@ -52,8 +50,8 @@ class BaseConfig {
   }
 
   String get newsPopularListUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.newsPopularListUrl;
       case BuildFlavor.development:
         return dev.newsPopularListUrl;
@@ -61,8 +59,8 @@ class BaseConfig {
   }
 
   String get videoPopularListUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.videoPopularListUrl;
       case BuildFlavor.development:
         return dev.videoPopularListUrl;
@@ -70,8 +68,8 @@ class BaseConfig {
   }
 
   String get ombudsAppealUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.ombudsAppealUrl;
       case BuildFlavor.development:
         return dev.ombudsAppealUrl;
@@ -79,8 +77,8 @@ class BaseConfig {
   }
 
   String get ombudsvideoRecorderUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.ombudsvideoRecorderUrl;
       case BuildFlavor.development:
         return dev.ombudsvideoRecorderUrl;
@@ -88,8 +86,8 @@ class BaseConfig {
   }
 
   String get ombudsReportsUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.ombudsReportsUrl;
       case BuildFlavor.development:
         return dev.ombudsReportsUrl;
@@ -97,8 +95,8 @@ class BaseConfig {
   }
 
   String get privacyPolicyUrl {
-    switch(_flavor) {
-      case BuildFlavor.production: 
+    switch (_flavor) {
+      case BuildFlavor.production:
         return prod.privacyPolicyUrl;
       case BuildFlavor.development:
         return dev.privacyPolicyUrl;
@@ -106,7 +104,7 @@ class BaseConfig {
   }
 
   String get categoriesUrl {
-    switch(_flavor) {
+    switch (_flavor) {
       case BuildFlavor.production:
         return prod.categoriesUrl;
       case BuildFlavor.development:
@@ -115,7 +113,7 @@ class BaseConfig {
   }
 
   String get programListUrl {
-    switch(_flavor) {
+    switch (_flavor) {
       case BuildFlavor.production:
         return prod.programListUrl;
       case BuildFlavor.development:

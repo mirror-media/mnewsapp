@@ -38,7 +38,8 @@ class MNewsVideoPlayer extends StatefulWidget {
   _MNewsVideoPlayerState createState() => _MNewsVideoPlayerState();
 }
 
-class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepAliveClientMixin {
+class _MNewsVideoPlayerState extends State<MNewsVideoPlayer>
+    with AutomaticKeepAliveClientMixin {
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
   late Future<bool> _configChewieFuture;
@@ -52,7 +53,7 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
     super.initState();
   }
 
-  Future<bool> _configVideoPlayer() async{
+  Future<bool> _configVideoPlayer() async {
     _videoPlayerController = VideoPlayerController.network(widget.videourl);
     try {
       await _videoPlayerController.initialize();
@@ -62,9 +63,8 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
         autoInitialize: true,
         autoPlay: widget.autoPlay,
       );
-      if(widget.muted)
-        _chewieController.setVolume(0.0);
-    } catch(e) {
+      if (widget.muted) _chewieController.setVolume(0.0);
+    } catch (e) {
       // TODO: need to return error
       return false;
     }
@@ -81,32 +81,29 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer> with AutomaticKeepA
 
   @override
   Widget build(BuildContext context) {
-    
     super.build(context);
     return FutureBuilder<bool>(
-      initialData: false,
-      future: _configChewieFuture,
-      builder: (context, snapshot) {
-        return LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            if(!snapshot.data!) {
+        initialData: false,
+        future: _configChewieFuture,
+        builder: (context, snapshot) {
+          return LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) {
+            if (!snapshot.data!) {
               return Container(
-                width: constraints.maxWidth,
-                height: constraints.maxWidth/widget.aspectRatio,
-                child: Center(child: CircularProgressIndicator())
-              );
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth / widget.aspectRatio,
+                  child: Center(child: CircularProgressIndicator()));
             }
 
             return Container(
               width: constraints.maxWidth,
-              height: constraints.maxWidth/_videoPlayerController.value.aspectRatio,
+              height: constraints.maxWidth /
+                  _videoPlayerController.value.aspectRatio,
               child: Chewie(
                 controller: _chewieController,
               ),
             );
-          }
-        );
-      }
-    );
+          });
+        });
   }
 }

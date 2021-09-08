@@ -11,7 +11,8 @@ class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
   final EditorChoiceRepos editorChoiceRepos;
   StoryListItemList editorChoiceList = StoryListItemList();
 
-  EditorChoiceBloc({required this.editorChoiceRepos}) : super(EditorChoiceInitState());
+  EditorChoiceBloc({required this.editorChoiceRepos})
+      : super(EditorChoiceInitState());
 
   @override
   Stream<EditorChoiceState> mapEventToState(EditorChoiceEvents event) async* {
@@ -21,8 +22,9 @@ class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
         case EditorChoiceEvents.fetchEditorChoiceList:
           editorChoiceList = await editorChoiceRepos.fetchEditorChoiceList();
           break;
-        case EditorChoiceEvents.fetchVideoEditorChoiceList: 
-          editorChoiceList = await editorChoiceRepos.fetchVideoEditorChoiceList();
+        case EditorChoiceEvents.fetchVideoEditorChoiceList:
+          editorChoiceList =
+              await editorChoiceRepos.fetchVideoEditorChoiceList();
           break;
       }
       yield EditorChoiceLoaded(editorChoiceList: editorChoiceList);

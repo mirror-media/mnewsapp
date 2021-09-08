@@ -17,7 +17,8 @@ class YoutubePlaylistItem {
 
   factory YoutubePlaylistItem.fromJson(Map<String, dynamic> json) {
     String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['snippet', 'thumbnails', 'high', 'url'])) {
+    if (BaseModel.checkJsonKeys(
+        json, ['snippet', 'thumbnails', 'high', 'url'])) {
       photoUrl = json['snippet']['thumbnails']['high']['url'];
     }
 
@@ -29,11 +30,12 @@ class YoutubePlaylistItem {
     );
   }
 
-  factory YoutubePlaylistItem.fromPromotionVideosJson(Map<String, dynamic> json) {
+  factory YoutubePlaylistItem.fromPromotionVideosJson(
+      Map<String, dynamic> json) {
     String? ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
 
     String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
-    if(ytId != null) {
+    if (ytId != null) {
       photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
     }
 
@@ -44,4 +46,4 @@ class YoutubePlaylistItem {
       publishedAt: null,
     );
   }
-} 
+}

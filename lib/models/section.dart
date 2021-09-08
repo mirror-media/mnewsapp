@@ -5,10 +5,7 @@ class Section {
   final MNewsSection id;
   final String name;
 
-  Section({
-    required this.id,
-    required this.name
-  });
+  Section({required this.id, required this.name});
 
   factory Section.fromJson(Map<String, dynamic> json) {
     return Section(
