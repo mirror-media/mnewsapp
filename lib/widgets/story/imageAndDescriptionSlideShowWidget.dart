@@ -54,16 +54,15 @@ class _ImageAndDescriptionSlideShowWidgetState
   }
 
   @override
+  void didUpdateWidget(ImageAndDescriptionSlideShowWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    textSize = widget.textSize;
+  }
+
+  @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 48;
     double imageHeight = width / 16 * 9;
-
-    if (textSize != widget.textSize) {
-      setState(() {
-        textSize = widget.textSize;
-      });
-    }
-
     options = CarouselOptions(
       viewportFraction: 1,
       aspectRatio: 16 / 9,
