@@ -39,6 +39,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
   late AdUnitId _adUnitId;
   late double _textSize;
+  late Story _story;
 
   @override
   void initState() {
@@ -59,43 +60,47 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<StoryBloc, StoryState>(
-      builder: (BuildContext context, StoryState state) {
-        if (state is StoryError) {
-          final error = state.error;
-          print('NewsCategoriesError: ${error.message}');
-          if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _loadStory(_currentSlug));
-          } 
-          
-          return error.renderWidget();
-        }
-        if (state is StoryLoaded) {
-          Story? story = state.story;
-          if(story == null) {
-            return Container();
-          }
-
-          _adUnitId = state.adUnitId;
-          _textSize = state.textSize;
-          return _storyContent(width, story);
+    return BlocConsumer<StoryBloc, StoryState>(listener: (context, state) {
+      _textSize = state.textSize ?? 20;
+    }, builder: (BuildContext context, StoryState state) {
+      if (state is StoryError) {
+        final error = state.error;
+        print('NewsCategoriesError: ${error.message}');
+        if (error is NoInternetException) {
+          return error.renderWidget(onPressed: () => _loadStory(_currentSlug));
         }
 
-        // state is Init, loading, or other 
-        return _loadingWidget();
+        return error.renderWidget();
       }
-    );
+      if (state is StoryLoaded) {
+        Story? story = state.story;
+        if (story == null) {
+          return Container();
+        }
+        _story = story;
+        _adUnitId = state.adUnitId;
+        _textSize = state.textSize;
+        return _storyContent(width, story);
+      } else if (state is TextSizeChanged) {
+        _textSize = state.textSize;
+        return _storyContent(width, _story);
+      }
+
+      // state is Init, loading, or other
+      return _loadingWidget();
+    });
   }
 
-  Widget _loadingWidget() =>
-      Center(
+  Widget _loadingWidget() => Center(
         child: CircularProgressIndicator(),
       );
 
   Widget _storyContent(double width, Story story) {
     return ListView(
       children: [
-        InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
+        InlineBannerAdWidget(
+          adUnitId: _adUnitId.hdAdUnitId,
+        ),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -109,18 +114,20 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 16),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
-        if(story.tags != null && story.tags!.length > 0)
-        ...[
+        if (story.tags != null && story.tags!.length > 0) ...[
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
-        if(story.relatedStories!.length > 0)
-        ...[
+        InlineBannerAdWidget(
+          adUnitId: _adUnitId.e1AdUnitId,
+        ),
+        if (story.relatedStories!.length > 0) ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
+        InlineBannerAdWidget(
+          adUnitId: _adUnitId.ftAdUnitId,
+        )
       ],
     );
   }
@@ -130,8 +137,7 @@ class _StoryWidgetState extends State<StoryWidget> {
 
     return Column(
       children: [
-        if (story.heroVideo != null)
-          _buildVideoWidget(story.heroVideo!),
+        if (story.heroVideo != null) _buildVideoWidget(story.heroVideo!),
         if (story.heroImage != null && story.heroVideo == null)
           CachedNetworkImage(
             width: width,
@@ -154,10 +160,8 @@ class _StoryWidgetState extends State<StoryWidget> {
             padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
             child: Text(
               story.heroCaption!,
-              style: TextStyle(
-                fontSize: _textSize - 5,
-                color: Color(0xff757575)
-              ),
+              style:
+                  TextStyle(fontSize: _textSize - 5, color: Color(0xff757575)),
             ),
           ),
       ],
@@ -166,19 +170,19 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   _buildVideoWidget(String videoUrl) {
     String youtubeString = 'youtube';
-    if(videoUrl.contains(youtubeString)) {
-      if(videoUrl.contains(youtubeString)) {
+    if (videoUrl.contains(youtubeString)) {
+      if (videoUrl.contains(youtubeString)) {
         videoUrl = YoutubePlayerController.convertUrlToId(videoUrl)!;
       }
       return YoutubePlayer(videoUrl);
     }
-    
+
     return MNewsVideoPlayer(
       videourl: videoUrl,
       aspectRatio: 16 / 9,
     );
   }
-  
+
   Widget _buildCategoryAndPublishedDate(Story story) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
 
@@ -187,9 +191,8 @@ class _StoryWidgetState extends State<StoryWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          if(story.categoryList!.length == 0)
-            Container(),
-          if(story.categoryList!.length > 0)
+          if (story.categoryList!.length == 0) Container(),
+          if (story.categoryList!.length > 0)
             Text(
               story.categoryList![0].name,
               style: TextStyle(
@@ -199,8 +202,8 @@ class _StoryWidgetState extends State<StoryWidget> {
               ),
             ),
           Text(
-            dateTimeFormat.changeStringToDisplayString(
-                story.publishTime!, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+            dateTimeFormat.changeStringToDisplayString(story.publishTime!,
+                'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
             style: TextStyle(
               fontSize: 14,
               color: Color(0xff757575),
@@ -210,14 +213,14 @@ class _StoryWidgetState extends State<StoryWidget> {
       ),
     );
   }
-  
+
   Widget _buildStoryTitle(String title) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
       child: Text(
         title,
         style: TextStyle(
-          fontFamily: 'PingFang TC', 
+          fontFamily: 'PingFang TC',
           fontSize: 26,
           fontWeight: FontWeight.w500,
         ),
@@ -243,10 +246,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "作者",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -261,10 +261,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "攝影",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -279,10 +276,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "影音",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -297,10 +291,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "設計",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -315,10 +306,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "工程",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -333,10 +321,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "主播",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -351,10 +336,7 @@ class _StoryWidgetState extends State<StoryWidget> {
       authorItems.add(
         Text(
           "作者",
-          style: TextStyle(
-            fontSize: 15, 
-            color: authorColor
-          ),
+          style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
       authorItems.add(myVerticalDivider);
@@ -379,7 +361,7 @@ class _StoryWidgetState extends State<StoryWidget> {
         child: Text(
           author.name,
           style: TextStyle(
-            fontSize: 15, 
+            fontSize: 15,
           ),
         ),
       ));
@@ -398,7 +380,7 @@ class _StoryWidgetState extends State<StoryWidget> {
               !_isNullOrEmpty(articles[i].contents![0].data)) {
             articleWidgets.add(
               ParseTheTextToHtmlWidget(
-                html: articles[i].contents![0].data, 
+                html: articles[i].contents![0].data,
                 color: storyBriefTextColor,
                 fontSize: _textSize,
               ),
@@ -452,16 +434,15 @@ class _StoryWidgetState extends State<StoryWidget> {
 
     return Container();
   }
-  
+
   Widget _buildContent(ParagraphList storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
-    if(storyContents.length > 0)
+    if (storyContents.length > 0)
       _numOfAds = 1;
-    else if(storyContents.length >= 5 && storyContents.length < 10)
+    else if (storyContents.length >= 5 && storyContents.length < 10)
       _numOfAds = 2;
-    else if(storyContents.length >= 10)
-      _numOfAds = 3;
+    else if (storyContents.length >= 10) _numOfAds = 3;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.builder(
@@ -469,33 +450,35 @@ class _StoryWidgetState extends State<StoryWidget> {
         physics: NeverScrollableScrollPhysics(),
         itemCount: storyContents.length + _numOfAds,
         itemBuilder: (context, index) {
-          if(index == 1){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
-          }
-          else if(index == 6){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
-          }
-          else if(index == 12){
-            return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
+          if (index == 1) {
+            return InlineBannerAdWidget(
+              adUnitId: _adUnitId.at1AdUnitId,
+              isInArticle: true,
+            );
+          } else if (index == 6) {
+            return InlineBannerAdWidget(
+                adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
+          } else if (index == 12) {
+            return InlineBannerAdWidget(
+                adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
           }
           int _trueIndex = index;
-          if(index > 1 && index < 6)
+          if (index > 1 && index < 6)
             _trueIndex--;
-          else if(index > 6 && index < 12)
+          else if (index > 6 && index < 12)
             _trueIndex = _trueIndex - 2;
-          else if(index > 12)
-            _trueIndex = _trueIndex - 3;
+          else if (index > 12) _trueIndex = _trueIndex - 3;
           Paragraph paragraph = storyContents[_trueIndex];
-          if (paragraph.contents != null && 
+          if (paragraph.contents != null &&
               paragraph.contents!.length > 0 &&
-              !_isNullOrEmpty(paragraph.contents![0].data)
-          ) {
+              !_isNullOrEmpty(paragraph.contents![0].data)) {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
-              child: paragraphFormat.parseTheParagraph(paragraph, context, _textSize),
+              child: paragraphFormat.parseTheParagraph(
+                  paragraph, context, _textSize),
             );
           }
-          
+
           return Container();
         },
       ),
@@ -506,15 +489,16 @@ class _StoryWidgetState extends State<StoryWidget> {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
 
     return Text(
-      '更新時間：'+dateTimeFormat.changeStringToDisplayString(
-          updateTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+      '更新時間：' +
+          dateTimeFormat.changeStringToDisplayString(
+              updateTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
       style: TextStyle(
         fontSize: 15,
         color: Color(0xff757575),
       ),
     );
   }
-  
+
   Widget _buildTags(TagList? tags) {
     if (tags == null) {
       return Container();
@@ -539,8 +523,10 @@ class _StoryWidgetState extends State<StoryWidget> {
             ),
           ),
         );
-        if(i != tags.length-1) {
-          tagWidgets.add(SizedBox(width: 4,));
+        if (i != tags.length - 1) {
+          tagWidgets.add(SizedBox(
+            width: 4,
+          ));
         }
       }
       return Padding(
@@ -552,45 +538,38 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
   }
 
-  Widget _buildRelatedWidget(
-    double width, 
-    StoryListItemList relatedStories
-  ) {
+  Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.separated(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
-        itemCount: relatedStories.length,
-        //padding: const EdgeInsets.only(bottom: 16),
-        itemBuilder: (context, index) {
-          if(index == 0) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '相關文章',
-                  style: TextStyle(
-                    fontSize: 26,
-                    color: storyWidgetColor,
-                  ),
-                ),
-                SizedBox(height: 16),
-                _buildRelatedItem(width, relatedStories[index]),
-              ]
-            );
-          }
-          return _buildRelatedItem(width, relatedStories[index]);
-        }
-      ),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: 16.0),
+          itemCount: relatedStories.length,
+          //padding: const EdgeInsets.only(bottom: 16),
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '相關文章',
+                      style: TextStyle(
+                        fontSize: 26,
+                        color: storyWidgetColor,
+                      ),
+                    ),
+                    SizedBox(height: 16),
+                    _buildRelatedItem(width, relatedStories[index]),
+                  ]);
+            }
+            return _buildRelatedItem(width, relatedStories[index]);
+          }),
     );
   }
 
-  Widget _buildRelatedItem(
-    double width, 
-    StoryListItem story
-  ) {
+  Widget _buildRelatedItem(double width, StoryListItem story) {
     double imageWidth = 33 * (width - 48) / 100;
     double imageHeight = imageWidth;
 
