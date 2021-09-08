@@ -1,4 +1,4 @@
-class ProgramListItem{
+class ProgramListItem {
   final String channelId;
   final int year;
   final int weekDay;
@@ -31,11 +31,11 @@ class ProgramListItem{
     required this.txCategory,
     required this.month,
     required this.day,
-});
+  });
 
-  factory ProgramListItem.fromJson(Map<String, dynamic> json){
+  factory ProgramListItem.fromJson(Map<String, dynamic> json) {
     int weekday = 0;
-    switch(json['WeekDay']){
+    switch (json['WeekDay']) {
       case 'mon':
         weekday = 1;
         break;
@@ -77,21 +77,21 @@ class ProgramListItem{
     );
   }
 
-  Map<String, dynamic> toJson() =>{
-    'Channel ID': channelId,
-    'Year': year,
-    'WeekDay': weekDay,
-    'Start Time(hh)': startTimeHour,
-    'Start Time(mm)': startTimeMinute,
-    'Duration': duration,
-    'Programme': programme,
-    'Programme(en)': programmeEn,
-    'ep no': epNo,
-    'ep name': epName,
-    'season no': seasonNo,
-    'Class': showClass,
-    'TxCategory': txCategory,
-    'Month': month,
-    'Day': day
-  };
+  Map<String, dynamic> toJson() => {
+        'Channel ID': channelId,
+        'Year': year,
+        'WeekDay': weekDay,
+        'Start Time(hh)': startTimeHour,
+        'Start Time(mm)': startTimeMinute,
+        'Duration': duration,
+        'Programme': programme,
+        'Programme(en)': programmeEn,
+        'ep no': epNo,
+        'ep name': epName,
+        'season no': seasonNo,
+        'Class': showClass,
+        'TxCategory': txCategory,
+        'Month': month,
+        'Day': day
+      };
 }

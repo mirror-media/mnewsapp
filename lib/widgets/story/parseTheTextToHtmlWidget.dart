@@ -13,7 +13,7 @@ class ParseTheTextToHtmlWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if(html == null) {
+    if (html == null) {
       return Container();
     }
 

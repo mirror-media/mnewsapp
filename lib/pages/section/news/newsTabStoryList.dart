@@ -16,10 +16,7 @@ import 'package:tv/widgets/inlineBannerAdWidget.dart';
 class NewsTabStoryList extends StatefulWidget {
   final String categorySlug;
   final bool needCarousel;
-  NewsTabStoryList({
-    required this.categorySlug,
-    this.needCarousel = false
-  });
+  NewsTabStoryList({required this.categorySlug, this.needCarousel = false});
 
   @override
   _NewsTabStoryListState createState() => _NewsTabStoryListState();
@@ -30,7 +27,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
 
   @override
   void initState() {
-    if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+    if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
       _fetchStoryList();
     } else {
       _fetchStoryListByCategorySlug();
@@ -47,201 +44,209 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
   }
 
   _fetchStoryListByCategorySlug() async {
-    context.read<TabStoryListBloc>().add(FetchStoryListByCategorySlug(widget.categorySlug));
+    context
+        .read<TabStoryListBloc>()
+        .add(FetchStoryListByCategorySlug(widget.categorySlug));
   }
 
   _fetchNextPageByCategorySlug() async {
-    context.read<TabStoryListBloc>().add(FetchNextPageByCategorySlug(widget.categorySlug));
+    context
+        .read<TabStoryListBloc>()
+        .add(FetchNextPageByCategorySlug(widget.categorySlug));
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TabStoryListBloc, TabStoryListState>(
-      builder: (BuildContext context, TabStoryListState state) {
-        if (state is TabStoryListError) {
-          final error = state.error;
-          print('TabStoryListError: ${error.message}');
-          if( error is NoInternetException) {
-            return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return error.renderWidget(
+        builder: (BuildContext context, TabStoryListState state) {
+      if (state is TabStoryListError) {
+        final error = state.error;
+        print('TabStoryListError: ${error.message}');
+        if (error is NoInternetException) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return error.renderWidget(
                     onPressed: () {
-                      if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+                      if (Category.checkIsLatestCategoryBySlug(
+                          widget.categorySlug)) {
                         _fetchStoryList();
                       } else {
                         _fetchStoryListByCategorySlug();
                       }
                     },
-                    isColumn: true
-                  );
-                },
-                childCount: 1,
-              ),
-            );
-          } 
-          
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return error.renderWidget(
-                  isNoButton: true,
-                  isColumn: true
-                );
+                    isColumn: true);
               },
               childCount: 1,
             ),
           );
         }
-        if (state is TabStoryListLoaded) {
-          StoryListItemList storyListItemList = state.storyListItemList;
-          if(state.adUnitId != null)
-            _adUnitId = state.adUnitId!;
 
-          if(storyListItemList.length == 0) {
-            return SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (BuildContext context, int index) {
-                  return TabContentNoResultWidget();
-                },
-                childCount: 1,
-              ),
-            );
-          }
-
-          return _tabStoryList(
-            storyListItemList: storyListItemList,
-            needCarousel: widget.needCarousel,
-          );
-        }
-
-        if (state is TabStoryListLoadingMore) {
-          StoryListItemList storyListItemList = state.storyListItemList;
-          return _tabStoryList(
-            storyListItemList: storyListItemList, 
-            needCarousel: widget.needCarousel,
-            isLoading: true,
-          );
-        }
-
-        if(state is TabStoryListLoadingMoreFail) {
-          StoryListItemList storyListItemList = state.storyListItemList;
-          if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
-            _fetchNextPage();
-          } else {
-            _fetchNextPageByCategorySlug();
-          }
-          return _tabStoryList(
-            storyListItemList: storyListItemList, 
-            needCarousel: widget.needCarousel,
-            isLoading: true
-          );
-        }
-
-        // state is Init, loading, or other 
         return SliverList(
           delegate: SliverChildBuilderDelegate(
             (BuildContext context, int index) {
-              return Center(child: CupertinoActivityIndicator());
+              return error.renderWidget(isNoButton: true, isColumn: true);
             },
             childCount: 1,
           ),
         );
       }
-    );
+      if (state is TabStoryListLoaded) {
+        StoryListItemList storyListItemList = state.storyListItemList;
+        if (state.adUnitId != null) _adUnitId = state.adUnitId!;
+
+        if (storyListItemList.length == 0) {
+          return SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return TabContentNoResultWidget();
+              },
+              childCount: 1,
+            ),
+          );
+        }
+
+        return _tabStoryList(
+          storyListItemList: storyListItemList,
+          needCarousel: widget.needCarousel,
+        );
+      }
+
+      if (state is TabStoryListLoadingMore) {
+        StoryListItemList storyListItemList = state.storyListItemList;
+        return _tabStoryList(
+          storyListItemList: storyListItemList,
+          needCarousel: widget.needCarousel,
+          isLoading: true,
+        );
+      }
+
+      if (state is TabStoryListLoadingMoreFail) {
+        StoryListItemList storyListItemList = state.storyListItemList;
+        if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+          _fetchNextPage();
+        } else {
+          _fetchNextPageByCategorySlug();
+        }
+        return _tabStoryList(
+            storyListItemList: storyListItemList,
+            needCarousel: widget.needCarousel,
+            isLoading: true);
+      }
+
+      // state is Init, loading, or other
+      return SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (BuildContext context, int index) {
+            return Center(child: CupertinoActivityIndicator());
+          },
+          childCount: 1,
+        ),
+      );
+    });
   }
 
   Widget _tabStoryList({
     required StoryListItemList storyListItemList,
-    bool needCarousel = false, bool isLoading = false,
+    bool needCarousel = false,
+    bool isLoading = false,
   }) {
-    List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
+    List<String?> _adPositions = [
+      _adUnitId.at1AdUnitId,
+      _adUnitId.at2AdUnitId,
+      _adUnitId.at3AdUnitId
+    ];
     List<Widget> _storyListWithAd = [];
     int _howManyAds = 0;
     int _adCounter = 0;
-    if(!needCarousel){
-      for(int i = 0; i < storyListItemList.length; i++) {
+    if (!needCarousel) {
+      for (int i = 0; i < storyListItemList.length; i++) {
         if (i % 6 == 1) {
           _storyListWithAd.add(InlineBannerAdWidget(
             adUnitId: _adPositions[_adCounter],
           ));
           _howManyAds++;
           _adCounter++;
-          if(_adCounter == 3)
-            _adCounter = 0;
-        }
-        else if (i == 0) {
-          _storyListWithAd.add(
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
-              )
-          );
-        }
-        else {
-          _storyListWithAd.add(
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NewsStoryListItem(
-                    storyListItem: storyListItemList[i - _howManyAds]),
-              )
-          );
+          if (_adCounter == 3) _adCounter = 0;
+        } else if (i == 0) {
+          _storyListWithAd.add(Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
+          ));
+        } else {
+          _storyListWithAd.add(Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: NewsStoryListItem(
+                storyListItem: storyListItemList[i - _howManyAds]),
+          ));
         }
       }
       if (storyListItemList.length == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+        _storyListWithAd.add(
+          InlineBannerAdWidget(
+            adUnitId: _adUnitId.at1AdUnitId,
+          ),
+        );
+        _howManyAds++;
+      } else if (storyListItemList.length == 6) {
+        _storyListWithAd.add(
+          InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),
+        );
+        _howManyAds++;
+      } else if (storyListItemList.length == 11) {
+        _storyListWithAd.add(
+          InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),
+        );
         _howManyAds++;
       }
-      else if (storyListItemList.length == 6) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId),);
-        _howManyAds++;
-      }
-      else if (storyListItemList.length == 11) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId),);
-        _howManyAds++;
-      }
-    }
-    else{
-      for(int i = 0; i < storyListItemList.length; i++){
-        if(i % 6 == 0){
+    } else {
+      for (int i = 0; i < storyListItemList.length; i++) {
+        if (i % 6 == 0) {
           _storyListWithAd.add(InlineBannerAdWidget(
             adUnitId: _adPositions[_adCounter],
           ));
           _howManyAds++;
           _adCounter++;
-          if(_adCounter == 3)
-            _adCounter = 0;
-        }
-        else{
-          _storyListWithAd.add(
-              Padding(
-                padding: const EdgeInsets.only(bottom: 16.0),
-                child: NewsStoryListItem(storyListItem: storyListItemList[i - _howManyAds]),
-              )
-          );
+          if (_adCounter == 3) _adCounter = 0;
+        } else {
+          _storyListWithAd.add(Padding(
+            padding: const EdgeInsets.only(bottom: 16.0),
+            child: NewsStoryListItem(
+                storyListItem: storyListItemList[i - _howManyAds]),
+          ));
         }
       }
       if (storyListItemList.length == 1) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId,),);
+        _storyListWithAd.add(
+          InlineBannerAdWidget(
+            adUnitId: _adUnitId.at1AdUnitId,
+          ),
+        );
         _howManyAds++;
-      }
-      else if (storyListItemList.length == 7) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId,),);
+      } else if (storyListItemList.length == 7) {
+        _storyListWithAd.add(
+          InlineBannerAdWidget(
+            adUnitId: _adUnitId.at2AdUnitId,
+          ),
+        );
         _howManyAds++;
-      }
-      else if (storyListItemList.length == 12) {
-        _storyListWithAd.add(InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId,),);
+      } else if (storyListItemList.length == 12) {
+        _storyListWithAd.add(
+          InlineBannerAdWidget(
+            adUnitId: _adUnitId.at3AdUnitId,
+          ),
+        );
         _howManyAds++;
       }
     }
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-          if(!isLoading &&
+        (BuildContext context, int index) {
+          if (!isLoading &&
               index == _storyListWithAd.length - 5 &&
               storyListItemList.length < storyListItemList.allStoryCount) {
-            if(Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+            if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
               _fetchNextPage();
             } else {
               _fetchNextPageByCategorySlug();
@@ -255,7 +260,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
           return Column(
             children: [
               _storyListWithAd[index],
-              if(index == _storyListWithAd.length - 1 && isLoading)
+              if (index == _storyListWithAd.length - 1 && isLoading)
                 _loadMoreWidget(),
             ],
           );
@@ -268,9 +273,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
   Widget _loadMoreWidget() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: CupertinoActivityIndicator()
-      ),
+      child: Center(child: CupertinoActivityIndicator()),
     );
   }
 }

@@ -11,19 +11,18 @@ class YoutubeViewer extends StatefulWidget {
   final bool isLive;
   final bool mute;
   YoutubeViewer(
-    this.videoID,
-    {
-      this.autoPlay = false,
-      this.isLive = false,
-      this.mute = false,
-    }
-  );
+    this.videoID, {
+    this.autoPlay = false,
+    this.isLive = false,
+    this.mute = false,
+  });
 
   @override
   _YoutubeViewerState createState() => _YoutubeViewerState();
 }
 
-class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveClientMixin {
+class _YoutubeViewerState extends State<YoutubeViewer>
+    with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
   late final YoutubePlayerController _controller;
 
@@ -49,19 +48,19 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
         mute: widget.mute,
       ),
     )..listen((value) {
-      if (value.isReady && !value.hasPlayed) {
-        _controller
-          ..hidePauseOverlay()
-          ..hideTopMenu();
-        if(widget.autoPlay) {
-          _controller.play();
+        if (value.isReady && !value.hasPlayed) {
+          _controller
+            ..hidePauseOverlay()
+            ..hideTopMenu();
+          if (widget.autoPlay) {
+            _controller.play();
+          }
         }
-      }
-      if (value.hasPlayed) {
-        _controller..hideEndScreen();
-      }
-    });
-    
+        if (value.hasPlayed) {
+          _controller..hideEndScreen();
+        }
+      });
+
     // Uncomment below for device orientation
     _controller.onEnterFullscreen = () {
       SystemChrome.setPreferredOrientations([
@@ -93,8 +92,8 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
   Widget build(BuildContext context) {
     super.build(context);
     final player = YoutubePlayerIFrame();
-    
-    if(widget.isLive && Platform.isAndroid) {
+
+    if (widget.isLive && Platform.isAndroid) {
       return Stack(
         children: [
           player,
@@ -107,10 +106,7 @@ class _YoutubeViewerState extends State<YoutubeViewer> with AutomaticKeepAliveCl
             top: 8.0,
             child: Text(
               'Live',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold
-              ),
+              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             ),
           ),
         ],

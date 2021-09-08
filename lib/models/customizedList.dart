@@ -9,7 +9,7 @@ class CustomizedList<E> extends ListBase<E> {
     innerList.length = length;
   }
 
-  void operator[]=(int index, E value) {
+  void operator []=(int index, E value) {
     innerList[index] = value;
   }
 

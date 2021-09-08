@@ -8,14 +8,9 @@ import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/mNewsCacheManager.dart';
 
 class ApiBaseHelper {
-
-  Future<dynamic> getByUrl(
-    String url,
-    {
-      Map<String,String> headers = const {'Cache-control': 'no-cache'},
-      bool skipCheck = false
-    }
-  ) async {
+  Future<dynamic> getByUrl(String url,
+      {Map<String, String> headers = const {'Cache-control': 'no-cache'},
+      bool skipCheck = false}) async {
     Uri uri = Uri.parse(url);
     final response = await http.get(uri, headers: headers);
     var responseJson = returnResponse(response, skipCheck: skipCheck);
@@ -24,28 +19,25 @@ class ApiBaseHelper {
   }
 
   /// Get the json file from cache first.
-  /// If there is no json file from cache, 
+  /// If there is no json file from cache,
   /// fetch the json file from get api and save the json file to cache.
   Future<dynamic> getByCacheAndAutoCache(
-    String url, 
-    {
-      Duration maxAge = const Duration(days: 30),
-      Map<String,String> headers = const {'Cache-control': 'no-cache'},
-    }
-  ) async {
+    String url, {
+    Duration maxAge = const Duration(days: 30),
+    Map<String, String> headers = const {'Cache-control': 'no-cache'},
+  }) async {
     MNewsCacheManager mNewsCacheManager = MNewsCacheManager();
     final cacheFile = await mNewsCacheManager.getFileFromCache(url);
-    if ( cacheFile == null ||
-      cacheFile.validTill.isBefore(DateTime.now())
-    ) {
+    if (cacheFile == null || cacheFile.validTill.isBefore(DateTime.now())) {
       Uri uri = Uri.parse(url);
       final response = await http.get(uri, headers: headers);
       var responseJson = returnResponse(response);
 
       try {
         // save cache file
-        mNewsCacheManager.putFile(url, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
-      } catch(e) {
+        mNewsCacheManager.putFile(url, response.bodyBytes,
+            maxAge: maxAge, fileExtension: 'json');
+      } catch (e) {
         print('error: $e');
       }
 
@@ -57,17 +49,18 @@ class ApiBaseHelper {
     if (await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
-      if(mimeStr == 'application/json') {
+      if (mimeStr == 'application/json') {
         res = await file.readAsString();
-      }
-      else {
+      } else {
         res = file.path;
       }
-      
+
       final response = http.Response(
-        res, 
+        res,
         200,
-        headers: { HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8' },
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'
+        },
       );
 
       return returnResponse(response);
@@ -79,7 +72,8 @@ class ApiBaseHelper {
     getByUrl(baseUrl + endpoint);
   }
 
-  Future<dynamic> postByUrl(String url, dynamic body, {Map<String, String>? headers}) async {
+  Future<dynamic> postByUrl(String url, dynamic body,
+      {Map<String, String>? headers}) async {
     Uri uri = Uri.parse(url);
     final response = await http.post(uri, headers: headers, body: body);
     var responseJson = returnResponse(response);
@@ -88,30 +82,27 @@ class ApiBaseHelper {
   }
 
   /// Get the json file from cache first.
-  /// If there is no json file from cache, 
+  /// If there is no json file from cache,
   /// fetch the json file from get api and save the json file to cache.
   Future<dynamic> postByCacheAndAutoCache(
     String fileKey,
-    String url, 
-    dynamic body, 
-    {
-      Duration maxAge = const Duration(days: 30),
-      Map<String,String> headers = const {'Cache-control': 'no-cache'},
-    }
-  ) async {
+    String url,
+    dynamic body, {
+    Duration maxAge = const Duration(days: 30),
+    Map<String, String> headers = const {'Cache-control': 'no-cache'},
+  }) async {
     MNewsCacheManager mNewsCacheManager = MNewsCacheManager();
     final cacheFile = await mNewsCacheManager.getFileFromCache(fileKey);
-    if ( cacheFile == null ||
-      cacheFile.validTill.isBefore(DateTime.now())
-    ) {
+    if (cacheFile == null || cacheFile.validTill.isBefore(DateTime.now())) {
       Uri uri = Uri.parse(url);
       final response = await http.post(uri, headers: headers, body: body);
       var responseJson = returnResponse(response);
 
       try {
         // save cache file
-        mNewsCacheManager.putFile(fileKey, response.bodyBytes, maxAge: maxAge, fileExtension: 'json');
-      } catch(e) {
+        mNewsCacheManager.putFile(fileKey, response.bodyBytes,
+            maxAge: maxAge, fileExtension: 'json');
+      } catch (e) {
         print('error: $e');
       }
 
@@ -123,17 +114,18 @@ class ApiBaseHelper {
     if (await file.exists()) {
       var mimeStr = lookupMimeType(file.path);
       String res;
-      if(mimeStr == 'application/json') {
+      if (mimeStr == 'application/json') {
         res = await file.readAsString();
-      }
-      else {
+      } else {
         res = file.path;
       }
-      
+
       final response = http.Response(
-        res, 
+        res,
         200,
-        headers: { HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8' },
+        headers: {
+          HttpHeaders.contentTypeHeader: 'application/json; charset=utf-8'
+        },
       );
 
       return returnResponse(response);
@@ -170,7 +162,7 @@ class ApiBaseHelper {
   }
 }
 
-dynamic returnResponse(http.Response response, {bool skipCheck=false}) {
+dynamic returnResponse(http.Response response, {bool skipCheck = false}) {
   switch (response.statusCode) {
     case 200:
       String utf8Json = utf8.decode(response.bodyBytes);
@@ -178,11 +170,13 @@ dynamic returnResponse(http.Response response, {bool skipCheck=false}) {
 
       bool hasData = false;
       // properties responded by member graphql
-      if(!skipCheck){
+      if (!skipCheck) {
         hasData = responseJson.containsKey('data') ||
             responseJson.containsKey('items') ||
             // search response
-            (responseJson.containsKey('body') && responseJson['body'] != null && responseJson['body'].containsKey('hits')) ||
+            (responseJson.containsKey('body') &&
+                responseJson['body'] != null &&
+                responseJson['body'].containsKey('hits')) ||
             // popular json
             responseJson.containsKey('report') ||
             // category json
@@ -190,8 +184,8 @@ dynamic returnResponse(http.Response response, {bool skipCheck=false}) {
             responseJson.containsKey('allPosts') ||
             responseJson.containsKey('allShows');
       }
-      
-      if(!hasData && !skipCheck) {
+
+      if (!hasData && !skipCheck) {
         throw FormatException(response.body.toString());
       }
 

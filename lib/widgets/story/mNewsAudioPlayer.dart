@@ -21,7 +21,8 @@ class MNewsAudioPlayer extends StatefulWidget {
   _MNewsAudioPlayerState createState() => _MNewsAudioPlayerState();
 }
 
-class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepAliveClientMixin {
+class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
+    with AutomaticKeepAliveClientMixin {
   Color _audioColor = Color(0xff014DB8);
   late AudioPlayer _audioPlayer;
   bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
@@ -31,7 +32,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
 
   @override
   bool get wantKeepAlive => true;
-  
+
   @override
   void initState() {
     _initAudioPlayer();
@@ -46,13 +47,13 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   _start() async {
     try {
       _duration = await _audioPlayer.getDuration();
-      if(_duration < 0) {
+      if (_duration < 0) {
         _duration = 0;
       }
-    } catch(e) {
+    } catch (e) {
       _duration = 0;
     }
-    
+
     await _audioPlayer.play(widget.audioUrl);
   }
 
@@ -82,7 +83,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   }
 
   @override
-  Widget build(BuildContext context) {    
+  Widget build(BuildContext context) {
     super.build(context);
     return Card(
       elevation: 10,
@@ -92,8 +93,7 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(widget.title != null) 
-            ...[
+            if (widget.title != null) ...[
               Text(
                 widget.title!,
                 style: TextStyle(
@@ -102,7 +102,9 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
                   color: _audioColor,
                 ),
               ),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
             ],
             Row(
               children: [
@@ -157,25 +159,27 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _duration == 0
-                            ? Slider(
-                                value: 0,
-                                onChanged: (v){},
-                              )
-                            : Slider(
-                                min: 0.0,
-                                max: _duration.toDouble(),
-                                value: sliderPosition,
-                                activeColor: _audioColor,
-                                inactiveColor: Color(0xff979797),
-                                onChanged: (v) {
-                                   _audioPlayer.seek(Duration(milliseconds: v.toInt()));
-                                },
-                              ),
+                                ? Slider(
+                                    value: 0,
+                                    onChanged: (v) {},
+                                  )
+                                : Slider(
+                                    min: 0.0,
+                                    max: _duration.toDouble(),
+                                    value: sliderPosition,
+                                    activeColor: _audioColor,
+                                    inactiveColor: Color(0xff979797),
+                                    onChanged: (v) {
+                                      _audioPlayer.seek(
+                                          Duration(milliseconds: v.toInt()));
+                                    },
+                                  ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(right: 24.0, left: 24),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     position,

@@ -27,5 +27,6 @@ class InvalidInputException extends ApiException {
 }
 
 class InternalServerErrorException extends ApiException {
-  InternalServerErrorException([message]) : super(message, "Internal Server Error: ");
+  InternalServerErrorException([message])
+      : super(message, "Internal Server Error: ");
 }

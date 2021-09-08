@@ -14,14 +14,14 @@ class InitialApp extends StatefulWidget {
   _InitialAppState createState() => _InitialAppState();
 }
 
-class _InitialAppState extends State<InitialApp> {  
+class _InitialAppState extends State<InitialApp> {
   @override
   void initState() {
     _loadingConfig();
     super.initState();
   }
 
-  _loadingConfig() async{
+  _loadingConfig() async {
     context.read<ConfigBloc>().add(LoadingConfig(context));
     MobileAds.instance.initialize();
   }
@@ -29,22 +29,21 @@ class _InitialAppState extends State<InitialApp> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ConfigBloc, ConfigState>(
-      builder: (BuildContext context, ConfigState state) {
-        if (state is ConfigError) {
-          final error = state.error;
-          print('ConfigError: ${error.message}');
-          return Container();
-        }
-        if (state is ConfigLoaded) {
-          return BlocProvider(
-            create: (_) => SectionCubit(),
-            child: HomePage(),
-          );
-        }
-
-        // state is Init, loading, or other 
-        return ConfigPage();
+        builder: (BuildContext context, ConfigState state) {
+      if (state is ConfigError) {
+        final error = state.error;
+        print('ConfigError: ${error.message}');
+        return Container();
       }
-    );
+      if (state is ConfigLoaded) {
+        return BlocProvider(
+          create: (_) => SectionCubit(),
+          child: HomePage(),
+        );
+      }
+
+      // state is Init, loading, or other
+      return ConfigPage();
+    });
   }
 }

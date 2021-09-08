@@ -14,10 +14,8 @@ class VideoServices implements VideoRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<Video> fetchVideoByName(String name) async{
-
-    final String query =
-    """
+  Future<Video> fetchVideoByName(String name) async {
+    final String query = """
     query(
       \$where: VideoWhereInput,
     ){
@@ -30,9 +28,7 @@ class VideoServices implements VideoRepos {
     """;
 
     Map<String, dynamic> variables = {
-      "where": {
-        "name": name
-      },
+      "where": {"name": name},
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -42,21 +38,15 @@ class VideoServices implements VideoRepos {
     );
 
     final jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json"
-        }
-    );
+        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"});
 
     Video video;
     try {
       video = Video.fromJson(jsonResponse['data']['allVideos'][0]);
-    } catch(e) {
+    } catch (e) {
       throw FormatException(e.toString());
     }
     return video;
   }
-
-
 }

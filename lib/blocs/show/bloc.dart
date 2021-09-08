@@ -1,4 +1,3 @@
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';

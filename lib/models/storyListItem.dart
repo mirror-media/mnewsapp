@@ -20,30 +20,30 @@ class StoryListItem {
   });
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
-    if(BaseModel.hasKey(json, '_source')) {
+    if (BaseModel.hasKey(json, '_source')) {
       json = json['_source'];
     }
 
     String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
-    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
+    } else if (BaseModel.checkJsonKeys(
+        json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
     CategoryList? allPostsCategory;
-    if(json['categories'] != null) {
+    if (json['categories'] != null) {
       allPostsCategory = CategoryList.fromJson(json['categories']);
     }
 
     return StoryListItem(
-      id: json[BaseModel.idKey],
-      name: json[BaseModel.nameKey],
-      slug: json[BaseModel.slugKey],
-      style: json['style'],
-      photoUrl: photoUrl,
-      categoryList: allPostsCategory
-    );
+        id: json[BaseModel.idKey],
+        name: json[BaseModel.nameKey],
+        slug: json[BaseModel.slugKey],
+        style: json['style'],
+        photoUrl: photoUrl,
+        categoryList: allPostsCategory);
   }
 
   Map<String, dynamic> toJson() => {

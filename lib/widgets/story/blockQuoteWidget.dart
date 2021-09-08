@@ -26,7 +26,7 @@ class BlockQuoteWidget extends StatelessWidget {
         SizedBox(width: 8),
         Expanded(
           child: ParseTheTextToHtmlWidget(
-            html: content, 
+            html: content,
             color: blockquoteColor,
           ),
         ),

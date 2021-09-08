@@ -13,16 +13,16 @@ abstract class TabStoryListRepos {
   Future<StoryListItemList> fetchStoryList({bool withCount = true});
   Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20});
   Future<StoryListItemList> fetchStoryListByCategorySlug(String slug);
-  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug, {int loadingMorePage = 20});
+  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug,
+      {int loadingMorePage = 20});
   Future<StoryListItemList> fetchPopularStoryList();
 }
 
-class TabStoryListServices implements TabStoryListRepos{
+class TabStoryListServices implements TabStoryListRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
   String? postStyle;
   int skip = 0, first = 20;
-  final String query = 
-  """
+  final String query = """
   query (
     \$where: PostWhereInput,
     \$skip: Int,
@@ -48,7 +48,7 @@ class TabStoryListServices implements TabStoryListRepos{
     }
   }
   """;
-  
+
   TabStoryListServices({String? postStyle, int first = 20}) {
     this.postStyle = postStyle;
     this.first = first;
@@ -62,7 +62,7 @@ class TabStoryListServices implements TabStoryListRepos{
   @override
   Future<StoryListItemList> fetchStoryList({bool withCount = true}) async {
     String key = 'fetchStoryList?skip=$skip&first=$first';
-    if(postStyle != null) {
+    if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
     }
 
@@ -70,15 +70,24 @@ class TabStoryListServices implements TabStoryListRepos{
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "slug_not_in": ["biography", "standards", "complaint", "press-self-regulation",
-          "faq", "law", "privacy", "webauthorization", "aboutus"],
+        "slug_not_in": [
+          "biography",
+          "standards",
+          "complaint",
+          "press-self-regulation",
+          "faq",
+          "law",
+          "privacy",
+          "webauthorization",
+          "aboutus"
+        ],
       },
       "skip": skip,
       "first": first,
       'withCount': withCount,
     };
 
-    if(postStyle != null) {
+    if (postStyle != null) {
       variables["where"].addAll({"style": postStyle});
     }
 
@@ -89,28 +98,20 @@ class TabStoryListServices implements TabStoryListRepos{
     );
 
     late final jsonResponse;
-    if(skip > 40) {
+    if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      );
+          baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          headers: {"Content-Type": "application/json"});
     } else {
       jsonResponse = await _helper.postByCacheAndAutoCache(
-        key,
-        baseConfig!.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        maxAge: newsTabStoryList,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      );
+          key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          maxAge: newsTabStoryList,
+          headers: {"Content-Type": "application/json"});
     }
 
-    StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
-    if(withCount) {
+    StoryListItemList newsList =
+        StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+    if (withCount) {
       newsList.allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
     }
 
@@ -118,16 +119,18 @@ class TabStoryListServices implements TabStoryListRepos{
   }
 
   @override
-  Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20}) async{
+  Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20}) async {
     skip = skip + first;
     first = loadingMorePage;
     return await fetchStoryList();
   }
 
   @override
-  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug, {bool withCount = true}) async {
-    String key = 'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
-    if(postStyle != null) {
+  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug,
+      {bool withCount = true}) async {
+    String key =
+        'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
+    if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
     }
 
@@ -135,19 +138,17 @@ class TabStoryListServices implements TabStoryListRepos{
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "categories_some": {
-          "slug": slug
-        },
+        "categories_some": {"slug": slug},
       },
       "skip": skip,
       "first": first,
       'withCount': withCount,
     };
 
-    if(postStyle != null) {
+    if (postStyle != null) {
       variables["where"].addAll({"style": postStyle!});
     }
-    
+
     GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
@@ -155,71 +156,60 @@ class TabStoryListServices implements TabStoryListRepos{
     );
 
     late final jsonResponse;
-    if(skip > 40) {
+    if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        headers: {
-          "Content-Type": "application/json"
-        }
-      );
+          baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          headers: {"Content-Type": "application/json"});
     } else {
       jsonResponse = await _helper.postByCacheAndAutoCache(
-        key,
-        baseConfig!.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        maxAge: newsTabStoryList,
-        headers: {
-          "Content-Type": "application/json"
-        }
-      );
+          key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          maxAge: newsTabStoryList,
+          headers: {"Content-Type": "application/json"});
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
         baseConfig!.categoriesUrl,
         maxAge: categoryCacheDuration,
-        headers: {
-          "Accept": "application/json"
-        }
-    );
+        headers: {"Accept": "application/json"});
 
-    StoryListItemList newsList = StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+    StoryListItemList newsList =
+        StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
 
-    if(withCount) {
+    if (withCount) {
       newsList.allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
     }
 
     /// Get featured posts from json
-    StoryListItemList newsListFromGCP = StoryListItemList.fromJson(jsonResponseFromGCP['allPosts']);
+    StoryListItemList newsListFromGCP =
+        StoryListItemList.fromJson(jsonResponseFromGCP['allPosts']);
     final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
         baseConfig!.categoriesUrl,
         maxAge: categoryCacheDuration,
-        headers: {
-          "Accept": "application/json"
-        }
-    );
+        headers: {"Accept": "application/json"});
 
-    CategoryList _categoryList = CategoryList.fromJson(jsonResponseGCP['allCategories']);
-    String? _categoryId = _categoryList.firstWhere((element) => element.slug == slug).id;
+    CategoryList _categoryList =
+        CategoryList.fromJson(jsonResponseGCP['allCategories']);
+    String? _categoryId =
+        _categoryList.firstWhere((element) => element.slug == slug).id;
 
     // Find the featured post which category id is equal to the current id
     StoryListItem? _featuredStory;
-    for(int i = 0; i < newsListFromGCP.length; i++){
-      if(newsListFromGCP[i].categoryList != null){
-        for(int j = 0; j < newsListFromGCP[i].categoryList!.length; j++){
-          if(newsListFromGCP[i].categoryList![j].id == _categoryId){
+    for (int i = 0; i < newsListFromGCP.length; i++) {
+      if (newsListFromGCP[i].categoryList != null) {
+        for (int j = 0; j < newsListFromGCP[i].categoryList!.length; j++) {
+          if (newsListFromGCP[i].categoryList![j].id == _categoryId) {
             _featuredStory = newsListFromGCP[i];
             break;
           }
         }
       }
-      if(_featuredStory != null)
-        break;
+      if (_featuredStory != null) break;
     }
 
-    if(_featuredStory != null){
+    if (_featuredStory != null) {
       // Remove featured post from the list which get from CMS
-      newsList.removeWhere((storyListItem) => storyListItem.id == _featuredStory!.id);
+      newsList.removeWhere(
+          (storyListItem) => storyListItem.id == _featuredStory!.id);
       // Put featured post at the top of the list
       newsList.insert(0, _featuredStory);
     }
@@ -228,23 +218,25 @@ class TabStoryListServices implements TabStoryListRepos{
   }
 
   @override
-  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug, {int loadingMorePage = 20}) async{
+  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug,
+      {int loadingMorePage = 20}) async {
     skip = skip + first;
     first = loadingMorePage;
     return await fetchStoryListByCategorySlug(slug);
   }
 
   @override
-  Future<StoryListItemList> fetchPopularStoryList() async{
+  Future<StoryListItemList> fetchPopularStoryList() async {
     String jsonUrl;
-    if(postStyle == 'videoNews') {
+    if (postStyle == 'videoNews') {
       jsonUrl = baseConfig!.videoPopularListUrl;
     } else {
       jsonUrl = baseConfig!.newsPopularListUrl;
     }
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);
-    StoryListItemList storyListItemList = StoryListItemList.fromJson(jsonResponse['report']);
+    StoryListItemList storyListItemList =
+        StoryListItemList.fromJson(jsonResponse['report']);
     return storyListItemList;
   }
 }

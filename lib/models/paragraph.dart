@@ -12,7 +12,7 @@ class Paragraph {
   });
 
   factory Paragraph.fromJson(Map<String, dynamic>? json) {
-    if(json == null) {
+    if (json == null) {
       return Paragraph();
     }
 

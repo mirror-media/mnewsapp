@@ -25,8 +25,8 @@ class NotificationSetting {
       topic: json['topic'],
       value: json['value'],
       notificationSettingList: json['notificationSettingList'] != null
-        ? NotificationSettingList.fromJson(json['notificationSettingList'])
-        : null,
+          ? NotificationSettingList.fromJson(json['notificationSettingList'])
+          : null,
     );
   }
 

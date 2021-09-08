@@ -6,7 +6,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/searchService.dart';
 
-abstract class SearchEvents{
+abstract class SearchEvents {
   StoryListItemList storyListItemList = StoryListItemList();
   Stream<SearchState> run(SearchRepos searchRepos);
 }
@@ -19,9 +19,9 @@ class SearchNewsStoryByKeyword extends SearchEvents {
   String toString() => 'SearchNewsStoryByKeyword { keyword: $keyword }';
 
   @override
-  Stream<SearchState> run(SearchRepos searchRepos) async*{
+  Stream<SearchState> run(SearchRepos searchRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield SearchLoading();
       storyListItemList = await searchRepos.searchNewsStoryByKeyword(keyword);
       yield SearchLoaded(storyListItemList: storyListItemList);
@@ -73,11 +73,12 @@ class SearchNextPageByKeyword extends SearchEvents {
   String toString() => 'SearchNextPageByKeyword { keyword: $keyword }';
 
   @override
-  Stream<SearchState> run(SearchRepos searchRepos) async*{
+  Stream<SearchState> run(SearchRepos searchRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield SearchLoadingMore(storyListItemList: storyListItemList);
-      StoryListItemList newStoryListItemList = await searchRepos.searchNextPageByKeyword(keyword);
+      StoryListItemList newStoryListItemList =
+          await searchRepos.searchNextPageByKeyword(keyword);
       storyListItemList.addAll(newStoryListItemList);
       yield SearchLoaded(storyListItemList: storyListItemList);
     } on SocketException {
@@ -125,7 +126,7 @@ class ClearKeyword extends SearchEvents {
   String toString() => 'ClearKeyword';
 
   @override
-  Stream<SearchState> run(SearchRepos searchRepos) async*{
+  Stream<SearchState> run(SearchRepos searchRepos) async* {
     print(this.toString());
     yield SearchInitState();
   }

@@ -32,7 +32,7 @@ class StoryListItemList extends CustomizedList<StoryListItem> {
     }
     return storyListItemMaps;
   }
-  
+
   String toJsonString() {
     List<Map> storyListItemMaps = List.empty(growable: true);
     for (StoryListItem storyListItem in this) {

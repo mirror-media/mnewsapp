@@ -16,8 +16,9 @@ import 'package:tv/widgets/story/quoteByWidget.dart';
 import 'package:tv/widgets/story/youtubeWidget.dart';
 
 class ParagraphFormat {
-  Widget parseTheParagraph(Paragraph? paragraph, BuildContext context, double textSize) {
-    if(paragraph == null) {
+  Widget parseTheParagraph(
+      Paragraph? paragraph, BuildContext context, double textSize) {
+    if (paragraph == null) {
       return Container();
     }
 
@@ -64,7 +65,7 @@ class ParagraphFormat {
       case 'image':
         {
           var width = MediaQuery.of(context).size.width - 48;
-          if(paragraph.contents!.length > 0) {
+          if (paragraph.contents!.length > 0) {
             return ImageDescriptionWidget(
               imageUrl: paragraph.contents![0].data,
               description: paragraph.contents![0].description,
@@ -72,14 +73,13 @@ class ParagraphFormat {
               textSize: textSize - 4,
             );
           }
-          
+
           return Container();
         }
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
-            contentList: paragraph.contents!
-          );
+              contentList: paragraph.contents!);
         }
       case 'annotation':
         {
@@ -91,7 +91,9 @@ class ParagraphFormat {
       case 'blockquote':
         {
           if (paragraph.contents!.length > 0) {
-            return BlockQuoteWidget(content: paragraph.contents![0].data,);
+            return BlockQuoteWidget(
+              content: paragraph.contents![0].data,
+            );
           }
           return Container();
         }
@@ -109,7 +111,7 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return InfoBoxWidget(
-              title: paragraph.contents![0].description??'',
+              title: paragraph.contents![0].description ?? '',
               description: paragraph.contents![0].data,
             );
           }
@@ -129,10 +131,11 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             String? titleAndDescription;
-            if(paragraph.contents![0].description != null) {
-              titleAndDescription = paragraph.contents![0].description!.split(';')[0];
+            if (paragraph.contents![0].description != null) {
+              titleAndDescription =
+                  paragraph.contents![0].description!.split(';')[0];
             }
-                
+
             return MNewsAudioPlayer(
               audioUrl: paragraph.contents![0].data,
               title: titleAndDescription,
@@ -155,10 +158,10 @@ class ParagraphFormat {
           if (paragraph.contents!.length > 0) {
             return EmbeddedCodeWidget(
               embeddedCoede: paragraph.contents![0].data,
-              aspectRatio:  paragraph.contents![0].aspectRatio,
+              aspectRatio: paragraph.contents![0].aspectRatio,
             );
           }
-          return Container(); 
+          return Container();
         }
       default:
         {

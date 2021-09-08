@@ -14,7 +14,6 @@ class YoutubeWidget extends StatefulWidget {
 }
 
 class _YoutubeWidgetState extends State<YoutubeWidget> {
-
   @override
   Widget build(BuildContext context) {
     return Column(

@@ -24,7 +24,9 @@ class _AnchorpersonStoryPageState extends State<AnchorpersonStoryPage> {
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => ContactBloc(contactRepos: ContactServices()),
-        child: AnchorpersonStoryWidget(anchorpersonId: widget.anchorpersonId,),
+        child: AnchorpersonStoryWidget(
+          anchorpersonId: widget.anchorpersonId,
+        ),
       ),
     );
   }

@@ -10,15 +10,14 @@ part 'section_state.dart';
 class SectionCubit extends Cubit<SectionStateCubit> {
   SectionCubit() : super(SectionInitState());
 
-  void changeSection(MNewsSection sectionId) async{
+  void changeSection(MNewsSection sectionId) async {
     print('ChangeSection { SectionId: $sectionId }');
-    if(sectionId == MNewsSection.live){
+    if (sectionId == MNewsSection.live) {
       String jsonFixed = await rootBundle.loadString(adUnitIdJson);
       final fixedAdUnitId = json.decode(jsonFixed);
-      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'live');
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'live');
       emit(SectionLoaded(sectionId: sectionId, adUnitId: adUnitId));
-    }
-    else{
+    } else {
       emit(SectionLoaded(sectionId: sectionId));
     }
   }

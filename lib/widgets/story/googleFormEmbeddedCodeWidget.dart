@@ -8,10 +8,12 @@ class GoogleFormEmbeddedCodeWidget extends StatefulWidget {
   });
 
   @override
-  _GoogleFormEmbeddedCodeWidgetState createState() => _GoogleFormEmbeddedCodeWidgetState();
+  _GoogleFormEmbeddedCodeWidgetState createState() =>
+      _GoogleFormEmbeddedCodeWidgetState();
 }
 
-class _GoogleFormEmbeddedCodeWidgetState extends State<GoogleFormEmbeddedCodeWidget> {
+class _GoogleFormEmbeddedCodeWidgetState
+    extends State<GoogleFormEmbeddedCodeWidget> {
   // <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSeuxlODHo9Xl_fufl-JV0_-epAwhjJvQhQ5DoJw70fJPqiD2Q/viewform?embedded=true" width="640" height="1098" frameborder="0" marginheight="0" marginwidth="0">載入中…</iframe>
   late String _launchUrl;
 
@@ -31,37 +33,36 @@ class _GoogleFormEmbeddedCodeWidgetState extends State<GoogleFormEmbeddedCodeWid
     return Container(
       width: width,
       child: OutlinedButton(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-          child: Text(
-            '表單連結',
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: Color(0xff014DB8),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
+            child: Text(
+              '表單連結',
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff014DB8),
+              ),
             ),
           ),
-        ),
-        style: ButtonStyle(
-          textStyle: MaterialStateProperty.all(
-            TextStyle(
-              color: Color(0xff014DB8),
+          style: ButtonStyle(
+            textStyle: MaterialStateProperty.all(
+              TextStyle(
+                color: Color(0xff014DB8),
+              ),
+            ),
+            side: MaterialStateProperty.all(
+              BorderSide(
+                color: Color(0xff014DB8),
+              ),
             ),
           ),
-          side: MaterialStateProperty.all(
-            BorderSide(
-              color: Color(0xff014DB8),
-            ),
-          ),
-        ),
-        onPressed: () async{
-          if (await canLaunch(_launchUrl)) {
-            await launch(_launchUrl);
-          } else {
-            throw 'Could not launch $_launchUrl';
-          }
-        }
-      ),
+          onPressed: () async {
+            if (await canLaunch(_launchUrl)) {
+              await launch(_launchUrl);
+            } else {
+              throw 'Could not launch $_launchUrl';
+            }
+          }),
     );
   }
 }

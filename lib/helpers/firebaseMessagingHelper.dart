@@ -15,7 +15,7 @@ class FirebaseMessagingHelper {
 
   FirebaseMessagingHelper();
 
-  configFirebaseMessaging(BuildContext context) async{
+  configFirebaseMessaging(BuildContext context) async {
     NotificationSettings settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
@@ -30,16 +30,20 @@ class FirebaseMessagingHelper {
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-    RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
-    if (initialMessage != null && initialMessage.data.containsKey('news_story_slug')) {
-      RouteGenerator.navigateToStory(context, initialMessage.data['news_story_slug']);
+    RemoteMessage? initialMessage =
+        await _firebaseMessaging.getInitialMessage();
+    if (initialMessage != null &&
+        initialMessage.data.containsKey('news_story_slug')) {
+      RouteGenerator.navigateToStory(
+          context, initialMessage.data['news_story_slug']);
     }
 
     // Also handle any interaction when the app is in the background via a
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data.containsKey('news_story_slug')) {
-        RouteGenerator.navigateToStory(context, message.data['news_story_slug']);
+        RouteGenerator.navigateToStory(
+            context, message.data['news_story_slug']);
       }
     });
   }

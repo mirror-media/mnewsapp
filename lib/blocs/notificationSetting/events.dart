@@ -5,8 +5,9 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/notificationSettingList.dart';
 import 'package:tv/services/notificationSettingService.dart';
 
-abstract class NotificationSettingEvents{
-  Stream<NotificationSettingState> run(NotificationSettingRepos notificationSettingRepos);
+abstract class NotificationSettingEvents {
+  Stream<NotificationSettingState> run(
+      NotificationSettingRepos notificationSettingRepos);
 }
 
 class GetNotificationSettingList extends NotificationSettingEvents {
@@ -16,12 +17,15 @@ class GetNotificationSettingList extends NotificationSettingEvents {
   String toString() => 'GetNotificationSettingList';
 
   @override
-  Stream<NotificationSettingState> run(NotificationSettingRepos notificationSettingRepos) async*{
+  Stream<NotificationSettingState> run(
+      NotificationSettingRepos notificationSettingRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield NotificationSettingLoading();
-      NotificationSettingList notificationSettingList = await notificationSettingRepos.getNotificationSettingList();
-      yield NotificationSettingLoaded(notificationSettingList: notificationSettingList);
+      NotificationSettingList notificationSettingList =
+          await notificationSettingRepos.getNotificationSettingList();
+      yield NotificationSettingLoaded(
+          notificationSettingList: notificationSettingList);
     } on SocketException {
       yield NotificationSettingError(
         error: NoInternetException('No Internet'),
@@ -47,24 +51,24 @@ class NotificationOnExpansionChanged extends NotificationSettingEvents {
   final int index;
   final bool value;
   NotificationOnExpansionChanged(
-    this.inputNotificationSettingList,
-    this.index,
-    this.value
-  );
+      this.inputNotificationSettingList, this.index, this.value);
 
   @override
   String toString() => 'NotificationOnExpansionChanged';
 
   @override
-  Stream<NotificationSettingState> run(NotificationSettingRepos notificationSettingRepos) async*{
+  Stream<NotificationSettingState> run(
+      NotificationSettingRepos notificationSettingRepos) async* {
     print(this.toString());
-    try{
-      NotificationSettingList notificationSettingList = notificationSettingRepos.onExpansionChanged(
+    try {
+      NotificationSettingList notificationSettingList =
+          notificationSettingRepos.onExpansionChanged(
         inputNotificationSettingList,
         index,
         value,
       );
-      yield NotificationSettingLoaded(notificationSettingList: notificationSettingList);
+      yield NotificationSettingLoaded(
+          notificationSettingList: notificationSettingList);
     } catch (e) {
       print('NotificationOnExpansionChanged error: $e');
     }
@@ -76,27 +80,26 @@ class NotificationOnCheckBoxChanged extends NotificationSettingEvents {
   final NotificationSettingList checkboxList;
   final int index;
   final bool isRepeatable;
-  NotificationOnCheckBoxChanged(
-    this.inputNotificationSettingList,
-    this.checkboxList,
-    this.index,
-    this.isRepeatable
-  );
+  NotificationOnCheckBoxChanged(this.inputNotificationSettingList,
+      this.checkboxList, this.index, this.isRepeatable);
 
   @override
   String toString() => 'NotificationOnCheckBoxChanged';
 
   @override
-  Stream<NotificationSettingState> run(NotificationSettingRepos notificationSettingRepos) async*{
+  Stream<NotificationSettingState> run(
+      NotificationSettingRepos notificationSettingRepos) async* {
     print(this.toString());
-    try{
-      NotificationSettingList notificationSettingList = notificationSettingRepos.onCheckBoxChanged(
+    try {
+      NotificationSettingList notificationSettingList =
+          notificationSettingRepos.onCheckBoxChanged(
         inputNotificationSettingList,
         checkboxList,
         index,
         isRepeatable,
       );
-      yield NotificationSettingLoaded(notificationSettingList: notificationSettingList);
+      yield NotificationSettingLoaded(
+          notificationSettingList: notificationSettingList);
     } catch (e) {
       print('NotificationOnCheckBoxChanged error: $e');
     }

@@ -38,13 +38,10 @@ class Story {
     this.contentApiData,
     this.publishTime,
     this.updatedAt,
-
     this.heroImage,
     this.heroVideo,
     this.heroCaption,
-
     this.categoryList,
-
     this.writers,
     this.photographers,
     this.cameraOperators,
@@ -52,21 +49,20 @@ class Story {
     this.engineers,
     this.vocals,
     this.otherbyline,
-
     this.tags,
     this.relatedStories,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
     ParagraphList brief = ParagraphList();
-    if(BaseModel.hasKey(json, 'briefApiData') &&
-      json["briefApiData"] != 'NaN') {
+    if (BaseModel.hasKey(json, 'briefApiData') &&
+        json["briefApiData"] != 'NaN') {
       brief = ParagraphList.parseResponseBody(json['briefApiData']);
     }
 
     ParagraphList contentApiData = ParagraphList();
-    if(BaseModel.hasKey(json, 'contentApiData') && 
-      json["contentApiData"] != 'NaN') {
+    if (BaseModel.hasKey(json, 'contentApiData') &&
+        json["contentApiData"] != 'NaN') {
       contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
     }
 
@@ -76,7 +72,7 @@ class Story {
     }
 
     String? videoUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroVideo', 'url']) ) {
+    if (BaseModel.checkJsonKeys(json, ['heroVideo', 'url'])) {
       videoUrl = json['heroVideo']['url'];
     }
 
@@ -87,13 +83,10 @@ class Story {
       contentApiData: contentApiData,
       publishTime: json['publishTime'],
       updatedAt: json['updatedAt'],
-
       heroImage: photoUrl,
       heroVideo: videoUrl,
       heroCaption: json['heroCaption'],
-
       categoryList: CategoryList.fromJson(json['categories']),
-
       writers: PeopleList.fromJson(json['writers']),
       photographers: PeopleList.fromJson(json['photographers']),
       cameraOperators: PeopleList.fromJson(json['cameraOperators']),
@@ -101,10 +94,8 @@ class Story {
       engineers: PeopleList.fromJson(json['engineers']),
       vocals: PeopleList.fromJson(json['vocals']),
       otherbyline: json['otherbyline'],
-
       tags: TagList.fromJson(json['tags']),
       relatedStories: StoryListItemList.fromJson(json['relatedPosts']),
     );
   }
 }
-

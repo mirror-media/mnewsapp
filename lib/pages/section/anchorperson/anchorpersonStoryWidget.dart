@@ -16,7 +16,8 @@ class AnchorpersonStoryWidget extends StatefulWidget {
   });
 
   @override
-  _AnchorpersonStoryWidgetState createState() => _AnchorpersonStoryWidgetState();
+  _AnchorpersonStoryWidgetState createState() =>
+      _AnchorpersonStoryWidgetState();
 }
 
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
@@ -35,36 +36,33 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
     var width = MediaQuery.of(context).size.width;
 
     return BlocBuilder<ContactBloc, ContactState>(
-      builder: (BuildContext context, ContactState state) {
-        if (state is ContactError) {
-          final error = state.error;
-          print('ContactError: ${error.message}');
-          if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchContactById(widget.anchorpersonId));
-          } 
-          
-          return error.renderWidget();
-        }
-        if (state is ContactLoaded) {
-          Contact contact = state.contact;
-          
-          return _buildAnchorpersonStory(contact, width);
+        builder: (BuildContext context, ContactState state) {
+      if (state is ContactError) {
+        final error = state.error;
+        print('ContactError: ${error.message}');
+        if (error is NoInternetException) {
+          return error.renderWidget(
+              onPressed: () => _fetchContactById(widget.anchorpersonId));
         }
 
-        // state is Init, loading, or other 
-        return _loadingWidget();
+        return error.renderWidget();
       }
-    );
+      if (state is ContactLoaded) {
+        Contact contact = state.contact;
+
+        return _buildAnchorpersonStory(contact, width);
+      }
+
+      // state is Init, loading, or other
+      return _loadingWidget();
+    });
   }
 
-  Widget _loadingWidget() =>
-      Center(
+  Widget _loadingWidget() => Center(
         child: CircularProgressIndicator(),
       );
-  
+
   Widget _buildAnchorpersonStory(Contact contact, double width) {
-
-
     return ListView(
       children: [
         SizedBox(height: 55),
@@ -76,68 +74,57 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   }
 
   Widget _buildAnchorpersonProfile(Contact contact, double width) {
-    double imageWidth = width/2;
+    double imageWidth = width / 2;
     double imageHeight = imageWidth / 1.333;
 
-    return Column(
-      children: [
-        CachedNetworkImage(
+    return Column(children: [
+      CachedNetworkImage(
+        height: imageHeight,
+        width: imageWidth,
+        imageUrl: contact.photoUrl,
+        placeholder: (context, url) => Container(
           height: imageHeight,
           width: imageWidth,
-          imageUrl: contact.photoUrl,
-          placeholder: (context, url) => Container(
-            height: imageHeight,
-            width: imageWidth,
-            color: Colors.grey,
-          ),
-          errorWidget: (context, url, error) => Container(
-            height: imageHeight,
-            width: imageWidth,
-            color: Colors.grey,
-            child: Icon(Icons.error),
-          ),
-          fit: BoxFit.fitWidth,
+          color: Colors.grey,
         ),
-        SizedBox(height: 12),
-        Text(
-          contact.name,
-          style: TextStyle(
-            fontSize: 17, 
-            fontWeight: FontWeight.w600,
+        errorWidget: (context, url, error) => Container(
+          height: imageHeight,
+          width: imageWidth,
+          color: Colors.grey,
+          child: Icon(Icons.error),
+        ),
+        fit: BoxFit.fitWidth,
+      ),
+      SizedBox(height: 12),
+      Text(
+        contact.name,
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      SizedBox(height: 20),
+      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+        if (contact.twitterUrl != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: _thirdPartyMediaLinkButton(
+                FontAwesomeIcons.twitter, contact.twitterUrl!),
           ),
-        ),
-        SizedBox(height: 20),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if(contact.twitterUrl != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: _thirdPartyMediaLinkButton(
-                  FontAwesomeIcons.twitter,
-                  contact.twitterUrl!
-                ),
-              ),
-            if(contact.facebookUrl != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: _thirdPartyMediaLinkButton(
-                  FontAwesomeIcons.facebook,
-                  contact.facebookUrl!
-                ),
-              ),
-            if(contact.instatgramUrl != null)
-              Padding(
-                padding: const EdgeInsets.only(left: 5, right: 5),
-                child: _thirdPartyMediaLinkButton(
-                  FontAwesomeIcons.instagram,
-                  contact.instatgramUrl!
-                ),
-              ),
-          ]
-        ),
-      ]
-    );
+        if (contact.facebookUrl != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: _thirdPartyMediaLinkButton(
+                FontAwesomeIcons.facebook, contact.facebookUrl!),
+          ),
+        if (contact.instatgramUrl != null)
+          Padding(
+            padding: const EdgeInsets.only(left: 5, right: 5),
+            child: _thirdPartyMediaLinkButton(
+                FontAwesomeIcons.instagram, contact.instatgramUrl!),
+          ),
+      ]),
+    ]);
   }
 
   Widget _thirdPartyMediaLinkButton(IconData icon, String link) {
@@ -145,28 +132,23 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
       child: Material(
         color: Color(0xffC1C2C2),
         child: InkWell(
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: FaIcon(
-              icon,
-              size: 18,
-              color: Colors.white
+            child: Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: FaIcon(icon, size: 18, color: Colors.white),
             ),
-          ),
-          onTap: () async{
-            if (await canLaunch(link)) {
-              await launch(link);
-            } else {
-              throw 'Could not launch $link';
-            }
-          }
-        ),
+            onTap: () async {
+              if (await canLaunch(link)) {
+                await launch(link);
+              } else {
+                throw 'Could not launch $link';
+              }
+            }),
       ),
     );
   }
 
   Widget _buildBioWidget(String? bio) {
-    if(bio != null) {
+    if (bio != null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.only(left: 44.0, right: 44.0),
@@ -174,7 +156,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
             bio,
             style: TextStyle(
               height: 1.8,
-              fontSize: 17, 
+              fontSize: 17,
               fontWeight: FontWeight.w400,
             ),
           ),

@@ -19,7 +19,10 @@ class GDPR extends StatelessWidget {
           ),
           SizedBox(height: 24),
           Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24,),
+            padding: const EdgeInsets.only(
+              left: 24,
+              right: 24,
+            ),
             child: Text(
               '隱私權保護政策之修正',
               style: TextStyle(
@@ -31,7 +34,10 @@ class GDPR extends StatelessWidget {
           ),
           SizedBox(height: 28),
           Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24,),
+            padding: const EdgeInsets.only(
+              left: 24,
+              right: 24,
+            ),
             child: Text(
               '本網站隱私權保護政策將因應需求隨時進行修正，修正後的條款將刊登於網站上。',
               style: TextStyle(
@@ -42,11 +48,17 @@ class GDPR extends StatelessWidget {
           ),
           SizedBox(height: 48),
           Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24,),
+            padding: const EdgeInsets.only(
+              left: 24,
+              right: 24,
+            ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
                 primary: themeColor,
-                padding: const EdgeInsets.only(top: 12, bottom: 12,),
+                padding: const EdgeInsets.only(
+                  top: 12,
+                  bottom: 12,
+                ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15.0),
                 ),
@@ -65,22 +77,21 @@ class GDPR extends StatelessWidget {
           SizedBox(height: 32),
           Center(
             child: InkWell(
-              child: Text(
-                '隱私政策',
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  color: themeColor,
+                child: Text(
+                  '隱私政策',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w400,
+                    color: themeColor,
+                  ),
                 ),
-              ),
-              onTap: () async{
-                if (await canLaunch(baseConfig!.privacyPolicyUrl)) {
-                  await launch(baseConfig!.privacyPolicyUrl);
-                } else {
-                  throw 'Could not launch ${baseConfig!.privacyPolicyUrl}';
-                }
-              }
-            ),
+                onTap: () async {
+                  if (await canLaunch(baseConfig!.privacyPolicyUrl)) {
+                    await launch(baseConfig!.privacyPolicyUrl);
+                  } else {
+                    throw 'Could not launch ${baseConfig!.privacyPolicyUrl}';
+                  }
+                }),
           ),
           SizedBox(height: 24),
         ],

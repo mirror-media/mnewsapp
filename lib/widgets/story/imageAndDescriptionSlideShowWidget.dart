@@ -53,12 +53,12 @@ class _ImageAndDescriptionSlideShowWidgetState
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width-48;
+    var width = MediaQuery.of(context).size.width - 48;
     double imageHeight = width / 16 * 9;
 
     options = CarouselOptions(
       viewportFraction: 1,
-      aspectRatio: 16/9,
+      aspectRatio: 16 / 9,
       enlargeCenterPage: true,
       onPageChanged: (index, reason) {
         setState(() {
@@ -67,25 +67,27 @@ class _ImageAndDescriptionSlideShowWidgetState
       },
     );
 
-    List<Widget> imageSilders = contentList.map(
-      (content) => CachedNetworkImage(
-        height: imageHeight,
-        width: width,
-        imageUrl: content.data,
-        placeholder: (context, url) => Container(
-          height: imageHeight,
-          width: width,
-          color: Colors.grey,
-        ),
-        errorWidget: (context, url, error) => Container(
-          height: imageHeight,
-          width: width,
-          color: Colors.grey,
-          child: Icon(Icons.error),
-        ),
-        fit: BoxFit.fitHeight,
-      ),
-    ).toList();
+    List<Widget> imageSilders = contentList
+        .map(
+          (content) => CachedNetworkImage(
+            height: imageHeight,
+            width: width,
+            imageUrl: content.data,
+            placeholder: (context, url) => Container(
+              height: imageHeight,
+              width: width,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: imageHeight,
+              width: width,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.fitHeight,
+          ),
+        )
+        .toList();
 
     return Column(
       children: [
@@ -95,45 +97,42 @@ class _ImageAndDescriptionSlideShowWidgetState
           options: options,
         ),
         SizedBox(height: 14),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            InkWell(
-              child: backArrowWidget,
-              onTap: () {
-                imageCarouselController.previousPage();
-                textCarouselController.nextPage();
-              },
-            ),
-            Row(
-              children: [
-                Text(
-                  currentPage.toString(),
-                  style: TextStyle(
-                    color: slideShowColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          InkWell(
+            child: backArrowWidget,
+            onTap: () {
+              imageCarouselController.previousPage();
+              textCarouselController.nextPage();
+            },
+          ),
+          Row(
+            children: [
+              Text(
+                currentPage.toString(),
+                style: TextStyle(
+                  color: slideShowColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
                 ),
-                myVerticalDivider,
-                Text(
-                  imageSilders.length.toString(),
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w400,
-                  ),
+              ),
+              myVerticalDivider,
+              Text(
+                imageSilders.length.toString(),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
                 ),
-              ],
-            ),
-            InkWell(
-              child: forwardArrowWidget,
-              onTap: () {
-                imageCarouselController.nextPage();
-                textCarouselController.nextPage();
-              },
-            ),
-          ]
-        ),
+              ),
+            ],
+          ),
+          InkWell(
+            child: forwardArrowWidget,
+            onTap: () {
+              imageCarouselController.nextPage();
+              textCarouselController.nextPage();
+            },
+          ),
+        ]),
         SizedBox(height: 18),
         _buildTextCarouselSlider(textCarouselController),
       ],
@@ -148,20 +147,21 @@ class _ImageAndDescriptionSlideShowWidgetState
       enlargeCenterPage: true,
       onPageChanged: (index, reason) {},
     );
-    List<Widget> textSilders = contentList.map(
-      (content) => RichText(
-        overflow: TextOverflow.ellipsis,
-        maxLines: 2,
-        text: TextSpan(
-          style: TextStyle(
-            color: Color(0xff757575),
-            fontSize: 15,
-            fontWeight: FontWeight.w400
+    List<Widget> textSilders = contentList
+        .map(
+          (content) => RichText(
+            overflow: TextOverflow.ellipsis,
+            maxLines: 2,
+            text: TextSpan(
+              style: TextStyle(
+                  color: Color(0xff757575),
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400),
+              text: content.description,
+            ),
           ),
-          text: content.description,
-        ),
-      ),
-    ).toList();
+        )
+        .toList();
 
     return CarouselSlider(
       items: textSilders,

@@ -14,7 +14,6 @@ class ShowIntro {
     required this.name,
     required this.introduction,
     required this.pictureUrl,
-
     this.playList01,
     this.playList02,
   });
@@ -27,9 +26,8 @@ class ShowIntro {
 
     return ShowIntro(
       name: json['name'],
-      introduction: json['introduction']??'',
+      introduction: json['introduction'] ?? '',
       pictureUrl: pictureUrl,
-
       playList01: YoutubePlaylistInfo.parseByShow(json['playList01'], '選單 A'),
       playList02: YoutubePlaylistInfo.parseByShow(json['playList02'], '選單 B'),
     );

@@ -11,7 +11,7 @@ import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
 
-abstract class StoryEvents{
+abstract class StoryEvents {
   Stream<StoryState> run(StoryRepos storyRepos);
 }
 
@@ -23,14 +23,14 @@ class FetchPublishedStoryBySlug extends StoryEvents {
   String toString() => 'FetchPublishedStoryBySlug { storySlug: $slug }';
 
   @override
-  Stream<StoryState> run(StoryRepos storyRepos) async*{
+  Stream<StoryState> run(StoryRepos storyRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield StoryLoading();
       Story story = await storyRepos.fetchPublishedStoryBySlug(slug);
       String jsonFixed = await rootBundle.loadString(adUnitIdJson);
       final fixedAdUnitId = json.decode(jsonFixed);
-      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'story');
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'story');
       SharedPreferences prefs = await SharedPreferences.getInstance();
       double textSize = prefs.getDouble('textSize') ?? 20;
       yield StoryLoaded(story: story, adUnitId: adUnitId, textSize: textSize);

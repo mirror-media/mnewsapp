@@ -12,30 +12,25 @@ abstract class ShowRepos {
   Future<ShowIntro> fetchShowIntroById(String id);
 }
 
-class ShowServices implements CategoryRepos, ShowRepos{
+class ShowServices implements CategoryRepos, ShowRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<CategoryList> fetchCategoryList() async {
-
     final jsonResponse = await _helper.getByCacheAndAutoCache(
         baseConfig!.categoriesUrl,
         maxAge: categoryCacheDuration,
-        headers: {
-          "Accept": "application/json"
-        }
-    );
+        headers: {"Accept": "application/json"});
 
     CategoryList categoryList = CategoryList.fromJson(jsonResponse['allShows']);
     return categoryList;
   }
 
   @override
-  Future<ShowIntro> fetchShowIntroById(String id) async{
+  Future<ShowIntro> fetchShowIntroById(String id) async {
     final key = 'fetchShowIntroById?id=$id';
 
-    String query = 
-    """
+    String query = """
     query (
       \$where: ShowWhereUniqueInput!,
     ) {
@@ -53,10 +48,8 @@ class ShowServices implements CategoryRepos, ShowRepos{
     }
     """;
 
-    Map<String,dynamic> variables = {
-      "where": {
-        "id": id
-      }
+    Map<String, dynamic> variables = {
+      "where": {"id": id}
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -66,14 +59,9 @@ class ShowServices implements CategoryRepos, ShowRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: showIntroCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: showIntroCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
     ShowIntro showIntro = ShowIntro.fromJson(jsonResponse['data']['Show']);
     return showIntro;
