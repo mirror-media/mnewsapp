@@ -11,30 +11,34 @@ class MNewsAudioPlayer extends StatefulWidget {
 
   /// The description of audio
   final String? description;
-  MNewsAudioPlayer({
-    required this.audioUrl,
-    this.title,
-    this.description,
-  });
+  final double textSize;
+  MNewsAudioPlayer(
+      {required this.audioUrl,
+      this.title,
+      this.description,
+      this.textSize = 20});
 
   @override
   _MNewsAudioPlayerState createState() => _MNewsAudioPlayerState();
 }
 
-class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepAliveClientMixin {
+class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
+    with AutomaticKeepAliveClientMixin {
   Color _audioColor = Color(0xff014DB8);
   late AudioPlayer _audioPlayer;
   bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
       _audioPlayer.state == PlayerState.STOPPED ||
       _audioPlayer.state == PlayerState.PAUSED);
   int _duration = 0;
+  late double _textSize;
 
   @override
   bool get wantKeepAlive => true;
-  
+
   @override
   void initState() {
     _initAudioPlayer();
+    _textSize = widget.textSize;
     super.initState();
   }
 
@@ -46,13 +50,13 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   _start() async {
     try {
       _duration = await _audioPlayer.getDuration();
-      if(_duration < 0) {
+      if (_duration < 0) {
         _duration = 0;
       }
-    } catch(e) {
+    } catch (e) {
       _duration = 0;
     }
-    
+
     await _audioPlayer.play(widget.audioUrl);
   }
 
@@ -82,7 +86,13 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
   }
 
   @override
-  Widget build(BuildContext context) {    
+  void didUpdateWidget(MNewsAudioPlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    _textSize = widget.textSize;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     super.build(context);
     return Card(
       elevation: 10,
@@ -92,17 +102,18 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if(widget.title != null) 
-            ...[
+            if (widget.title != null) ...[
               Text(
                 widget.title!,
                 style: TextStyle(
-                  fontSize: 24,
+                  fontSize: _textSize + 4,
                   fontWeight: FontWeight.w600,
                   color: _audioColor,
                 ),
               ),
-              SizedBox(height: 8,),
+              SizedBox(
+                height: 8,
+              ),
             ],
             Row(
               children: [
@@ -157,25 +168,27 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer> with AutomaticKeepA
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             _duration == 0
-                            ? Slider(
-                                value: 0,
-                                onChanged: (v){},
-                              )
-                            : Slider(
-                                min: 0.0,
-                                max: _duration.toDouble(),
-                                value: sliderPosition,
-                                activeColor: _audioColor,
-                                inactiveColor: Color(0xff979797),
-                                onChanged: (v) {
-                                   _audioPlayer.seek(Duration(milliseconds: v.toInt()));
-                                },
-                              ),
+                                ? Slider(
+                                    value: 0,
+                                    onChanged: (v) {},
+                                  )
+                                : Slider(
+                                    min: 0.0,
+                                    max: _duration.toDouble(),
+                                    value: sliderPosition,
+                                    activeColor: _audioColor,
+                                    inactiveColor: Color(0xff979797),
+                                    onChanged: (v) {
+                                      _audioPlayer.seek(
+                                          Duration(milliseconds: v.toInt()));
+                                    },
+                                  ),
                             Padding(
                               padding:
                                   const EdgeInsets.only(right: 24.0, left: 24),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     position,
