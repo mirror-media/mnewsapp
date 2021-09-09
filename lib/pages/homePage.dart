@@ -24,7 +24,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _scaffoldkey = GlobalKey<ScaffoldState>();
-  InterstitialAdWidget interstitial = InterstitialAdWidget();
+  // InterstitialAdWidget interstitial = InterstitialAdWidget();
 
   @override
   void initState() {
@@ -48,10 +48,11 @@ class _HomePageState extends State<HomePage> {
         },
       );
       await prefs.setBool("isFirstLaunch", false);
-    } else {
-      interstitial.createInterstitialAd();
-      await Future.delayed(Duration(seconds: 1));
-      interstitial.showInterstitialAd();
+      // } else {
+      //   interstitial.createInterstitialAd();
+      //   await Future.delayed(Duration(seconds: 1));
+      //   interstitial.showInterstitialAd();
+      // }
     }
   }
 
@@ -74,7 +75,7 @@ class _HomePageState extends State<HomePage> {
               Expanded(
                 child: _buildBody(sectionId, adUnitId: state.adUnitId),
               ),
-              AnchoredBannerAdWidget(),
+              // AnchoredBannerAdWidget(),
             ],
           );
         }

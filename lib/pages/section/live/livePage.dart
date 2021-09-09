@@ -33,23 +33,23 @@ class LivePage extends StatelessWidget {
               isLive: true,
               mute: true,
             ),
-            InlineBannerAdWidget(
-              adUnitId: adUnitId?.at1AdUnitId,
-            ),
+
+            // InlineBannerAdWidget(adUnitId: adUnitId?.at1AdUnitId,),
+
             BlocProvider(
                 create: (context) => YoutubePlaylistBloc(
                     youtubePlaylistRepos: YoutubePlaylistServices()),
                 child: LiveSite()),
-            InlineBannerAdWidget(
-              adUnitId: adUnitId?.at2AdUnitId,
-            ),
+
+            // InlineBannerAdWidget(adUnitId: adUnitId?.at2AdUnitId,),
+
             BlocProvider(
                 create: (context) => PromotionVideoBloc(
                     promotionVideosRepos: PromotionVideosServices()),
                 child: PromotionVideos()),
-            InlineBannerAdWidget(
-              adUnitId: adUnitId?.at3AdUnitId,
-            ),
+
+            // InlineBannerAdWidget(adUnitId: adUnitId?.at3AdUnitId,),
+
             SizedBox(height: 24),
           ],
         ),

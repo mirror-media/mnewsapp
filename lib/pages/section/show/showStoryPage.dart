@@ -49,9 +49,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: _buildTitleAndPublishedDate(),
           ),
-          InlineBannerAdWidget(
-            adUnitId: widget.adUnitId.at2AdUnitId,
-          ),
+          // InlineBannerAdWidget(adUnitId: widget.adUnitId.at2AdUnitId,),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
             child: Text(
