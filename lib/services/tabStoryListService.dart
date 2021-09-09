@@ -35,6 +35,7 @@ class TabStoryListServices implements TabStoryListRepos {
       first: \$first, 
       sortBy: [ publishTime_DESC ]
     ) {
+      id
       slug
       name
       heroImage {
@@ -211,7 +212,7 @@ class TabStoryListServices implements TabStoryListRepos {
       newsList.removeWhere(
           (storyListItem) => storyListItem.id == _featuredStory!.id);
       // Put featured post at the top of the list
-      newsList.insert(0, _featuredStory);
+      if (skip == 0) newsList.insert(0, _featuredStory);
     }
 
     return newsList;
