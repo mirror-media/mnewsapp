@@ -17,17 +17,11 @@ class SearchNoResultWidget extends StatelessWidget {
         SizedBox(height: 24),
         Text(
           '您的搜尋「$keyword」',
-          style: TextStyle(
-            color: Color(0xff898F9C), 
-            fontSize: 16.0
-          ),
+          style: TextStyle(color: Color(0xff898F9C), fontSize: 16.0),
         ),
         Text(
           '查無相關結果',
-          style: TextStyle(
-            color: Colors.black, 
-            fontSize: 16.0
-          ),
+          style: TextStyle(color: Colors.black, fontSize: 16.0),
         ),
         SizedBox(height: 24),
       ],

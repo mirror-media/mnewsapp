@@ -11,7 +11,8 @@ class NewsMarqueeBloc extends Bloc<NewsMarqueeEvents, NewsMarqueeState> {
   final NewsMarqueeRepos newsMarqueeRepos;
   StoryListItemList newsList = StoryListItemList();
 
-  NewsMarqueeBloc({required this.newsMarqueeRepos}) : super(NewsMarqueeInitState());
+  NewsMarqueeBloc({required this.newsMarqueeRepos})
+      : super(NewsMarqueeInitState());
 
   @override
   Stream<NewsMarqueeState> mapEventToState(NewsMarqueeEvents event) async* {

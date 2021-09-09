@@ -25,7 +25,7 @@ class Content {
           aspectRatio: null,
           description: json['description'],
         );
-      } 
+      }
       // audio or video
       else if (BaseModel.checkJsonKeys(json, ['url'])) {
         return Content(
@@ -33,17 +33,16 @@ class Content {
           aspectRatio: null,
           description: json['name'],
         );
-      } 
-      else if (BaseModel.checkJsonKeys(json, ['embeddedCode'])) {
+      } else if (BaseModel.checkJsonKeys(json, ['embeddedCode'])) {
         return Content(
           data: json['embeddedCode'],
           aspectRatio: (json['width'] == null || json['height'] == null)
-            ? null
-            : double.parse(json['width'])/double.parse(json['height']),
+              ? null
+              : double.parse(json['width']) / double.parse(json['height']),
           description: json['caption'],
         );
-      } else if (BaseModel.checkJsonKeys(json, ['draftRawObj'])
-      || BaseModel.checkJsonKeys(json, ['title'])) {
+      } else if (BaseModel.checkJsonKeys(json, ['draftRawObj']) ||
+          BaseModel.checkJsonKeys(json, ['title'])) {
         return Content(
           data: json['body'],
           aspectRatio: null,

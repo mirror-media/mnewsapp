@@ -14,7 +14,8 @@ class InlineBannerAdWidget extends StatefulWidget {
   _InlineBannerAdWidgetState createState() => _InlineBannerAdWidgetState();
 }
 
-class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget> with AutomaticKeepAliveClientMixin{
+class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
+    with AutomaticKeepAliveClientMixin {
   BannerAd? _inlineBanner;
   bool _loadingInlineBanner = false;
 
@@ -55,33 +56,34 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget> with Automa
     super.build(context);
     double _horizontalPadding = 37.5;
 
-    if(widget.isInArticle) {
+    if (widget.isInArticle) {
       _horizontalPadding = 13.5;
     }
 
-    if(!_loadingInlineBanner){
+    if (!_loadingInlineBanner) {
       _loadingInlineBanner = true;
       String? _adUnitId = widget.adUnitId;
-      if(_adUnitId != null){
-        _createInlineBanner(context,_adUnitId);
-      }
-      else{
+      if (_adUnitId != null) {
+        _createInlineBanner(context, _adUnitId);
+      } else {
         return Container(
           alignment: Alignment.center,
           width: 300,
           height: 250,
-          margin: EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
+          margin: EdgeInsets.symmetric(
+              vertical: 24, horizontal: _horizontalPadding),
         );
       }
     }
 
-    if(_inlineBanner != null){
+    if (_inlineBanner != null) {
       return Container(
         alignment: Alignment.center,
         width: _inlineBanner!.size.width.toDouble(),
         height: _inlineBanner!.size.height.toDouble(),
         child: AdWidget(ad: _inlineBanner!),
-        margin: EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
+        margin:
+            EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
       );
     }
 
@@ -89,13 +91,13 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget> with Automa
       alignment: Alignment.center,
       width: 300,
       height: 250,
-      margin: EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
+      margin:
+          EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
     );
-
   }
 
   @override
-  void dispose(){
+  void dispose() {
     super.dispose();
     _inlineBanner?.dispose();
   }

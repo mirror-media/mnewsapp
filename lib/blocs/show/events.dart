@@ -1,5 +1,3 @@
-
-
 import 'dart:convert';
 import 'dart:io';
 
@@ -11,7 +9,7 @@ import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/services/showService.dart';
 
-abstract class ShowEvents{
+abstract class ShowEvents {
   Stream<ShowState> run(ShowRepos showRepos);
 }
 
@@ -22,14 +20,14 @@ class FetchShowIntro extends ShowEvents {
   String toString() => 'FetchShowIntro { ShowCategoryId: $showCategoryId }';
 
   @override
-  Stream<ShowState> run(ShowRepos showRepos) async*{
+  Stream<ShowState> run(ShowRepos showRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield ShowLoading();
       ShowIntro showIntro = await showRepos.fetchShowIntroById(showCategoryId);
       String jsonFixed = await rootBundle.loadString(adUnitIdJson);
       final fixedAdUnitId = json.decode(jsonFixed);
-      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId,'show');
+      AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'show');
       yield ShowIntroLoaded(showIntro: showIntro, adUnitId: adUnitId);
     } on SocketException {
       yield ShowError(

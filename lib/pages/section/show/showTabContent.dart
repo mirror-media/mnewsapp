@@ -17,12 +17,13 @@ class ShowTabContent extends StatefulWidget {
 }
 
 class _ShowTabContentState extends State<ShowTabContent> {
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => ShowIntroBloc(showRepos: ShowServices()),
-      child: BuildShowIntro(showCategoryId: widget.category.id!,),
+      child: BuildShowIntro(
+        showCategoryId: widget.category.id!,
+      ),
     );
   }
 }

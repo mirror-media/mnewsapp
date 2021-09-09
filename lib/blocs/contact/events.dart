@@ -7,7 +7,7 @@ import 'package:tv/models/contact.dart';
 import 'package:tv/models/contactList.dart';
 import 'package:tv/services/contactService.dart';
 
-abstract class ContactEvents{
+abstract class ContactEvents {
   Stream<ContactState> run(ContactRepos contactRepos);
 }
 
@@ -18,11 +18,12 @@ class FetchAnchorpersonOrHostContactList extends ContactEvents {
   String toString() => 'FetchAnchorpersonOrHostContactList';
 
   @override
-  Stream<ContactState> run(ContactRepos contactRepos) async*{
+  Stream<ContactState> run(ContactRepos contactRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield ContactLoading();
-      ContactList contactList = await contactRepos.fetchAnchorpersonOrHostContactList();
+      ContactList contactList =
+          await contactRepos.fetchAnchorpersonOrHostContactList();
       yield ContactListLoaded(contactList: contactList);
     } on SocketException {
       yield ContactError(
@@ -72,9 +73,9 @@ class FetchContactById extends ContactEvents {
   String toString() => 'FetchContactById : { ContactId : $contactId }';
 
   @override
-  Stream<ContactState> run(ContactRepos contactRepos) async*{
+  Stream<ContactState> run(ContactRepos contactRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield ContactLoading();
       Contact contact = await contactRepos.fetchContactById(contactId);
       yield ContactLoaded(contact: contact);

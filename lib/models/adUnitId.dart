@@ -1,6 +1,6 @@
 import 'dart:io';
 
-class AdUnitId{
+class AdUnitId {
   String at1AdUnitId;
   String at2AdUnitId;
   String? at3AdUnitId;
@@ -8,14 +8,13 @@ class AdUnitId{
   String? e1AdUnitId;
   String? ftAdUnitId;
 
-  AdUnitId({
-    required this.at1AdUnitId,
-    required this.at2AdUnitId,
-    required this.at3AdUnitId,
-    this.e1AdUnitId,
-    this.ftAdUnitId,
-    this.hdAdUnitId
-});
+  AdUnitId(
+      {required this.at1AdUnitId,
+      required this.at2AdUnitId,
+      required this.at3AdUnitId,
+      this.e1AdUnitId,
+      this.ftAdUnitId,
+      this.hdAdUnitId});
 
   factory AdUnitId.fromJson(Map<String, dynamic> json, String name) {
     String _platform = 'ios';
@@ -23,17 +22,17 @@ class AdUnitId{
       _platform = 'android';
     }
 
-    if(json[_platform][name] == null){
+    if (json[_platform][name] == null) {
       name = 'others';
     }
 
     return new AdUnitId(
-        at1AdUnitId: json[_platform][name]['at1AdUnitId'],
-        at2AdUnitId: json[_platform][name]['at2AdUnitId'],
-        at3AdUnitId: json[_platform][name]['at3AdUnitId'],
-        hdAdUnitId: json[_platform][name]['hdAdUnitId'],
-        e1AdUnitId: json[_platform][name]['e1AdUnitId'],
-        ftAdUnitId: json[_platform][name]['ftAdUnitId'],
+      at1AdUnitId: json[_platform][name]['at1AdUnitId'],
+      at2AdUnitId: json[_platform][name]['at2AdUnitId'],
+      at3AdUnitId: json[_platform][name]['at3AdUnitId'],
+      hdAdUnitId: json[_platform][name]['hdAdUnitId'],
+      e1AdUnitId: json[_platform][name]['e1AdUnitId'],
+      ftAdUnitId: json[_platform][name]['ftAdUnitId'],
     );
   }
 

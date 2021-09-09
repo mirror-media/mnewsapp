@@ -6,7 +6,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 import 'package:tv/services/promotionVideosService.dart';
 
-abstract class PromotionVideoEvents{
+abstract class PromotionVideoEvents {
   Stream<PromotionVideoState> run(PromotionVideosRepos promotionVideosRepos);
 }
 
@@ -15,13 +15,15 @@ class FetchAllPromotionVideos extends PromotionVideoEvents {
   String toString() => 'FetchAllPromotionVideos';
 
   @override
-  Stream<PromotionVideoState> run(PromotionVideosRepos promotionVideosRepos) async*{
+  Stream<PromotionVideoState> run(
+      PromotionVideosRepos promotionVideosRepos) async* {
     print(this.toString());
-    try{
+    try {
       yield PromotionVideoLoading();
-      YoutubePlaylistItemList youtubePlaylistItemList = 
+      YoutubePlaylistItemList youtubePlaylistItemList =
           await promotionVideosRepos.fetchAllPromotionVideos();
-      yield PromotionVideoLoaded(youtubePlaylistItemList: youtubePlaylistItemList);
+      yield PromotionVideoLoaded(
+          youtubePlaylistItemList: youtubePlaylistItemList);
     } on SocketException {
       yield PromotionVideoError(
         error: NoInternetException('No Internet'),

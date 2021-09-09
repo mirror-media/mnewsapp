@@ -4,8 +4,7 @@ import 'package:tv/models/programListItem.dart';
 
 import 'customizedList.dart';
 
-class ProgramList extends CustomizedList<ProgramListItem>{
-
+class ProgramList extends CustomizedList<ProgramListItem> {
   ProgramList();
 
   factory ProgramList.fromJson(List<dynamic> parsedJson) {
@@ -18,16 +17,13 @@ class ProgramList extends CustomizedList<ProgramListItem>{
       programList.add(element);
     });
 
-    programList.sort((ProgramListItem a, ProgramListItem b){
+    programList.sort((ProgramListItem a, ProgramListItem b) {
       int compare = a.year.compareTo(b.year);
-      if(compare != 0)
-        return compare;
+      if (compare != 0) return compare;
       compare = a.weekDay.compareTo(b.weekDay);
-      if(compare != 0)
-        return compare;
+      if (compare != 0) return compare;
       compare = a.startTimeHour.compareTo(b.startTimeHour);
-      if(compare != 0)
-        return compare;
+      if (compare != 0) return compare;
       return a.startTimeMinute.compareTo(b.startTimeMinute);
     });
 
@@ -56,5 +52,4 @@ class ProgramList extends CustomizedList<ProgramListItem>{
     }
     return json.encode(programListItemMaps);
   }
-
 }

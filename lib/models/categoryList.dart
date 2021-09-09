@@ -4,7 +4,6 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/customizedList.dart';
 
 class CategoryList extends CustomizedList<Category> {
-
   // constructor
   CategoryList();
 

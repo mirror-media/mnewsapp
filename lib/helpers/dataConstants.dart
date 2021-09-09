@@ -9,7 +9,8 @@ const youtubeLink = 'https://www.youtube.com/';
 /// assets
 const String menuJson = 'assets/json/menu.json';
 const String videoMenuJson = 'assets/json/videoMenu.json';
-const String defaultNotificationListJson = 'assets/json/defaultNotificationList.json';
+const String defaultNotificationListJson =
+    'assets/json/defaultNotificationList.json';
 const String tabContentNoResultSvg = 'assets/image/tabContentNoResult.svg';
 const String error400Png = 'assets/image/error404.png';
 const String error500Png = 'assets/image/error500.png';
@@ -24,8 +25,6 @@ const String mailPng = 'assets/image/ombuds/mail.png';
 const String logoPng = 'assets/image/logo.png';
 const String hammerPng = 'assets/image/ombuds/hammer.png';
 const String adUnitIdJson = 'assets/json/adUnitId.json';
-
-
 
 /// color
 const Color themeColor = Color(0xff003366);
@@ -49,50 +48,22 @@ const Color infoBoxTitleColor = storyWidgetColor;
 const Color slideShowColor = storyWidgetColor;
 
 /// section
-enum MNewsSection {
-  news,
-  live,
-  video,
-  show,
-  anchorperson,
-  ombuds,
-  programList
-}
+enum MNewsSection { news, live, video, show, anchorperson, ombuds, programList }
 
 const mNewsSectionList = [
-  {
-    BaseModel.idKey: MNewsSection.news,
-    BaseModel.nameKey: '新聞'
-  },
-  {
-    BaseModel.idKey: MNewsSection.live,
-    BaseModel.nameKey: '直播'
-  },
-  {
-    BaseModel.idKey: MNewsSection.video,
-    BaseModel.nameKey: '影音'
-  },
-  {
-    BaseModel.idKey: MNewsSection.show,
-    BaseModel.nameKey: '節目'
-  },
-  {
-    BaseModel.idKey: MNewsSection.anchorperson,
-    BaseModel.nameKey: '鏡主播'
-  },
-  {
-    BaseModel.idKey: MNewsSection.ombuds,
-    BaseModel.nameKey: '公評人'
-  },
-  {
-    BaseModel.idKey: MNewsSection.programList,
-    BaseModel.nameKey: '節目表'
-  }
+  {BaseModel.idKey: MNewsSection.news, BaseModel.nameKey: '新聞'},
+  {BaseModel.idKey: MNewsSection.live, BaseModel.nameKey: '直播'},
+  {BaseModel.idKey: MNewsSection.video, BaseModel.nameKey: '影音'},
+  {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
+  {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},
+  {BaseModel.idKey: MNewsSection.ombuds, BaseModel.nameKey: '公評人'},
+  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'}
 ];
 
 /// live
 const String mNewsLiveYoutubeId = 'coYw-eVU0Ks';
-const String mNewsLiveSiteYoutubePlayListId = 'PLT6yxVwBEbi2dWegLu37V63_tP-nI6em_';
+const String mNewsLiveSiteYoutubePlayListId =
+    'PLT6yxVwBEbi2dWegLu37V63_tP-nI6em_';
 
 /// google admob
 const androidAdMobAppId = 'ca-app-pub-3940256099942544~3347511713';

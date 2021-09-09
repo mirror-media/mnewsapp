@@ -10,75 +10,61 @@ import 'package:tv/models/notificationSettingList.dart';
 
 class NotificationSettingWidget extends StatefulWidget {
   @override
-  _NotificationSettingWidgetState createState() => _NotificationSettingWidgetState();
+  _NotificationSettingWidgetState createState() =>
+      _NotificationSettingWidgetState();
 }
 
 class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
-
   @override
   void initState() {
     _getNotificationSettingList();
     super.initState();
   }
 
-  _getNotificationSettingList() async{
+  _getNotificationSettingList() async {
     context.read<NotificationSettingBloc>().add(GetNotificationSettingList());
   }
 
-  _onExpansionChanged(
-    NotificationSettingList notificationSettingList, 
-    int index, 
-    bool value
-  ) async {
+  _onExpansionChanged(NotificationSettingList notificationSettingList,
+      int index, bool value) async {
     context.read<NotificationSettingBloc>().add(
-      NotificationOnExpansionChanged(
-        notificationSettingList, 
-        index, 
-        value
-      )
-    );
+        NotificationOnExpansionChanged(notificationSettingList, index, value));
   }
 
   _onCheckBoxChanged(
-    NotificationSettingList notificationSettingList, 
-    NotificationSettingList checkboxList,
-    int index, 
-    bool isRepeatable
-  ) async {
+      NotificationSettingList notificationSettingList,
+      NotificationSettingList checkboxList,
+      int index,
+      bool isRepeatable) async {
     context.read<NotificationSettingBloc>().add(
-      NotificationOnCheckBoxChanged(
-        notificationSettingList, 
-        checkboxList, 
-        index, 
-        isRepeatable
-      ),
-    );
+          NotificationOnCheckBoxChanged(
+              notificationSettingList, checkboxList, index, isRepeatable),
+        );
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NotificationSettingBloc, NotificationSettingState>(
-      builder: (BuildContext context, NotificationSettingState state) {
-        if (state is NotificationSettingError) {
-          final error = state.error;
-          print('NotificationSettingError: ${error.message}');
-          return Container();
-        }
-        if (state is NotificationSettingLoaded) {
-          NotificationSettingList notificationSettingList = state.notificationSettingList;
-
-          return _buildNotificationSettingListSection(notificationSettingList);
-        }
-
-        // state is Init, loading, or other 
+        builder: (BuildContext context, NotificationSettingState state) {
+      if (state is NotificationSettingError) {
+        final error = state.error;
+        print('NotificationSettingError: ${error.message}');
         return Container();
       }
-    );
+      if (state is NotificationSettingLoaded) {
+        NotificationSettingList notificationSettingList =
+            state.notificationSettingList;
+
+        return _buildNotificationSettingListSection(notificationSettingList);
+      }
+
+      // state is Init, loading, or other
+      return Container();
+    });
   }
 
   _buildNotificationSettingListSection(
-    List<NotificationSetting> notificationSettingList
-  ) {
+      List<NotificationSetting> notificationSettingList) {
     return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
@@ -95,7 +81,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
                 title: Text(
                   notificationSettingList[listViewIndex].title,
                   style: TextStyle(
-                    color:  Colors.black,
+                    color: Colors.black,
                     fontSize: 17,
                     fontWeight: FontWeight.w400,
                   ),
@@ -103,20 +89,20 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
               ),
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
-                  value: notificationSettingList[listViewIndex].value,
-                  activeColor: appBarColor,
-                  onChanged: (bool value) {}
-                ),
+                    value: notificationSettingList[listViewIndex].value,
+                    activeColor: appBarColor,
+                    onChanged: (bool value) {}),
               ),
               onExpansionChanged: (bool value) {
                 _onExpansionChanged(
-                  notificationSettingList as NotificationSettingList, 
-                  listViewIndex, 
-                  value
-                );
+                    notificationSettingList as NotificationSettingList,
+                    listViewIndex,
+                    value);
               },
               children: _renderCheckBoxChildren(
-                  context, notificationSettingList as NotificationSettingList, listViewIndex),
+                  context,
+                  notificationSettingList as NotificationSettingList,
+                  listViewIndex),
             ),
           ),
         );
@@ -124,14 +110,11 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
     );
   }
 
-  List<Widget> _renderCheckBoxChildren(
-      BuildContext context, 
-      NotificationSettingList notificationSettingList,
-      int index) {
+  List<Widget> _renderCheckBoxChildren(BuildContext context,
+      NotificationSettingList notificationSettingList, int index) {
     if (notificationSettingList[index].id == 'notification') {
       return [
-        _buildCheckbox(
-            context, notificationSettingList, index, true, 4, 2.0)
+        _buildCheckbox(context, notificationSettingList, index, true, 4, 2.0)
       ];
     }
 
@@ -145,7 +128,8 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
       bool isRepeatable,
       int count,
       double ratio) {
-    List<NotificationSetting> checkboxList = notificationSettingList[index].notificationSettingList!;
+    List<NotificationSetting> checkboxList =
+        notificationSettingList[index].notificationSettingList!;
     return GridView.builder(
         shrinkWrap: true,
         physics: NeverScrollableScrollPhysics(),
@@ -158,11 +142,10 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
           return InkWell(
             onTap: () {
               _onCheckBoxChanged(
-                notificationSettingList, 
-                checkboxList as NotificationSettingList, 
-                checkboxIndex, 
-                isRepeatable
-              );
+                  notificationSettingList,
+                  checkboxList as NotificationSettingList,
+                  checkboxIndex,
+                  isRepeatable);
             },
             child: IgnorePointer(
               child: Row(children: [

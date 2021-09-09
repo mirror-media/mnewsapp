@@ -37,16 +37,16 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     _fetchSnippetByPlaylistId(widget.youtubePlaylistInfo.youtubePlayListId);
     _initPagetokenAndIsLoading();
 
-    widget.listviewController.addListener(
-      () { 
-        if (widget.listviewController.position.pixels == widget.listviewController.position.maxScrollExtent &&
+    widget.listviewController.addListener(() {
+      if (widget.listviewController.position.pixels ==
+              widget.listviewController.position.maxScrollExtent &&
           !_isLoading &&
-          _nextPagetoken != '' && _nextPagetoken != null
-        ) {
-          _fetchSnippetByPlaylistIdAndPageToken(widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
-        }
+          _nextPagetoken != '' &&
+          _nextPagetoken != null) {
+        _fetchSnippetByPlaylistIdAndPageToken(
+            widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
       }
-    );
+    });
     super.initState();
   }
 
@@ -58,108 +58,100 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   }
 
   _fetchSnippetByPlaylistId(String id) async {
-    context.read<YoutubePlaylistBloc>().add(FetchSnippetByPlaylistId(id, maxResults: _fetchPlaylistMaxResult));
+    context
+        .read<YoutubePlaylistBloc>()
+        .add(FetchSnippetByPlaylistId(id, maxResults: _fetchPlaylistMaxResult));
   }
 
   _fetchSnippetByPlaylistIdAndPageToken(String id, String pageToken) async {
     context.read<YoutubePlaylistBloc>().add(
-      FetchSnippetByPlaylistIdAndPageToken(
-        id,
-        pageToken,
-        maxResults: _fetchPlaylistMaxResult
-      )
-    );
+        FetchSnippetByPlaylistIdAndPageToken(id, pageToken,
+            maxResults: _fetchPlaylistMaxResult));
   }
 
- _initPagetokenAndIsLoading() {
-   _isLoading = true;
-   _nextPagetoken = '';
- }
+  _initPagetokenAndIsLoading() {
+    _isLoading = true;
+    _nextPagetoken = '';
+  }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<YoutubePlaylistBloc, YoutubePlaylistState>(
-      builder: (BuildContext context, YoutubePlaylistState state) {
-        if (state is YoutubePlaylistError) {
-          final error = state.error;
-          print('YoutubePlaylistError: ${error.message}');
-          return Container();
-        }
-        if (state is YoutubePlaylistLoadingMore) {
-          _isLoading = true;
-          YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
-          return _buildYoutubePlaylistItemList(
-            widget.youtubePlaylistInfo.youtubePlayListId,
-            youtubePlaylistItemList, 
-            isLoading: true
-          );
-        }
-        if(state is YoutubePlaylistLoadingMoreFail) {
-          YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
-          _isLoading = false;
-          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
-          
-          return _buildYoutubePlaylistItemList(
-            widget.youtubePlaylistInfo.youtubePlayListId,
-            youtubePlaylistItemList, 
-            isLoading: true
-          );
-        }
-        if (state is YoutubePlaylistLoaded) {
-          YoutubePlaylistItemList youtubePlaylistItemList = state.youtubePlaylistItemList;
-          _isLoading = false;
-          _nextPagetoken = youtubePlaylistItemList.nextPageToken;
-
-          return _buildYoutubePlaylistItemList(
+        builder: (BuildContext context, YoutubePlaylistState state) {
+      if (state is YoutubePlaylistError) {
+        final error = state.error;
+        print('YoutubePlaylistError: ${error.message}');
+        return Container();
+      }
+      if (state is YoutubePlaylistLoadingMore) {
+        _isLoading = true;
+        YoutubePlaylistItemList youtubePlaylistItemList =
+            state.youtubePlaylistItemList;
+        return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
             youtubePlaylistItemList,
-          );
-        }
-
-        // state is Init, loading, or other 
-        return _loadMoreWidget();
+            isLoading: true);
       }
-    );
+      if (state is YoutubePlaylistLoadingMoreFail) {
+        YoutubePlaylistItemList youtubePlaylistItemList =
+            state.youtubePlaylistItemList;
+        _isLoading = false;
+        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
+
+        return _buildYoutubePlaylistItemList(
+            widget.youtubePlaylistInfo.youtubePlayListId,
+            youtubePlaylistItemList,
+            isLoading: true);
+      }
+      if (state is YoutubePlaylistLoaded) {
+        YoutubePlaylistItemList youtubePlaylistItemList =
+            state.youtubePlaylistItemList;
+        _isLoading = false;
+        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
+
+        return _buildYoutubePlaylistItemList(
+          widget.youtubePlaylistInfo.youtubePlayListId,
+          youtubePlaylistItemList,
+        );
+      }
+
+      // state is Init, loading, or other
+      return _loadMoreWidget();
+    });
   }
 
   Widget _buildYoutubePlaylistItemList(
-    String youtubePlayListId,
-    YoutubePlaylistItemList youtubePlaylistItemList, 
-    { bool isLoading = false }
-  ) {
+      String youtubePlayListId, YoutubePlaylistItemList youtubePlaylistItemList,
+      {bool isLoading = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SizedBox(height: 24),
         ListView.separated(
-          //controller: widget.listviewController,
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
-          itemCount: youtubePlaylistItemList.length,
-          itemBuilder: (context, index) {
-            return _buildListItem(
-              context,
-              youtubePlayListId,
-              youtubePlaylistItemList[index]
-            );
-          }
-        ),
-        if(isLoading)
-          _loadMoreWidget(),
+            //controller: widget.listviewController,
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            separatorBuilder: (BuildContext context, int index) =>
+                SizedBox(height: 16.0),
+            itemCount: youtubePlaylistItemList.length,
+            itemBuilder: (context, index) {
+              return _buildListItem(
+                  context, youtubePlayListId, youtubePlaylistItemList[index]);
+            }),
+        if (isLoading) _loadMoreWidget(),
       ],
     );
   }
 
   Widget _buildListItem(
-    BuildContext context, 
+    BuildContext context,
     String youtubePlayListId,
     YoutubePlaylistItem youtubePlaylistItem,
   ) {
     DateTimeFormat dateTimeFormat = DateTimeFormat();
     var width = MediaQuery.of(context).size.width;
     double imageWidth = 33.3 * (width - 48) / 100;
-    double imageHeight = imageWidth/16*9;
+    double imageHeight = imageWidth / 16 * 9;
 
     return InkWell(
       child: Row(
@@ -201,15 +193,13 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
                     text: youtubePlaylistItem.name,
                   ),
                 ),
-                if(youtubePlaylistItem.publishedAt != null)
-                ...[
+                if (youtubePlaylistItem.publishedAt != null) ...[
                   SizedBox(height: 12),
                   Text(
                     dateTimeFormat.changeStringToDisplayString(
-                      youtubePlaylistItem.publishedAt!,
-                      'yyyy-MM-ddTHH:mm:ssZ', 
-                      'yyyy年MM月dd日'
-                    ),
+                        youtubePlaylistItem.publishedAt!,
+                        'yyyy-MM-ddTHH:mm:ssZ',
+                        'yyyy年MM月dd日'),
                     style: TextStyle(
                       color: Color(0xff757575),
                       fontSize: 14.0,
@@ -223,20 +213,14 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         ],
       ),
       onTap: () => RouteGenerator.navigateToShowStory(
-        context, 
-        youtubePlayListId,
-        youtubePlaylistItem,
-        widget.adUnitId
-      ),
+          context, youtubePlayListId, youtubePlaylistItem, widget.adUnitId),
     );
   }
-  
+
   Widget _loadMoreWidget() {
     return Padding(
       padding: const EdgeInsets.all(16.0),
-      child: Center(
-        child: CupertinoActivityIndicator()
-      ),
+      child: Center(child: CupertinoActivityIndicator()),
     );
   }
 }

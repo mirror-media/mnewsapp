@@ -17,7 +17,7 @@ class FbEmbeddedCodeWidget extends StatefulWidget {
 class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
   late WebViewController _webViewController;
   String _htmlPage = '';
-  double _ratio = 16/9;
+  double _ratio = 16 / 9;
   RegExpMatch? _regExpMatch;
 
   @override
@@ -36,9 +36,9 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
     );
     _regExpMatch = regExp.firstMatch(widget.embeddedCoede);
 
-    if(_regExpMatch != null) {
+    if (_regExpMatch != null) {
       String fbUrl = _regExpMatch!.group(1)!;
-      _htmlPage = 'https://www.facebook.com/plugins/post.php?href='+fbUrl;
+      _htmlPage = 'https://www.facebook.com/plugins/post.php?href=' + fbUrl;
       print(_htmlPage);
       RegExp widthRegExp = new RegExp(
         r'width="(.[0-9]*)"',
@@ -48,34 +48,36 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
         r'height="(.[0-9]*)"',
         caseSensitive: false,
       );
-      double w = double.parse(widthRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
-      double h = double.parse(heightRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
-      _ratio = w/h;
+      double w =
+          double.parse(widthRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
+      double h = double.parse(
+          heightRegExp.firstMatch(widget.embeddedCoede)!.group(1)!);
+      _ratio = w / h;
     }
     super.initState();
   }
 
   // refer to the link(https://github.com/flutter/flutter/issues/2897)
-  // webview will cause the device to crash in some physical android device, 
+  // webview will cause the device to crash in some physical android device,
   // when the webview height is higher than the physical device screen height.
   // --------------------------------------------------
-  // width : device screen width - 32(padding) 
+  // width : device screen width - 32(padding)
   // height : device screen height
   // ratio : webview aspect ratio
   // width / ratio : webview height
   bool _isHigherThanScreenHeight(double width, double height, double ratio) {
     double webviewHeight = width / ratio;
-    return webviewHeight >  height;
+    return webviewHeight > height;
   }
 
   double _getIframeHeight(double width, double height, double ratio) {
-    if(Platform.isIOS) {
+    if (Platform.isIOS) {
       return width / ratio;
     }
 
-    return _isHigherThanScreenHeight(width, height, ratio) 
-      ? height 
-      : width / ratio;
+    return _isHigherThanScreenHeight(width, height, ratio)
+        ? height
+        : width / ratio;
   }
 
   @override
@@ -85,7 +87,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width-32;
+    var width = MediaQuery.of(context).size.width - 32;
     var height = MediaQuery.of(context).size.height;
 
     return Container(
@@ -104,20 +106,20 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
               },
               //userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36',
               javascriptMode: JavascriptMode.unrestricted,
-              onPageFinished: (e) async{
+              onPageFinished: (e) async {
                 double? w = double.tryParse(
-                  await _webViewController
-                      .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().width;'),
+                  await _webViewController.evaluateJavascript(
+                      'document.querySelector("._li").getBoundingClientRect().width;'),
                 );
                 double? h = double.tryParse(
-                  await _webViewController
-                      .evaluateJavascript('document.querySelector("._li").getBoundingClientRect().height;'),
+                  await _webViewController.evaluateJavascript(
+                      'document.querySelector("._li").getBoundingClientRect().height;'),
                 );
 
-                if(w != null && h != null) {
-                  double ratio = w/h;
-                  if(ratio != _ratio) {
-                    if(mounted) {
+                if (w != null && h != null) {
+                  double ratio = w / h;
+                  if (ratio != _ratio) {
+                    if (mounted) {
                       setState(() {
                         _ratio = ratio;
                       });
@@ -128,16 +130,16 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
             ),
           ),
           // display watching more widget when meeting some conditions.
-          if(_isHigherThanScreenHeight(width, height, _ratio) && 
+          if (_isHigherThanScreenHeight(width, height, _ratio) &&
               Platform.isAndroid)
             Align(
               alignment: Alignment.bottomCenter,
               child: _buildWatchingMoreWidget(width),
             ),
-          // cover a launching url widget over the iframe 
+          // cover a launching url widget over the iframe
           InkWell(
-            onTap: ()async{
-              if(_regExpMatch != null) {
+            onTap: () async {
+              if (_regExpMatch != null) {
                 var url = _regExpMatch!.group(1)!;
                 url = Uri.decodeFull(url);
                 print(url);
@@ -158,7 +160,7 @@ class _FbEmbeddedCodeWidgetState extends State<FbEmbeddedCodeWidget> {
       ),
     );
   }
-  
+
   Widget _buildWatchingMoreWidget(double width) {
     return Container(
       height: width / 16 * 9 / 3,

@@ -1,5 +1,3 @@
-
-
 import 'package:tv/models/notificationSettingList.dart';
 
 abstract class NotificationSettingState {}

@@ -12,9 +12,9 @@ part 'video_state.dart';
 class VideoCubit extends Cubit<VideoState> {
   VideoCubit() : super(VideoInitial());
 
-  void fetchVideoByName(String name) async{
+  void fetchVideoByName(String name) async {
     print('GetVideoByName: { name: $name }');
-    try{
+    try {
       Video video = await VideoServices().fetchVideoByName(name);
       emit(VideoLoaded(video: video));
     } on SocketException {
@@ -26,31 +26,31 @@ class VideoCubit extends Cubit<VideoState> {
         error: NoServiceFoundException('No Service Found'),
       ));
     } on FormatException {
-      emit (VideoError(
+      emit(VideoError(
         error: InvalidFormatException('Invalid Response format'),
       ));
     } on FetchDataException {
-      emit (VideoError(
+      emit(VideoError(
         error: NoInternetException('Error During Communication'),
       ));
     } on BadRequestException {
-      emit (VideoError(
+      emit(VideoError(
         error: Error400Exception('Invalid Request'),
       ));
     } on UnauthorisedException {
-      emit (VideoError(
+      emit(VideoError(
         error: Error400Exception('Unauthorised'),
       ));
     } on InvalidInputException {
-      emit (VideoError(
+      emit(VideoError(
         error: Error400Exception('Invalid Input'),
       ));
     } on InternalServerErrorException {
-      emit (VideoError(
+      emit(VideoError(
         error: Error500Exception('Internal Server Error'),
       ));
     } catch (e) {
-      emit (VideoError(
+      emit(VideoError(
         error: UnknownException(e.toString()),
       ));
     }

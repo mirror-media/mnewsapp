@@ -12,15 +12,14 @@ abstract class ContactRepos {
   Future<ContactList> fetchAnchorpersonOrHostContactList();
 }
 
-class ContactServices implements ContactRepos{
+class ContactServices implements ContactRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<ContactList> fetchAnchorpersonOrHostContactList() async {
     final key = 'fetchAnchorpersonOrHostContactList';
 
-    String query = 
-    """
+    String query = """
     query {
       allContacts(
         where: {
@@ -46,7 +45,7 @@ class ContactServices implements ContactRepos{
     }
     """;
 
-    Map<String,String> variables = {};
+    Map<String, String> variables = {};
 
     GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
@@ -55,25 +54,20 @@ class ContactServices implements ContactRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: anchorPersonListCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: anchorPersonListCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
-    ContactList contactList = ContactList.fromJson(jsonResponse['data']['allContacts']);
+    ContactList contactList =
+        ContactList.fromJson(jsonResponse['data']['allContacts']);
     return contactList;
   }
 
   @override
-  Future<Contact> fetchContactById(String contactId) async{
+  Future<Contact> fetchContactById(String contactId) async {
     final key = 'fetchContactById?contactId=$contactId';
 
-    String query = 
-    """
+    String query = """
     query(\$where: ContactWhereUniqueInput!) {
       Contact(where: \$where) {
         id
@@ -90,10 +84,8 @@ class ContactServices implements ContactRepos{
     }
     """;
 
-    Map<String,dynamic> variables = {
-      "where": {
-        "id": contactId
-      }
+    Map<String, dynamic> variables = {
+      "where": {"id": contactId}
     };
 
     GraphqlBody graphqlBody = GraphqlBody(
@@ -103,14 +95,9 @@ class ContactServices implements ContactRepos{
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-      key,
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      maxAge: anchorPersonCacheDuration,
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: anchorPersonCacheDuration,
+        headers: {"Content-Type": "application/json"});
 
     Contact contact = Contact.fromJson(jsonResponse['data']['Contact']);
     return contact;

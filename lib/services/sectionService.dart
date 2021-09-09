@@ -4,9 +4,9 @@ abstract class SectionRepos {
   MNewsSection changeSection(MNewsSection sectionId);
 }
 
-class SectionServices implements SectionRepos{
+class SectionServices implements SectionRepos {
   @override
-  MNewsSection changeSection(MNewsSection sectionId){
+  MNewsSection changeSection(MNewsSection sectionId) {
     return sectionId;
   }
 }

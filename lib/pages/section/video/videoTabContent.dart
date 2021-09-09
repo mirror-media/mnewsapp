@@ -27,20 +27,24 @@ class _VideoTabContentState extends State<VideoTabContent> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        if(widget.isFeaturedSlug)
+        if (widget.isFeaturedSlug)
           BlocProvider(
-            create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
-            child: BuildEditorChoiceStoryList(editorChoiceEvent: EditorChoiceEvents.fetchVideoEditorChoiceList),
+            create: (context) =>
+                EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
+            child: BuildEditorChoiceStoryList(
+                editorChoiceEvent:
+                    EditorChoiceEvents.fetchVideoEditorChoiceList),
           ),
-        
-        if(!widget.isFeaturedSlug)
+        if (!widget.isFeaturedSlug)
           BlocProvider(
-            create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices(postStyle: 'videoNews')),
+            create: (context) => TabStoryListBloc(
+                tabStoryListRepos:
+                    TabStoryListServices(postStyle: 'videoNews')),
             child: widget.categorySlug == 'popular'
-            ? PopularVideoTabStoryList()
-            : VideoTabStoryList(
-              categorySlug: widget.categorySlug,
-            ),
+                ? PopularVideoTabStoryList()
+                : VideoTabStoryList(
+                    categorySlug: widget.categorySlug,
+                  ),
           ),
       ],
     );

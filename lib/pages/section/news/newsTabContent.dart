@@ -27,24 +27,28 @@ class _NewsTabContentState extends State<NewsTabContent> {
   Widget build(BuildContext context) {
     return CustomScrollView(
       slivers: [
-        if(widget.needCarousel)
+        if (widget.needCarousel)
           SliverToBoxAdapter(
             child: BlocProvider(
-              create: (context) => EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
+              create: (context) =>
+                  EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: BuildEditorChoiceCarousel(editorChoiceEvent: EditorChoiceEvents.fetchEditorChoiceList),
+                child: BuildEditorChoiceCarousel(
+                    editorChoiceEvent:
+                        EditorChoiceEvents.fetchEditorChoiceList),
               ),
             ),
           ),
         BlocProvider(
-          create: (context) => TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
+          create: (context) =>
+              TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
           child: widget.categorySlug == 'popular'
-          ? NewsPopularTabStoryList()
-          : NewsTabStoryList(
-              categorySlug: widget.categorySlug,
-              needCarousel: widget.needCarousel,
-            ),
+              ? NewsPopularTabStoryList()
+              : NewsTabStoryList(
+                  categorySlug: widget.categorySlug,
+                  needCarousel: widget.needCarousel,
+                ),
         ),
       ],
     );

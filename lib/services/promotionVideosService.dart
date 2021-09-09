@@ -9,13 +9,12 @@ abstract class PromotionVideosRepos {
   Future<YoutubePlaylistItemList> fetchAllPromotionVideos();
 }
 
-class PromotionVideosServices implements PromotionVideosRepos{
+class PromotionVideosServices implements PromotionVideosRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<YoutubePlaylistItemList> fetchAllPromotionVideos() async{
-    final String query = 
-    """
+  Future<YoutubePlaylistItemList> fetchAllPromotionVideos() async {
+    final String query = """
     query {
       allPromotionVideos(
         where: {
@@ -37,14 +36,12 @@ class PromotionVideosServices implements PromotionVideosRepos{
     );
 
     final jsonResponse = await _helper.postByUrl(
-      baseConfig!.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    );
+        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"});
 
-    YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList.fromPromotionVideosJson(jsonResponse['data']['allPromotionVideos']);
+    YoutubePlaylistItemList youtubePlaylistItemList =
+        YoutubePlaylistItemList.fromPromotionVideosJson(
+            jsonResponse['data']['allPromotionVideos']);
     return youtubePlaylistItemList;
   }
 }

@@ -10,6 +10,6 @@ class Video {
   }
 
   Map<String, dynamic> toJson() => {
-    'url': url,
-  };
+        'url': url,
+      };
 }

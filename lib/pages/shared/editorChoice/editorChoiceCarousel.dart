@@ -14,7 +14,8 @@ class BuildEditorChoiceCarousel extends StatefulWidget {
   });
 
   @override
-  _BuildEditorChoiceCarouselState createState() => _BuildEditorChoiceCarouselState();
+  _BuildEditorChoiceCarouselState createState() =>
+      _BuildEditorChoiceCarouselState();
 }
 
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
@@ -31,28 +32,27 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditorChoiceBloc, EditorChoiceState>(
-      builder: (BuildContext context, EditorChoiceState state) {
-        if (state is EditorChoiceError) {
-          final error = state.error;
-          print('EditorChoiceError: ${error.message}');
-          return Container();
-        }
-        if (state is EditorChoiceLoaded) {
-          StoryListItemList editorChoiceList = state.editorChoiceList;
-
-          if(editorChoiceList.length == 0) {
-            return Container();
-          }
-          return EditorChoiceCarousel(
-            editorChoiceList: editorChoiceList,
-            aspectRatio: 4/3,
-          );
-        }
-
-        // state is Init, loading, or other 
+        builder: (BuildContext context, EditorChoiceState state) {
+      if (state is EditorChoiceError) {
+        final error = state.error;
+        print('EditorChoiceError: ${error.message}');
         return Container();
       }
-    );
+      if (state is EditorChoiceLoaded) {
+        StoryListItemList editorChoiceList = state.editorChoiceList;
+
+        if (editorChoiceList.length == 0) {
+          return Container();
+        }
+        return EditorChoiceCarousel(
+          editorChoiceList: editorChoiceList,
+          aspectRatio: 4 / 3,
+        );
+      }
+
+      // state is Init, loading, or other
+      return Container();
+    });
   }
 }
 
@@ -61,7 +61,7 @@ class EditorChoiceCarousel extends StatefulWidget {
   final double aspectRatio;
   EditorChoiceCarousel({
     required this.editorChoiceList,
-    this.aspectRatio = 16/9,
+    this.aspectRatio = 16 / 9,
   });
 
   @override
@@ -145,7 +145,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
     return editorChoiceList
         .map(
           (item) => CarouselDisplayWidget(
-            storyListItem: item, 
+            storyListItem: item,
             width: width,
           ),
         )

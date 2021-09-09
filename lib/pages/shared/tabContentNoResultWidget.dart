@@ -8,7 +8,7 @@ class TabContentNoResultWidget extends StatelessWidget {
     double height = MediaQuery.of(context).size.height;
     return Column(
       children: [
-        SizedBox(height: height/10),
+        SizedBox(height: height / 10),
         Center(child: SvgPicture.asset(tabContentNoResultSvg)),
       ],
     );

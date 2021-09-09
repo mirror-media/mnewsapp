@@ -34,40 +34,37 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ShowIntroBloc, ShowState>(
-      builder: (BuildContext context, ShowState state) {
-        if (state is ShowError) {
-          final error = state.error;
-          print('ShowError: ${error.message}');
-          if( error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchShowIntro(widget.showCategoryId));
-          } 
-          
-          return error.renderWidget(isNoButton: true);
-        }
-        if (state is ShowIntroLoaded) {
-          ShowIntro showIntro = state.showIntro;
-          AdUnitId adUnitId = state.adUnitId;
-
-          return ShowIntroWidget(
-            showIntro: showIntro,
-            adUnitId: adUnitId,
-          );
+        builder: (BuildContext context, ShowState state) {
+      if (state is ShowError) {
+        final error = state.error;
+        print('ShowError: ${error.message}');
+        if (error is NoInternetException) {
+          return error.renderWidget(
+              onPressed: () => _fetchShowIntro(widget.showCategoryId));
         }
 
-        // state is Init, loading, or other 
-        return Container();
+        return error.renderWidget(isNoButton: true);
       }
-    );
+      if (state is ShowIntroLoaded) {
+        ShowIntro showIntro = state.showIntro;
+        AdUnitId adUnitId = state.adUnitId;
+
+        return ShowIntroWidget(
+          showIntro: showIntro,
+          adUnitId: adUnitId,
+        );
+      }
+
+      // state is Init, loading, or other
+      return Container();
+    });
   }
 }
 
 class ShowIntroWidget extends StatefulWidget {
   final ShowIntro showIntro;
   final AdUnitId adUnitId;
-  ShowIntroWidget({
-    required this.showIntro,
-    required this.adUnitId
-  });
+  ShowIntroWidget({required this.showIntro, required this.adUnitId});
 
   @override
   _ShowIntroWidgetState createState() => _ShowIntroWidgetState();
@@ -85,60 +82,59 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-    double height = width/375*140;
+    double height = width / 375 * 140;
 
-    return ListView(
-        controller: _listviewController,
-        children: [
-          CachedNetworkImage(
-            width: width,
-            imageUrl: widget.showIntro.pictureUrl,
-            placeholder: (context, url) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
+    return ListView(controller: _listviewController, children: [
+      CachedNetworkImage(
+        width: width,
+        imageUrl: widget.showIntro.pictureUrl,
+        placeholder: (context, url) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+          child: Icon(Icons.error),
+        ),
+        fit: BoxFit.cover,
+      ),
+      SizedBox(height: 32),
+      Padding(
+        padding: const EdgeInsets.only(left: 24, right: 24),
+        child: Text(
+          widget.showIntro.name,
+          style: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w500,
           ),
-          SizedBox(height: 32),
-          Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: Text(
-              widget.showIntro.name,
-              style: TextStyle(
-                fontSize: 22,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
+        ),
+      ),
+      SizedBox(height: 12),
+      Padding(
+        padding: const EdgeInsets.only(left: 24, right: 24),
+        child: Text(
+          widget.showIntro.introduction,
+          style: TextStyle(
+            fontSize: 17,
+            fontWeight: FontWeight.w400,
           ),
-          SizedBox(height: 12),
-          Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: Text(
-              widget.showIntro.introduction,
-              style: TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w400,
-              ),
-            ),
-          ),
-          InlineBannerAdWidget(adUnitId: widget.adUnitId.at1AdUnitId,),
-          SizedBox(height: 24),
-          Padding(
-            padding: const EdgeInsets.only(left: 24, right: 24),
-            child: ShowPlaylistWidget(
-              showIntro: widget.showIntro,
-              listviewController: _listviewController,
-              adUnitId: widget.adUnitId,
-            ),
-          ),
-        ]
-    );
+        ),
+      ),
+      InlineBannerAdWidget(
+        adUnitId: widget.adUnitId.at1AdUnitId,
+      ),
+      SizedBox(height: 24),
+      Padding(
+        padding: const EdgeInsets.only(left: 24, right: 24),
+        child: ShowPlaylistWidget(
+          showIntro: widget.showIntro,
+          listviewController: _listviewController,
+          adUnitId: widget.adUnitId,
+        ),
+      ),
+    ]);
   }
 }

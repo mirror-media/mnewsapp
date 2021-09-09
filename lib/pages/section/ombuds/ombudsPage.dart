@@ -12,7 +12,7 @@ class OmbudsPage extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-              create: (context) => StoryBloc(storyRepos: StoryServices()),
+            create: (context) => StoryBloc(storyRepos: StoryServices()),
           ),
           BlocProvider(
             create: (context) => VideoCubit(),
