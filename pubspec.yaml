@@ -35,7 +35,7 @@ dependencies:
   # Launching a URL in the mobile platform.
   url_launcher: ^6.0.4
   # Blocs and cubits.
-  flutter_bloc: ^7.0.1
+  flutter_bloc: ^7.1.0
   # The dart library for making HTTP requests.
   http: ^0.13.3
   # local storage
