@@ -30,8 +30,8 @@ class Contact {
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['image', 'urlMobileSized'])) {
-      photoUrl = json['image']['urlMobileSized'];
+    if (BaseModel.checkJsonKeys(json, ['anchorImg', 'urlMobileSized'])) {
+      photoUrl = json['anchorImg']['urlMobileSized'];
     }
 
     return Contact(

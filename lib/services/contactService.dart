@@ -35,7 +35,7 @@ class ContactServices implements ContactRepos {
       ) {
         id
         name
-        image {
+        anchorImg {
           urlMobileSized
         }
         slug
@@ -72,13 +72,13 @@ class ContactServices implements ContactRepos {
       Contact(where: \$where) {
         id
         name
-        image {
+        anchorImg {
           urlMobileSized
         }
         slug
         twitter
         facebook
-        instatgram
+        instagram
         bio
       }
     }
