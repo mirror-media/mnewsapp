@@ -25,6 +25,7 @@ const String mailPng = 'assets/image/ombuds/mail.png';
 const String logoPng = 'assets/image/logo.png';
 const String hammerPng = 'assets/image/ombuds/hammer.png';
 const String adUnitIdJson = 'assets/json/adUnitId.json';
+const String reportPng = 'assets/image/ombuds/report.png';
 
 /// color
 const Color themeColor = Color(0xff003366);
