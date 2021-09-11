@@ -79,7 +79,7 @@ class ContactServices implements ContactRepos {
         twitter
         facebook
         instagram
-        bio
+        bioApiData
       }
     }
     """;

@@ -6,7 +6,10 @@ import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/contact.dart';
+import 'package:tv/models/paragraph.dart';
+import 'package:tv/models/paragrpahList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AnchorpersonStoryWidget extends StatefulWidget {
@@ -147,23 +150,39 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
     );
   }
 
-  Widget _buildBioWidget(String? bio) {
+  Widget _buildBioWidget(ParagraphList? bio) {
+    ParagraphFormat paragraphFormat = ParagraphFormat();
     if (bio != null) {
       return Center(
         child: Padding(
           padding: const EdgeInsets.only(left: 44.0, right: 44.0),
-          child: Text(
-            bio,
-            style: TextStyle(
-              height: 1.8,
-              fontSize: 17,
-              fontWeight: FontWeight.w400,
-            ),
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: NeverScrollableScrollPhysics(),
+            itemCount: bio.length,
+            itemBuilder: (context, index) {
+              Paragraph paragraph = bio[index];
+              if (paragraph.contents != null &&
+                  paragraph.contents!.length > 0 &&
+                  !_isNullOrEmpty(paragraph.contents![0].data)) {
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16.0),
+                  child:
+                      paragraphFormat.parseTheParagraph(paragraph, context, 17),
+                );
+              }
+
+              return Container();
+            },
           ),
         ),
       );
     }
 
     return Container();
+  }
+
+  bool _isNullOrEmpty(String? input) {
+    return input == null || input == '';
   }
 }
