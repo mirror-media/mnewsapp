@@ -13,19 +13,20 @@ class Error400Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isNoButton) {
-      return MNewsNoButtonErrorWidget(
-        assetImagePath: error400Png,
-        title: '抱歉...訊號出了點問題',
-        isColumn: isColumn,
-      );
-    }
+    // if (isNoButton) {
+    //   return MNewsNoButtonErrorWidget(
+    //     assetImagePath: error400Png,
+    //     title: '抱歉...訊號出了點問題',
+    //     isColumn: isColumn,
+    //   );
+    // }
 
     return MNewsErrorWidget(
       assetImagePath: error400Png,
       title: '這個頁面失去訊號了...',
       buttonName: '回首頁',
-      onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+      onPressed: () => Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false),
       isColumn: isColumn,
     );
   }
