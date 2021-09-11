@@ -93,26 +93,6 @@ class _YoutubeViewerState extends State<YoutubeViewer>
     super.build(context);
     final player = YoutubePlayerIFrame();
 
-    if (widget.isLive && Platform.isAndroid) {
-      return Stack(
-        children: [
-          player,
-          YoutubePlayerControllerProvider(
-            controller: _controller,
-            child: player,
-          ),
-          Positioned(
-            right: 8.0,
-            top: 8.0,
-            child: Text(
-              'Live',
-              style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
-            ),
-          ),
-        ],
-      );
-    }
-
     return YoutubePlayerControllerProvider(
       controller: _controller,
       child: player,
