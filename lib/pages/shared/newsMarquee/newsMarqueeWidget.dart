@@ -103,7 +103,7 @@ class _NewsMarqueeState extends State<NewsMarquee> {
           child: Padding(
             padding: const EdgeInsets.all(12.0),
             child: Text(
-              '快訊',
+              '最新',
               style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
             ),
           ),

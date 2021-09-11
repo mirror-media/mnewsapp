@@ -13,19 +13,20 @@ class Error500Widget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (isNoButton) {
-      return MNewsNoButtonErrorWidget(
-        assetImagePath: error500Png,
-        title: '抱歉...訊號出了點問題',
-        isColumn: isColumn,
-      );
-    }
+    // if (isNoButton) {
+    //   return MNewsNoButtonErrorWidget(
+    //     assetImagePath: error500Png,
+    //     title: '抱歉...訊號出了點問題',
+    //     isColumn: isColumn,
+    //   );
+    // }
 
     return MNewsErrorWidget(
       assetImagePath: error500Png,
       title: '抱歉...訊號出了點問題',
       buttonName: '回首頁',
-      onPressed: () => Navigator.of(context).popUntil((route) => route.isFirst),
+      onPressed: () => Navigator.of(context)
+          .pushNamedAndRemoveUntil('/', (Route<dynamic> route) => false),
       isColumn: isColumn,
     );
   }

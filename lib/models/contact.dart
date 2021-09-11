@@ -1,5 +1,6 @@
 import 'package:tv/baseConfig.dart';
 import 'package:tv/models/baseModel.dart';
+import 'package:tv/models/paragrpahList.dart';
 
 class Contact {
   final String id;
@@ -13,7 +14,7 @@ class Contact {
   final String? twitterUrl;
   final String? facebookUrl;
   final String? instatgramUrl;
-  final String? bio;
+  final ParagraphList? bio;
 
   Contact({
     required this.id,
@@ -30,8 +31,12 @@ class Contact {
 
   factory Contact.fromJson(Map<String, dynamic> json) {
     String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['image', 'urlMobileSized'])) {
-      photoUrl = json['image']['urlMobileSized'];
+    if (BaseModel.checkJsonKeys(json, ['anchorImg', 'urlMobileSized'])) {
+      photoUrl = json['anchorImg']['urlMobileSized'];
+    }
+    ParagraphList bioApiData = ParagraphList();
+    if (BaseModel.hasKey(json, 'bioApiData') && json["bioApiData"] != 'NaN') {
+      bioApiData = ParagraphList.parseResponseBody(json["bioApiData"]);
     }
 
     return Contact(
@@ -44,7 +49,7 @@ class Contact {
       twitterUrl: json['twitter'],
       facebookUrl: json['facebook'],
       instatgramUrl: json['instatgram'],
-      bio: json['bio'],
+      bio: bioApiData,
     );
   }
 }
