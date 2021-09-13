@@ -1,5 +1,5 @@
 import 'dart:convert';
-
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
@@ -71,17 +71,8 @@ class TabStoryListServices implements TabStoryListRepos {
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "slug_not_in": [
-          "biography",
-          "standards",
-          "complaint",
-          "press-self-regulation",
-          "faq",
-          "law",
-          "privacy",
-          "webauthorization",
-          "aboutus"
-        ],
+        "slug_not_in": filteredSlug,
+        "categories_every": {"slug_not_in": "ombuds"},
       },
       "skip": skip,
       "first": first,

@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -37,6 +38,8 @@ class NewsMarqueeServices implements NewsMarqueeRepos {
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
+        "slug_not_in": filteredSlug,
+        "categories_every": {"slug_not_in": "ombuds"},
         // TODO: need to be confirmed
         // "categories_some": {
         //   "slug_in": [],

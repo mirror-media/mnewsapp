@@ -73,3 +73,12 @@ const androidInterstitialAdUnitId = 'ca-app-pub-3940256099942544/1033173712';
 const iOSAdMobAppId = 'ca-app-pub-3940256099942544~1458002511';
 const iOSAnchoredBannerAdUnitId = 'ca-app-pub-3940256099942544/2934735716';
 const iOSInterstitialAdUnitId = 'ca-app-pub-3940256099942544/4411468910';
+
+// slug filter
+const filteredSlug = [
+  'privacy',
+  'ad-sales',
+  'press-self-regulation',
+  'webauthorization',
+  'aboutus',
+];
