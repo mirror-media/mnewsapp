@@ -196,18 +196,25 @@ class _HomeDrawerState extends State<HomeDrawer> {
   Widget _thirdPartyBlock() {
     return Container(
       // real size is 143 ((15*1.4+16)*3+32)
-      height: 150,
+      //height: 150,
       color: Color(0xffF4F5F6),
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 24, 16),
-        child: Column(children: [
-          _thirdPartyMediaLinkButton(FontAwesomeIcons.youtube, '鏡電視 YouTube 頻道',
-              'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
-          _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
-              '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
-          _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
-              '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
-        ]),
+      child: SafeArea(
+        child: Container(
+          padding: const EdgeInsets.fromLTRB(16, 16, 24, 0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _thirdPartyMediaLinkButton(
+                  FontAwesomeIcons.youtube,
+                  '鏡電視 YouTube 頻道',
+                  'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
+              _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
+                  '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
+              _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
+                  '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
+            ],
+          ),
+        ),
       ),
     );
   }
