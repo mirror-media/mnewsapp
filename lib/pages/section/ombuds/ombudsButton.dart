@@ -34,7 +34,6 @@ class OmbudsButton extends StatelessWidget {
           Container(
             width: width,
             color: Colors.white,
-            height: 90,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -45,6 +44,7 @@ class OmbudsButton extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                       color: themeColor,
+                      height: 1.7
                     ),
                   ),
                   Text(
@@ -53,6 +53,7 @@ class OmbudsButton extends StatelessWidget {
                       fontSize: 24,
                       fontWeight: FontWeight.w500,
                       color: themeColor,
+                      height: 1.7
                     ),
                   ),
                 ],
