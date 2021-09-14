@@ -120,4 +120,13 @@ class BaseConfig {
         return dev.programListUrl;
     }
   }
+
+  String get mNewsWebsiteLink {
+    switch (_flavor) {
+      case BuildFlavor.production:
+        return prod.mNewsWebsiteLink;
+      case BuildFlavor.development:
+        return dev.mNewsWebsiteLink;
+    }
+  }
 }
