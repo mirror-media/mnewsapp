@@ -3,7 +3,7 @@ import 'package:tv/models/baseModel.dart';
 
 /// url link
 const mNewsMail = 'mnews.cs@mnews.tw';
-const mNewsWebsiteLink = 'https://dev.mnews.tw/';
+const mNewsWebsiteLink = 'https://www.mnews.tw/';
 const youtubeLink = 'https://www.youtube.com/';
 
 /// assets
