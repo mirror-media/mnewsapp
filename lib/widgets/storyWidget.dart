@@ -502,16 +502,17 @@ class _StoryWidgetState extends State<StoryWidget> {
           Padding(
             padding: const EdgeInsets.all(4.0),
             child: Container(
+              height: 40,
               decoration: BoxDecoration(
                 //color: storyWidgetColor,
                 border: Border.all(width: 2.0, color: storyWidgetColor),
               ),
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  '#' + tags[i].name,
-                  style: TextStyle(fontSize: 18, color: storyWidgetColor),
-                ),
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                '#' + tags[i].name,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontSize: 18, color: storyWidgetColor, height: 1.1),
               ),
             ),
           ),
