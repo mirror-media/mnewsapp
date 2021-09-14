@@ -50,9 +50,19 @@ const Color slideShowColor = storyWidgetColor;
 /// section
 enum MNewsSection { news, live, video, show, anchorperson, ombuds, programList }
 
-const mNewsSectionList = [
+const mNewsDevSectionList = [
   {BaseModel.idKey: MNewsSection.news, BaseModel.nameKey: '新聞'},
   {BaseModel.idKey: MNewsSection.live, BaseModel.nameKey: '直播'},
+  {BaseModel.idKey: MNewsSection.video, BaseModel.nameKey: '影音'},
+  {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
+  {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},
+  {BaseModel.idKey: MNewsSection.ombuds, BaseModel.nameKey: '公評人'},
+  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'}
+];
+
+const mNewsProdSectionList = [
+  {BaseModel.idKey: MNewsSection.news, BaseModel.nameKey: '新聞'},
+  // {BaseModel.idKey: MNewsSection.live, BaseModel.nameKey: '直播'},
   {BaseModel.idKey: MNewsSection.video, BaseModel.nameKey: '影音'},
   {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
   {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/sectionList.dart';
@@ -118,7 +119,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
-    SectionList sectionList = SectionList.fromJson(mNewsSectionList);
+    SectionList sectionList = SectionList.fromJson(baseConfig!.mNewsSectionList);
 
     return ListView.builder(
         shrinkWrap: true,

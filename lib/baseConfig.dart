@@ -1,5 +1,6 @@
 import 'package:tv/helpers/prodApiConstants.dart' as prod;
 import 'package:tv/helpers/devApiConstants.dart' as dev;
+import 'package:tv/helpers/dataConstants.dart';
 
 enum BuildFlavor { production, development }
 
@@ -127,6 +128,16 @@ class BaseConfig {
         return prod.mNewsWebsiteLink;
       case BuildFlavor.development:
         return dev.mNewsWebsiteLink;
+    }
+  }
+
+  // data constants
+  List get mNewsSectionList {
+    switch (_flavor) {
+      case BuildFlavor.production:
+        return mNewsProdSectionList;
+      case BuildFlavor.development:
+        return mNewsDevSectionList;
     }
   }
 }
