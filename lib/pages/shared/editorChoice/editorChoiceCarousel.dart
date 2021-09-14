@@ -46,7 +46,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         }
         return EditorChoiceCarousel(
           editorChoiceList: editorChoiceList,
-          aspectRatio: 4 / 3,
+          aspectRatio: 4 / 3.2,
         );
       }
 

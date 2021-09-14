@@ -76,11 +76,10 @@ class CarouselDisplayWidget extends StatelessWidget {
 
   Widget _displayTitle(StoryListItem storyListItem) {
     return Container(
-      height: width / aspectRatio / 3,
       color: editorChoiceTitleBackgroundColor,
       child: Center(
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 5.0),
+          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
           child: RichText(
             overflow: TextOverflow.ellipsis,
             maxLines: 2,
