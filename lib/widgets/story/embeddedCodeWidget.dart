@@ -297,7 +297,7 @@ class _EmbeddedCodeWidgetState extends State<EmbeddedCodeWidget>
     } else if (embeddedCoede.contains('www.facebook.com/plugins')) {
       // refer to https://www.facebook.com/help/105399436216001
       regExp = new RegExp(
-        r'https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
+        r'https:\/\/www\.facebook\.com\/plugins\/(?:post|video)\.php\?.*&href=(https?(%3A|\:)(%2F|\\)(%2F|\\)www\.facebook\.com(%2F|\\)(?:[a-zA-Z0-9.]+)(%2F|\\)(?:posts|videos)(%2F|\\)[0-9]+)(%2F?|\\?)\&',
         caseSensitive: false,
       );
     }
