@@ -16,15 +16,15 @@ const String error500Png = 'assets/image/error500.png';
 const String noSignalPng = 'assets/image/noSignal.png';
 const String searchNoResultSvg = 'assets/image/search/searchNoResult.svg';
 const String ombudsDefaultJpg = 'assets/image/ombuds/ombudsDefault.jpg';
-const String tvPng = 'assets/image/ombuds/tv.png';
-const String phonePng = 'assets/image/ombuds/phone.png';
-const String paperPng = 'assets/image/ombuds/paper.png';
-const String faqPng = 'assets/image/ombuds/FAQ.png';
-const String mailPng = 'assets/image/ombuds/mail.png';
+const String tvSvg = 'assets/image/ombuds/tv.svg';
+const String phoneSvg = 'assets/image/ombuds/phone.svg';
+const String paperSvg = 'assets/image/ombuds/paper.svg';
+const String faqSvg = 'assets/image/ombuds/FAQ.svg';
+const String mailSvg = 'assets/image/ombuds/mail.svg';
 const String logoPng = 'assets/image/logo.png';
-const String hammerPng = 'assets/image/ombuds/hammer.png';
+const String hammerSvg = 'assets/image/ombuds/hammer.svg';
 const String adUnitIdJson = 'assets/json/adUnitId.json';
-const String reportPng = 'assets/image/ombuds/report.png';
+const String reportSvg = 'assets/image/ombuds/report.svg';
 
 /// color
 const Color themeColor = Color(0xff003366);
