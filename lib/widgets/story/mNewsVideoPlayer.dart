@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
@@ -95,13 +97,26 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer>
                   child: Center(child: CircularProgressIndicator()));
             }
 
+            Widget _videoPlayer = Chewie(
+              controller: _chewieController,
+            );
+
+            if (Platform.isAndroid) {
+              _videoPlayer = Theme(
+                data: ThemeData.light().copyWith(
+                  platform: TargetPlatform.windows,
+                ),
+                child: Chewie(
+                  controller: _chewieController,
+                ),
+              );
+            }
+
             return Container(
               width: constraints.maxWidth,
               height: constraints.maxWidth /
                   _videoPlayerController.value.aspectRatio,
-              child: Chewie(
-                controller: _chewieController,
-              ),
+              child: _videoPlayer,
             );
           });
         });
