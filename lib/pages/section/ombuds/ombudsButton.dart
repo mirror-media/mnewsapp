@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tv/helpers/dataConstants.dart';
 
 class OmbudsButton extends StatelessWidget {
@@ -24,11 +25,9 @@ class OmbudsButton extends StatelessWidget {
             width: width,
             height: 36,
             color: Color(0xff003366),
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Image.asset(
-                imageLocationString,
-              ),
+            child: SvgPicture.asset(
+              imageLocationString,
+              color: Color.fromARGB(255, 255, 204, 1),
             ),
           ),
           Container(
@@ -41,20 +40,18 @@ class OmbudsButton extends StatelessWidget {
                   Text(
                     title1,
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: themeColor,
-                      height: 1.7
-                    ),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        color: themeColor,
+                        height: 1.7),
                   ),
                   Text(
                     title2,
                     style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.w500,
-                      color: themeColor,
-                      height: 1.7
-                    ),
+                        fontSize: 24,
+                        fontWeight: FontWeight.w500,
+                        color: themeColor,
+                        height: 1.7),
                   ),
                 ],
               ),

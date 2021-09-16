@@ -295,7 +295,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           children: [
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: tvPng,
+              imageLocationString: tvSvg,
               title1: '關於鏡電視',
               title2: '公評人',
               onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
@@ -303,7 +303,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             SizedBox(width: 8),
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: phonePng,
+              imageLocationString: phoneSvg,
               title1: '申訴',
               title2: '流程',
               onTap: () => RouteGenerator.navigateToStory(context, 'complaint'),
@@ -315,7 +315,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           children: [
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: hammerPng,
+              imageLocationString: hammerSvg,
               title1: '外部公評人',
               title2: '設置章程',
               onTap: () => RouteGenerator.navigateToStory(context, 'law'),
@@ -323,7 +323,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             SizedBox(width: 8),
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: paperPng,
+              imageLocationString: paperSvg,
               title1: '新聞自律 /',
               title2: '他律規範',
               onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
@@ -335,7 +335,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           children: [
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: faqPng,
+              imageLocationString: faqSvg,
               title1: '常見問題',
               title2: 'FAQ',
               onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
@@ -343,7 +343,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             SizedBox(width: 8),
             OmbudsButton(
               width: ombudsWidth,
-              imageLocationString: reportPng,
+              imageLocationString: reportSvg,
               title1: '季報',
               title2: '年報',
               onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
