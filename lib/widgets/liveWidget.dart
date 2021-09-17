@@ -8,22 +8,34 @@ import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class LiveWidget extends StatefulWidget {
   final bool needBuildLiveTitle;
-  LiveWidget({this.needBuildLiveTitle = true});
+  final String liveTitle;
+  final IconData icon;
+  final bool showIcon;
+  final String livePostId;
+  LiveWidget({
+    this.needBuildLiveTitle = true,
+    this.liveTitle = '鏡電視 Live',
+    this.icon = FontAwesomeIcons.podcast,
+    this.showIcon = true,
+    required this.livePostId,
+  });
   @override
   _LiveWidgetState createState() => _LiveWidgetState();
 }
 
 class _LiveWidgetState extends State<LiveWidget> {
   late bool _needBuildLiveTitle;
+  late bool _showIcon;
   @override
   void initState() {
     _loadLiveId();
     _needBuildLiveTitle = widget.needBuildLiveTitle;
+    _showIcon = widget.showIcon;
     super.initState();
   }
 
   _loadLiveId() {
-    context.read<LiveCubit>().fetchLiveId(baseConfig!.mNewsLivePostId);
+    context.read<LiveCubit>().fetchLiveId(widget.livePostId);
   }
 
   @override
@@ -36,7 +48,7 @@ class _LiveWidgetState extends State<LiveWidget> {
               _needBuildLiveTitle
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-                      child: _buildLiveTitle('鏡電視 Live'),
+                      child: _buildLiveTitle(widget.liveTitle, widget.icon),
                     )
                   : Container(),
               YoutubeViewer(
@@ -53,7 +65,7 @@ class _LiveWidgetState extends State<LiveWidget> {
     );
   }
 
-  Widget _buildLiveTitle(String title) {
+  Widget _buildLiveTitle(String title, IconData icon) {
     return Row(
       children: [
         Text(
@@ -64,11 +76,13 @@ class _LiveWidgetState extends State<LiveWidget> {
           ),
         ),
         SizedBox(width: 8.0),
-        FaIcon(
-          FontAwesomeIcons.podcast,
-          size: 18,
-          color: Colors.red,
-        ),
+        _showIcon
+            ? FaIcon(
+                icon,
+                size: 18,
+                color: Colors.red,
+              )
+            : Container(),
       ],
     );
   }
