@@ -7,18 +7,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
 
 class LiveWidget extends StatefulWidget {
-  final bool needTitle;
-  LiveWidget({this.needTitle = true});
+  final bool needBuildLiveTitle;
+  LiveWidget({this.needBuildLiveTitle = true});
   @override
   _LiveWidgetState createState() => _LiveWidgetState();
 }
 
 class _LiveWidgetState extends State<LiveWidget> {
-  late bool _needTitle;
+  late bool _needBuildLiveTitle;
   @override
   void initState() {
     _loadLiveId();
-    _needTitle = widget.needTitle;
+    _needBuildLiveTitle = widget.needBuildLiveTitle;
     super.initState();
   }
 
@@ -33,7 +33,7 @@ class _LiveWidgetState extends State<LiveWidget> {
         if (state is LiveIdLoaded) {
           return Column(
             children: [
-              _needTitle
+              _needBuildLiveTitle
                   ? Padding(
                       padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
                       child: _buildLiveTitle('鏡電視 Live'),

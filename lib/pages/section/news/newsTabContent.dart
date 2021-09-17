@@ -38,7 +38,7 @@ class _NewsTabContentState extends State<NewsTabContent> {
                 child: Column(
                   children: [
                     LiveWidget(
-                      needTitle: false,
+                      needBuildLiveTitle: false,
                     ),
                     SizedBox(
                       height: 12,
