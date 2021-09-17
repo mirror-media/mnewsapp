@@ -140,4 +140,13 @@ class BaseConfig {
         return mNewsDevSectionList;
     }
   }
+
+  String get mNewsLivePostId {
+    switch (_flavor) {
+      case BuildFlavor.production:
+        return prod.mNewsLivePostId;
+      case BuildFlavor.development:
+        return dev.mNewsLivePostId;
+    }
+  }
 }
