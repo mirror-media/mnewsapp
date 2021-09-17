@@ -32,8 +32,7 @@ class _VideoTabContentState extends State<VideoTabContent> {
             create: (context) =>
                 EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
             child: BuildEditorChoiceStoryList(
-                editorChoiceEvent:
-                    EditorChoiceEvents.fetchVideoEditorChoiceList),
+                editorChoiceEvent: FetchVideoEditorChoiceList()),
           ),
         if (!widget.isFeaturedSlug)
           BlocProvider(

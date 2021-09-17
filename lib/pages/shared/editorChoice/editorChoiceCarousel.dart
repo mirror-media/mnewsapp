@@ -10,11 +10,6 @@ import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
-  final EditorChoiceEvents editorChoiceEvent;
-  BuildEditorChoiceCarousel({
-    required this.editorChoiceEvent,
-  });
-
   @override
   _BuildEditorChoiceCarouselState createState() =>
       _BuildEditorChoiceCarouselState();
@@ -23,12 +18,7 @@ class BuildEditorChoiceCarousel extends StatefulWidget {
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
   @override
   void initState() {
-    _loadEditorChoiceList(widget.editorChoiceEvent);
     super.initState();
-  }
-
-  _loadEditorChoiceList(EditorChoiceEvents editorChoiceEvent) async {
-    context.read<EditorChoiceBloc>().add(editorChoiceEvent);
   }
 
   @override
@@ -40,10 +30,24 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         print('EditorChoiceError: ${error.message}');
         return Container();
       }
-      if (state is EditorChoiceLoaded) {
+      if (state is EditorChoiceLoadedAfterTabstory) {
         StoryListItemList editorChoiceList = state.editorChoiceList;
+        StoryListItemList storyListItemList = state.storyListItemList;
 
         if (editorChoiceList.length == 0) {
+          if (storyListItemList.length != 0) {
+            return Column(
+              children: [
+                LiveWidget(
+                  needBuildLiveTitle: false,
+                  livePostId: baseConfig!.mNewsLivePostId,
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+              ],
+            );
+          }
           return Container();
         }
         return Column(

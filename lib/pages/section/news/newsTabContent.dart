@@ -23,6 +23,8 @@ class NewsTabContent extends StatefulWidget {
 }
 
 class _NewsTabContentState extends State<NewsTabContent> {
+  TabStoryListBloc tabStoryListBloc =
+      TabStoryListBloc(tabStoryListRepos: TabStoryListServices());
   @override
   Widget build(BuildContext context) {
     return CustomScrollView(
@@ -30,19 +32,18 @@ class _NewsTabContentState extends State<NewsTabContent> {
         if (widget.needCarousel)
           SliverToBoxAdapter(
             child: BlocProvider(
-              create: (context) =>
-                  EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
+              create: (context) => EditorChoiceBloc(
+                editorChoiceRepos: EditorChoiceServices(),
+                tabStoryListBloc: tabStoryListBloc,
+              ),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: BuildEditorChoiceCarousel(
-                    editorChoiceEvent:
-                        EditorChoiceEvents.fetchEditorChoiceList),
+                child: BuildEditorChoiceCarousel(),
               ),
             ),
           ),
         BlocProvider(
-          create: (context) =>
-              TabStoryListBloc(tabStoryListRepos: TabStoryListServices()),
+          create: (context) => tabStoryListBloc,
           child: widget.categorySlug == 'popular'
               ? NewsPopularTabStoryList()
               : NewsTabStoryList(
