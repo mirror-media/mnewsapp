@@ -4,7 +4,7 @@ import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/models/adUnitId.dart';
-import 'package:tv/pages/section/live/liveWidget.dart';
+import 'package:tv/widgets/liveWidget.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
