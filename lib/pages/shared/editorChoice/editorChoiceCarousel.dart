@@ -6,6 +6,7 @@ import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
+import 'package:tv/widgets/liveWidget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
@@ -42,11 +43,30 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         StoryListItemList editorChoiceList = state.editorChoiceList;
 
         if (editorChoiceList.length == 0) {
-          return Container();
+          return Column(
+            children: [
+              LiveWidget(
+                needBuildLiveTitle: false,
+              ),
+              SizedBox(
+                height: 12,
+              ),
+            ],
+          );
         }
-        return EditorChoiceCarousel(
-          editorChoiceList: editorChoiceList,
-          aspectRatio: 4 / 3.2,
+        return Column(
+          children: [
+            LiveWidget(
+              needBuildLiveTitle: false,
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            EditorChoiceCarousel(
+              editorChoiceList: editorChoiceList,
+              aspectRatio: 4 / 3.2,
+            ),
+          ],
         );
       }
 

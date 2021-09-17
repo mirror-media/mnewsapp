@@ -9,7 +9,6 @@ import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
 import 'package:tv/pages/section/news/newsTabStoryList.dart';
-import 'package:tv/widgets/liveWidget.dart';
 
 class NewsTabContent extends StatefulWidget {
   final String categorySlug;
@@ -35,19 +34,9 @@ class _NewsTabContentState extends State<NewsTabContent> {
                   EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 16),
-                child: Column(
-                  children: [
-                    LiveWidget(
-                      needBuildLiveTitle: false,
-                    ),
-                    SizedBox(
-                      height: 12,
-                    ),
-                    BuildEditorChoiceCarousel(
-                        editorChoiceEvent:
-                            EditorChoiceEvents.fetchEditorChoiceList),
-                  ],
-                ),
+                child: BuildEditorChoiceCarousel(
+                    editorChoiceEvent:
+                        EditorChoiceEvents.fetchEditorChoiceList),
               ),
             ),
           ),
