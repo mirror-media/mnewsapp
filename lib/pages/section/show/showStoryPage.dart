@@ -129,6 +129,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
         ),
         listviewController: _listviewController,
         adUnitId: widget.adUnitId,
+        isMoreShow: true,
       ),
     );
   }

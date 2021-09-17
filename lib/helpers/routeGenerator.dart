@@ -130,18 +130,31 @@ class RouteGenerator {
   }
 
   static void navigateToShowStory(
-      BuildContext context,
-      String youtubePlayListId,
-      YoutubePlaylistItem youtubePlaylistItem,
-      AdUnitId adUnitId) {
-    Navigator.of(context).pushNamed(
-      showStory,
-      arguments: {
-        'youtubePlayListId': youtubePlayListId,
-        'youtubePlaylistItem': youtubePlaylistItem,
-        'adUnitId': adUnitId
-      },
-    );
+    BuildContext context,
+    String youtubePlayListId,
+    YoutubePlaylistItem youtubePlaylistItem,
+    AdUnitId adUnitId,
+    bool isMoreShow,
+  ) {
+    if (isMoreShow) {
+      Navigator.of(context).popAndPushNamed(
+        showStory,
+        arguments: {
+          'youtubePlayListId': youtubePlayListId,
+          'youtubePlaylistItem': youtubePlaylistItem,
+          'adUnitId': adUnitId
+        },
+      );
+    } else {
+      Navigator.of(context).pushNamed(
+        showStory,
+        arguments: {
+          'youtubePlayListId': youtubePlayListId,
+          'youtubePlaylistItem': youtubePlaylistItem,
+          'adUnitId': adUnitId
+        },
+      );
+    }
   }
 
   static void printRouteSettings(BuildContext context) {
