@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
@@ -43,21 +44,13 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         StoryListItemList editorChoiceList = state.editorChoiceList;
 
         if (editorChoiceList.length == 0) {
-          return Column(
-            children: [
-              LiveWidget(
-                needBuildLiveTitle: false,
-              ),
-              SizedBox(
-                height: 12,
-              ),
-            ],
-          );
+          return Container();
         }
         return Column(
           children: [
             LiveWidget(
               needBuildLiveTitle: false,
+              livePostId: baseConfig!.mNewsLivePostId,
             ),
             SizedBox(
               height: 12,
