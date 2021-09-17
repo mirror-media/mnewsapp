@@ -62,7 +62,7 @@ const mNewsDevSectionList = [
 
 const mNewsProdSectionList = [
   {BaseModel.idKey: MNewsSection.news, BaseModel.nameKey: '新聞'},
-  // {BaseModel.idKey: MNewsSection.live, BaseModel.nameKey: '直播'},
+  {BaseModel.idKey: MNewsSection.live, BaseModel.nameKey: '直播'},
   {BaseModel.idKey: MNewsSection.video, BaseModel.nameKey: '影音'},
   {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
   {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},
