@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/models/graphqlBody.dart';
+import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 import '../baseConfig.dart';
 
 abstract class LiveRepos {
@@ -39,13 +40,13 @@ class LiveServices implements LiveRepos {
         baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
         headers: {"Content-Type": "application/json"});
 
-    String youtubeId;
+    String? youtubeId;
     try {
-      var splitString = jsonResponse['data']['Video']['youtubeUrl'].split('=');
-      youtubeId = splitString[1];
+      youtubeId = YoutubePlayerController.convertUrlToId(
+          jsonResponse['data']['Video']['youtubeUrl']);
     } catch (e) {
       throw FormatException(e.toString());
     }
-    return youtubeId;
+    return youtubeId ?? '';
   }
 }
