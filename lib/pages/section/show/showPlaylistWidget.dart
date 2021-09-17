@@ -43,6 +43,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
         padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
         child: Text(
           showIntro.playList01!.name,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w500,
@@ -53,6 +54,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
         padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
         child: Text(
           showIntro.playList02!.name,
+          textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w500,

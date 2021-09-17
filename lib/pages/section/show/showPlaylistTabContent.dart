@@ -16,11 +16,13 @@ class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
   final ScrollController listviewController;
   final AdUnitId adUnitId;
+  final bool isMoreShow;
   ShowPlaylistTabContent({
     Key? key,
     required this.youtubePlaylistInfo,
     required this.listviewController,
     required this.adUnitId,
+    this.isMoreShow = false,
   }) : super(key: key);
 
   @override
@@ -213,7 +215,12 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         ],
       ),
       onTap: () => RouteGenerator.navigateToShowStory(
-          context, youtubePlayListId, youtubePlaylistItem, widget.adUnitId),
+        context,
+        youtubePlayListId,
+        youtubePlaylistItem,
+        widget.adUnitId,
+        widget.isMoreShow,
+      ),
     );
   }
 
