@@ -14,7 +14,10 @@ class YoutubePlaylistInfo {
 
     List<String> info = json.split('：');
     String name = info.length < 2 ? defaultName : info[1];
-    String youtubePlayListId = info[0].split('playlist?list=')[1];
+    String youtubePlayListId = '';
+    if (info[0] != '') {
+      youtubePlayListId = info[0].split('playlist?list=')[1];
+    }
     return YoutubePlaylistInfo(
       name: name,
       youtubePlayListId: youtubePlayListId,
