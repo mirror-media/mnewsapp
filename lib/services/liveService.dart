@@ -66,7 +66,6 @@ class LiveServices implements LiveRepos {
 
     Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
         "categories_some": {"slug_in": category}
       }
     };
