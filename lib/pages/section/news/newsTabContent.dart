@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
-import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
