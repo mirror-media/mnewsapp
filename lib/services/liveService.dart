@@ -49,4 +49,52 @@ class LiveServices implements LiveRepos {
     }
     return youtubeId ?? '';
   }
+
+  Future<List<String>> fetchLiveIdByPostCategory(String category) async {
+    final String query = """
+    query(
+      \$where: VideoWhereInput!,
+    ){
+     allVideos(
+        where: \$where
+        sortBy: [ publishTime_DESC ]
+      ){
+        youtubeUrl
+      }
+    }    
+    """;
+
+    Map<String, dynamic> variables = {
+      "where": {
+        "state": "published",
+        "categories_some": {"slug_in": category}
+      }
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: null,
+      query: query,
+      variables: variables,
+    );
+
+    final jsonResponse = await _helper.postByUrl(
+        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"});
+
+    List<String> youtubeIdList = [];
+    try {
+      if (jsonResponse['data']['allVideos'] != null) {
+        jsonResponse['data']['allVideos'].forEach((video) {
+          if (video['youtubeUrl'] != null) {
+            String? youtubeId =
+                YoutubePlayerController.convertUrlToId(video['youtubeUrl']);
+            if (youtubeId != null) youtubeIdList.add(youtubeId);
+          }
+        });
+      }
+    } catch (e) {
+      throw FormatException(e.toString());
+    }
+    return youtubeIdList;
+  }
 }
