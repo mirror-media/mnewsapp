@@ -11,6 +11,15 @@ class EditorChoiceLoaded extends EditorChoiceState {
   EditorChoiceLoaded({required this.editorChoiceList});
 }
 
+class EditorChoiceLoadedAfterTabstory extends EditorChoiceState {
+  final StoryListItemList editorChoiceList;
+  final StoryListItemList storyListItemList;
+  EditorChoiceLoadedAfterTabstory({
+    required this.editorChoiceList,
+    required this.storyListItemList,
+  });
+}
+
 class EditorChoiceError extends EditorChoiceState {
   final error;
   EditorChoiceError({this.error});

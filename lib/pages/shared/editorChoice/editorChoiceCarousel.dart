@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
+import 'package:tv/widgets/liveWidget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
-  final EditorChoiceEvents editorChoiceEvent;
-  BuildEditorChoiceCarousel({
-    required this.editorChoiceEvent,
-  });
-
   @override
   _BuildEditorChoiceCarouselState createState() =>
       _BuildEditorChoiceCarouselState();
@@ -21,12 +18,7 @@ class BuildEditorChoiceCarousel extends StatefulWidget {
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
   @override
   void initState() {
-    _loadEditorChoiceList(widget.editorChoiceEvent);
     super.initState();
-  }
-
-  _loadEditorChoiceList(EditorChoiceEvents editorChoiceEvent) async {
-    context.read<EditorChoiceBloc>().add(editorChoiceEvent);
   }
 
   @override
@@ -38,15 +30,40 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         print('EditorChoiceError: ${error.message}');
         return Container();
       }
-      if (state is EditorChoiceLoaded) {
+      if (state is EditorChoiceLoadedAfterTabstory) {
         StoryListItemList editorChoiceList = state.editorChoiceList;
+        StoryListItemList storyListItemList = state.storyListItemList;
 
         if (editorChoiceList.length == 0) {
+          if (storyListItemList.length != 0) {
+            return Column(
+              children: [
+                LiveWidget(
+                  needBuildLiveTitle: false,
+                  livePostId: baseConfig!.mNewsLivePostId,
+                ),
+                SizedBox(
+                  height: 12,
+                ),
+              ],
+            );
+          }
           return Container();
         }
-        return EditorChoiceCarousel(
-          editorChoiceList: editorChoiceList,
-          aspectRatio: 4 / 3.2,
+        return Column(
+          children: [
+            LiveWidget(
+              needBuildLiveTitle: false,
+              livePostId: baseConfig!.mNewsLivePostId,
+            ),
+            SizedBox(
+              height: 12,
+            ),
+            EditorChoiceCarousel(
+              editorChoiceList: editorChoiceList,
+              aspectRatio: 4 / 3.2,
+            ),
+          ],
         );
       }
 
