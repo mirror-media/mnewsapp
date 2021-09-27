@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
-import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';

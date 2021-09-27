@@ -3,12 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
-import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/models/adUnitId.dart';
+import 'package:tv/pages/section/live/liveCams.dart';
 import 'package:tv/widgets/liveWidget.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
-import 'package:tv/services/youtubePlaylistService.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class LivePage extends StatelessWidget {
@@ -31,11 +30,9 @@ class LivePage extends StatelessWidget {
             // InlineBannerAdWidget(adUnitId: adUnitId?.at1AdUnitId,),
 
             BlocProvider(
-                create: (context) => LiveCubit(),
-                child: LiveWidget(
-                  livePostId: baseConfig!.mNewsLiveCamPostId,
-                  liveTitle: '直播現場',
-                )),
+              create: (context) => LiveCubit(),
+              child: LiveCams(),
+            ),
 
             // InlineBannerAdWidget(adUnitId: adUnitId?.at2AdUnitId,),
 

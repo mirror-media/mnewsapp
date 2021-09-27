@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/error/mNewsErrorWidget.dart';
-import 'package:tv/pages/error/mNewsNoButtonErrorWidget.dart';
 
 class Error500Widget extends StatelessWidget {
   final bool isNoButton;

@@ -54,4 +54,49 @@ class LiveCubit extends Cubit<LiveState> {
       ));
     }
   }
+
+  void fetchLiveIdList(String category) async {
+    print('Fetch live id list');
+    try {
+      List<String> liveIdList =
+          await LiveServices().fetchLiveIdByPostCategory(category);
+      emit(LiveIdListLoaded(liveIdList: liveIdList));
+    } on SocketException {
+      emit(LiveError(
+        error: NoInternetException('No Internet'),
+      ));
+    } on HttpException {
+      emit(LiveError(
+        error: NoServiceFoundException('No Service Found'),
+      ));
+    } on FormatException {
+      emit(LiveError(
+        error: InvalidFormatException('Invalid Response format'),
+      ));
+    } on FetchDataException {
+      emit(LiveError(
+        error: NoInternetException('Error During Communication'),
+      ));
+    } on BadRequestException {
+      emit(LiveError(
+        error: Error400Exception('Invalid Request'),
+      ));
+    } on UnauthorisedException {
+      emit(LiveError(
+        error: Error400Exception('Unauthorised'),
+      ));
+    } on InvalidInputException {
+      emit(LiveError(
+        error: Error400Exception('Invalid Input'),
+      ));
+    } on InternalServerErrorException {
+      emit(LiveError(
+        error: Error500Exception('Internal Server Error'),
+      ));
+    } catch (e) {
+      emit(LiveError(
+        error: UnknownException(e.toString()),
+      ));
+    }
+  }
 }

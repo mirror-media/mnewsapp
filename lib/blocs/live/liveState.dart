@@ -10,6 +10,11 @@ class LiveIdLoaded extends LiveState {
   LiveIdLoaded({required this.liveId});
 }
 
+class LiveIdListLoaded extends LiveState {
+  final List<String> liveIdList;
+  LiveIdListLoaded({required this.liveIdList});
+}
+
 class LiveError extends LiveState {
   final error;
   LiveError({this.error});
