@@ -1,3 +1,3 @@
-enum CategoryEvents {
-  fetchCategories,
-}
+abstract class CategoriesEvents {}
+
+class FetchCategories extends CategoriesEvents {}
