@@ -1,9 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/helpers/updateMessages.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
@@ -16,8 +19,12 @@ import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 import 'package:tv/widgets/interstitialAdWidget.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:upgrader/upgrader.dart';
 
 class HomePage extends StatefulWidget {
+  final String minAppVersion;
+  HomePage(this.minAppVersion);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -25,9 +32,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   var _scaffoldkey = GlobalKey<ScaffoldState>();
   // InterstitialAdWidget interstitial = InterstitialAdWidget();
+  late String _minAppVersion;
 
   @override
   void initState() {
+    _minAppVersion = widget.minAppVersion;
     _showGDPR();
     super.initState();
   }
@@ -62,24 +71,31 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldkey,
       drawer: HomeDrawer(),
       appBar: _buildBar(context, _scaffoldkey),
-      body: BlocBuilder<SectionCubit, SectionStateCubit>(
-          builder: (BuildContext context, SectionStateCubit state) {
-        if (state is SectionError) {
-          final error = state.error;
-          print('SectionError: ${error.message}');
-          return Container();
-        } else {
-          MNewsSection sectionId = state.sectionId;
-          return Column(
-            children: [
-              Expanded(
-                child: _buildBody(sectionId, adUnitId: state.adUnitId),
-              ),
-              // AnchoredBannerAdWidget(),
-            ],
-          );
-        }
-      }),
+      body: UpgradeAlert(
+        minAppVersion: _minAppVersion,
+        messages: UpdateMessages(),
+        dialogStyle: Platform.isAndroid
+            ? UpgradeDialogStyle.material
+            : UpgradeDialogStyle.cupertino,
+        child: BlocBuilder<SectionCubit, SectionStateCubit>(
+            builder: (BuildContext context, SectionStateCubit state) {
+          if (state is SectionError) {
+            final error = state.error;
+            print('SectionError: ${error.message}');
+            return Container();
+          } else {
+            MNewsSection sectionId = state.sectionId;
+            return Column(
+              children: [
+                Expanded(
+                  child: _buildBody(sectionId, adUnitId: state.adUnitId),
+                ),
+                // AnchoredBannerAdWidget(),
+              ],
+            );
+          }
+        }),
+      ),
     );
   }
 
