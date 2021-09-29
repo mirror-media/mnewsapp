@@ -38,7 +38,7 @@ class _InitialAppState extends State<InitialApp> {
       if (state is ConfigLoaded) {
         return BlocProvider(
           create: (_) => SectionCubit(),
-          child: HomePage(),
+          child: HomePage(state.minAppVersion),
         );
       }
 
