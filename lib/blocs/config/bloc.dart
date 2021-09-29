@@ -1,3 +1,4 @@
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
@@ -15,7 +16,14 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
     try {
       yield ConfigLoading();
       bool isSuccess = await configRepos.loadTheConfig(event.context);
-      yield ConfigLoaded(isSuccess: isSuccess);
+      RemoteConfig remoteConfig = RemoteConfig.instance;
+      await remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: Duration(seconds: 10),
+        minimumFetchInterval: Duration(seconds: 1),
+      ));
+      await remoteConfig.fetchAndActivate();
+      String minAppVersion = remoteConfig.getString('min_version_number');
+      yield ConfigLoaded(isSuccess: isSuccess, minAppVersion: minAppVersion);
     } catch (e) {
       yield ConfigError(
         error: UnknownException(e.toString()),
