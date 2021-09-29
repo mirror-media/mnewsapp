@@ -63,9 +63,9 @@ dependencies:
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
-  firebase_core: "^1.3.0"
+  firebase_core: "^1.6.0"
   # firebase cloud messaging
-  firebase_messaging: "^10.0.2"
+  firebase_messaging: "^10.0.7"
   # generate app icons
   flutter_launcher_icons: ^0.9.0
   # svg file loader
@@ -80,6 +80,10 @@ dependencies:
   google_mobile_ads: ^0.13.3
   # shared_preferences
   shared_preferences: ^2.0.7
+  # version update
+  upgrader: ^3.5.1
+  # firebase remote config
+  firebase_remote_config: ^0.11.0
 
 flutter_icons:
   android: "launcher_icon"
