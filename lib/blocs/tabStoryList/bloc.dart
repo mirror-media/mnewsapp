@@ -11,7 +11,6 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
   TabStoryListBloc({required this.tabStoryListRepos})
       : super(TabStoryListInitState());
 
-  // TODO: https://github.com/dart-lang/sdk/issues/42466
   @override
   Stream<TabStoryListState> mapEventToState(TabStoryListEvents event) async* {
     event.storyListItemList = storyListItemList;

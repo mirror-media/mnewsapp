@@ -59,7 +59,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
-              hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
                 fontSize: textSize,
                 height: 1.8,
@@ -134,7 +133,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
                   padding: const EdgeInsets.all(16.0),
                   child: HtmlWidget(
                     annotation.annotation,
-                    hyperlinkColor: Colors.blue[900],
                     textStyle: TextStyle(
                       fontSize: textSize,
                       height: 1.8,
@@ -150,7 +148,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
           displayWidgets.add(
             HtmlWidget(
               annotation.text,
-              hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
                 fontSize: textSize,
                 height: 1.8,
@@ -204,7 +201,6 @@ class _AnnotationWidgetState extends State<AnnotationWidget> {
         displayWidgets.add(
           HtmlWidget(
             displayStringList[i],
-            hyperlinkColor: Colors.blue[900],
             textStyle: TextStyle(
               fontSize: textSize,
               height: 1.8,

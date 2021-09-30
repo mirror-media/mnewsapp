@@ -19,7 +19,6 @@ class ParseTheTextToHtmlWidget extends StatelessWidget {
 
     return HtmlWidget(
       html!,
-      hyperlinkColor: Colors.blue,
       textStyle: TextStyle(
         fontSize: fontSize,
         height: 1.8,
