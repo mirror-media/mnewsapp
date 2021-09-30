@@ -43,7 +43,6 @@ class _InitialAppState extends State<InitialApp> {
         return UpgradeAlert(
           minAppVersion: state.minAppVersion,
           messages: UpdateMessages(),
-          debugAlwaysUpgrade: true,
           dialogStyle: Platform.isAndroid
               ? UpgradeDialogStyle.material
               : UpgradeDialogStyle.cupertino,
