@@ -33,7 +33,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
   }
 
   _loadCategoryList() async {
-    context.read<CategoriesBloc>().add(CategoryEvents.fetchCategories);
+    context.read<CategoriesBloc>().add(FetchCategories());
   }
 
   _initializeTabController(CategoryList categoryList) {

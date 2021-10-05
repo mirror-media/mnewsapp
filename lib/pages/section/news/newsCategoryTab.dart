@@ -33,7 +33,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
   }
 
   _loadCategoryList() async {
-    context.read<CategoriesBloc>().add(CategoryEvents.fetchCategories);
+    context.read<CategoriesBloc>().add(FetchCategories());
   }
 
   _initializeTabController(CategoryList categoryList) {

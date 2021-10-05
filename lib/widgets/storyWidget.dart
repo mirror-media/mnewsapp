@@ -60,9 +60,8 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocConsumer<StoryBloc, StoryState>(listener: (context, state) {
-      _textSize = state.textSize ?? 20;
-    }, builder: (BuildContext context, StoryState state) {
+    return BlocBuilder<StoryBloc, StoryState>(
+        builder: (BuildContext context, StoryState state) {
       if (state is StoryError) {
         final error = state.error;
         print('NewsCategoriesError: ${error.message}');
