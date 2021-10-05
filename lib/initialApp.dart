@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -6,8 +8,10 @@ import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
 import 'package:tv/pages/configPage.dart';
 import 'package:tv/pages/homePage.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'blocs/section/section_cubit.dart';
+import 'helpers/updateMessages.dart';
 
 class InitialApp extends StatefulWidget {
   @override
@@ -36,9 +40,16 @@ class _InitialAppState extends State<InitialApp> {
         return Container();
       }
       if (state is ConfigLoaded) {
-        return BlocProvider(
-          create: (_) => SectionCubit(),
-          child: HomePage(),
+        return UpgradeAlert(
+          minAppVersion: state.minAppVersion,
+          messages: UpdateMessages(),
+          dialogStyle: Platform.isAndroid
+              ? UpgradeDialogStyle.material
+              : UpgradeDialogStyle.cupertino,
+          child: BlocProvider(
+            create: (_) => SectionCubit(),
+            child: HomePage(),
+          ),
         );
       }
 

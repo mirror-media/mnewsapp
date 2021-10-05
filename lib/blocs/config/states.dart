@@ -6,7 +6,8 @@ class ConfigLoading extends ConfigState {}
 
 class ConfigLoaded extends ConfigState {
   final bool isSuccess;
-  ConfigLoaded({required this.isSuccess});
+  final String minAppVersion;
+  ConfigLoaded({required this.isSuccess, required this.minAppVersion});
 }
 
 class ConfigError extends ConfigState {
