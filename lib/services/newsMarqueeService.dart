@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -55,7 +55,7 @@ class NewsMarqueeServices implements NewsMarqueeRepos {
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         maxAge: newsMarqueeCacheDuration,
         headers: {"Content-Type": "application/json"});
 

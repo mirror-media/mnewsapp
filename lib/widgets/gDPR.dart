@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tv/baseConfig.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class GDPR extends StatelessWidget {
@@ -86,10 +86,10 @@ class GDPR extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  if (await canLaunch(baseConfig!.privacyPolicyUrl)) {
-                    await launch(baseConfig!.privacyPolicyUrl);
+                  if (await canLaunch(Environment().config.privacyPolicyUrl)) {
+                    await launch(Environment().config.privacyPolicyUrl);
                   } else {
-                    throw 'Could not launch ${baseConfig!.privacyPolicyUrl}';
+                    throw 'Could not launch ${Environment().config.privacyPolicyUrl}';
                   }
                 }),
           ),

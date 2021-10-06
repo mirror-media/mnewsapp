@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -60,7 +60,7 @@ class EditorChoiceServices implements EditorChoiceRepos {
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         maxAge: editorChoiceCacheDuration,
         headers: {"Content-Type": "application/json"});
 
@@ -119,7 +119,7 @@ class EditorChoiceServices implements EditorChoiceRepos {
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         maxAge: videoEditorChoiceCacheDuration,
         headers: {"Content-Type": "application/json"});
 

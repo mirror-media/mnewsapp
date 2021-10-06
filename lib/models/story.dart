@@ -1,4 +1,4 @@
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/paragrpahList.dart';
@@ -66,7 +66,7 @@ class Story {
       contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
     }
 
-    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
+    String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'mobile'])) {
       photoUrl = json['heroImage']['mobile'];
     }

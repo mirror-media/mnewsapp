@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/categoryList.dart';
@@ -18,7 +18,7 @@ class ShowServices implements CategoryRepos, ShowRepos {
   @override
   Future<CategoryList> fetchCategoryList() async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
-        baseConfig!.categoriesUrl,
+        Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
@@ -59,7 +59,7 @@ class ShowServices implements CategoryRepos, ShowRepos {
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         maxAge: showIntroCacheDuration,
         headers: {"Content-Type": "application/json"});
 

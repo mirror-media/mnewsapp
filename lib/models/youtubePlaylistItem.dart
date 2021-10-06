@@ -1,4 +1,4 @@
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
 
@@ -16,7 +16,7 @@ class YoutubePlaylistItem {
   });
 
   factory YoutubePlaylistItem.fromJson(Map<String, dynamic> json) {
-    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
+    String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(
         json, ['snippet', 'thumbnails', 'high', 'url'])) {
       photoUrl = json['snippet']['thumbnails']['high']['url'];
@@ -34,7 +34,7 @@ class YoutubePlaylistItem {
       Map<String, dynamic> json) {
     String? ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
 
-    String photoUrl = baseConfig!.mirrorNewsDefaultImageUrl;
+    String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (ytId != null) {
       photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
     }
