@@ -108,6 +108,9 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
     return Column(
       children: [
         Container(
+          color: tabBarColor,
+          width: double.infinity,
+          alignment: Alignment.topCenter,
           constraints: BoxConstraints(maxHeight: 150.0),
           child: Material(
             color: tabBarColor,
