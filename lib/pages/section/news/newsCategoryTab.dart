@@ -110,7 +110,9 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
     return Column(
       children: [
         Container(
-          constraints: BoxConstraints(maxHeight: 150.0),
+          color: tabBarColor,
+          width: double.infinity,
+          alignment: Alignment.topCenter,
           child: Material(
             color: tabBarColor,
             child: TabBar(
