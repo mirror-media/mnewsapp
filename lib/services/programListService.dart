@@ -1,7 +1,6 @@
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/programList.dart';
-
-import '../baseConfig.dart';
 
 abstract class ProgramListRepos {
   Future<ProgramList> fetchProgramList();
@@ -12,7 +11,7 @@ class ProgramListServices implements ProgramListRepos {
 
   @override
   Future<ProgramList> fetchProgramList() async {
-    final jsonResponse = await _helper.getByUrl(baseConfig!.programListUrl,
+    final jsonResponse = await _helper.getByUrl(Environment().config.programListUrl,
         headers: {"Accept": "application/json"}, skipCheck: true);
 
     ProgramList programList;

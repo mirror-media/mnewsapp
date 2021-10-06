@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
@@ -39,7 +39,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
               children: [
                 LiveWidget(
                   needBuildLiveTitle: false,
-                  livePostId: baseConfig!.mNewsLivePostId,
+                  livePostId: Environment().config.mNewsLivePostId,
                 ),
                 SizedBox(
                   height: 12,
@@ -53,7 +53,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
           children: [
             LiveWidget(
               needBuildLiveTitle: false,
-              livePostId: baseConfig!.mNewsLivePostId,
+              livePostId: Environment().config.mNewsLivePostId,
             ),
             SizedBox(
               height: 12,

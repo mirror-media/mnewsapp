@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/models/storyListItemList.dart';
 
@@ -24,7 +24,7 @@ class SearchServices implements SearchRepos {
     var query = {"query": keyword, "from": from, "size": size};
 
     final jsonResponse = await _helper.postByUrl(
-        baseConfig!.searchApi, jsonEncode(query),
+        Environment().config.searchApi, jsonEncode(query),
         headers: {"Content-Type": "application/json"});
 
     StoryListItemList storyListItemList =

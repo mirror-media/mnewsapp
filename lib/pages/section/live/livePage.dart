@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/baseConfig.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/pages/section/live/liveCams.dart';
 import 'package:tv/widgets/liveWidget.dart';
@@ -24,7 +24,7 @@ class LivePage extends StatelessWidget {
             BlocProvider(
                 create: (context) => LiveCubit(),
                 child: LiveWidget(
-                  livePostId: baseConfig!.mNewsLivePostId,
+                  livePostId: Environment().config.mNewsLivePostId,
                 )),
 
             // InlineBannerAdWidget(adUnitId: adUnitId?.at1AdUnitId,),

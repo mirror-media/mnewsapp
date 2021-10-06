@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
@@ -36,7 +36,7 @@ class PromotionVideosServices implements PromotionVideosRepos {
     );
 
     final jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         headers: {"Content-Type": "application/json"});
 
     YoutubePlaylistItemList youtubePlaylistItemList =

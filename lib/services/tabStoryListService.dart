@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/categoryList.dart';
@@ -92,11 +92,11 @@ class TabStoryListServices implements TabStoryListRepos {
     late final jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
-          baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           headers: {"Content-Type": "application/json"});
     } else {
       jsonResponse = await _helper.postByCacheAndAutoCache(
-          key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           maxAge: newsTabStoryList,
           headers: {"Content-Type": "application/json"});
     }
@@ -150,17 +150,17 @@ class TabStoryListServices implements TabStoryListRepos {
     late final jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
-          baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           headers: {"Content-Type": "application/json"});
     } else {
       jsonResponse = await _helper.postByCacheAndAutoCache(
-          key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           maxAge: newsTabStoryList,
           headers: {"Content-Type": "application/json"});
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
-        baseConfig!.categoriesUrl,
+        Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
@@ -175,7 +175,7 @@ class TabStoryListServices implements TabStoryListRepos {
     StoryListItemList newsListFromGCP =
         StoryListItemList.fromJson(jsonResponseFromGCP['allPosts']);
     final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
-        baseConfig!.categoriesUrl,
+        Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
@@ -221,9 +221,9 @@ class TabStoryListServices implements TabStoryListRepos {
   Future<StoryListItemList> fetchPopularStoryList() async {
     String jsonUrl;
     if (postStyle == 'videoNews') {
-      jsonUrl = baseConfig!.videoPopularListUrl;
+      jsonUrl = Environment().config.videoPopularListUrl;
     } else {
-      jsonUrl = baseConfig!.newsPopularListUrl;
+      jsonUrl = Environment().config.newsPopularListUrl;
     }
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);

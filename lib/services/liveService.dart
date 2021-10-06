@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:tv/helpers/apiBaseHelper.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
-import '../baseConfig.dart';
 
 abstract class LiveRepos {
   Future<String> fetchLiveIdByPostId(String id);
@@ -37,7 +37,7 @@ class LiveServices implements LiveRepos {
     );
 
     final jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         headers: {"Content-Type": "application/json"});
 
     String? youtubeId;
@@ -77,7 +77,7 @@ class LiveServices implements LiveRepos {
     );
 
     final jsonResponse = await _helper.postByUrl(
-        baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         headers: {"Content-Type": "application/json"});
 
     List<String> youtubeIdList = [];

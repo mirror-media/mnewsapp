@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/services.dart';
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -20,7 +20,7 @@ class CategoryServices implements CategoryRepos {
   @override
   Future<CategoryList> fetchCategoryList() async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
-        baseConfig!.categoriesUrl,
+        Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 

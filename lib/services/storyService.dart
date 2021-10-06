@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:tv/baseConfig.dart';
+import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
@@ -103,7 +103,7 @@ class StoryServices implements StoryRepos {
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, baseConfig!.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         maxAge: newsStoryCacheDuration,
         headers: {"Content-Type": "application/json"});
 
