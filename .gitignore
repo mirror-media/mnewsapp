@@ -41,9 +41,12 @@ app.*.symbols
 # Obfuscation related
 app.*.map.json
 
-# for internal constants
+# for internal constants (Deprecated)
 lib/helpers/devApiConstants.dart
 lib/helpers/prodApiConstants.dart
+# for internal config
+lib/configs/devConfig.dart
+lib/configs/prodConfig.dart
 
 # android key
 android/prod/prod.properties
