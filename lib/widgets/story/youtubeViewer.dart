@@ -1,9 +1,8 @@
-import 'dart:developer';
 import 'dart:io';
-
+import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:video_player/video_player.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubeViewer extends StatefulWidget {
   final String videoID;
@@ -24,78 +23,105 @@ class YoutubeViewer extends StatefulWidget {
 class _YoutubeViewerState extends State<YoutubeViewer>
     with AutomaticKeepAliveClientMixin {
   // ignore: close_sinks
-  late final YoutubePlayerController _controller;
+  late VideoPlayerController _videoPlayerController;
+  late ChewieController _chewieController;
+  late Future<bool> _configChewieFuture;
+  var yt = YoutubeExplode();
+  bool isInitialized = false;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    _controller = YoutubePlayerController(
-      initialVideoId: widget.videoID,
-      params: YoutubePlayerParams(
-        showControls: true,
-        showFullscreenButton: true,
-        // iOS can not trigger full screen when desktopMode is true
-        desktopMode: Platform.isAndroid, // false for platform design
-        autoPlay: widget.autoPlay,
-        enableCaption: false,
-        showVideoAnnotations: false,
-        enableJavaScript: true,
-        privacyEnhanced: true,
-        playsInline: true, // iOS only
-        useHybridComposition: true,
-        mute: widget.mute,
-      ),
-    )..listen((value) {
-        if (value.isReady && !value.hasPlayed) {
-          _controller
-            ..hidePauseOverlay()
-            ..hideTopMenu();
-          if (widget.autoPlay) {
-            _controller.play();
-          }
-        }
-        if (value.hasPlayed) {
-          _controller..hideEndScreen();
-        }
-      });
-
-    // Uncomment below for device orientation
-    _controller.onEnterFullscreen = () {
-      SystemChrome.setPreferredOrientations([
-        DeviceOrientation.landscapeLeft,
-        DeviceOrientation.landscapeRight,
-      ]);
-      log('Entered Fullscreen');
-    };
-    _controller.onExitFullscreen = () {
-      SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
-      Future.delayed(const Duration(seconds: 1), () {
-        _controller.play();
-      });
-      Future.delayed(const Duration(seconds: 5), () {
-        SystemChrome.setPreferredOrientations(DeviceOrientation.values);
-      });
-      log('Exited Fullscreen');
-    };
+    _configChewieFuture = _configVideoPlayer();
     super.initState();
+  }
+
+  Future<bool> _configVideoPlayer() async {
+    String videoUrl;
+    try {
+      if (widget.isLive) {
+        videoUrl = await yt.videos.streamsClient
+            .getHttpLiveStreamUrl(VideoId(widget.videoID));
+      } else {
+        var manifest =
+            await yt.videos.streamsClient.getManifest(widget.videoID);
+        var streamInfo = manifest.muxed.withHighestBitrate();
+        videoUrl = streamInfo.url.toString();
+      }
+      _videoPlayerController = VideoPlayerController.network(
+        videoUrl,
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      );
+      await _videoPlayerController.initialize();
+      _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController,
+        aspectRatio: _videoPlayerController.value.aspectRatio,
+        autoInitialize: true,
+        autoPlay: widget.autoPlay,
+        showOptions: false,
+        isLive: widget.isLive,
+      );
+      if (widget.mute) _chewieController.setVolume(0.0);
+    } catch (e) {
+      print('Youtube player error: $e');
+      return false;
+    }
+    isInitialized = true;
+    return true;
   }
 
   @override
   void dispose() {
-    _controller.close();
+    yt.close();
+    if (isInitialized) {
+      _videoPlayerController.dispose();
+      _chewieController.dispose();
+    }
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final player = YoutubePlayerIFrame();
+    return FutureBuilder<bool>(
+      initialData: false,
+      future: _configChewieFuture,
+      builder: (context, snapshot) {
+        return LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            if (snapshot.data == null || !snapshot.data!) {
+              return Container(
+                  width: constraints.maxWidth,
+                  height: constraints.maxWidth / (16 / 9),
+                  child: Center(child: CircularProgressIndicator()));
+            }
 
-    return YoutubePlayerControllerProvider(
-      controller: _controller,
-      child: player,
+            Widget _videoPlayer = Chewie(
+              controller: _chewieController,
+            );
+
+            if (Platform.isAndroid) {
+              _videoPlayer = Theme(
+                data: ThemeData.light().copyWith(
+                  platform: TargetPlatform.windows,
+                ),
+                child: Chewie(
+                  controller: _chewieController,
+                ),
+              );
+            }
+
+            return Container(
+              width: constraints.maxWidth,
+              height: constraints.maxWidth /
+                  _videoPlayerController.value.aspectRatio,
+              child: _videoPlayer,
+            );
+          },
+        );
+      },
     );
   }
 }
