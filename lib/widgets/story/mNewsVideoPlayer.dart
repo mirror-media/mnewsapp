@@ -64,6 +64,7 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer>
         aspectRatio: _videoPlayerController.value.aspectRatio,
         autoInitialize: true,
         autoPlay: widget.autoPlay,
+        showOptions: false,
       );
       if (widget.muted) _chewieController.setVolume(0.0);
     } catch (e) {
