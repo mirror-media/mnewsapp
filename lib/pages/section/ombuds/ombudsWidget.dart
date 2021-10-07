@@ -9,12 +9,12 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/story.dart';
-import 'package:tv/models/video.dart';
+import 'package:tv/models/video.dart' as myVideo;
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class OmbudsWidget extends StatefulWidget {
   @override
@@ -127,7 +127,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         return Container();
       }
       if (state is VideoLoaded) {
-        Video? video = state.video;
+        myVideo.Video? video = state.video;
         if (video == null) {
           return Container();
         }
@@ -143,10 +143,8 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   _buildVideoWidget(String videoUrl) {
     String youtubeString = 'youtube';
     if (videoUrl.contains(youtubeString)) {
-      if (videoUrl.contains(youtubeString)) {
-        videoUrl = YoutubePlayerController.convertUrlToId(videoUrl)!;
-      }
-      return YoutubePlayer(videoUrl);
+      String? ytId = VideoId.parseVideoId(videoUrl) ?? '';
+      return YoutubePlayer(ytId);
     }
 
     return MNewsVideoPlayer(

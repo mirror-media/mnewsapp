@@ -6,7 +6,7 @@ import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class PromotionVideos extends StatefulWidget {
   @override
@@ -104,11 +104,7 @@ class _PromotionVideosState extends State<PromotionVideos> {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0),
                                 child: Image.network(
-                                  YoutubePlayerController.getThumbnail(
-                                      videoId: videoID,
-                                      // todo: get thumbnail quality from list
-                                      quality: ThumbnailQuality.max,
-                                      webp: false),
+                                  ThumbnailSet(videoID).maxResUrl,
                                   fit: BoxFit.fill,
                                 ),
                               ),
@@ -118,11 +114,7 @@ class _PromotionVideosState extends State<PromotionVideos> {
                               color: Colors.transparent,
                               width: MediaQuery.of(context).size.width * 2,
                               child: Image.network(
-                                YoutubePlayerController.getThumbnail(
-                                    videoId: videoID,
-                                    // todo: get thumbnail quality from list
-                                    quality: ThumbnailQuality.max,
-                                    webp: false),
+                                ThumbnailSet(videoID).maxResUrl,
                                 fit: BoxFit.fill,
                               ),
                             );

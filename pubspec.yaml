@@ -84,6 +84,8 @@ dependencies:
   upgrader: ^3.5.1
   # firebase remote config
   firebase_remote_config: ^0.11.0
+  # get youtube metadata
+  youtube_explode_dart: ^1.10.8
 
 flutter_icons:
   android: "launcher_icon"

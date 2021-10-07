@@ -22,7 +22,7 @@ import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 import 'inlineBannerAdWidget.dart';
 
 class StoryWidget extends StatefulWidget {
@@ -164,10 +164,8 @@ class _StoryWidgetState extends State<StoryWidget> {
   _buildVideoWidget(String videoUrl) {
     String youtubeString = 'youtube';
     if (videoUrl.contains(youtubeString)) {
-      if (videoUrl.contains(youtubeString)) {
-        videoUrl = YoutubePlayerController.convertUrlToId(videoUrl)!;
-      }
-      return YoutubePlayer(videoUrl);
+      String? ytId = VideoId.parseVideoId(videoUrl) ?? '';
+      return YoutubePlayer(ytId);
     }
 
     return MNewsVideoPlayer(
