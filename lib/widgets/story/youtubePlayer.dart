@@ -1,7 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubePlayer extends StatefulWidget {
   final String videoID;
@@ -21,11 +21,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
 
   @override
   void initState() {
-    _youtubeThumbnail = YoutubePlayerController.getThumbnail(
-        videoId: widget.videoID,
-        // todo: get thumbnail quality from list
-        quality: ThumbnailQuality.max,
-        webp: false);
+    _youtubeThumbnail = ThumbnailSet(widget.videoID).maxResUrl;
 
     super.initState();
   }
