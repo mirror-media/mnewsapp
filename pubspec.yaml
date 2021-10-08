@@ -63,9 +63,9 @@ dependencies:
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
-  firebase_core: "^1.6.0"
+  firebase_core: ^1.6.0
   # firebase cloud messaging
-  firebase_messaging: "^10.0.7"
+  firebase_messaging: ^10.0.7
   # generate app icons
   flutter_launcher_icons: ^0.9.0
   # svg file loader
@@ -86,6 +86,8 @@ dependencies:
   firebase_remote_config: ^0.11.0
   # get youtube metadata
   youtube_explode_dart: ^1.10.8
+  # webview
+  webview_flutter: ^2.1.1
 
 flutter_icons:
   android: "launcher_icon"
