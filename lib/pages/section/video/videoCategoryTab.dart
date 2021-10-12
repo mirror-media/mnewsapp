@@ -111,7 +111,6 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
           color: tabBarColor,
           width: double.infinity,
           alignment: Alignment.topCenter,
-          constraints: BoxConstraints(maxHeight: 150.0),
           child: Material(
             color: tabBarColor,
             child: TabBar(
