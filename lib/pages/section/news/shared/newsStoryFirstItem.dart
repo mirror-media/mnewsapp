@@ -31,7 +31,7 @@ class NewsStoryFirstItem extends StatelessWidget {
               fit: BoxFit.cover,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
               child: RichText(
                 overflow: TextOverflow.ellipsis,
                 maxLines: 3,
