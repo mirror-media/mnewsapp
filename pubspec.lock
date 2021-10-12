@@ -260,13 +260,6 @@ packages:
       url: "https://github.com/Realank/flutter_datetime_picker.git"
     source: git
     version: "1.5.1"
-  flutter_inappwebview:
-    dependency: transitive
-    description:
-      name: flutter_inappwebview
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "5.3.2"
   flutter_launcher_icons:
     dependency: "direct main"
     description:
@@ -912,13 +905,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.10.8"
-  youtube_plyr_iframe:
-    dependency: "direct main"
-    description:
-      name: youtube_plyr_iframe
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "2.0.7"
 sdks:
   dart: ">=2.14.0 <3.0.0"
   flutter: ">=2.5.0"
