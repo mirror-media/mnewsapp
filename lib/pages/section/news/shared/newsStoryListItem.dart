@@ -11,6 +11,7 @@ class NewsStoryListItem extends StatelessWidget {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double imageSize = 33.3 * (width - 32) / 100;
+    if (imageSize > 150) imageSize = 150;
 
     return InkWell(
         child: Padding(

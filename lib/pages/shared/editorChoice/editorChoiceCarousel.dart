@@ -90,14 +90,6 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
 
   @override
   void initState() {
-    _options = CarouselOptions(
-      viewportFraction: 1.0,
-      aspectRatio: widget.aspectRatio,
-      autoPlay: true,
-      autoPlayInterval: Duration(seconds: 8),
-      enlargeCenterPage: true,
-      onPageChanged: (index, reason) {},
-    );
     super.initState();
   }
 
@@ -109,6 +101,21 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
+    var height = width / widget.aspectRatio;
+    if (height > 700) {
+      height = 700;
+    } else if (height > 500) {
+      height = (height ~/ 100) * 100;
+    }
+    _options = CarouselOptions(
+      viewportFraction: 1.0,
+      aspectRatio: widget.aspectRatio,
+      autoPlay: true,
+      autoPlayInterval: Duration(seconds: 8),
+      enlargeCenterPage: true,
+      onPageChanged: (index, reason) {},
+      height: height,
+    );
     return widget.editorChoiceList.length == 0
         ? Container()
         : Stack(
@@ -123,7 +130,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 child: InkWell(
                   child: SizedBox(
                     width: width * 0.1,
-                    height: width / widget.aspectRatio,
+                    height: height,
                     child: Padding(
                       padding: const EdgeInsets.only(left: 4.0),
                       child: Icon(
@@ -142,7 +149,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
                 child: InkWell(
                   child: SizedBox(
                     width: width * 0.1,
-                    height: width / widget.aspectRatio,
+                    height: height,
                     child: Icon(
                       Icons.arrow_forward_ios,
                       color: Colors.white,
