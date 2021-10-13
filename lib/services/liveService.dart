@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 abstract class LiveRepos {
   Future<String> fetchLiveIdByPostId(String id);
@@ -42,8 +42,8 @@ class LiveServices implements LiveRepos {
 
     String? youtubeId;
     try {
-      youtubeId = YoutubePlayerController.convertUrlToId(
-          jsonResponse['data']['Video']['youtubeUrl']);
+      youtubeId =
+          VideoId.parseVideoId(jsonResponse['data']['Video']['youtubeUrl']);
     } catch (e) {
       throw FormatException(e.toString());
     }
@@ -85,8 +85,7 @@ class LiveServices implements LiveRepos {
       if (jsonResponse['data']['allVideos'] != null) {
         jsonResponse['data']['allVideos'].forEach((video) {
           if (video['youtubeUrl'] != null) {
-            String? youtubeId =
-                YoutubePlayerController.convertUrlToId(video['youtubeUrl']);
+            String? youtubeId = VideoId.parseVideoId(video['youtubeUrl']);
             if (youtubeId != null) youtubeIdList.add(youtubeId);
           }
         });

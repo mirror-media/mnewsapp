@@ -1,6 +1,6 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:youtube_plyr_iframe/youtube_plyr_iframe.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubePlaylistItem {
   final String youtubeVideoId;
@@ -32,11 +32,11 @@ class YoutubePlaylistItem {
 
   factory YoutubePlaylistItem.fromPromotionVideosJson(
       Map<String, dynamic> json) {
-    String? ytId = YoutubePlayerController.convertUrlToId(json['ytUrl']);
+    String? ytId = VideoId.parseVideoId(json['ytUrl']);
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (ytId != null) {
-      photoUrl = YoutubePlayerController.getThumbnail(videoId: ytId);
+      photoUrl = ThumbnailSet(ytId).standardResUrl;
     }
 
     return YoutubePlaylistItem(
