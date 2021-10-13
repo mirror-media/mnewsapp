@@ -7,6 +7,7 @@ import 'package:tv/models/categoryList.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/services/editorChoiceService.dart';
 
 abstract class TabStoryListRepos {
   void reduceSkip(int reducedNumber);
@@ -66,12 +67,19 @@ class TabStoryListServices implements TabStoryListRepos {
     if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
     }
+    StoryListItemList editorChoiceList =
+        await EditorChoiceServices().fetchEditorChoiceList();
+    List<String> filterSlugList = [];
+    filterSlugList.addAll(filteredSlug);
+    editorChoiceList.forEach((element) {
+      filterSlugList.add(element.slug);
+    });
 
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
         "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "slug_not_in": filteredSlug,
+        "slug_not_in": filterSlugList,
         "categories_every": {"slug_not_in": "ombuds"},
       },
       "skip": skip,
@@ -95,8 +103,8 @@ class TabStoryListServices implements TabStoryListRepos {
           Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           headers: {"Content-Type": "application/json"});
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(
-          key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+      jsonResponse = await _helper.postByCacheAndAutoCache(key,
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           maxAge: newsTabStoryList,
           headers: {"Content-Type": "application/json"});
     }
@@ -153,8 +161,8 @@ class TabStoryListServices implements TabStoryListRepos {
           Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           headers: {"Content-Type": "application/json"});
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(
-          key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+      jsonResponse = await _helper.postByCacheAndAutoCache(key,
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           maxAge: newsTabStoryList,
           headers: {"Content-Type": "application/json"});
     }
