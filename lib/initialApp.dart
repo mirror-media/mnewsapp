@@ -1,11 +1,13 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/configPage.dart';
 import 'package:tv/pages/homePage.dart';
 import 'package:upgrader/upgrader.dart';
@@ -37,7 +39,7 @@ class _InitialAppState extends State<InitialApp> {
       if (state is ConfigError) {
         final error = state.error;
         print('ConfigError: ${error.message}');
-        return Container();
+        return _errorMessage();
       }
       if (state is ConfigLoaded) {
         return UpgradeAlert(
@@ -56,5 +58,36 @@ class _InitialAppState extends State<InitialApp> {
       // state is Init, loading, or other
       return ConfigPage();
     });
+  }
+
+  Widget _errorMessage() {
+    return Scaffold(
+      backgroundColor: themeColor,
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Image.asset(
+              logoPng,
+              scale: 4.0,
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text('載入失敗',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                )),
+            Text('請檢查網路連線後再重新開啟',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 17,
+                )),
+          ],
+        ),
+      ),
+    );
   }
 }
