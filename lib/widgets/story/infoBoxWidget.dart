@@ -33,7 +33,6 @@ class InfoBoxWidget extends StatelessWidget {
             SizedBox(height: 16.0),
             HtmlWidget(
               description,
-              hyperlinkColor: Colors.blue[900],
               textStyle: TextStyle(
                 fontSize: textSize,
                 height: 1.8,
