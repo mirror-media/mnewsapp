@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:tv/widgets/youtubeLiveViewer.dart';
 
 class LiveCams extends StatefulWidget {
   @override
@@ -50,10 +50,9 @@ class _LiveCamsState extends State<LiveCams> {
             ),
           ));
           state.liveIdList.forEach((element) {
-            liveCamPlayers.add(YoutubeViewer(
+            liveCamPlayers.add(YoutubeLiveViewer(
               element,
               autoPlay: true,
-              isLive: true,
               mute: true,
             ));
           });
