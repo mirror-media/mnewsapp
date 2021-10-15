@@ -7,12 +7,10 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class YoutubeViewer extends StatefulWidget {
   final String videoID;
   final bool autoPlay;
-  final bool isLive;
   final bool mute;
   YoutubeViewer(
     this.videoID, {
     this.autoPlay = false,
-    this.isLive = false,
     this.mute = false,
   });
 
@@ -39,17 +37,13 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   }
 
   Future<bool> _configVideoPlayer() async {
-    String videoUrl;
     try {
-      if (widget.isLive) {
-        videoUrl = await yt.videos.streamsClient
-            .getHttpLiveStreamUrl(VideoId(widget.videoID));
-      } else {
-        var manifest =
-            await yt.videos.streamsClient.getManifest(widget.videoID);
-        var streamInfo = manifest.muxed.withHighestBitrate();
-        videoUrl = streamInfo.url.toString();
-      }
+      // Get youtube video url with higest resolution.
+      // Highest resolution is 720P
+      // Only use this for get not live video
+      var manifest = await yt.videos.streamsClient.getManifest(widget.videoID);
+      var streamInfo = manifest.muxed.withHighestBitrate();
+      String videoUrl = streamInfo.url.toString();
       _videoPlayerController = VideoPlayerController.network(
         videoUrl,
         videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
@@ -61,7 +55,6 @@ class _YoutubeViewerState extends State<YoutubeViewer>
         autoInitialize: true,
         autoPlay: widget.autoPlay,
         showOptions: false,
-        isLive: widget.isLive,
       );
       if (widget.mute) _chewieController.setVolume(0.0);
     } catch (e) {
