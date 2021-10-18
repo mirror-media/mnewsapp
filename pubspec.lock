@@ -42,7 +42,7 @@ packages:
       name: better_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.0.76"
+    version: "0.0.77"
   bloc:
     dependency: transitive
     description:
