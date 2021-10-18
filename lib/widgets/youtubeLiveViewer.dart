@@ -48,7 +48,9 @@ class _YoutubeLiveViewerState extends State<YoutubeLiveViewer>
             enableAudioTracks: false,
             enableOverflowMenu: false,
           ),
-          fullScreenAspectRatio: 16 / 9,
+          autoDetectFullscreenAspectRatio: true,
+          autoDetectFullscreenDeviceOrientation: true,
+          fit: BoxFit.contain,
           translations: [
             BetterPlayerTranslations.chinese(),
             BetterPlayerTranslations(
