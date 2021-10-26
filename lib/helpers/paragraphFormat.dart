@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/contentList.dart';
 import 'package:tv/models/paragraph.dart';
+import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
-import 'package:tv/widgets/story/embeddedCodeWidget.dart';
 import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
 import 'package:tv/widgets/story/infoBoxWidget.dart';
@@ -165,7 +165,7 @@ class ParagraphFormat {
         {
           if (paragraph.contents!.length > 0) {
             return EmbeddedCodeWidget(
-              embeddedCoede: paragraph.contents![0].data,
+              embeddedCode: paragraph.contents![0].data,
               aspectRatio: paragraph.contents![0].aspectRatio,
             );
           }

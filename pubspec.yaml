@@ -58,6 +58,12 @@ dependencies:
   chewie: ^1.2.2
   # Widget from html
   flutter_widget_from_html: ^0.7.0
+  # mirrormedia embedded code
+  flutter_embedded_webview: 
+    git:
+      url: git://github.com/mirror-media/flutter_embedded_webview.git
+      ref: master
+      version: ^0.0.1
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
