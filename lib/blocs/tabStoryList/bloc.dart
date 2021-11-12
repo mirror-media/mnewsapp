@@ -38,7 +38,10 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
       } else if (event is FetchNextPage) {
         yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
         StoryListItemList newStoryListItemList = await tabStoryListRepos
-            .fetchNextPage(loadingMorePage: event.loadingMorePage);
+            .fetchStoryList(
+              skip: storyListItemList.length,
+              first: storyListItemList.length + event.loadingMorePage,
+            );
         storyListItemList.addAll(newStoryListItemList);
         yield TabStoryListLoaded(storyListItemList: storyListItemList);
       } else if (event is FetchStoryListByCategorySlug) {
@@ -57,8 +60,11 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
       } else if (event is FetchNextPageByCategorySlug) {
         yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
         StoryListItemList newStoryListItemList =
-            await tabStoryListRepos.fetchNextPageByCategorySlug(event.slug,
-                loadingMorePage: event.loadingMorePage);
+            await tabStoryListRepos.fetchStoryListByCategorySlug(
+              event.slug,
+              skip: storyListItemList.length,
+              first: storyListItemList.length + event.loadingMorePage,
+            );
         storyListItemList.addAll(newStoryListItemList);
         yield TabStoryListLoaded(storyListItemList: storyListItemList);
       } else if (event is FetchPopularStoryList) {
@@ -113,7 +119,6 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
             textColor: Colors.white,
             fontSize: 16.0);
         await Future.delayed(Duration(seconds: 5));
-        tabStoryListRepos.reduceSkip(event.loadingMorePage);
         yield TabStoryListLoadingMoreFail(storyListItemList: storyListItemList);
       } else if (event is FetchNextPageByCategorySlug) {
         Fluttertoast.showToast(
@@ -125,7 +130,6 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
             textColor: Colors.white,
             fontSize: 16.0);
         await Future.delayed(Duration(seconds: 5));
-        tabStoryListRepos.reduceSkip(event.loadingMorePage);
         yield TabStoryListLoadingMoreFail(storyListItemList: storyListItemList);
       } else {
         yield TabStoryListError(
