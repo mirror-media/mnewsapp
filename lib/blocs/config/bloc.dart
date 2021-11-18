@@ -16,13 +16,15 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
     try {
       yield ConfigLoading();
       bool isSuccess = await configRepos.loadTheConfig(event.context);
+      // fetch min app version setting in firebase_remote_config
       RemoteConfig remoteConfig = RemoteConfig.instance;
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: Duration(seconds: 10),
-        minimumFetchInterval: Duration(seconds: 1),
+        minimumFetchInterval: Duration(hours: 12),
       ));
       await remoteConfig.fetchAndActivate();
       String minAppVersion = remoteConfig.getString('min_version_number');
+
       yield ConfigLoaded(isSuccess: isSuccess, minAppVersion: minAppVersion);
     } catch (e) {
       yield ConfigError(
