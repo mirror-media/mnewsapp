@@ -37,6 +37,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Drawer(
           child: CustomScrollView(
+            physics: const NeverScrollableScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: _buildDrawerHeader(padding),
@@ -45,7 +46,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
               SliverToBoxAdapter(child: _topicsButton()),
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: Align(
+                child: Container(
+                  color: Colors.white,
                   alignment: Alignment.bottomCenter,
                   child: _thirdPartyBlock(),
                 ),
@@ -102,24 +104,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget _drawerButton(Widget child, bool isSelected, Function function) {
     return InkWell(
-        child: Row(
-          children: [
-            Container(
-              width: 12.0,
-              height: 56,
-              color: isSelected ? Color(0xffFFCC00) : null,
-            ),
-            SizedBox(width: 12.0),
-            child,
-          ],
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            children: [
+              Container(
+                width: 12.0,
+                height: 56,
+                color: isSelected ? Color(0xffFFCC00) : null,
+              ),
+              SizedBox(width: 12.0),
+              child,
+            ],
+          ),
         ),
         onTap: function as void Function()?);
   }
 
-  Widget _dividerBlock() => Container(
-        margin: const EdgeInsets.only(left: 16.0),
+  Widget _dividerBlock(double leftMargin) => Container(
+        margin: EdgeInsets.only(left: leftMargin),
         height: 0.5,
-        color: Colors.grey,
+        color: Colors.grey[350],
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
@@ -161,7 +166,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               await Future.delayed(Duration(milliseconds: 150));
               Navigator.of(context).pop();
             }),
-            _dividerBlock(),
+            _dividerBlock(index == sectionList.length - 1 ? 0 : 16.0),
           ]);
         });
   }
@@ -215,6 +220,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     ));
 
     return Container(
+      color: Colors.white,
       child: Wrap(
         children: topicButtons,
       ),
@@ -259,24 +265,34 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Container(
       // real size is 143 ((15*1.4+16)*3+32)
       //height: 150,
-      color: Color(0xffF4F5F6),
-      child: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 24, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _thirdPartyMediaLinkButton(
-                  FontAwesomeIcons.youtube,
-                  '鏡電視 YouTube 頻道',
-                  'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
-              _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
-                  '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
-              _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
-                  '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
-            ],
+      color: Color.fromRGBO(244, 245, 246, 1),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.white,
+            ),
           ),
-        ),
+          SafeArea(
+            top: false,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 16, 24, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _thirdPartyMediaLinkButton(
+                      FontAwesomeIcons.youtube,
+                      '鏡電視 YouTube 頻道',
+                      'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
+                  _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
+                      '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
+                  _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
+                      '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
