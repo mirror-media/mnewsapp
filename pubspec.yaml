@@ -41,7 +41,7 @@ dependencies:
   # local storage
   localstorage: ^4.0.0+1
   # share url
-  share: ^2.0.4
+  share_plus: ^3.0.4
   # Carousel slider in flutter.
   carousel_slider: ^4.0.0-nullsafety.0
   # Cached network image.
