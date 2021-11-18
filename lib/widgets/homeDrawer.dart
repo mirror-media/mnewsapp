@@ -5,9 +5,12 @@ import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/sectionList.dart';
+import 'package:tv/models/topicList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
+  final TopicList topics;
+  const HomeDrawer(this.topics);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
 }
@@ -39,6 +42,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 child: _buildDrawerHeader(padding),
               ),
               SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
+              SliverToBoxAdapter(child: _topicsButton()),
               SliverFillRemaining(
                 hasScrollBody: false,
                 child: Align(
@@ -119,9 +123,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
-    SectionList sectionList = SectionList.fromJson(
-      Environment().config.mNewsSectionList
-    );
+    SectionList sectionList =
+        SectionList.fromJson(Environment().config.mNewsSectionList);
 
     return ListView.builder(
         shrinkWrap: true,
@@ -161,6 +164,62 @@ class _HomeDrawerState extends State<HomeDrawer> {
             _dividerBlock(),
           ]);
         });
+  }
+
+  Widget _topicsButton() {
+    List<Widget> topicButtons = [];
+    String allTopicsButtonText = '所有專題';
+
+    if (widget.topics.isNotEmpty) {
+      for (var topic in widget.topics) {
+        topicButtons.add(Container(
+          alignment: Alignment.centerLeft,
+          width: 90,
+          height: 40,
+          child: TextButton(
+            onPressed: () {},
+            child: Text(
+              topic.name,
+              maxLines: 1,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
+            style: TextButton.styleFrom(
+              primary: Color.fromRGBO(0, 77, 188, 1),
+            ),
+          ),
+        ));
+      }
+      allTopicsButtonText = '更多專題';
+    }
+
+    topicButtons.add(Container(
+      padding: EdgeInsets.only(right: 20),
+      alignment: Alignment.centerLeft,
+      width: 100,
+      height: 40,
+      child: TextButton(
+        onPressed: () {},
+        child: Text(
+          allTopicsButtonText,
+          maxLines: 1,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+        ),
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(117, 117, 117, 1),
+        ),
+      ),
+    ));
+
+    return Container(
+      child: Wrap(
+        children: topicButtons,
+      ),
+      padding: EdgeInsets.only(top: 20, left: 20),
+    );
   }
 
   Widget _thirdPartyMediaLinkButton(IconData icon, String title, String link) {
