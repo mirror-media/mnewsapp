@@ -48,7 +48,16 @@ const Color infoBoxTitleColor = storyWidgetColor;
 const Color slideShowColor = storyWidgetColor;
 
 /// section
-enum MNewsSection { news, live, video, show, anchorperson, ombuds, programList }
+enum MNewsSection {
+  news,
+  live,
+  video,
+  show,
+  anchorperson,
+  ombuds,
+  programList,
+  topicList,
+}
 
 const mNewsDevSectionList = [
   {BaseModel.idKey: MNewsSection.news, BaseModel.nameKey: '新聞'},
