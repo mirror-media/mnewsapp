@@ -205,7 +205,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
       width: 100,
       height: 40,
       child: TextButton(
-        onPressed: () {},
+        onPressed: () async {
+          _changeSection(MNewsSection.topicList);
+          await Future.delayed(Duration(milliseconds: 150));
+          Navigator.of(context).pop();
+        },
         child: Text(
           allTopicsButtonText,
           maxLines: 1,
