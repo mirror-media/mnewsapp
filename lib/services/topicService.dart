@@ -50,4 +50,46 @@ class TopicService {
 
     return topics;
   }
+
+  Future<TopicList> fetchTopicList() async {
+    String key = 'fetchTopicList';
+
+    Map<String, dynamic> variables = {
+      "where": {"state": "published"}
+    };
+
+    final String query = """
+    query (
+    \$where: TopicWhereInput,
+  ) {
+    allTopics(
+      where: \$where,
+      sortBy: [sortOrder_ASC, isFeatured_DESC, updatedBy_DESC ]
+    ) {
+      id
+      slug
+      name
+      brief
+      heroImage{
+        urlMobileSized
+      }
+    }
+  }
+    """;
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: null,
+      query: query,
+      variables: variables,
+    );
+
+    late final jsonResponse;
+    jsonResponse = await _helper.postByCacheAndAutoCache(
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: topicListCacheDuration,
+        headers: {"Content-Type": "application/json"});
+
+    TopicList topics = TopicList.fromJson(jsonResponse['data']['allTopics']);
+    return topics;
+  }
 }
