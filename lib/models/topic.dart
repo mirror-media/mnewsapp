@@ -8,6 +8,7 @@ class Topic {
   final String? slug;
   final String? photoUrl;
   final ParagraphList? brief;
+  bool isExpanded;
 
   Topic({
     required this.id,
@@ -15,18 +16,19 @@ class Topic {
     this.slug,
     this.photoUrl,
     this.brief,
+    this.isExpanded = false,
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) {
     ParagraphList brief = ParagraphList();
-    if (BaseModel.hasKey(json, 'briefApiData') &&
-        json["briefApiData"] != 'NaN') {
-      brief = ParagraphList.parseResponseBody(json['briefApiData']);
+    if (BaseModel.hasKey(json, 'brief') && json["brief"] != 'NaN') {
+      brief =
+          ParagraphList.parseResponseBody(json['brief'], isNotApiData: true);
     }
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroImage', 'mobile'])) {
-      photoUrl = json['heroImage']['mobile'];
+    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
+      photoUrl = json['heroImage']['urlMobileSized'];
     }
 
     return Topic(
