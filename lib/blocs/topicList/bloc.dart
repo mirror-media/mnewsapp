@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/topicList.dart';
