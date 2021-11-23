@@ -5,7 +5,7 @@ import 'package:tv/models/paragrpahList.dart';
 class Topic {
   final String id;
   final String name;
-  final String? slug;
+  final String slug;
   final String? photoUrl;
   final ParagraphList? brief;
   bool isExpanded;
@@ -13,7 +13,7 @@ class Topic {
   Topic({
     required this.id,
     required this.name,
-    this.slug,
+    required this.slug,
     this.photoUrl,
     this.brief,
     this.isExpanded = false,
