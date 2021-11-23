@@ -5,6 +5,7 @@ import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topicStoryList.dart';
 
 class TopicService {
   ApiBaseHelper _helper = ApiBaseHelper();
@@ -91,5 +92,87 @@ class TopicService {
 
     TopicList topics = TopicList.fromJson(jsonResponse['data']['allTopics']);
     return topics;
+  }
+
+  Future<TopicStoryList> fetchTopicStoryList(
+    String slug, {
+    int skip = 0,
+    int first = 8,
+    bool withCount = true,
+  }) async {
+    String key = 'fetchTopicStoryList&slug=$slug&skip=$skip';
+
+    Map<String, dynamic> variables = {
+      "where": {"state": "published", "slug": slug},
+      "first": first,
+      "skip": skip,
+      "withCount": withCount
+    };
+
+    final String query = """
+    query (
+    \$where: TopicWhereInput,
+    \$first: Int,
+    \$skip: Int,
+    \$withCount: Boolean!
+  ) {
+    allTopics(
+      where: \$where
+    ) {
+      heroImage{
+        urlMobileSized
+      }
+      post(
+        where: {state: published},
+        sortBy: [updatedAt_DESC],
+        first: \$first,
+        skip: \$skip
+      ){
+        id
+        name
+        slug
+        categories{
+          name
+        }
+        heroImage{
+          urlMobileSized
+        }
+      }
+      _postMeta(
+        where: {state: published}
+       )@include(if: \$withCount){
+        count
+      }
+    }
+  }
+    """;
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: null,
+      query: query,
+      variables: variables,
+    );
+
+    late final jsonResponse;
+    if (skip > 16) {
+      jsonResponse = await _helper.postByUrl(
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          headers: {"Content-Type": "application/json"});
+    } else {
+      jsonResponse = await _helper.postByCacheAndAutoCache(key,
+          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+          maxAge: newsTabStoryList,
+          headers: {"Content-Type": "application/json"});
+    }
+
+    TopicStoryList topicStoryList =
+        TopicStoryList.fromJson(jsonResponse['data']['allTopics'][0]);
+
+    if (withCount && topicStoryList.storyListItemList != null) {
+      topicStoryList.storyListItemList!.allStoryCount =
+          jsonResponse['data']['allTopics'][0]['_postMeta']['count'];
+    }
+
+    return topicStoryList;
   }
 }
