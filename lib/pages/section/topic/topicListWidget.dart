@@ -3,6 +3,7 @@ import 'package:tv/blocs/topicList/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/topic.dart';
 import 'package:tv/models/topicList.dart';
@@ -158,21 +159,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
                     height: 140,
                     fit: BoxFit.cover,
                   ),
-                  Container(
-                    width: 140,
-                    height: 48,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: Text('進入專題'),
-                      style: TextButton.styleFrom(
-                        primary: Color.fromRGBO(1, 77, 184, 1),
-                        side: BorderSide(
-                          color: Color.fromRGBO(1, 77, 184, 1),
-                          width: 1,
-                        ),
-                      ),
-                    ),
-                  ),
+                  _intoTopicButton(topic.name, topic.slug),
                 ],
               ),
             ],
@@ -220,21 +207,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
                 const SizedBox(
                   width: 8,
                 ),
-                Container(
-                  width: 140,
-                  height: 48,
-                  child: TextButton(
-                    onPressed: () {},
-                    child: Text('進入專題'),
-                    style: TextButton.styleFrom(
-                      primary: Color.fromRGBO(1, 77, 184, 1),
-                      side: BorderSide(
-                        color: Color.fromRGBO(1, 77, 184, 1),
-                        width: 1,
-                      ),
-                    ),
-                  ),
-                ),
+                _intoTopicButton(topic.name, topic.slug),
               ],
             );
           } else {
@@ -256,6 +229,30 @@ class _TopicListWidgetState extends State<TopicListWidget> {
             );
           }
         },
+      ),
+    );
+  }
+
+  Widget _intoTopicButton(String topicName, String topicSlug) {
+    return Container(
+      width: 140,
+      height: 48,
+      child: TextButton(
+        onPressed: () {
+          RouteGenerator.navigateToTopicStoryListPage(
+            context,
+            topicName,
+            topicSlug,
+          );
+        },
+        child: Text('進入專題'),
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(1, 77, 184, 1),
+          side: BorderSide(
+            color: Color.fromRGBO(1, 77, 184, 1),
+            width: 1,
+          ),
+        ),
       ),
     );
   }

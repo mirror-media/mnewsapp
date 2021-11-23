@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/sectionList.dart';
 import 'package:tv/models/topicList.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -182,7 +183,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
           width: 90,
           height: 40,
           child: TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).pop();
+              RouteGenerator.navigateToTopicStoryListPage(
+                context,
+                topic.name,
+                topic.slug,
+              );
+            },
             child: Text(
               topic.name,
               maxLines: 1,
