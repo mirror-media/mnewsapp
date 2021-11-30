@@ -46,8 +46,8 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
   Widget build(BuildContext context) {
     return BlocBuilder<TabStoryListBloc, TabStoryListState>(
         builder: (BuildContext context, TabStoryListState state) {
-      if (state is TabStoryListError) {
-        final error = state.error;
+      if (state.status == TabStoryListStatus.error) {
+        final error = state.errorMessages;
         print('TabStoryListError: ${error.message}');
         if (error is NoInternetException) {
           return SliverList(
@@ -71,8 +71,8 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
           ),
         );
       }
-      if (state is TabStoryListLoaded) {
-        StoryListItemList storyListItemList = state.storyListItemList;
+      if (state.status == TabStoryListStatus.loaded) {
+        StoryListItemList storyListItemList = state.storyListItemList!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
@@ -92,14 +92,14 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
         );
       }
 
-      if (state is TabStoryListLoadingMore) {
-        StoryListItemList storyListItemList = state.storyListItemList;
+      if (state.status == TabStoryListStatus.loadingMore) {
+        StoryListItemList storyListItemList = state.storyListItemList!;
         return _tabStoryList(
             storyListItemList: storyListItemList, isLoading: true);
       }
 
-      if (state is TabStoryListLoadingMoreFail) {
-        StoryListItemList storyListItemList = state.storyListItemList;
+      if (state.status == TabStoryListStatus.loadingMoreError) {
+        StoryListItemList storyListItemList = state.storyListItemList!;
         _fetchNextPageByCategorySlug();
         return _tabStoryList(
             storyListItemList: storyListItemList, isLoading: true);
