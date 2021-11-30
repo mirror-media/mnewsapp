@@ -16,36 +16,37 @@ import 'package:tv/services/tabStoryListService.dart';
 
 class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
   final TabStoryListRepos tabStoryListRepos;
-  StoryListItemList storyListItemList = StoryListItemList();
 
   TabStoryListBloc({required this.tabStoryListRepos})
-      : super(TabStoryListInitState());
+      : super(TabStoryListState.init());
 
   // TODO: https://github.com/dart-lang/sdk/issues/42466
   @override
   Stream<TabStoryListState> mapEventToState(TabStoryListEvents event) async* {
     print(event.toString());
     try {
-      yield TabStoryListLoading();
       if (event is FetchStoryList) {
-        storyListItemList = await tabStoryListRepos.fetchStoryList();
+        yield TabStoryListState.loading();
+        StoryListItemList storyListItemList = await tabStoryListRepos.fetchStoryList();
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
         AdUnitId adUnitId =
             AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
-        yield TabStoryListLoaded(
+        yield TabStoryListState.loaded(
             storyListItemList: storyListItemList, adUnitId: adUnitId);
       } else if (event is FetchNextPage) {
-        yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
+        StoryListItemList storyListItemList = state.storyListItemList!;
+        yield TabStoryListState.loadingMore(storyListItemList: storyListItemList);
         StoryListItemList newStoryListItemList = await tabStoryListRepos
             .fetchStoryList(
               skip: storyListItemList.length,
               first: storyListItemList.length + event.loadingMorePage,
             );
         storyListItemList.addAll(newStoryListItemList);
-        yield TabStoryListLoaded(storyListItemList: storyListItemList);
+        yield TabStoryListState.loaded(storyListItemList: storyListItemList);
       } else if (event is FetchStoryListByCategorySlug) {
-        storyListItemList =
+        yield TabStoryListState.loading();
+        StoryListItemList storyListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(event.slug);
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
@@ -55,10 +56,11 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         } else {
           adUnitId = AdUnitId.fromJson(fixedAdUnitId, event.slug);
         }
-        yield TabStoryListLoaded(
+        yield TabStoryListState.loaded(
             storyListItemList: storyListItemList, adUnitId: adUnitId);
       } else if (event is FetchNextPageByCategorySlug) {
-        yield TabStoryListLoadingMore(storyListItemList: storyListItemList);
+        StoryListItemList storyListItemList = state.storyListItemList!;
+        yield TabStoryListState.loadingMore(storyListItemList: storyListItemList);
         StoryListItemList newStoryListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(
               event.slug,
@@ -66,48 +68,17 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
               first: storyListItemList.length + event.loadingMorePage,
             );
         storyListItemList.addAll(newStoryListItemList);
-        yield TabStoryListLoaded(storyListItemList: storyListItemList);
+        yield TabStoryListState.loaded(storyListItemList: storyListItemList);
       } else if (event is FetchPopularStoryList) {
-        storyListItemList = await tabStoryListRepos.fetchPopularStoryList();
+        yield TabStoryListState.loading();
+        StoryListItemList storyListItemList = await tabStoryListRepos.fetchPopularStoryList();
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
         AdUnitId adUnitId =
             AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
-        yield TabStoryListLoaded(
+        yield TabStoryListState.loaded(
             storyListItemList: storyListItemList, adUnitId: adUnitId);
       }
-    } on SocketException {
-      yield TabStoryListError(
-        error: NoInternetException('No Internet'),
-      );
-    } on HttpException {
-      yield TabStoryListError(
-        error: NoServiceFoundException('No Service Found'),
-      );
-    } on FormatException {
-      yield TabStoryListError(
-        error: InvalidFormatException('Invalid Response format'),
-      );
-    } on FetchDataException {
-      yield TabStoryListError(
-        error: NoInternetException('Error During Communication'),
-      );
-    } on BadRequestException {
-      yield TabStoryListError(
-        error: Error400Exception('Invalid Request'),
-      );
-    } on UnauthorisedException {
-      yield TabStoryListError(
-        error: Error400Exception('Unauthorised'),
-      );
-    } on InvalidInputException {
-      yield TabStoryListError(
-        error: Error400Exception('Invalid Input'),
-      );
-    } on InternalServerErrorException {
-      yield TabStoryListError(
-        error: Error500Exception('Internal Server Error'),
-      );
     } catch (e) {
       if (event is FetchNextPage) {
         Fluttertoast.showToast(
@@ -119,7 +90,10 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
             textColor: Colors.white,
             fontSize: 16.0);
         await Future.delayed(Duration(seconds: 5));
-        yield TabStoryListLoadingMoreFail(storyListItemList: storyListItemList);
+        yield TabStoryListState.loadingMoreError(
+          storyListItemList: state.storyListItemList!,
+          errorMessages: e.toString(),
+        );
       } else if (event is FetchNextPageByCategorySlug) {
         Fluttertoast.showToast(
             msg: "加載失敗",
@@ -130,10 +104,45 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
             textColor: Colors.white,
             fontSize: 16.0);
         await Future.delayed(Duration(seconds: 5));
-        yield TabStoryListLoadingMoreFail(storyListItemList: storyListItemList);
+        yield TabStoryListState.loadingMoreError(
+          storyListItemList: state.storyListItemList!,
+          errorMessages: e.toString(),
+        );
+      } else if(e is SocketException) {
+        yield TabStoryListState.error(
+          errorMessages: NoInternetException('No Internet'),
+        );
+      } else if(e is HttpException) {
+        yield TabStoryListState.error(
+          errorMessages: NoServiceFoundException('No Service Found'),
+        );
+      } else if(e is FormatException) {
+        yield TabStoryListState.error(
+          errorMessages: InvalidFormatException('Invalid Response format'),
+        );
+      } else if(e is FetchDataException) {
+        yield TabStoryListState.error(
+          errorMessages: NoInternetException('Error During Communication'),
+        );
+      } else if(e is BadRequestException) {
+        yield TabStoryListState.error(
+          errorMessages: Error400Exception('Invalid Request'),
+        );
+      } else if(e is UnauthorisedException) {
+        yield TabStoryListState.error(
+          errorMessages: Error400Exception('Unauthorised'),
+        );
+      } else if(e is InvalidInputException) {
+        yield TabStoryListState.error(
+          errorMessages: Error400Exception('Invalid Input'),
+        );
+      } else if(e is InternalServerErrorException) {
+        yield TabStoryListState.error(
+          errorMessages: Error500Exception('Internal Server Error'),
+        );
       } else {
-        yield TabStoryListError(
-          error: UnknownException(e.toString()),
+        yield TabStoryListState.error(
+          errorMessages: UnknownException(e.toString()),
         );
       }
     }
