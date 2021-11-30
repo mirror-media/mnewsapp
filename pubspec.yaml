@@ -94,6 +94,8 @@ dependencies:
   webview_flutter: ^2.1.1
   # better video player use for yt live only
   better_player: ^0.0.77
+  # firebase analytics
+  firebase_analytics: ^8.3.4
 
 flutter_icons:
   android: "launcher_icon"
