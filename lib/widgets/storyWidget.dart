@@ -409,7 +409,7 @@ class _StoryWidgetState extends State<StoryWidget> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: articleWidgets,
@@ -536,6 +536,8 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
+    double width = MediaQuery.of(context).size.width;
+    double frameWidth = width - 24 - 120 - 14;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.separated(
@@ -550,11 +552,41 @@ class _StoryWidgetState extends State<StoryWidget> {
               return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      '相關文章',
-                      style: TextStyle(
-                        fontSize: 26,
-                        color: storyWidgetColor,
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(0.0, 0.0, frameWidth, 0.0),
+                      child: Column(
+                        children: [
+                          ClipPath(
+                            clipper: StoryBriefTopFrameClipper(),
+                            child: Container(
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: storyBriefFrameColor,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            width: 120,
+                            padding:
+                                const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 0.0),
+                            child: Text(
+                              '相關文章',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: storyWidgetColor,
+                              ),
+                            ),
+                          ),
+                          ClipPath(
+                            clipper: StoryBriefBottomFrameClipper(),
+                            child: Container(
+                              height: 14,
+                              decoration: BoxDecoration(
+                                color: storyBriefFrameColor,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(height: 16),
