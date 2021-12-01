@@ -6,4 +6,12 @@ class AnalyticsHelper {
   static sendScreenView({required String screenName}) async {
     await analytics.setCurrentScreen(screenName: screenName);
   }
+
+  static logAppOpen() async {
+    await analytics.logAppOpen();
+  }
+
+  static logSearch({required String searchText}) async {
+    await analytics.logSearch(searchTerm: searchText);
+  }
 }
