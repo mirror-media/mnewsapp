@@ -14,7 +14,6 @@ part 'states.dart';
 class TopicStoryListBloc
     extends Bloc<TopicStoryListEvents, TopicStoryListState> {
   final TopicService topicService = TopicService();
-  TopicStoryList topicStoryList = TopicStoryList();
   late String topicSlug;
 
   TopicStoryListBloc() : super(const TopicStoryListState.initial());
@@ -27,8 +26,13 @@ class TopicStoryListBloc
       if (event is FetchTopicStoryList) {
         yield const TopicStoryListState.loading();
         topicSlug = event.slug;
-        topicStoryList = await topicService.fetchTopicStoryList(topicSlug);
+        TopicStoryList topicStoryList =
+            await topicService.fetchTopicStoryList(topicSlug);
+        yield TopicStoryListState.loaded(
+          topicStoryList: topicStoryList,
+        );
       } else if (event is FetchTopicStoryListMore) {
+        TopicStoryList topicStoryList = state.topicStoryList!;
         TopicStoryList newTopicStoryList =
             await topicService.fetchTopicStoryList(
           topicSlug,
@@ -41,10 +45,10 @@ class TopicStoryListBloc
           topicStoryList.storyListItemList!
               .addAll(newTopicStoryList.storyListItemList!);
         }
+        yield TopicStoryListState.loaded(
+          topicStoryList: topicStoryList,
+        );
       }
-      yield TopicStoryListState.loaded(
-        topicStoryList: topicStoryList,
-      );
     } catch (e) {
       if (event is FetchTopicStoryListMore) {
         Fluttertoast.showToast(
