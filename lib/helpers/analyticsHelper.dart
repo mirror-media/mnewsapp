@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:tv/models/categoryList.dart';
 
 class AnalyticsHelper {
   static final FirebaseAnalytics analytics = FirebaseAnalytics();
@@ -13,5 +14,20 @@ class AnalyticsHelper {
 
   static logSearch({required String searchText}) async {
     await analytics.logSearch(searchTerm: searchText);
+  }
+
+  static logStory({
+    required String slug,
+    required String title,
+    required CategoryList? category,
+  }) async {
+    String categoryName = '';
+    if (category != null) {
+      for (var item in category) {
+        categoryName = categoryName + item.name + ',';
+      }
+    }
+    await analytics.logViewItem(
+        itemId: 'slug=' + slug, itemName: title, itemCategory: categoryName);
   }
 }
