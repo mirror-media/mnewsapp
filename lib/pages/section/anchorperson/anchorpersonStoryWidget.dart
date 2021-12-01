@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/contact.dart';
@@ -52,7 +53,8 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
       }
       if (state is ContactLoaded) {
         Contact contact = state.contact;
-
+        AnalyticsHelper.sendScreenView(
+            screenName: 'AnchorpersonStoryPage name=${contact.name}');
         return _buildAnchorpersonStory(contact, width);
       }
 

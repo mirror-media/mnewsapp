@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -79,6 +80,8 @@ class _StoryWidgetState extends State<StoryWidget> {
         _story = story;
         _adUnitId = state.adUnitId;
         _textSize = state.textSize;
+        AnalyticsHelper.sendScreenView(
+            screenName: 'StoryPage title=${story.name!}');
         return _storyContent(width, story);
       } else if (state is TextSizeChanged) {
         _textSize = state.textSize;

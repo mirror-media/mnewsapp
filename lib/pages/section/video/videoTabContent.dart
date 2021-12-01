@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/pages/shared/editorChoice/editorChoiceStoryList.dart';
@@ -25,6 +26,13 @@ class VideoTabContent extends StatefulWidget {
 class _VideoTabContentState extends State<VideoTabContent> {
   @override
   Widget build(BuildContext context) {
+    if (widget.isFeaturedSlug) {
+      AnalyticsHelper.sendScreenView(
+          screenName: 'VideoPage categorySlug=featured');
+    } else {
+      AnalyticsHelper.sendScreenView(
+          screenName: 'VideoPage categorySlug=${widget.categorySlug}');
+    }
     return CustomScrollView(
       slivers: [
         if (widget.isFeaturedSlug)
