@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 
 class MNewsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    AnalyticsHelper.logAppOpen();
     return MaterialApp(
       title: 'mnews',
       theme: ThemeData(
