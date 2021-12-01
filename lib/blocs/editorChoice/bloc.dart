@@ -20,8 +20,8 @@ class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
       : super(EditorChoiceLoading()) {
     if (tabStoryListBloc != null) {
       tabStoryListBlocSubscription = tabStoryListBloc!.stream.listen((state) {
-        if (state is TabStoryListLoaded) {
-          add(TabStoryListIsLoaded(state.storyListItemList));
+        if (state.status == TabStoryListStatus.loaded) {
+          add(TabStoryListIsLoaded(state.storyListItemList!));
         }
       });
     }

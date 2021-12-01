@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/config/bloc.dart';
@@ -50,7 +49,7 @@ class _InitialAppState extends State<InitialApp> {
               : UpgradeDialogStyle.cupertino,
           child: BlocProvider(
             create: (_) => SectionCubit(),
-            child: HomePage(),
+            child: HomePage(state.topics),
           ),
         );
       }

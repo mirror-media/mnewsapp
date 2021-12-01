@@ -10,19 +10,26 @@ import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/editorChoiceService.dart';
 
 abstract class TabStoryListRepos {
-  void reduceSkip(int reducedNumber);
-  Future<StoryListItemList> fetchStoryList({bool withCount = true});
-  Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20});
-  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug);
-  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug,
-      {int loadingMorePage = 20});
+  Future<StoryListItemList> fetchStoryList({
+    int skip = 0,
+    int first = 20,
+    bool withCount = true
+  });
+  Future<StoryListItemList> fetchStoryListByCategorySlug(
+    String slug,
+    {
+      int skip = 0,
+      int first = 20,
+      bool withCount = true
+    }
+  );
   Future<StoryListItemList> fetchPopularStoryList();
 }
 
 class TabStoryListServices implements TabStoryListRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
   String? postStyle;
-  int skip = 0, first = 20;
+
   final String query = """
   query (
     \$where: PostWhereInput,
@@ -53,16 +60,14 @@ class TabStoryListServices implements TabStoryListRepos {
 
   TabStoryListServices({String? postStyle, int first = 20}) {
     this.postStyle = postStyle;
-    this.first = first;
   }
 
   @override
-  void reduceSkip(int reducedNumber) {
-    skip = skip - reducedNumber;
-  }
-
-  @override
-  Future<StoryListItemList> fetchStoryList({bool withCount = true}) async {
+  Future<StoryListItemList> fetchStoryList({
+    int skip = 0,
+    int first = 20,
+    bool withCount = true
+  }) async {
     String key = 'fetchStoryList?skip=$skip&first=$first';
     if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
@@ -119,15 +124,14 @@ class TabStoryListServices implements TabStoryListRepos {
   }
 
   @override
-  Future<StoryListItemList> fetchNextPage({int loadingMorePage = 20}) async {
-    skip = skip + first;
-    first = loadingMorePage;
-    return await fetchStoryList();
-  }
-
-  @override
-  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug,
-      {bool withCount = true}) async {
+  Future<StoryListItemList> fetchStoryListByCategorySlug(
+    String slug,
+    {
+      int skip = 0,
+      int first = 20,
+      bool withCount = true
+    }
+  ) async {
     String key =
         'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
     if (postStyle != null) {
@@ -215,14 +219,6 @@ class TabStoryListServices implements TabStoryListRepos {
     }
 
     return newsList;
-  }
-
-  @override
-  Future<StoryListItemList> fetchNextPageByCategorySlug(String slug,
-      {int loadingMorePage = 20}) async {
-    skip = skip + first;
-    first = loadingMorePage;
-    return await fetchStoryListByCategorySlug(slug);
   }
 
   @override
