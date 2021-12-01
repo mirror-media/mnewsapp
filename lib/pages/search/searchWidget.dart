@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/search/bloc.dart';
 import 'package:tv/blocs/search/events.dart';
 import 'package:tv/blocs/search/states.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -162,6 +163,7 @@ class _SearchWidgetState extends State<SearchWidget> {
             ),
             onSubmitted: (value) {
               _searchNewsStoryByKeyword(_textController.text);
+              AnalyticsHelper.logSearch(searchText: _textController.text);
             }),
       ),
     );
