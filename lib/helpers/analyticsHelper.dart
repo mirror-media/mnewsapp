@@ -27,7 +27,10 @@ class AnalyticsHelper {
         categoryName = categoryName + item.name + ',';
       }
     }
-    await analytics.logViewItem(
-        itemId: 'slug=' + slug, itemName: title, itemCategory: categoryName);
+    await analytics.logEvent(name: 'open_story', parameters: {
+      'slug': slug,
+      'title': title,
+      'category': categoryName,
+    });
   }
 }

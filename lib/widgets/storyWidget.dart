@@ -80,8 +80,6 @@ class _StoryWidgetState extends State<StoryWidget> {
         _story = story;
         _adUnitId = state.adUnitId;
         _textSize = state.textSize;
-        AnalyticsHelper.sendScreenView(
-            screenName: 'StoryPage title=${story.name}');
         AnalyticsHelper.logStory(
             slug: _currentSlug,
             title: story.name ?? '',
