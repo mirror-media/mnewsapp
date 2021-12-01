@@ -17,9 +17,13 @@ class ParagraphList extends CustomizedList<Paragraph> {
     return paragraphs;
   }
 
-  factory ParagraphList.parseResponseBody(String body) {
+  factory ParagraphList.parseResponseBody(String body,
+      {bool isNotApiData: false}) {
     try {
       final jsonData = json.decode(body);
+      if (isNotApiData) {
+        return ParagraphList.fromJson(jsonData['apiData']);
+      }
       if (jsonData == "" || jsonData == null) {
         return ParagraphList();
       }

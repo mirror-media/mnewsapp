@@ -12,3 +12,6 @@ const Duration youtubePlayListCacheDuration = Duration(minutes: 5);
 
 const Duration anchorPersonListCacheDuration = Duration(hours: 24);
 const Duration anchorPersonCacheDuration = Duration(hours: 24);
+
+const Duration featuredTopicCacheDuration = Duration(hours: 24);
+const Duration topicListCacheDuration = Duration(hours: 12);

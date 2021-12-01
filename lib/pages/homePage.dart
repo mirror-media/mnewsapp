@@ -5,12 +5,14 @@ import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/adUnitId.dart';
+import 'package:tv/models/topicList.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/programList/programListPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
+import 'package:tv/pages/section/topic/topicListPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
 import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
@@ -18,6 +20,8 @@ import 'package:tv/widgets/homeDrawer.dart';
 import 'package:tv/widgets/interstitialAdWidget.dart';
 
 class HomePage extends StatefulWidget {
+  final TopicList topics;
+  const HomePage(this.topics);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -60,7 +64,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      drawer: HomeDrawer(),
+      drawer: HomeDrawer(widget.topics),
       appBar: _buildBar(context, _scaffoldkey),
       body: BlocBuilder<SectionCubit, SectionStateCubit>(
           builder: (BuildContext context, SectionStateCubit state) {
@@ -125,6 +129,8 @@ class _HomePageState extends State<HomePage> {
         return OmbudsPage();
       case MNewsSection.programList:
         return ProgramListPage();
+      case MNewsSection.topicList:
+        return TopicListPage();
     }
   }
 }

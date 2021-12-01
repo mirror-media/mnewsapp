@@ -4,10 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/sectionList.dart';
+import 'package:tv/models/topicList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
+  final TopicList topics;
+  const HomeDrawer(this.topics);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
 }
@@ -34,14 +38,17 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Drawer(
           child: CustomScrollView(
+            physics: const NeverScrollableScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: _buildDrawerHeader(padding),
               ),
               SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
+              SliverToBoxAdapter(child: _topicsButton()),
               SliverFillRemaining(
                 hasScrollBody: false,
-                child: Align(
+                child: Container(
+                  color: Colors.white,
                   alignment: Alignment.bottomCenter,
                   child: _thirdPartyBlock(),
                 ),
@@ -98,30 +105,32 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget _drawerButton(Widget child, bool isSelected, Function function) {
     return InkWell(
-        child: Row(
-          children: [
-            Container(
-              width: 12.0,
-              height: 56,
-              color: isSelected ? Color(0xffFFCC00) : null,
-            ),
-            SizedBox(width: 12.0),
-            child,
-          ],
+        child: Container(
+          color: Colors.white,
+          child: Row(
+            children: [
+              Container(
+                width: 12.0,
+                height: 56,
+                color: isSelected ? Color(0xffFFCC00) : null,
+              ),
+              SizedBox(width: 12.0),
+              child,
+            ],
+          ),
         ),
         onTap: function as void Function()?);
   }
 
-  Widget _dividerBlock() => Container(
-        margin: const EdgeInsets.only(left: 16.0),
+  Widget _dividerBlock(double leftMargin) => Container(
+        margin: EdgeInsets.only(left: leftMargin),
         height: 0.5,
-        color: Colors.grey,
+        color: Colors.grey[350],
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
-    SectionList sectionList = SectionList.fromJson(
-      Environment().config.mNewsSectionList
-    );
+    SectionList sectionList =
+        SectionList.fromJson(Environment().config.mNewsSectionList);
 
     return ListView.builder(
         shrinkWrap: true,
@@ -158,9 +167,77 @@ class _HomeDrawerState extends State<HomeDrawer> {
               await Future.delayed(Duration(milliseconds: 150));
               Navigator.of(context).pop();
             }),
-            _dividerBlock(),
+            _dividerBlock(index == sectionList.length - 1 ? 0 : 16.0),
           ]);
         });
+  }
+
+  Widget _topicsButton() {
+    List<Widget> topicButtons = [];
+    String allTopicsButtonText = '所有專題';
+
+    if (widget.topics.isNotEmpty) {
+      for (var topic in widget.topics) {
+        topicButtons.add(Container(
+          alignment: Alignment.centerLeft,
+          width: 90,
+          height: 40,
+          child: TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              RouteGenerator.navigateToTopicStoryListPage(
+                context,
+                topic.name,
+                topic.slug,
+              );
+            },
+            child: Text(
+              topic.name,
+              maxLines: 1,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+              softWrap: true,
+              overflow: TextOverflow.ellipsis,
+            ),
+            style: TextButton.styleFrom(
+              primary: Color.fromRGBO(0, 77, 188, 1),
+            ),
+          ),
+        ));
+      }
+      allTopicsButtonText = '更多專題';
+    }
+
+    topicButtons.add(Container(
+      padding: EdgeInsets.only(right: 20),
+      alignment: Alignment.centerLeft,
+      width: 100,
+      height: 40,
+      child: TextButton(
+        onPressed: () async {
+          _changeSection(MNewsSection.topicList);
+          await Future.delayed(Duration(milliseconds: 150));
+          Navigator.of(context).pop();
+        },
+        child: Text(
+          allTopicsButtonText,
+          maxLines: 1,
+          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          softWrap: true,
+          overflow: TextOverflow.ellipsis,
+        ),
+        style: TextButton.styleFrom(
+          primary: Color.fromRGBO(117, 117, 117, 1),
+        ),
+      ),
+    ));
+
+    return Container(
+      color: Colors.white,
+      child: Wrap(
+        children: topicButtons,
+      ),
+      padding: EdgeInsets.only(top: 20, left: 20),
+    );
   }
 
   Widget _thirdPartyMediaLinkButton(IconData icon, String title, String link) {
@@ -200,24 +277,34 @@ class _HomeDrawerState extends State<HomeDrawer> {
     return Container(
       // real size is 143 ((15*1.4+16)*3+32)
       //height: 150,
-      color: Color(0xffF4F5F6),
-      child: SafeArea(
-        child: Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 24, 0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              _thirdPartyMediaLinkButton(
-                  FontAwesomeIcons.youtube,
-                  '鏡電視 YouTube 頻道',
-                  'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
-              _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
-                  '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
-              _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
-                  '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
-            ],
+      color: Color.fromRGBO(244, 245, 246, 1),
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              color: Colors.white,
+            ),
           ),
-        ),
+          SafeArea(
+            top: false,
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(16, 16, 24, 0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  _thirdPartyMediaLinkButton(
+                      FontAwesomeIcons.youtube,
+                      '鏡電視 YouTube 頻道',
+                      'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
+                  _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
+                      '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
+                  _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
+                      '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

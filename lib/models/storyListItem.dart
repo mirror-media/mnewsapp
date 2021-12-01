@@ -37,11 +37,16 @@ class StoryListItem {
       allPostsCategory = CategoryList.fromJson(json['categories']);
     }
 
+    String? style;
+    if (BaseModel.checkJsonKeys(json, ['style'])) {
+      style = json['style'];
+    }
+
     return StoryListItem(
         id: json[BaseModel.idKey],
         name: json[BaseModel.nameKey],
         slug: json[BaseModel.slugKey],
-        style: json['style'],
+        style: style,
         photoUrl: photoUrl,
         categoryList: allPostsCategory);
   }

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/topicList.dart';
 import 'package:tv/services/configService.dart';
+import 'package:tv/services/topicService.dart';
 
 class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
   final ConfigRepos configRepos;
@@ -24,8 +26,13 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
       ));
       await remoteConfig.fetchAndActivate();
       String minAppVersion = remoteConfig.getString('min_version_number');
-
-      yield ConfigLoaded(isSuccess: isSuccess, minAppVersion: minAppVersion);
+      // fetch topic list need to show in drawer
+      TopicList topics = await TopicService().fetchFeaturedTopics();
+      yield ConfigLoaded(
+        isSuccess: isSuccess,
+        minAppVersion: minAppVersion,
+        topics: topics,
+      );
     } catch (e) {
       yield ConfigError(
         error: UnknownException(e.toString()),

@@ -7,6 +7,7 @@ import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
 import 'package:tv/pages/search/searchPage.dart';
+import 'package:tv/pages/section/topic/topicStoryListPage.dart';
 import 'package:tv/pages/settingPage.dart';
 import 'package:tv/pages/section/show/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -19,6 +20,7 @@ class RouteGenerator {
   static const String story = '/story';
   static const String anchorpersonStory = '/anchorpersonStory';
   static const String showStory = '/showStory';
+  static const String topicStoryList = '/topicStoryList';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -75,6 +77,20 @@ class RouteGenerator {
                     youtubePlayListId: args['youtubePlayListId'],
                     youtubePlaylistItem: args['youtubePlaylistItem'],
                     adUnitId: args['adUnitId'],
+                  ));
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
+      case topicStoryList:
+        Map args = settings.arguments as Map<dynamic, dynamic>;
+        // Validation of correct data type
+        if (args['slug'] is String && args['topicName'] is String) {
+          return MaterialPageRoute(
+              settings: settings,
+              builder: (context) => TopicStoryListPage(
+                    slug: args['slug'],
+                    topicName: args['topicName'],
                   ));
         }
         // If args is not of the correct type, return an error page.
@@ -155,6 +171,17 @@ class RouteGenerator {
         },
       );
     }
+  }
+
+  static void navigateToTopicStoryListPage(
+    BuildContext context,
+    String topicName,
+    String slug,
+  ) {
+    Navigator.of(context).pushNamed(
+      topicStoryList,
+      arguments: {'slug': slug, 'topicName': topicName},
+    );
   }
 
   static void printRouteSettings(BuildContext context) {
