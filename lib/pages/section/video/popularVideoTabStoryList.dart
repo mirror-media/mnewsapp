@@ -33,8 +33,8 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
   Widget build(BuildContext context) {
     return BlocBuilder<TabStoryListBloc, TabStoryListState>(
         builder: (BuildContext context, TabStoryListState state) {
-      if (state is TabStoryListError) {
-        final error = state.error;
+      if (state.status == TabStoryListStatus.error) {
+        final error = state.errorMessages;
         print('PopularVideoTabStoryListError: ${error.message}');
         if (error is NoInternetException) {
           return SliverList(
@@ -57,8 +57,8 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
           ),
         );
       }
-      if (state is TabStoryListLoaded) {
-        StoryListItemList storyListItemList = state.storyListItemList;
+      if (state.status == TabStoryListStatus.loaded) {
+        StoryListItemList storyListItemList = state.storyListItemList!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
