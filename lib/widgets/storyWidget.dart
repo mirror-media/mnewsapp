@@ -134,6 +134,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     double height = width / 16 * 9;
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (story.heroVideo != null) _buildVideoWidget(story.heroVideo!),
         if (story.heroImage != null && story.heroVideo == null)
