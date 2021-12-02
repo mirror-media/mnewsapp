@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/adUnitId.dart';
@@ -38,6 +39,8 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    AnalyticsHelper.sendScreenView(
+        screenName: 'ShowStoryPage title=${widget.youtubePlaylistItem.name}');
     return Scaffold(
       appBar: _buildBar(context),
       body: ListView(

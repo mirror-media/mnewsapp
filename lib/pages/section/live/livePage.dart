@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/pages/section/live/liveCams.dart';
@@ -17,6 +18,7 @@ class LivePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AnalyticsHelper.sendScreenView(screenName: 'LivePage');
     return ListView(
       children: [
         Column(

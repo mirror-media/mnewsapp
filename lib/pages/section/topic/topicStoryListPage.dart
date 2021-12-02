@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/pages/section/topic/topicStoryListWidget.dart';
@@ -12,6 +13,8 @@ class TopicStoryListPage extends StatelessWidget {
   TopicStoryListPage({required this.topicName, required this.slug});
   @override
   Widget build(BuildContext context) {
+    AnalyticsHelper.sendScreenView(
+        screenName: 'TopicStoryListPage name=$topicName');
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(

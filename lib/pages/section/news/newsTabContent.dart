@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
@@ -26,6 +27,12 @@ class _NewsTabContentState extends State<NewsTabContent> {
       TabStoryListBloc(tabStoryListRepos: TabStoryListServices());
   @override
   Widget build(BuildContext context) {
+    if (widget.categorySlug == 'latest') {
+      AnalyticsHelper.sendScreenView(screenName: 'HomePage');
+    } else {
+      AnalyticsHelper.sendScreenView(
+          screenName: 'NewsPage categorySlug=${widget.categorySlug}');
+    }
     return CustomScrollView(
       slivers: [
         if (widget.needCarousel)

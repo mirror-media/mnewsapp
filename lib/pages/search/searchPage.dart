@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/search/bloc.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/search/searchWidget.dart';
 import 'package:tv/services/searchService.dart';
@@ -13,6 +14,7 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   @override
   Widget build(BuildContext context) {
+    AnalyticsHelper.sendScreenView(screenName: 'SearchPage');
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
