@@ -47,11 +47,11 @@ class NewsStoryListItem extends StatelessWidget {
               Expanded(
                 child: RichText(
                   overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
+                  maxLines: 4,
                   text: TextSpan(
                     style: TextStyle(
                       color: Colors.black,
-                      fontSize: 17.0,
+                      fontSize: 20.0,
                       height: 1.5,
                     ),
                     text: storyListItem.name,
