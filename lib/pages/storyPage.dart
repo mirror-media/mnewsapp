@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
@@ -94,6 +95,7 @@ class _StoryPageState extends State<StoryPage> {
           icon: Icon(Icons.share),
           tooltip: 'Share',
           onPressed: () {
+            AnalyticsHelper.logShare(name: _slug, type: 'story');
             String url =
                 Environment().config.mNewsWebsiteLink + 'story/' + _slug;
             Share.share(url);
