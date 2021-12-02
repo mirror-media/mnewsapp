@@ -5,6 +5,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -130,6 +131,10 @@ class _BuildEditorChoiceStoryListState
           ],
         ),
         onTap: () {
+          AnalyticsHelper.logClick(
+              slug: storyListItem.slug,
+              title: storyListItem.name,
+              location: 'HomePage_編輯精選');
           RouteGenerator.navigateToStory(context, storyListItem.slug);
         });
   }

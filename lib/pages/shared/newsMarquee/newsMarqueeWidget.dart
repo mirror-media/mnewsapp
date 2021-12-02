@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItemList.dart';
@@ -137,6 +138,10 @@ class _NewsMarqueeState extends State<NewsMarquee> {
           ),
         ),
         onTap: () {
+          AnalyticsHelper.logClick(
+              slug: newsList[i].slug,
+              title: newsList[i].name,
+              location: 'HomePage_快訊跑馬燈');
           RouteGenerator.navigateToStory(context, newsList[i].slug);
         },
       ));

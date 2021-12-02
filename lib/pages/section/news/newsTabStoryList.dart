@@ -170,13 +170,18 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
         if (i == 0) {
           _storyListWithAd.add(Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
-            child: NewsStoryFirstItem(storyListItem: storyListItemList[i]),
+            child: NewsStoryFirstItem(
+              storyListItem: storyListItemList[i],
+              categorySlug: widget.categorySlug,
+            ),
           ));
         } else {
           _storyListWithAd.add(Padding(
             padding: const EdgeInsets.only(bottom: 16.0),
             child: NewsStoryListItem(
-                storyListItem: storyListItemList[i - _howManyAds]),
+              storyListItem: storyListItemList[i - _howManyAds],
+              categorySlug: widget.categorySlug,
+            ),
           ));
         }
       }
@@ -207,7 +212,9 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
         _storyListWithAd.add(Padding(
           padding: const EdgeInsets.only(bottom: 16.0),
           child: NewsStoryListItem(
-              storyListItem: storyListItemList[i - _howManyAds]),
+            storyListItem: storyListItemList[i - _howManyAds],
+            categorySlug: widget.categorySlug,
+          ),
         ));
         // }
       }

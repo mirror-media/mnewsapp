@@ -1,11 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 
 class NewsStoryFirstItem extends StatelessWidget {
   final StoryListItem storyListItem;
-  NewsStoryFirstItem({required this.storyListItem});
+  final String categorySlug;
+  NewsStoryFirstItem({
+    required this.storyListItem,
+    this.categorySlug = 'latest',
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +53,12 @@ class NewsStoryFirstItem extends StatelessWidget {
           ],
         ),
         onTap: () {
+          AnalyticsHelper.logClick(
+            slug: storyListItem.slug,
+            title: storyListItem.name,
+            location:
+                categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
+          );
           RouteGenerator.navigateToStory(context, storyListItem.slug);
         });
   }

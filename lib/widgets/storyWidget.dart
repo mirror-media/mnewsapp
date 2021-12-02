@@ -635,6 +635,8 @@ class _StoryWidgetState extends State<StoryWidget> {
         ],
       ),
       onTap: () {
+        AnalyticsHelper.logClick(
+            slug: story.slug, title: story.name, location: 'Article_相關文章');
         _currentSlug = story.slug;
         StoryPage.of(context)!.slug = _currentSlug;
         _loadStory(_currentSlug);
