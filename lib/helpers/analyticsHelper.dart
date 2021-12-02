@@ -33,4 +33,23 @@ class AnalyticsHelper {
       'category': categoryName,
     });
   }
+
+  static logClick({
+    required String slug,
+    required String title,
+    required String location,
+  }) async {
+    await analytics.logEvent(name: 'click', parameters: {
+      'location': location,
+      'slug': slug,
+      'title': title,
+    });
+  }
+
+  static logShare({
+    required String name,
+    required String type,
+  }) async {
+    await analytics.logShare(contentType: type, itemId: name, method: "");
+  }
 }
