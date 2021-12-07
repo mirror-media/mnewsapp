@@ -42,6 +42,10 @@ class TopicStoryListBloc
         );
 
         if (newTopicStoryList.storyListItemList != null) {
+          for (var item in topicStoryList.storyListItemList!) {
+            newTopicStoryList.storyListItemList!
+                .removeWhere((element) => element.id == item.id);
+          }
           topicStoryList.storyListItemList!
               .addAll(newTopicStoryList.storyListItemList!);
         }
