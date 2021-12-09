@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/models/adUnitId.dart';
+import 'package:tv/models/tag.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
@@ -11,6 +12,7 @@ import 'package:tv/pages/section/topic/topicStoryListPage.dart';
 import 'package:tv/pages/settingPage.dart';
 import 'package:tv/pages/section/show/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/tag/tagPage.dart';
 import 'package:tv/services/configService.dart';
 
 class RouteGenerator {
@@ -21,6 +23,7 @@ class RouteGenerator {
   static const String anchorpersonStory = '/anchorpersonStory';
   static const String showStory = '/showStory';
   static const String topicStoryList = '/topicStoryList';
+  static const String tagStoryList = '/tagStoryList';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -91,6 +94,19 @@ class RouteGenerator {
               builder: (context) => TopicStoryListPage(
                     slug: args['slug'],
                     topicName: args['topicName'],
+                  ));
+        }
+        // If args is not of the correct type, return an error page.
+        // You can also throw an exception while in development.
+        return _errorRoute(settings);
+      case tagStoryList:
+        Map args = settings.arguments as Map<dynamic, dynamic>;
+        // Validation of correct data type
+        if (args['tag'] is Tag) {
+          return MaterialPageRoute(
+              settings: settings,
+              builder: (context) => TagPage(
+                    tag: args['tag'],
                   ));
         }
         // If args is not of the correct type, return an error page.
@@ -181,6 +197,16 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(
       topicStoryList,
       arguments: {'slug': slug, 'topicName': topicName},
+    );
+  }
+
+  static void navigateToTagStoryListPage(
+    BuildContext context,
+    Tag tag,
+  ) {
+    Navigator.of(context).pushNamed(
+      tagStoryList,
+      arguments: {'tag': tag},
     );
   }
 
