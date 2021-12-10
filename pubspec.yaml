@@ -69,11 +69,11 @@ dependencies:
   # firebase
   firebase_core: ^1.6.0
   # firebase cloud messaging
-  firebase_messaging: ^10.0.7
+  firebase_messaging: ^11.2.3
   # generate app icons
   flutter_launcher_icons: ^0.9.0
   # svg file loader
-  flutter_svg: ^0.22.0
+  flutter_svg: ^1.0.0
   # ios look date picker
   flutter_datetime_picker:
     git:
@@ -81,13 +81,13 @@ dependencies:
       ref: master
 
   # google mobile ad
-  google_mobile_ads: ^0.13.3
+  google_mobile_ads: ^1.0.1
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
   upgrader: ^3.5.1
   # firebase remote config
-  firebase_remote_config: ^0.11.0
+  firebase_remote_config: ^1.0.2
   # get youtube metadata
   youtube_explode_dart: ^1.10.8
   # webview
@@ -95,7 +95,7 @@ dependencies:
   # better video player use for yt live only
   better_player: ^0.0.77
   # firebase analytics
-  firebase_analytics: ^8.3.4
+  firebase_analytics: ^9.0.2
 
 flutter_icons:
   android: "launcher_icon"
