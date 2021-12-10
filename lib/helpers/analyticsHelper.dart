@@ -2,7 +2,7 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:tv/models/categoryList.dart';
 
 class AnalyticsHelper {
-  static final FirebaseAnalytics analytics = FirebaseAnalytics();
+  static final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   static sendScreenView({required String screenName}) async {
     await analytics.setCurrentScreen(screenName: screenName);
