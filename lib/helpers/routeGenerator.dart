@@ -4,6 +4,7 @@ import 'package:tv/initialApp.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/tag.dart';
+import 'package:tv/models/topic.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 import 'package:tv/pages/error/routeErrorPage.dart';
@@ -88,12 +89,11 @@ class RouteGenerator {
       case topicStoryList:
         Map args = settings.arguments as Map<dynamic, dynamic>;
         // Validation of correct data type
-        if (args['slug'] is String && args['topicName'] is String) {
+        if (args['topic'] is Topic) {
           return MaterialPageRoute(
               settings: settings,
               builder: (context) => TopicStoryListPage(
-                    slug: args['slug'],
-                    topicName: args['topicName'],
+                    topic: args['topic'],
                   ));
         }
         // If args is not of the correct type, return an error page.
@@ -191,12 +191,11 @@ class RouteGenerator {
 
   static void navigateToTopicStoryListPage(
     BuildContext context,
-    String topicName,
-    String slug,
+    Topic topic,
   ) {
     Navigator.of(context).pushNamed(
       topicStoryList,
-      arguments: {'slug': slug, 'topicName': topicName},
+      arguments: {'topic': topic},
     );
   }
 

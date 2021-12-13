@@ -159,7 +159,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
                     height: 140,
                     fit: BoxFit.cover,
                   ),
-                  _intoTopicButton(topic.name, topic.slug),
+                  _intoTopicButton(topic),
                 ],
               ),
             ],
@@ -207,7 +207,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
                 const SizedBox(
                   width: 8,
                 ),
-                _intoTopicButton(topic.name, topic.slug),
+                _intoTopicButton(topic),
               ],
             );
           } else {
@@ -233,7 +233,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
     );
   }
 
-  Widget _intoTopicButton(String topicName, String topicSlug) {
+  Widget _intoTopicButton(Topic topic) {
     return Container(
       width: 140,
       height: 48,
@@ -241,8 +241,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
         onPressed: () {
           RouteGenerator.navigateToTopicStoryListPage(
             context,
-            topicName,
-            topicSlug,
+            topic,
           );
         },
         child: Text('進入專題'),

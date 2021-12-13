@@ -187,8 +187,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.of(context).pop();
               RouteGenerator.navigateToTopicStoryListPage(
                 context,
-                topic.name,
-                topic.slug,
+                topic,
               );
             },
             child: Text(
