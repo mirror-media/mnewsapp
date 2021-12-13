@@ -1,14 +1,23 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/video.dart';
 
 class TopicStoryList {
-  final String? photoUrl;
-  StoryListItemList? storyListItemList;
+  final String photoUrl;
+  final String leading;
+  final StoryListItemList? storyListItemList;
+  final StoryListItemList? headerArticles;
+  final List<Video>? headerVideoList;
+  final Video? headerVideo;
 
   TopicStoryList({
-    this.photoUrl,
+    required this.photoUrl,
+    required this.leading,
     this.storyListItemList,
+    this.headerArticles,
+    this.headerVideoList,
+    this.headerVideo,
   });
 
   factory TopicStoryList.fromJson(Map<String, dynamic> json) {
@@ -22,9 +31,15 @@ class TopicStoryList {
       storyListItemList = StoryListItemList.fromJson(json['post']);
     }
 
+    String leading = 'image';
+    if (BaseModel.checkJsonKeys(json, ['leading'])) {
+      leading = json['leading'];
+    }
+
     return TopicStoryList(
       photoUrl: photoUrl,
       storyListItemList: storyListItemList,
+      leading: leading,
     );
   }
 }

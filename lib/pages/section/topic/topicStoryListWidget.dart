@@ -17,10 +17,11 @@ class TopicStoryListWidget extends StatefulWidget {
 }
 
 class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
-  TopicStoryList _topicStoryList = TopicStoryList();
+  late TopicStoryList _topicStoryList;
   late final _storySlug;
   bool _isAllLoaded = false;
   StoryListItemList _storyListItemList = StoryListItemList();
+
   @override
   void initState() {
     _storySlug = widget.slug;
@@ -88,7 +89,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         children: [
           CachedNetworkImage(
             width: width,
-            imageUrl: _topicStoryList.photoUrl!,
+            imageUrl: _topicStoryList.photoUrl,
             placeholder: (context, url) => Container(
               height: height,
               width: width,
@@ -121,25 +122,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         }
 
         if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 29),
-            child: CachedNetworkImage(
-              width: width,
-              imageUrl: _topicStoryList.photoUrl!,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
-          );
+          return _buildLeading(width, height);
         }
 
         if (index == _storyListItemList.length + 1) {
@@ -161,6 +144,37 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           },
         );
       },
+    );
+  }
+
+  Widget _buildLeading(double width, double height) {
+    if (_topicStoryList.leading == 'slideshow' &&
+        _topicStoryList.headerArticles != null &&
+        _topicStoryList.headerArticles!.isNotEmpty) {
+    } else if (_topicStoryList.leading == 'video' &&
+        _topicStoryList.headerVideo != null) {
+    } else if (_topicStoryList.leading == 'multivideo' &&
+        _topicStoryList.headerVideoList != null &&
+        _topicStoryList.headerVideoList!.isNotEmpty) {}
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 29),
+      child: CachedNetworkImage(
+        width: width,
+        imageUrl: _topicStoryList.photoUrl,
+        placeholder: (context, url) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+          child: Icon(Icons.error),
+        ),
+        fit: BoxFit.cover,
+      ),
     );
   }
 
