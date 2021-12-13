@@ -80,6 +80,7 @@ class StoryServices implements StoryRepos {
         tags {
           id
           name
+          slug
         }
         relatedPosts {
           slug

@@ -87,6 +87,7 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
     return ListView(controller: _listviewController, children: [
       CachedNetworkImage(
         width: width,
+        height: 160,
         imageUrl: widget.showIntro.pictureUrl,
         placeholder: (context, url) => Container(
           height: height,

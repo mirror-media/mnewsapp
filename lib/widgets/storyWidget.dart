@@ -9,6 +9,7 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
@@ -504,18 +505,25 @@ class _StoryWidgetState extends State<StoryWidget> {
         tagWidgets.add(
           Padding(
             padding: const EdgeInsets.all(4.0),
-            child: Container(
-              decoration: BoxDecoration(
-                //color: storyWidgetColor,
-                border: Border.all(width: 2.0, color: storyWidgetColor),
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                '#' + tags[i].name,
-                textAlign: TextAlign.center,
-                style: TextStyle(color: storyWidgetColor),
-                strutStyle:
-                    StrutStyle(forceStrutHeight: true, fontSize: 18, height: 1),
+            child: GestureDetector(
+              onTap: () {
+                AnalyticsHelper.logClick(
+                    slug: '', title: tags[i].name, location: 'Article_關鍵字');
+                RouteGenerator.navigateToTagStoryListPage(context, tags[i]);
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  //color: storyWidgetColor,
+                  border: Border.all(width: 2.0, color: storyWidgetColor),
+                ),
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  '#' + tags[i].name,
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: storyWidgetColor),
+                  strutStyle: StrutStyle(
+                      forceStrutHeight: true, fontSize: 18, height: 1),
+                ),
               ),
             ),
           ),

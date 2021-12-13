@@ -23,22 +23,22 @@ PODS:
   - Firebase/RemoteConfig (8.9.0):
     - Firebase/CoreOnly
     - FirebaseRemoteConfig (~> 8.9.0)
-  - firebase_analytics (8.3.4):
+  - firebase_analytics (9.0.2):
     - Firebase/Analytics (= 8.9.0)
     - firebase_core
     - Flutter
-  - firebase_core (1.9.0):
+  - firebase_core (1.10.5):
     - Firebase/CoreOnly (= 8.9.0)
     - Flutter
-  - firebase_messaging (10.0.8):
+  - firebase_messaging (11.2.3):
     - Firebase/Messaging (= 8.9.0)
     - firebase_core
     - Flutter
-  - firebase_remote_config (0.11.0-1):
+  - firebase_remote_config (1.0.2):
     - Firebase/RemoteConfig (= 8.9.0)
     - firebase_core
     - Flutter
-  - FirebaseABTesting (8.9.0):
+  - FirebaseABTesting (8.10.0):
     - FirebaseCore (~> 8.0)
   - FirebaseAnalytics (8.9.1):
     - FirebaseAnalytics/AdIdSupport (= 8.9.1)
@@ -62,12 +62,12 @@ PODS:
     - FirebaseCoreDiagnostics (~> 8.0)
     - GoogleUtilities/Environment (~> 7.6)
     - GoogleUtilities/Logger (~> 7.6)
-  - FirebaseCoreDiagnostics (8.9.0):
+  - FirebaseCoreDiagnostics (8.10.0):
     - GoogleDataTransport (~> 9.1)
     - GoogleUtilities/Environment (~> 7.6)
     - GoogleUtilities/Logger (~> 7.6)
     - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.9.0):
+  - FirebaseInstallations (8.10.0):
     - FirebaseCore (~> 8.0)
     - GoogleUtilities/Environment (~> 7.6)
     - GoogleUtilities/UserDefaults (~> 7.6)
@@ -97,12 +97,12 @@ PODS:
   - GCDWebServer (3.5.4):
     - GCDWebServer/Core (= 3.5.4)
   - GCDWebServer/Core (3.5.4)
-  - Google-Mobile-Ads-SDK (8.5.0):
+  - Google-Mobile-Ads-SDK (8.11.0):
     - GoogleAppMeasurement (< 9.0, >= 7.0)
     - GoogleUserMessagingPlatform (>= 1.1)
   - google_mobile_ads (0.0.1):
     - Flutter
-    - Google-Mobile-Ads-SDK (= 8.5.0)
+    - Google-Mobile-Ads-SDK (= 8.11.0)
   - GoogleAppMeasurement (8.9.1):
     - GoogleAppMeasurement/AdIdSupport (= 8.9.1)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.6)
@@ -157,9 +157,9 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
-  - package_info (0.0.1):
+  - package_info_plus (0.4.5):
     - Flutter
-  - path_provider (0.0.1):
+  - path_provider_ios (0.0.1):
     - Flutter
   - PINCache (3.0.3):
     - PINCache/Arc-exception-safe (= 3.0.3)
@@ -172,13 +172,13 @@ PODS:
   - PromisesObjC (2.0.0)
   - share_plus (0.0.1):
     - Flutter
-  - shared_preferences (0.0.1):
+  - shared_preferences_ios (0.0.1):
     - Flutter
   - sqflite (0.0.2):
     - Flutter
     - FMDB (>= 2.7.5)
   - Toast (4.0.0)
-  - url_launcher (0.0.1):
+  - url_launcher_ios (0.0.1):
     - Flutter
   - video_player (0.0.1):
     - Flutter
@@ -200,12 +200,12 @@ DEPENDENCIES:
   - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
   - google_mobile_ads (from `.symlinks/plugins/google_mobile_ads/ios`)
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
-  - package_info (from `.symlinks/plugins/package_info/ios`)
-  - path_provider (from `.symlinks/plugins/path_provider/ios`)
+  - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
   - share_plus (from `.symlinks/plugins/share_plus/ios`)
-  - shared_preferences (from `.symlinks/plugins/shared_preferences/ios`)
+  - shared_preferences_ios (from `.symlinks/plugins/shared_preferences_ios/ios`)
   - sqflite (from `.symlinks/plugins/sqflite/ios`)
-  - url_launcher (from `.symlinks/plugins/url_launcher/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
   - video_player (from `.symlinks/plugins/video_player/ios`)
   - wakelock (from `.symlinks/plugins/wakelock/ios`)
   - webview_flutter_wkwebview (from `.symlinks/plugins/webview_flutter_wkwebview/ios`)
@@ -260,18 +260,18 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/google_mobile_ads/ios"
   just_audio:
     :path: ".symlinks/plugins/just_audio/ios"
-  package_info:
-    :path: ".symlinks/plugins/package_info/ios"
-  path_provider:
-    :path: ".symlinks/plugins/path_provider/ios"
+  package_info_plus:
+    :path: ".symlinks/plugins/package_info_plus/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
   share_plus:
     :path: ".symlinks/plugins/share_plus/ios"
-  shared_preferences:
-    :path: ".symlinks/plugins/shared_preferences/ios"
+  shared_preferences_ios:
+    :path: ".symlinks/plugins/shared_preferences_ios/ios"
   sqflite:
     :path: ".symlinks/plugins/sqflite/ios"
-  url_launcher:
-    :path: ".symlinks/plugins/url_launcher/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
   video_player:
     :path: ".symlinks/plugins/video_player/ios"
   wakelock:
@@ -286,23 +286,23 @@ SPEC CHECKSUMS:
   Cache: 4ca7e00363fca5455f26534e5607634c820ffc2d
   device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   Firebase: 13d8d96499e2635428d5bf0ec675df21f95d9a95
-  firebase_analytics: 7a7528bb2abf4ca22cff7a57bbf909dcab73e13d
-  firebase_core: 3aa324017663581c1d250b66518b86298fda337c
-  firebase_messaging: 51b1029537c74503e935e4ccb221da8be8cbf26e
-  firebase_remote_config: 35dbf224b07bef561d28bdf0c4ac982d16c7963f
-  FirebaseABTesting: 9de50b34bf9eb4a07d4edb7af82c14152fd905aa
+  firebase_analytics: de9c26820ce4ec52fc6f759a73c1c6b8c669b038
+  firebase_core: dfcae4c150a5e24436a0b7677c470478a234d5bf
+  firebase_messaging: c4696ded2f44fb5c2bf6e94f9a575105793e58fa
+  firebase_remote_config: b6c8f06b74e803e9d03f9aa9adc58f0720feb3f7
+  FirebaseABTesting: fc7255f7e96d3cf7a1131fd68636c47e312cef76
   FirebaseAnalytics: 4ab446ce08a3fe52e8a4303dd997cf26276bf968
   FirebaseCore: 599ee609343eaf4941bd188f85e3aa077ffe325b
-  FirebaseCoreDiagnostics: 5daa63f1c1409d981a2d5007daa100b36eac6a34
-  FirebaseInstallations: caa7c8e0d3e2345b8829d2fa9ca1b4dfbf2fcc85
+  FirebaseCoreDiagnostics: 56fb7216d87e0e6ec2feddefa9d8a392fe8b2c18
+  FirebaseInstallations: 830327b45345ffc859eaa9c17bcd5ae893fd5425
   FirebaseMessaging: 82c4a48638f53f7b184f3cc9f6cd2cbe533ab316
   FirebaseRemoteConfig: a75c1bd44ebd3ed4ad3fa1ff09414a8b133be405
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
   fluttertoast: 6122fa75143e992b1d3470f61000f591a798cc58
   FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   GCDWebServer: 2c156a56c8226e2d5c0c3f208a3621ccffbe3ce4
-  Google-Mobile-Ads-SDK: 6f5c41bf73db1656e5b203ba9c31e3d0899a128d
-  google_mobile_ads: b3a22ee82112a9f06eea4435c71a97d104e0d271
+  Google-Mobile-Ads-SDK: be2192b51b74d74a6ed70590c2e8275412f1b71e
+  google_mobile_ads: a2f8b901601401bf7e691b4224d5992e9a37599a
   GoogleAppMeasurement: 837649ad3987936c232f6717c5680216f6243d24
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleUserMessagingPlatform: ab890ce5f6620f293a21b6bdd82e416a2c73aeca
@@ -310,19 +310,19 @@ SPEC CHECKSUMS:
   HLSCachingReverseProxyServer: 59935e1e0244ad7f3375d75b5ef46e8eb26ab181
   just_audio: baa7252489dbcf47a4c7cc9ca663e9661c99aafa
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  package_info: 873975fc26034f0b863a300ad47e7f1ac6c7ec62
-  path_provider: d1e9807085df1f9cc9318206cd649dc0b76be3de
+  package_info_plus: 6c92f08e1f853dc01228d6f553146438dafcd14e
+  path_provider_ios: 7d7ce634493af4477d156294792024ec3485acd5
   PINCache: 7a8fc1a691173d21dbddbf86cd515de6efa55086
   PINOperation: 00c935935f1e8cf0d1e2d6b542e75b88fc3e5e20
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
   share_plus: 056a1e8ac890df3e33cb503afffaf1e9b4fbae68
-  shared_preferences: 5033afbb22d372e15aff8ff766df9021b845f273
+  shared_preferences_ios: aef470a42dc4675a1cdd50e3158b42e3d1232b32
   sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
   Toast: 91b396c56ee72a5790816f40d3a94dd357abc196
-  url_launcher: b6e016d912f04be9f5bf6e8e82dc599b7ba59649
+  url_launcher_ios: 02f1989d4e14e998335b02b67a7590fa34f971af
   video_player: ecd305f42e9044793efd34846e1ce64c31ea6fcb
   wakelock: d0fc7c864128eac40eba1617cb5264d9c940b46f
-  webview_flutter_wkwebview: 44aa025fbcf6730d808f1e0d86a5af5ac25fa8de
+  webview_flutter_wkwebview: 005fbd90c888a42c5690919a1527ecc6649e1162
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
