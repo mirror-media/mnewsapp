@@ -173,61 +173,64 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           child: SizedBox(
             width: 90,
             height: 90,
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  width: 90,
-                  height: 90,
-                  imageUrl: storyListItem.photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.grey,
-                    child: Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
-                ),
-                if (storyListItem.categoryList != null &&
-                    storyListItem.categoryList!.isNotEmpty)
-                  Container(
-                    color: const Color.fromRGBO(244, 245, 246, 1),
-                    padding:
-                        const EdgeInsets.only(left: 6, right: 6, bottom: 3),
-                    child: Text(
-                      storyListItem.categoryList![0].name,
-                      softWrap: true,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(0, 51, 102, 1),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
+            child: CachedNetworkImage(
+              width: 90,
+              height: 90,
+              imageUrl: storyListItem.photoUrl,
+              placeholder: (context, url) => Container(
+                height: 90,
+                width: 90,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 90,
+                width: 90,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
             ),
           ),
         ),
         const SizedBox(
           width: 12,
         ),
-        Expanded(
-          child: Text(
-            storyListItem.name,
-            softWrap: true,
-            maxLines: 4,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: 17,
-            ),
-            overflow: TextOverflow.ellipsis,
+        SizedBox(
+          height: 90,
+          width: MediaQuery.of(context).size.width - 90 - 12 - 48,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                storyListItem.name,
+                softWrap: true,
+                maxLines: 2,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (storyListItem.categoryList != null &&
+                  storyListItem.categoryList!.isNotEmpty)
+                Container(
+                  color: const Color.fromRGBO(151, 151, 151, 1),
+                  padding: const EdgeInsets.only(left: 6, right: 6, bottom: 3),
+                  child: Text(
+                    storyListItem.categoryList![0].name,
+                    softWrap: true,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
           ),
         ),
       ],
