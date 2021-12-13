@@ -132,7 +132,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           return Container();
         }
 
-        return _buildVideoWidget(video.url);
+        return _buildVideoWidget(video.url!);
       }
 
       // state is Init, loading, or other
