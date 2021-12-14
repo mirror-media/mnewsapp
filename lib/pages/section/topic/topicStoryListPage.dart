@@ -5,21 +5,21 @@ import 'package:tv/blocs/topicStoryList/bloc.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
+import 'package:tv/models/topic.dart';
 import 'package:tv/pages/section/topic/topicStoryListWidget.dart';
 
 class TopicStoryListPage extends StatelessWidget {
-  final String slug;
-  final String topicName;
-  TopicStoryListPage({required this.topicName, required this.slug});
+  final Topic topic;
+  TopicStoryListPage({required this.topic});
   @override
   Widget build(BuildContext context) {
     AnalyticsHelper.sendScreenView(
-        screenName: 'TopicStoryListPage name=$topicName');
+        screenName: 'TopicStoryListPage name=${topic.name}');
     return Scaffold(
       appBar: _buildBar(context),
       body: BlocProvider(
         create: (context) => TopicStoryListBloc(),
-        child: TopicStoryListWidget(slug),
+        child: TopicStoryListWidget(topic.slug),
       ),
     );
   }
@@ -33,7 +33,7 @@ class TopicStoryListPage extends StatelessWidget {
       backgroundColor: appBarColor,
       centerTitle: true,
       title: Text(
-        topicName,
+        topic.name,
         style: TextStyle(
           fontSize: 17,
           color: Colors.white,
@@ -45,7 +45,7 @@ class TopicStoryListPage extends StatelessWidget {
           tooltip: 'Share',
           onPressed: () {
             String url =
-                Environment().config.mNewsWebsiteLink + 'story/' + slug;
+                Environment().config.mNewsWebsiteLink + 'story/' + topic.slug;
             Share.share(url);
           },
         ),

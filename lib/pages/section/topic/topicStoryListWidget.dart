@@ -1,13 +1,20 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
+import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
   final String slug;
@@ -17,10 +24,12 @@ class TopicStoryListWidget extends StatefulWidget {
 }
 
 class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
-  TopicStoryList _topicStoryList = TopicStoryList();
+  late TopicStoryList _topicStoryList;
   late final _storySlug;
   bool _isAllLoaded = false;
   StoryListItemList _storyListItemList = StoryListItemList();
+  CarouselController carouselController = CarouselController();
+
   @override
   void initState() {
     _storySlug = widget.slug;
@@ -86,22 +95,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     if (_storyListItemList.isEmpty) {
       return Column(
         children: [
-          CachedNetworkImage(
-            width: width,
-            imageUrl: _topicStoryList.photoUrl!,
-            placeholder: (context, url) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
+          _buildLeading(width, height),
           TabContentNoResultWidget(),
         ],
       );
@@ -111,8 +105,17 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
       itemCount: _storyListItemList.length + 2,
       padding: EdgeInsets.only(bottom: 28),
       separatorBuilder: (context, index) {
-        return const SizedBox(
+        if (index == 0 || index == _storyListItemList.length) {
+          return const SizedBox(
+            height: 16,
+          );
+        }
+        return const Divider(
           height: 16,
+          thickness: 1,
+          color: Color.fromRGBO(244, 245, 246, 1),
+          indent: 24,
+          endIndent: 27,
         );
       },
       itemBuilder: (context, index) {
@@ -121,25 +124,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         }
 
         if (index == 0) {
-          return Padding(
-            padding: EdgeInsets.only(bottom: 29),
-            child: CachedNetworkImage(
-              width: width,
-              imageUrl: _topicStoryList.photoUrl!,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
-          );
+          return _buildLeading(width, height);
         }
 
         if (index == _storyListItemList.length + 1) {
@@ -164,6 +149,166 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     );
   }
 
+  Widget _buildLeading(double width, double height) {
+    if (_topicStoryList.leading == 'slideshow' &&
+        _topicStoryList.headerArticles != null &&
+        _topicStoryList.headerArticles!.isNotEmpty) {
+      List<Widget> items = [];
+      for (var item in _topicStoryList.headerArticles!) {
+        items.add(CarouselDisplayWidget(
+          storyListItem: item,
+          width: width,
+          isHomePage: false,
+          showTag: false,
+        ));
+      }
+      return CarouselSlider(
+        items: items,
+        options: CarouselOptions(
+          autoPlay: true,
+          aspectRatio: 2.0,
+          viewportFraction: 1.0,
+          height: 350,
+        ),
+      );
+    } else if (_topicStoryList.leading == 'video' &&
+        _topicStoryList.headerVideo != null) {
+      if (_topicStoryList.headerVideo!.url.contains('youtube')) {
+        String? videoId =
+            VideoId.parseVideoId(_topicStoryList.headerVideo!.url);
+        if (videoId == null) {
+          return Container();
+        } else {
+          return YoutubePlayer(
+            videoId,
+            mute: true,
+            autoPlay: true,
+          );
+        }
+      } else {
+        return MNewsVideoPlayer(
+          videourl: _topicStoryList.headerVideo!.url,
+          aspectRatio: 16 / 9,
+          autoPlay: true,
+          muted: true,
+        );
+      }
+    } else if (_topicStoryList.leading == 'multivideo' &&
+        _topicStoryList.headerVideoList != null &&
+        _topicStoryList.headerVideoList!.isNotEmpty) {
+      List<Widget> items = [];
+      for (var item in _topicStoryList.headerVideoList!) {
+        String? videoId = VideoId.parseVideoId(item.url);
+        if (videoId != null) {
+          items.add(YoutubeViewer(
+            videoId,
+            autoPlay: true,
+            mute: true,
+            whenFinished: () => carouselController.nextPage(),
+          ));
+        }
+      }
+      if (items.isEmpty) {
+        return Container();
+      }
+      return Column(
+        children: [
+          CarouselSlider(
+            items: items,
+            carouselController: carouselController,
+            options: CarouselOptions(
+              autoPlay: false,
+              aspectRatio: 2.0,
+              viewportFraction: 1.0,
+              height: MediaQuery.of(context).size.width / (16 / 9),
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  carouselController.previousPage();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.arrow_back_ios,
+                      color: themeColor,
+                      size: 18,
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    const Text(
+                      '上一則影片',
+                      style: TextStyle(color: themeColor, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  carouselController.nextPage();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      '下一則影片',
+                      style: TextStyle(color: themeColor, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: themeColor,
+                      size: 18,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+        ],
+      );
+    }
+
+    return Padding(
+      padding: EdgeInsets.only(bottom: 29),
+      child: CachedNetworkImage(
+        width: width,
+        imageUrl: _topicStoryList.photoUrl,
+        placeholder: (context, url) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+        ),
+        errorWidget: (context, url, error) => Container(
+          height: height,
+          width: width,
+          color: Colors.grey,
+          child: Icon(Icons.error),
+        ),
+        fit: BoxFit.cover,
+      ),
+    );
+  }
+
   Widget _buildTopicStoryListItem(StoryListItem storyListItem) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,61 +318,64 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           child: SizedBox(
             width: 90,
             height: 90,
-            child: Stack(
-              children: [
-                CachedNetworkImage(
-                  width: 90,
-                  height: 90,
-                  imageUrl: storyListItem.photoUrl,
-                  placeholder: (context, url) => Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.grey,
-                  ),
-                  errorWidget: (context, url, error) => Container(
-                    height: 90,
-                    width: 90,
-                    color: Colors.grey,
-                    child: Icon(Icons.error),
-                  ),
-                  fit: BoxFit.cover,
-                ),
-                if (storyListItem.categoryList != null &&
-                    storyListItem.categoryList!.isNotEmpty)
-                  Container(
-                    color: const Color.fromRGBO(244, 245, 246, 1),
-                    padding:
-                        const EdgeInsets.only(left: 6, right: 6, bottom: 3),
-                    child: Text(
-                      storyListItem.categoryList![0].name,
-                      softWrap: true,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: Color.fromRGBO(0, 51, 102, 1),
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-              ],
+            child: CachedNetworkImage(
+              width: 90,
+              height: 90,
+              imageUrl: storyListItem.photoUrl,
+              placeholder: (context, url) => Container(
+                height: 90,
+                width: 90,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: 90,
+                width: 90,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
             ),
           ),
         ),
         const SizedBox(
           width: 12,
         ),
-        Expanded(
-          child: Text(
-            storyListItem.name,
-            softWrap: true,
-            maxLines: 4,
-            style: const TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.w400,
-              fontSize: 17,
-            ),
-            overflow: TextOverflow.ellipsis,
+        SizedBox(
+          height: 90,
+          width: MediaQuery.of(context).size.width - 90 - 12 - 48,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                storyListItem.name,
+                softWrap: true,
+                maxLines: 2,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+              if (storyListItem.categoryList != null &&
+                  storyListItem.categoryList!.isNotEmpty)
+                Container(
+                  color: const Color.fromRGBO(151, 151, 151, 1),
+                  padding: const EdgeInsets.only(left: 6, right: 6, bottom: 3),
+                  child: Text(
+                    storyListItem.categoryList![0].name,
+                    softWrap: true,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+            ],
           ),
         ),
       ],

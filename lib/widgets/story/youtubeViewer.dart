@@ -2,16 +2,19 @@ import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubeViewer extends StatefulWidget {
   final String videoID;
   final bool autoPlay;
   final bool mute;
+  final Function()? whenFinished;
   YoutubeViewer(
     this.videoID, {
     this.autoPlay = false,
     this.mute = false,
+    this.whenFinished,
   });
 
   @override
@@ -26,6 +29,7 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   late Future<bool> _configChewieFuture;
   var yt = YoutubeExplode();
   bool isInitialized = false;
+  bool isFinished = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -57,6 +61,17 @@ class _YoutubeViewerState extends State<YoutubeViewer>
         showOptions: false,
       );
       if (widget.mute) _chewieController.setVolume(0.0);
+      if (widget.whenFinished != null) {
+        _videoPlayerController.addListener(() {
+          if (_videoPlayerController.value.position ==
+              _videoPlayerController.value.duration) {
+            if (!isFinished) {
+              widget.whenFinished!();
+              isFinished = true;
+            }
+          }
+        });
+      }
     } catch (e) {
       print('Youtube player error: $e');
       return false;
@@ -79,16 +94,19 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   Widget build(BuildContext context) {
     super.build(context);
     return FutureBuilder<bool>(
-      initialData: false,
       future: _configChewieFuture,
       builder: (context, snapshot) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            if (snapshot.data == null || !snapshot.data!) {
+            if (snapshot.data == null) {
               return Container(
                   width: constraints.maxWidth,
                   height: constraints.maxWidth / (16 / 9),
                   child: Center(child: CircularProgressIndicator()));
+            }
+
+            if (!snapshot.data!) {
+              return Container();
             }
 
             Widget _videoPlayer = Chewie(
@@ -106,11 +124,19 @@ class _YoutubeViewerState extends State<YoutubeViewer>
               );
             }
 
-            return Container(
-              width: constraints.maxWidth,
-              height: constraints.maxWidth /
-                  _videoPlayerController.value.aspectRatio,
-              child: _videoPlayer,
+            return VisibilityDetector(
+              key: UniqueKey(),
+              child: Container(
+                width: constraints.maxWidth,
+                height: constraints.maxWidth /
+                    _videoPlayerController.value.aspectRatio,
+                child: _videoPlayer,
+              ),
+              onVisibilityChanged: (visibility) {
+                if (visibility.visibleFraction == 0) {
+                  _chewieController.pause();
+                }
+              },
             );
           },
         );

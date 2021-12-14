@@ -119,9 +119,13 @@ class TopicService {
     allTopics(
       where: \$where
     ) {
+      leading
       heroImage{
         urlMobileSized
       }
+      heroVideo{
+				url
+			}
       post(
         where: {state: published},
         sortBy: [updatedAt_DESC],
