@@ -84,11 +84,15 @@ class _YoutubeViewerState extends State<YoutubeViewer>
       builder: (context, snapshot) {
         return LayoutBuilder(
           builder: (BuildContext context, BoxConstraints constraints) {
-            if (snapshot.data == null || !snapshot.data!) {
+            if (snapshot.data == null) {
               return Container(
                   width: constraints.maxWidth,
                   height: constraints.maxWidth / (16 / 9),
                   child: Center(child: CircularProgressIndicator()));
+            }
+
+            if (!snapshot.data!) {
+              return Container();
             }
 
             Widget _videoPlayer = Chewie(
