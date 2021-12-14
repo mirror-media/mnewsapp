@@ -148,10 +148,10 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
 
   Widget _buildLeading(double width, double height) {
     if (_topicStoryList.leading == 'slideshow' &&
-        _topicStoryList.storyListItemList != null &&
-        _topicStoryList.storyListItemList!.isNotEmpty) {
+        _topicStoryList.headerArticles != null &&
+        _topicStoryList.headerArticles!.isNotEmpty) {
       List<Widget> items = [];
-      for (var item in _topicStoryList.storyListItemList!) {
+      for (var item in _topicStoryList.headerArticles!) {
         items.add(CarouselDisplayWidget(
           storyListItem: item,
           width: width,
