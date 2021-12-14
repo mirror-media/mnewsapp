@@ -27,8 +27,11 @@ class TopicStoryList {
     }
 
     StoryListItemList? storyListItemList;
+    StoryListItemList? headerArticles;
     if (json['post'] != null && json['post'].length > 0) {
       storyListItemList = StoryListItemList.fromJson(json['post']);
+      // TODO: remove under line when column is opened
+      headerArticles = storyListItemList;
     }
 
     String leading = 'image';
@@ -46,6 +49,7 @@ class TopicStoryList {
       storyListItemList: storyListItemList,
       leading: leading,
       headerVideo: heroVideo,
+      headerArticles: headerArticles,
     );
   }
 }
