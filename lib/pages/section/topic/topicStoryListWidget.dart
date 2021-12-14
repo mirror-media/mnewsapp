@@ -10,6 +10,9 @@ import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
+import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
   final String slug;
@@ -89,22 +92,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     if (_storyListItemList.isEmpty) {
       return Column(
         children: [
-          CachedNetworkImage(
-            width: width,
-            imageUrl: _topicStoryList.photoUrl,
-            placeholder: (context, url) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
+          _buildLeading(width, height),
           TabContentNoResultWidget(),
         ],
       );
@@ -182,6 +170,26 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
       );
     } else if (_topicStoryList.leading == 'video' &&
         _topicStoryList.headerVideo != null) {
+      if (_topicStoryList.headerVideo!.url.contains('youtube')) {
+        String? videoId =
+            VideoId.parseVideoId(_topicStoryList.headerVideo!.url);
+        if (videoId == null) {
+          return Container();
+        } else {
+          return YoutubePlayer(
+            videoId,
+            mute: true,
+            autoPlay: true,
+          );
+        }
+      } else {
+        return MNewsVideoPlayer(
+          videourl: _topicStoryList.headerVideo!.url,
+          aspectRatio: 16 / 9,
+          autoPlay: true,
+          muted: true,
+        );
+      }
     } else if (_topicStoryList.leading == 'multivideo' &&
         _topicStoryList.headerVideoList != null &&
         _topicStoryList.headerVideoList!.isNotEmpty) {}
