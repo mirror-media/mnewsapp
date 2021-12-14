@@ -8,9 +8,13 @@ import 'package:tv/models/storyListItem.dart';
 class CarouselDisplayWidget extends StatelessWidget {
   final StoryListItem storyListItem;
   final double width;
+  final bool isHomePage;
+  final bool showTag;
   CarouselDisplayWidget({
     required this.storyListItem,
     required this.width,
+    this.isHomePage = true,
+    this.showTag = true,
   });
 
   final double aspectRatio = 16 / 9;
@@ -23,20 +27,23 @@ class CarouselDisplayWidget extends StatelessWidget {
           Stack(
             children: [
               _displayImage(width, storyListItem),
-              Align(
-                alignment: Alignment.topLeft,
-                child: _displayTag(),
-              ),
+              if (showTag)
+                Align(
+                  alignment: Alignment.topLeft,
+                  child: _displayTag(),
+                ),
             ],
           ),
           Expanded(child: _displayTitle(storyListItem)),
         ],
       ),
       onTap: () {
-        AnalyticsHelper.logClick(
-            slug: storyListItem.slug,
-            title: storyListItem.name,
-            location: 'HomePage_編輯精選');
+        if (isHomePage) {
+          AnalyticsHelper.logClick(
+              slug: storyListItem.slug,
+              title: storyListItem.name,
+              location: 'HomePage_編輯精選');
+        }
         RouteGenerator.navigateToStory(context, storyListItem.slug);
       },
     );
