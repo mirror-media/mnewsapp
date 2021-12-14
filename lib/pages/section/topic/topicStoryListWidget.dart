@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -7,6 +8,7 @@ import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
@@ -112,8 +114,17 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
       itemCount: _storyListItemList.length + 2,
       padding: EdgeInsets.only(bottom: 28),
       separatorBuilder: (context, index) {
-        return const SizedBox(
+        if (index == 0 || index == _storyListItemList.length) {
+          return const SizedBox(
+            height: 16,
+          );
+        }
+        return const Divider(
           height: 16,
+          thickness: 1,
+          color: Color.fromRGBO(244, 245, 246, 1),
+          indent: 24,
+          endIndent: 27,
         );
       },
       itemBuilder: (context, index) {
@@ -149,8 +160,26 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
 
   Widget _buildLeading(double width, double height) {
     if (_topicStoryList.leading == 'slideshow' &&
-        _topicStoryList.headerArticles != null &&
-        _topicStoryList.headerArticles!.isNotEmpty) {
+        _topicStoryList.storyListItemList != null &&
+        _topicStoryList.storyListItemList!.isNotEmpty) {
+      List<Widget> items = [];
+      for (var item in _topicStoryList.storyListItemList!) {
+        items.add(CarouselDisplayWidget(
+          storyListItem: item,
+          width: width,
+          isHomePage: false,
+          showTag: false,
+        ));
+      }
+      return CarouselSlider(
+        items: items,
+        options: CarouselOptions(
+          autoPlay: true,
+          aspectRatio: 2.0,
+          viewportFraction: 1.0,
+          height: 350,
+        ),
+      );
     } else if (_topicStoryList.leading == 'video' &&
         _topicStoryList.headerVideo != null) {
     } else if (_topicStoryList.leading == 'multivideo' &&
