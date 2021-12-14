@@ -96,6 +96,8 @@ dependencies:
   better_player: ^0.0.77
   # firebase analytics
   firebase_analytics: ^9.0.2
+  # visibility detector
+  visibility_detector: ^0.2.2
 
 flutter_icons:
   android: "launcher_icon"
