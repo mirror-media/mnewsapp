@@ -7,9 +7,13 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 class YoutubePlayer extends StatefulWidget {
   final String videoID;
   final bool isLive;
+  final bool autoPlay;
+  final bool mute;
   YoutubePlayer(
     this.videoID, {
     this.isLive = false,
+    this.autoPlay = false,
+    this.mute = false,
   });
 
   @override
@@ -40,7 +44,7 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
             _isPlaying = !_isPlaying;
           });
         },
-        child: !_isPlaying
+        child: !_isPlaying && !widget.autoPlay
             ? Stack(
                 alignment: Alignment.center,
                 children: [
@@ -74,11 +78,13 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
             : widget.isLive
                 ? YoutubeLiveViewer(
                     widget.videoID,
-                    autoPlay: true,
+                    autoPlay: widget.autoPlay,
+                    mute: widget.mute,
                   )
                 : YoutubeViewer(
                     widget.videoID,
-                    autoPlay: true,
+                    autoPlay: widget.autoPlay,
+                    mute: widget.mute,
                   ),
       ),
     );
