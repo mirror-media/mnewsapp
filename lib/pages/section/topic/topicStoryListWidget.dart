@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -12,6 +13,7 @@ import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:tv/widgets/story/youtubeViewer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
@@ -26,6 +28,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   late final _storySlug;
   bool _isAllLoaded = false;
   StoryListItemList _storyListItemList = StoryListItemList();
+  CarouselController carouselController = CarouselController();
 
   @override
   void initState() {
@@ -192,7 +195,98 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
       }
     } else if (_topicStoryList.leading == 'multivideo' &&
         _topicStoryList.headerVideoList != null &&
-        _topicStoryList.headerVideoList!.isNotEmpty) {}
+        _topicStoryList.headerVideoList!.isNotEmpty) {
+      List<Widget> items = [];
+      for (var item in _topicStoryList.headerVideoList!) {
+        String? videoId = VideoId.parseVideoId(item.url);
+        if (videoId != null) {
+          items.add(YoutubeViewer(
+            videoId,
+            autoPlay: true,
+            mute: true,
+            whenFinished: () => carouselController.nextPage(),
+          ));
+        }
+      }
+      if (items.isEmpty) {
+        return Container();
+      }
+      return Column(
+        children: [
+          CarouselSlider(
+            items: items,
+            carouselController: carouselController,
+            options: CarouselOptions(
+              autoPlay: false,
+              aspectRatio: 2.0,
+              viewportFraction: 1.0,
+              height: MediaQuery.of(context).size.width / (16 / 9),
+            ),
+          ),
+          const SizedBox(
+            height: 8,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              InkWell(
+                onTap: () {
+                  carouselController.previousPage();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Icon(
+                      Icons.arrow_back_ios,
+                      color: themeColor,
+                      size: 18,
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    const Text(
+                      '上一則影片',
+                      style: TextStyle(color: themeColor, fontSize: 14),
+                    ),
+                  ],
+                ),
+              ),
+              InkWell(
+                onTap: () {
+                  carouselController.nextPage();
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    const Text(
+                      '下一則影片',
+                      style: TextStyle(color: themeColor, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      width: 13,
+                    ),
+                    Icon(
+                      Icons.arrow_forward_ios,
+                      color: themeColor,
+                      size: 18,
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+        ],
+      );
+    }
 
     return Padding(
       padding: EdgeInsets.only(bottom: 29),
