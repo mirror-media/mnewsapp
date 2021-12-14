@@ -36,10 +36,16 @@ class TopicStoryList {
       leading = json['leading'];
     }
 
+    Video? heroVideo;
+    if (BaseModel.checkJsonKeys(json, ['heroVideo'])) {
+      heroVideo = Video.fromJson(json['heroVideo']);
+    }
+
     return TopicStoryList(
       photoUrl: photoUrl,
       storyListItemList: storyListItemList,
       leading: leading,
+      headerVideo: heroVideo,
     );
   }
 }
