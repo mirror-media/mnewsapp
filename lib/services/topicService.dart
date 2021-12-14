@@ -119,6 +119,7 @@ class TopicService {
     allTopics(
       where: \$where
     ) {
+      leading
       heroImage{
         urlMobileSized
       }
