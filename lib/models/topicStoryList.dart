@@ -34,7 +34,7 @@ class TopicStoryList {
       headerArticles = storyListItemList;
     }
 
-    String leading = 'image';
+    String leading = 'multivideo';
     if (BaseModel.checkJsonKeys(json, ['leading'])) {
       leading = json['leading'];
     }
@@ -44,12 +44,20 @@ class TopicStoryList {
       heroVideo = Video.fromJson(json['heroVideo']);
     }
 
+    List<Video> headerVideoList = [];
+    // mock data
+    headerVideoList
+        .add(Video(url: "https://www.youtube.com/watch?v=IOyq-eTRhvo"));
+    headerVideoList
+        .add(Video(url: "https://www.youtube.com/watch?v=Nb07Tdpcrfg"));
+
     return TopicStoryList(
       photoUrl: photoUrl,
       storyListItemList: storyListItemList,
       leading: leading,
       headerVideo: heroVideo,
       headerArticles: headerArticles,
+      headerVideoList: headerVideoList,
     );
   }
 }
