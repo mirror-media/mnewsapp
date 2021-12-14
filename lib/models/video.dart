@@ -1,22 +1,15 @@
 class Video {
-  final String? url;
-  final String? ytUrl;
+  final String url;
 
-  Video({this.url, this.ytUrl});
+  Video({required this.url});
 
   factory Video.fromJson(Map<String, dynamic> json) {
-    String? ytUrl;
-    if (json['youtubeUrl'] != null) {
-      ytUrl = json['youtubeUrl'];
-    }
     return Video(
       url: json['url'],
-      ytUrl: ytUrl,
     );
   }
 
   Map<String, dynamic> toJson() => {
         'url': url,
-        'youtubeUrl': ytUrl,
       };
 }
