@@ -30,26 +30,36 @@ class TopicStoryList {
     StoryListItemList? headerArticles;
     if (json['post'] != null && json['post'].length > 0) {
       storyListItemList = StoryListItemList.fromJson(json['post']);
-      // TODO: remove under line when column is opened
-      headerArticles = storyListItemList;
     }
 
-    String leading = 'multivideo';
+    String leading = 'image';
     if (BaseModel.checkJsonKeys(json, ['leading'])) {
       leading = json['leading'];
     }
 
     Video? heroVideo;
-    if (BaseModel.checkJsonKeys(json, ['heroVideo'])) {
+    if (BaseModel.checkJsonKeys(json, ['heroVideo']) && leading == 'video') {
       heroVideo = Video.fromJson(json['heroVideo']);
+    } else {
+      leading = 'image';
     }
 
     List<Video> headerVideoList = [];
-    // mock data
-    headerVideoList
-        .add(Video(url: "https://www.youtube.com/watch?v=IOyq-eTRhvo"));
-    headerVideoList
-        .add(Video(url: "https://www.youtube.com/watch?v=Nb07Tdpcrfg"));
+    if (BaseModel.checkJsonKeys(json, ['multivideo']) &&
+        leading == 'multivideo') {
+      for (var video in json['multivideo']) {
+        headerVideoList.add(Video.fromJson(video));
+      }
+    } else {
+      leading = 'image';
+    }
+
+    if (BaseModel.checkJsonKeys(json, ['slideshow']) &&
+        leading == 'slideshow') {
+      headerArticles = StoryListItemList.fromJson(json['slideshow']);
+    } else {
+      leading = 'image';
+    }
 
     return TopicStoryList(
       photoUrl: photoUrl,

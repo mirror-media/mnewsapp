@@ -126,6 +126,20 @@ class TopicService {
       heroVideo{
 				url
 			}
+      multivideo{
+				url
+			}
+			slideshow{
+				id
+				name
+				slug
+				categories{
+          name
+        }
+        heroImage{
+          urlMobileSized
+        }
+			}
       post(
         where: {state: published},
         sortBy: [updatedAt_DESC],
