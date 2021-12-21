@@ -61,16 +61,30 @@ android {
     
     signingConfigs {
         dev {
-            keyAlias devKeystoreProperties['keyAlias']
-            keyPassword devKeystoreProperties['keyPassword']
-            storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
-            storePassword devKeystoreProperties['storePassword']
+            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+            }else{
+                keyAlias devKeystoreProperties['keyAlias']
+                keyPassword devKeystoreProperties['keyPassword']
+                storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
+                storePassword devKeystoreProperties['storePassword']
+            }
         }
         prod {
-            keyAlias prodKeystoreProperties['keyAlias']
-            keyPassword prodKeystoreProperties['keyPassword']
-            storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
-            storePassword prodKeystoreProperties['storePassword']
+            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
+                keyAlias System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+            }else{
+                keyAlias devKeystoreProperties['keyAlias']
+                keyPassword devKeystoreProperties['keyPassword']
+                storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
+                storePassword devKeystoreProperties['storePassword']
+            }
         }
     }
 
