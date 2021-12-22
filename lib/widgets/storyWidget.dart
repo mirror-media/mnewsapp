@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -545,7 +546,7 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
     double width = MediaQuery.of(context).size.width;
-    double frameWidth = width - 24 - 120 - 14;
+    double frameWidth = width - 24 - 120 - 12;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.separated(
@@ -577,12 +578,13 @@ class _StoryWidgetState extends State<StoryWidget> {
                             width: 120,
                             padding:
                                 const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 0.0),
-                            child: Text(
+                            child: AutoSizeText(
                               '相關文章',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: storyWidgetColor,
                               ),
+                              maxLines: 1,
                             ),
                           ),
                           ClipPath(

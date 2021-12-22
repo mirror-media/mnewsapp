@@ -97,7 +97,7 @@ class _StoryPageState extends State<StoryPage> {
           onPressed: () {
             AnalyticsHelper.logShare(name: _slug, type: 'story');
             String url =
-                Environment().config.mNewsWebsiteLink + 'story/' + _slug;
+                Environment().config.mNewsWebsiteLink + '/story/' + _slug;
             Share.share(url);
           },
         ),
