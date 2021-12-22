@@ -98,6 +98,8 @@ dependencies:
   firebase_analytics: ^9.0.2
   # visibility detector
   visibility_detector: ^0.2.2
+  # auto size text
+  auto_size_text: ^3.0.0
 
 flutter_icons:
   android: "launcher_icon"
