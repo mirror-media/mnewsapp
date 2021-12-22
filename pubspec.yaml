@@ -63,7 +63,7 @@ dependencies:
     git:
       url: git://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.1.1
+      version: ^0.2.0
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
