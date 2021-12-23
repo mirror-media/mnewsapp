@@ -174,61 +174,63 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget _topicsButton() {
     List<Widget> topicButtons = [];
-    String allTopicsButtonText = '所有專題';
 
     if (widget.topics.isNotEmpty) {
       for (var topic in widget.topics) {
-        topicButtons.add(Container(
-          alignment: Alignment.centerLeft,
-          width: 90,
-          height: 40,
-          child: TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              RouteGenerator.navigateToTopicStoryListPage(
-                context,
-                topic,
-              );
-            },
-            child: Text(
-              topic.name,
-              maxLines: 1,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-              softWrap: true,
-              overflow: TextOverflow.ellipsis,
+        if (topic.isFeatured) {
+          topicButtons.add(Container(
+            alignment: Alignment.centerLeft,
+            width: 90,
+            height: 40,
+            child: TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                RouteGenerator.navigateToTopicStoryListPage(
+                  context,
+                  topic,
+                );
+              },
+              child: Text(
+                topic.name,
+                maxLines: 1,
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+                softWrap: true,
+                overflow: TextOverflow.ellipsis,
+              ),
+              style: TextButton.styleFrom(
+                primary: Color.fromRGBO(0, 77, 188, 1),
+              ),
             ),
-            style: TextButton.styleFrom(
-              primary: Color.fromRGBO(0, 77, 188, 1),
-            ),
-          ),
-        ));
+          ));
+        }
       }
-      allTopicsButtonText = '更多專題';
-    }
 
-    topicButtons.add(Container(
-      padding: EdgeInsets.only(right: 20),
-      alignment: Alignment.centerLeft,
-      width: 100,
-      height: 40,
-      child: TextButton(
-        onPressed: () async {
-          _changeSection(MNewsSection.topicList);
-          await Future.delayed(Duration(milliseconds: 150));
-          Navigator.of(context).pop();
-        },
-        child: Text(
-          allTopicsButtonText,
-          maxLines: 1,
-          style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-          softWrap: true,
-          overflow: TextOverflow.ellipsis,
+      String buttonText = '所有專題';
+
+      if (topicButtons.isNotEmpty) {
+        buttonText = '更多專題';
+      }
+      topicButtons.add(Container(
+        padding: EdgeInsets.only(right: 20),
+        alignment: Alignment.centerLeft,
+        width: 100,
+        height: 40,
+        child: TextButton(
+          onPressed: () async {
+            _changeSection(MNewsSection.topicList);
+            await Future.delayed(Duration(milliseconds: 150));
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            buttonText,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+          style: TextButton.styleFrom(
+            primary: Color.fromRGBO(117, 117, 117, 1),
+          ),
         ),
-        style: TextButton.styleFrom(
-          primary: Color.fromRGBO(117, 117, 117, 1),
-        ),
-      ),
-    ));
+      ));
+    }
 
     return Container(
       color: Colors.white,
