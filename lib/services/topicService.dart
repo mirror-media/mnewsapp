@@ -14,7 +14,7 @@ class TopicService {
     String key = 'fetchFeaturedTopics';
 
     Map<String, dynamic> variables = {
-      "where": {"state": "published", "isFeatured": true},
+      "where": {"state": "published"},
       "first": 5
     };
 
@@ -31,6 +31,7 @@ class TopicService {
       id
       slug
       name
+      isFeatured
       }
     }
     """;
@@ -71,6 +72,7 @@ class TopicService {
       slug
       name
       brief
+      isFeatured
       heroImage{
         urlMobileSized
       }
