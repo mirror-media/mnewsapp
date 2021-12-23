@@ -205,28 +205,31 @@ class _HomeDrawerState extends State<HomeDrawer> {
         }
       }
 
+      String buttonText = '所有專題';
+
       if (topicButtons.isNotEmpty) {
-        topicButtons.add(Container(
-          padding: EdgeInsets.only(right: 20),
-          alignment: Alignment.centerLeft,
-          width: 100,
-          height: 40,
-          child: TextButton(
-            onPressed: () async {
-              _changeSection(MNewsSection.topicList);
-              await Future.delayed(Duration(milliseconds: 150));
-              Navigator.of(context).pop();
-            },
-            child: Text(
-              '更多專題',
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-            ),
-            style: TextButton.styleFrom(
-              primary: Color.fromRGBO(117, 117, 117, 1),
-            ),
-          ),
-        ));
+        buttonText = '更多專題';
       }
+      topicButtons.add(Container(
+        padding: EdgeInsets.only(right: 20),
+        alignment: Alignment.centerLeft,
+        width: 100,
+        height: 40,
+        child: TextButton(
+          onPressed: () async {
+            _changeSection(MNewsSection.topicList);
+            await Future.delayed(Duration(milliseconds: 150));
+            Navigator.of(context).pop();
+          },
+          child: Text(
+            buttonText,
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
+          ),
+          style: TextButton.styleFrom(
+            primary: Color.fromRGBO(117, 117, 117, 1),
+          ),
+        ),
+      ));
     }
 
     return Container(
