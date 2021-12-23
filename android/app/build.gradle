@@ -80,10 +80,10 @@ android {
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
                 keyPassword System.getenv()["FCI_KEY_PASSWORD"]
             }else{
-                keyAlias devKeystoreProperties['keyAlias']
-                keyPassword devKeystoreProperties['keyPassword']
-                storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
-                storePassword devKeystoreProperties['storePassword']
+                keyAlias prodKeystoreProperties['keyAlias']
+                keyPassword prodKeystoreProperties['keyPassword']
+                storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
+                storePassword prodKeystoreProperties['storePassword']
             }
         }
     }

@@ -30,6 +30,7 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   var yt = YoutubeExplode();
   bool isInitialized = false;
   bool isFinished = false;
+  bool isDisposed = false;
 
   @override
   bool get wantKeepAlive => true;
@@ -84,6 +85,7 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   void dispose() {
     yt.close();
     if (isInitialized) {
+      isDisposed = true;
       _videoPlayerController.dispose();
       _chewieController.dispose();
     }
@@ -133,7 +135,7 @@ class _YoutubeViewerState extends State<YoutubeViewer>
                 child: _videoPlayer,
               ),
               onVisibilityChanged: (visibility) {
-                if (visibility.visibleFraction == 0) {
+                if (visibility.visibleFraction == 0 && !isDisposed) {
                   _chewieController.pause();
                 }
               },

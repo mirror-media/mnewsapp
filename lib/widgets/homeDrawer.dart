@@ -301,6 +301,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
                   _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
                       '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
+                  _thirdPartyMediaLinkButton(
+                      Icons.email, '聯絡我們', 'mailto:mnews.cs@mnews.tw'),
                 ],
               ),
             ),
