@@ -6,6 +6,7 @@ class Topic {
   final String id;
   final String name;
   final String slug;
+  final bool isFeatured;
   final String? photoUrl;
   final ParagraphList? brief;
   bool isExpanded;
@@ -14,6 +15,7 @@ class Topic {
     required this.id,
     required this.name,
     required this.slug,
+    required this.isFeatured,
     this.photoUrl,
     this.brief,
     this.isExpanded = false,
@@ -37,6 +39,7 @@ class Topic {
       slug: json['slug'],
       photoUrl: photoUrl,
       brief: brief,
+      isFeatured: json['isFeatured'] ?? false,
     );
   }
 
