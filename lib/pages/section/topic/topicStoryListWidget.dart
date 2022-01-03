@@ -212,7 +212,6 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             videoId,
             autoPlay: true,
             mute: true,
-            whenFinished: () => carouselController.nextPage(),
           ));
         }
       }
