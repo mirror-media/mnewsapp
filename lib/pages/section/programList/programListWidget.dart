@@ -7,6 +7,7 @@ import 'package:tv/blocs/programList/program_list_cubit.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/programList.dart';
 import 'package:tv/models/programListItem.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/customPicker.dart';
 
 class ProgramListWidget extends StatefulWidget {
@@ -141,6 +142,10 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     int end = programList.lastIndexWhere((element) =>
         element.year == _selectedDate.year &&
         element.weekDay == _selectedDate.weekday);
+
+    if (start == -1 || end == -1) {
+      return TabContentNoResultWidget();
+    }
 
     for (int i = start; i <= end; i++) {
       _pickedProgramList.add(programList[i]);
