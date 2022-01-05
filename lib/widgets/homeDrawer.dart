@@ -36,24 +36,26 @@ class _HomeDrawerState extends State<HomeDrawer> {
       } else {
         MNewsSection sectionId = state.sectionId;
 
-        return Drawer(
-          child: CustomScrollView(
-            physics: const NeverScrollableScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: _buildDrawerHeader(padding),
-              ),
-              SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
-              SliverToBoxAdapter(child: _topicsButton()),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Container(
-                  color: Colors.white,
-                  alignment: Alignment.bottomCenter,
-                  child: _thirdPartyBlock(),
+        return SafeArea(
+          child: Drawer(
+            child: CustomScrollView(
+              physics: const NeverScrollableScrollPhysics(),
+              slivers: [
+                SliverToBoxAdapter(
+                  child: _buildDrawerHeader(padding),
                 ),
-              ),
-            ],
+                SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
+                SliverToBoxAdapter(child: _topicsButton()),
+                SliverFillRemaining(
+                  hasScrollBody: false,
+                  child: Container(
+                    color: Colors.white,
+                    alignment: Alignment.bottomCenter,
+                    child: _thirdPartyBlock(),
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       }
@@ -62,7 +64,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
   Widget _buildDrawerHeader(EdgeInsets padding) {
     return Container(
-      height: 84.0 + padding.top,
+      // height: 84.0 + padding.top,
       // Add color back
       color: drawerColor,
       //Temporarily remove the login and setting buttons
@@ -176,6 +178,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
     List<Widget> topicButtons = [];
 
     if (widget.topics.isNotEmpty) {
+      int topicCount = 0;
       for (var topic in widget.topics) {
         if (topic.isFeatured) {
           topicButtons.add(Container(
@@ -202,6 +205,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
               ),
             ),
           ));
+          topicCount++;
+          if (topicCount == 5) break;
         }
       }
 
@@ -237,7 +242,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
       child: Wrap(
         children: topicButtons,
       ),
-      padding: EdgeInsets.only(top: 20, left: 20),
+      padding: EdgeInsets.only(top: 5, left: 20),
     );
   }
 
