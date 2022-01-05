@@ -45,7 +45,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   child: _buildDrawerHeader(padding),
                 ),
                 SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
-                SliverToBoxAdapter(child: _topicsButton()),
                 SliverFillRemaining(
                   hasScrollBody: false,
                   child: Container(
@@ -174,92 +173,22 @@ class _HomeDrawerState extends State<HomeDrawer> {
         });
   }
 
-  Widget _topicsButton() {
-    List<Widget> topicButtons = [];
-
-    if (widget.topics.isNotEmpty) {
-      int topicCount = 0;
-      for (var topic in widget.topics) {
-        if (topic.isFeatured) {
-          topicButtons.add(Container(
-            alignment: Alignment.centerLeft,
-            width: 90,
-            height: 40,
-            child: TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                RouteGenerator.navigateToTopicStoryListPage(
-                  context,
-                  topic,
-                );
-              },
-              child: Text(
-                topic.name,
-                maxLines: 1,
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-                softWrap: true,
-                overflow: TextOverflow.ellipsis,
-              ),
-              style: TextButton.styleFrom(
-                primary: Color.fromRGBO(0, 77, 188, 1),
-              ),
-            ),
-          ));
-          topicCount++;
-          if (topicCount == 5) break;
-        }
-      }
-
-      String buttonText = '所有專題';
-
-      if (topicButtons.isNotEmpty) {
-        buttonText = '更多專題';
-      }
-      topicButtons.add(Container(
-        padding: EdgeInsets.only(right: 20),
-        alignment: Alignment.centerLeft,
-        width: 100,
-        height: 40,
-        child: TextButton(
-          onPressed: () async {
-            _changeSection(MNewsSection.topicList);
-            await Future.delayed(Duration(milliseconds: 150));
-            Navigator.of(context).pop();
-          },
-          child: Text(
-            buttonText,
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
-          ),
-          style: TextButton.styleFrom(
-            primary: Color.fromRGBO(117, 117, 117, 1),
-          ),
-        ),
-      ));
-    }
-
-    return Container(
-      color: Colors.white,
-      child: Wrap(
-        children: topicButtons,
-      ),
-      padding: EdgeInsets.only(top: 5, left: 20),
-    );
-  }
-
   Widget _thirdPartyMediaLinkButton(IconData icon, String title, String link) {
     return InkWell(
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
             children: [
-              FaIcon(
-                icon,
-                size: 18,
-                color: Color(0xff757575),
+              Container(
+                width: 18,
+                alignment: Alignment.center,
+                child: FaIcon(
+                  icon,
+                  size: 18,
+                  color: Color(0xff757575),
+                ),
               ),
-              icon == FontAwesomeIcons.youtube
-                  ? SizedBox(width: 13.0)
-                  : SizedBox(width: 16.0),
+              SizedBox(width: 16.0),
               Text(
                 title,
                 style: TextStyle(
@@ -300,12 +229,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 children: [
                   _thirdPartyMediaLinkButton(
                       FontAwesomeIcons.youtube,
-                      '鏡電視 YouTube 頻道',
+                      '鏡新聞 YouTube 頻道',
                       'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
                   _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
-                      '鏡電視 粉絲專頁', 'https://www.facebook.com/mnewstw'),
+                      '鏡新聞 粉絲專頁', 'https://www.facebook.com/mnewstw'),
                   _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
-                      '鏡電視 Instagram', 'https://www.instagram.com/mnewstw/'),
+                      '鏡新聞 Instagram', 'https://www.instagram.com/mnewstw/'),
                   _thirdPartyMediaLinkButton(
                       Icons.email, '聯絡我們', 'mailto:mnews.cs@mnews.tw'),
                 ],
