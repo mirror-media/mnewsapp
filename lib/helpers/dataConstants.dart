@@ -66,7 +66,8 @@ const mNewsDevSectionList = [
   {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
   {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},
   {BaseModel.idKey: MNewsSection.ombuds, BaseModel.nameKey: '公評人'},
-  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'}
+  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'},
+  {BaseModel.idKey: MNewsSection.topicList, BaseModel.nameKey: '專題'}
 ];
 
 const mNewsProdSectionList = [
@@ -76,7 +77,8 @@ const mNewsProdSectionList = [
   {BaseModel.idKey: MNewsSection.show, BaseModel.nameKey: '節目'},
   {BaseModel.idKey: MNewsSection.anchorperson, BaseModel.nameKey: '鏡主播'},
   {BaseModel.idKey: MNewsSection.ombuds, BaseModel.nameKey: '公評人'},
-  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'}
+  {BaseModel.idKey: MNewsSection.programList, BaseModel.nameKey: '節目表'},
+  {BaseModel.idKey: MNewsSection.topicList, BaseModel.nameKey: '專題'}
 ];
 
 /// live

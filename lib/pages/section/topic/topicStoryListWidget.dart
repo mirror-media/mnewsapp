@@ -93,12 +93,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     double height = width / 16 * 9;
 
     if (_storyListItemList.isEmpty) {
-      return Column(
-        children: [
-          _buildLeading(width, height),
-          TabContentNoResultWidget(),
-        ],
-      );
+      return TabContentNoResultWidget();
     }
 
     return ListView.separated(
