@@ -17,7 +17,8 @@ import 'package:tv/widgets/story/youtubeWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(
-      Paragraph? paragraph, BuildContext context, double textSize) {
+      Paragraph? paragraph, BuildContext context, double textSize,
+      {List<String>? imageUrlList}) {
     if (paragraph == null) {
       return Container();
     }
@@ -71,6 +72,7 @@ class ParagraphFormat {
               description: paragraph.contents![0].description,
               width: width,
               textSize: textSize - 4,
+              imageUrlList: imageUrlList ?? [paragraph.contents![0].data],
             );
           }
 
@@ -79,7 +81,10 @@ class ParagraphFormat {
       case 'slideshow':
         {
           return ImageAndDescriptionSlideShowWidget(
-              contentList: paragraph.contents!, textSize: textSize);
+            contentList: paragraph.contents!,
+            textSize: textSize,
+            imageUrlList: imageUrlList ?? [],
+          );
         }
       case 'annotation':
         {
