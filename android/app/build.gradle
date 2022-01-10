@@ -38,7 +38,7 @@ if (prodKeystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -52,11 +52,14 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.mirrortv.mnews"
-        minSdkVersion 19
-        targetSdkVersion 30
+        minSdkVersion 23
+        targetSdkVersion 31
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
     }
     
     signingConfigs {
@@ -105,6 +108,8 @@ android {
             // Signing with the debug keys for now, so `flutter run --release` works.
             productFlavors.dev.signingConfig signingConfigs.dev
             productFlavors.prod.signingConfig signingConfigs.prod
+            shrinkResources true
+            minifyEnabled true
         }
     }
 }

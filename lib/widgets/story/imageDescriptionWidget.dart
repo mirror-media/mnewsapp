@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 
 class ImageDescriptionWidget extends StatelessWidget {
   final String imageUrl;
@@ -7,12 +8,14 @@ class ImageDescriptionWidget extends StatelessWidget {
   final double width;
   final double aspectRatio;
   final double textSize;
+  final List<String> imageUrlList;
   ImageDescriptionWidget({
     required this.imageUrl,
     required this.description,
     required this.width,
     this.aspectRatio = 16 / 9,
     this.textSize = 16,
+    required this.imageUrlList,
   });
 
   @override
@@ -51,7 +54,17 @@ class ImageDescriptionWidget extends StatelessWidget {
             ),
         ],
       ),
-      onTap: () {},
+      onTap: () {
+        int index = imageUrlList.indexOf(imageUrl);
+        if (index == -1) {
+          index = 0;
+        }
+        RouteGenerator.navigateToImageViewer(
+          context,
+          imageUrlList,
+          openIndex: index,
+        );
+      },
     );
   }
 }

@@ -140,21 +140,34 @@ class _StoryWidgetState extends State<StoryWidget> {
       children: [
         if (story.heroVideo != null) _buildVideoWidget(story.heroVideo!),
         if (story.heroImage != null && story.heroVideo == null)
-          CachedNetworkImage(
-            width: width,
-            imageUrl: story.heroImage!,
-            placeholder: (context, url) => Container(
-              height: height,
+          InkWell(
+            onTap: () {
+              int index = story.imageUrlList?.indexOf(story.heroImage!) ?? 0;
+              if (index == -1) {
+                index = 0;
+              }
+              RouteGenerator.navigateToImageViewer(
+                context,
+                story.imageUrlList ?? [story.heroImage!],
+                openIndex: index,
+              );
+            },
+            child: CachedNetworkImage(
               width: width,
-              color: Colors.grey,
+              imageUrl: story.heroImage!,
+              placeholder: (context, url) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: height,
+                width: width,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.cover,
             ),
-            errorWidget: (context, url, error) => Container(
-              height: height,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
           ),
         if (!_isNullOrEmpty(story.heroCaption))
           Padding(
@@ -473,7 +486,11 @@ class _StoryWidgetState extends State<StoryWidget> {
             return Padding(
               padding: const EdgeInsets.only(bottom: 16.0),
               child: paragraphFormat.parseTheParagraph(
-                  paragraph, context, _textSize),
+                paragraph,
+                context,
+                _textSize,
+                imageUrlList: _story.imageUrlList,
+              ),
             );
           }
 
