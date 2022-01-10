@@ -15,6 +15,7 @@ import 'package:tv/pages/section/show/showStoryPage.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/pages/tag/tagPage.dart';
 import 'package:tv/services/configService.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
 
 class RouteGenerator {
   static const String root = '/';
@@ -25,6 +26,7 @@ class RouteGenerator {
   static const String showStory = '/showStory';
   static const String topicStoryList = '/topicStoryList';
   static const String tagStoryList = '/tagStoryList';
+  static const String imageViewer = '/imageViewer';
 
   static Route<dynamic> generateRoute(RouteSettings settings) {
     switch (settings.name) {
@@ -112,6 +114,16 @@ class RouteGenerator {
         // If args is not of the correct type, return an error page.
         // You can also throw an exception while in development.
         return _errorRoute(settings);
+      case imageViewer:
+        Map args = settings.arguments as Map<dynamic, dynamic>;
+        return MaterialPageRoute(
+          settings: settings,
+          builder: (context) => ImageViewerWidget(
+            args['imageUrlList'],
+            openIndex: args['openIndex'],
+          ),
+          fullscreenDialog: true,
+        );
       default:
         // If there is no such named route in the switch statement, e.g. /third
         return _errorRoute(settings);
@@ -206,6 +218,18 @@ class RouteGenerator {
     Navigator.of(context).pushNamed(
       tagStoryList,
       arguments: {'tag': tag},
+    );
+  }
+
+  static void navigateToImageViewer(
+      BuildContext context, List<String> imageUrlList,
+      {int openIndex = 0}) {
+    Navigator.of(context).pushNamed(
+      imageViewer,
+      arguments: {
+        'imageUrlList': imageUrlList,
+        'openIndex': openIndex,
+      },
     );
   }
 

@@ -2,13 +2,18 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
+import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/contentList.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
   final ContentList contentList;
   final double textSize;
-  ImageAndDescriptionSlideShowWidget(
-      {required this.contentList, this.textSize = 20});
+  final List<String> imageUrlList;
+  ImageAndDescriptionSlideShowWidget({
+    required this.contentList,
+    this.textSize = 20,
+    required this.imageUrlList,
+  });
 
   @override
   _ImageAndDescriptionSlideShowWidgetState createState() =>
@@ -76,22 +81,35 @@ class _ImageAndDescriptionSlideShowWidgetState
 
     List<Widget> imageSilders = contentList
         .map(
-          (content) => CachedNetworkImage(
-            height: imageHeight,
-            width: width,
-            imageUrl: content.data,
-            placeholder: (context, url) => Container(
+          (content) => InkWell(
+            onTap: () {
+              int index = widget.imageUrlList.indexOf(content.data);
+              if (index == -1) {
+                index = 0;
+              }
+              RouteGenerator.navigateToImageViewer(
+                context,
+                widget.imageUrlList,
+                openIndex: index,
+              );
+            },
+            child: CachedNetworkImage(
               height: imageHeight,
               width: width,
-              color: Colors.grey,
+              imageUrl: content.data,
+              placeholder: (context, url) => Container(
+                height: imageHeight,
+                width: width,
+                color: Colors.grey,
+              ),
+              errorWidget: (context, url, error) => Container(
+                height: imageHeight,
+                width: width,
+                color: Colors.grey,
+                child: Icon(Icons.error),
+              ),
+              fit: BoxFit.fitHeight,
             ),
-            errorWidget: (context, url, error) => Container(
-              height: imageHeight,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.fitHeight,
           ),
         )
         .toList();

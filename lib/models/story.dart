@@ -30,6 +30,7 @@ class Story {
 
   final TagList? tags;
   final StoryListItemList? relatedStories;
+  final List<String>? imageUrlList;
 
   Story({
     this.style,
@@ -51,6 +52,7 @@ class Story {
     this.otherbyline,
     this.tags,
     this.relatedStories,
+    this.imageUrlList,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -60,15 +62,32 @@ class Story {
       brief = ParagraphList.parseResponseBody(json['briefApiData']);
     }
 
+    List<String>? imageUrlList = [];
+
     ParagraphList contentApiData = ParagraphList();
     if (BaseModel.hasKey(json, 'contentApiData') &&
         json["contentApiData"] != 'NaN') {
       contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
+      for (var paragraph in contentApiData) {
+        if (paragraph.contents != null &&
+            paragraph.contents!.length > 0 &&
+            paragraph.contents![0].data != '') {
+          if (paragraph.type == 'image') {
+            imageUrlList.add(paragraph.contents![0].data);
+          } else if (paragraph.type == 'slideshow') {
+            var contentList = paragraph.contents;
+            for (var content in contentList!) {
+              imageUrlList.add(content.data);
+            }
+          }
+        }
+      }
     }
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'mobile'])) {
       photoUrl = json['heroImage']['mobile'];
+      imageUrlList.insert(0, photoUrl);
     }
 
     String? videoUrl;
@@ -96,6 +115,7 @@ class Story {
       otherbyline: json['otherbyline'],
       tags: TagList.fromJson(json['tags']),
       relatedStories: StoryListItemList.fromJson(json['relatedPosts']),
+      imageUrlList: imageUrlList,
     );
   }
 }

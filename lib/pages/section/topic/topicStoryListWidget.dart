@@ -93,12 +93,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     double height = width / 16 * 9;
 
     if (_storyListItemList.isEmpty) {
-      return Column(
-        children: [
-          _buildLeading(width, height),
-          TabContentNoResultWidget(),
-        ],
-      );
+      return TabContentNoResultWidget();
     }
 
     return ListView.separated(
@@ -154,6 +149,14 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         _topicStoryList.headerArticles != null &&
         _topicStoryList.headerArticles!.isNotEmpty) {
       List<Widget> items = [];
+      var width = MediaQuery.of(context).size.width;
+      var height = width / (16 / 9);
+      if (height > 700) {
+        height = 700;
+      } else if (height > 500) {
+        height = (height ~/ 100) * 100;
+      }
+      height = height + 120;
       for (var item in _topicStoryList.headerArticles!) {
         items.add(CarouselDisplayWidget(
           storyListItem: item,
@@ -168,7 +171,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           autoPlay: true,
           aspectRatio: 2.0,
           viewportFraction: 1.0,
-          height: 350,
+          height: height,
         ),
       );
     } else if (_topicStoryList.leading == 'video' &&
@@ -204,7 +207,6 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             videoId,
             autoPlay: true,
             mute: true,
-            whenFinished: () => carouselController.nextPage(),
           ));
         }
       }

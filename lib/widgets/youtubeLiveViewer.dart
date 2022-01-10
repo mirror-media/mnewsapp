@@ -1,5 +1,6 @@
 import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubeLiveViewer extends StatefulWidget {
@@ -68,6 +69,10 @@ class _YoutubeLiveViewerState extends State<YoutubeLiveViewer>
               overflowMenuAudioTracks: "音訊",
               qualityAuto: "自動",
             )
+          ],
+          deviceOrientationsAfterFullScreen: [
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
           ],
         ),
         betterPlayerDataSource: betterPlayerDataSource,

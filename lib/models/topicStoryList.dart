@@ -27,7 +27,6 @@ class TopicStoryList {
     }
 
     StoryListItemList? storyListItemList;
-    StoryListItemList? headerArticles;
     if (json['post'] != null && json['post'].length > 0) {
       storyListItemList = StoryListItemList.fromJson(json['post']);
     }
@@ -38,27 +37,32 @@ class TopicStoryList {
     }
 
     Video? heroVideo;
-    if (BaseModel.checkJsonKeys(json, ['heroVideo']) && leading == 'video') {
-      heroVideo = Video.fromJson(json['heroVideo']);
-    } else {
-      leading = 'image';
-    }
-
     List<Video> headerVideoList = [];
-    if (BaseModel.checkJsonKeys(json, ['multivideo']) &&
-        leading == 'multivideo') {
-      for (var video in json['multivideo']) {
-        headerVideoList.add(Video.fromJson(video));
-      }
-    } else {
-      leading = 'image';
-    }
-
-    if (BaseModel.checkJsonKeys(json, ['slideshow']) &&
-        leading == 'slideshow') {
-      headerArticles = StoryListItemList.fromJson(json['slideshow']);
-    } else {
-      leading = 'image';
+    StoryListItemList? headerArticles;
+    switch (leading) {
+      case 'video':
+        if (BaseModel.checkJsonKeys(json, ['heroVideo', 'url'])) {
+          heroVideo = Video.fromJson(json['heroVideo']);
+        } else {
+          leading = 'image';
+        }
+        break;
+      case 'multivideo':
+        if (json['multivideo'] != null && json['multivideo'].isNotEmpty) {
+          for (var video in json['multivideo']) {
+            headerVideoList.add(Video.fromJson(video));
+          }
+        } else {
+          leading = 'image';
+        }
+        break;
+      case 'slideshow':
+        if (json['slideshow'] != null && json['slideshow'].isNotEmpty) {
+          headerArticles = StoryListItemList.fromJson(json['slideshow']);
+        } else {
+          leading = 'image';
+        }
+        break;
     }
 
     return TopicStoryList(
