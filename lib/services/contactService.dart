@@ -32,6 +32,7 @@ class ContactServices implements ContactRepos {
             }
           ]
         }
+        sortBy:[sortOrder_ASC]
       ) {
         id
         name
@@ -72,7 +73,7 @@ class ContactServices implements ContactRepos {
       Contact(where: \$where) {
         id
         name
-        anchorImg {
+        showhostImg {
           urlMobileSized
         }
         slug

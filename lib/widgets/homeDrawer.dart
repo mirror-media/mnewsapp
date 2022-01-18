@@ -36,25 +36,29 @@ class _HomeDrawerState extends State<HomeDrawer> {
       } else {
         MNewsSection sectionId = state.sectionId;
 
-        return SafeArea(
-          child: Drawer(
-            child: CustomScrollView(
-              physics: const NeverScrollableScrollPhysics(),
-              slivers: [
-                SliverToBoxAdapter(
-                  child: _buildDrawerHeader(padding),
-                ),
-                SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
-                SliverFillRemaining(
-                  hasScrollBody: false,
-                  child: Container(
-                    color: Colors.white,
-                    alignment: Alignment.bottomCenter,
-                    child: _thirdPartyBlock(),
+        return Drawer(
+          child: CustomScrollView(
+            physics: const NeverScrollableScrollPhysics(),
+            slivers: [
+              SliverToBoxAdapter(
+                child: Container(
+                  color: drawerColor,
+                  child: SafeArea(
+                    bottom: false,
+                    child: _buildDrawerHeader(padding),
                   ),
                 ),
-              ],
-            ),
+              ),
+              SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
+              SliverFillRemaining(
+                hasScrollBody: false,
+                child: Container(
+                  color: Colors.white,
+                  alignment: Alignment.bottomCenter,
+                  child: _thirdPartyBlock(),
+                ),
+              ),
+            ],
           ),
         );
       }
