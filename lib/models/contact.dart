@@ -33,6 +33,9 @@ class Contact {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['anchorImg', 'urlMobileSized'])) {
       photoUrl = json['anchorImg']['urlMobileSized'];
+    } else if (BaseModel.checkJsonKeys(
+        json, ['showhostImg', 'urlMobileSized'])) {
+      photoUrl = json['showhostImg']['urlMobileSized'];
     }
     ParagraphList bioApiData = ParagraphList();
     if (BaseModel.hasKey(json, 'bioApiData') && json["bioApiData"] != 'NaN') {
