@@ -128,7 +128,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
   Widget _buildContactList(List<Contact> contactList, double width) {
     double imageWidth = width / 2;
-    double imageHeight = imageWidth / 1.333;
+    double imageHeight = imageWidth * 0.56;
 
     return GridView.builder(
         shrinkWrap: true,
@@ -137,7 +137,6 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         itemCount: contactList.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
-          childAspectRatio: 1 - 16 / imageWidth,
         ),
         itemBuilder: (context, index) {
           return Padding(
