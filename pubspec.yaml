@@ -57,7 +57,7 @@ dependencies:
   # a friendly Material or Cupertino UI for video
   chewie: ^1.2.2
   # Widget from html
-  flutter_widget_from_html: ^0.7.0
+  flutter_widget_from_html: ^0.8.4
   # mirrormedia embedded code
   flutter_embedded_webview: 
     git:
