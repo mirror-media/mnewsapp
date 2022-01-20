@@ -68,86 +68,79 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
       );
 
   Widget _buildAnchorpersonStory(Contact contact, double width) {
-    return ListView(
-      children: [
-        SizedBox(height: 55),
-        _buildAnchorpersonProfile(contact, width),
-        SizedBox(height: 20),
-        _buildBioWidget(contact.bio),
-      ],
+    double imageWidth = width;
+    double imageHeight = imageWidth;
+    return SafeArea(
+      top: false,
+      child: ListView(
+        padding: const EdgeInsets.all(0),
+        children: [
+          CachedNetworkImage(
+            height: imageHeight,
+            width: imageWidth,
+            imageUrl: contact.photoUrl,
+            placeholder: (context, url) => Container(
+              height: imageHeight,
+              width: imageWidth,
+              color: Colors.grey,
+            ),
+            errorWidget: (context, url, error) => Container(
+              height: imageHeight,
+              width: imageWidth,
+              color: Colors.grey,
+              child: Icon(Icons.error),
+            ),
+            fit: BoxFit.fitWidth,
+          ),
+          SizedBox(height: 24),
+          _buildBioWidget(contact.bio),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (contact.twitterUrl != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: _thirdPartyMediaLinkButton(
+                      FontAwesomeIcons.twitter, contact.twitterUrl!),
+                ),
+              if (contact.facebookUrl != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: _thirdPartyMediaLinkButton(
+                      FontAwesomeIcons.facebookF, contact.facebookUrl!),
+                ),
+              if (contact.instatgramUrl != null)
+                Padding(
+                  padding: const EdgeInsets.only(left: 5, right: 5),
+                  child: _thirdPartyMediaLinkButton(
+                      FontAwesomeIcons.instagram, contact.instatgramUrl!),
+                ),
+            ],
+          ),
+          SizedBox(height: 24),
+        ],
+      ),
     );
   }
 
-  Widget _buildAnchorpersonProfile(Contact contact, double width) {
-    double imageWidth = width / 2;
-    double imageHeight = imageWidth / 1.333;
-
-    return Column(children: [
-      CachedNetworkImage(
-        height: imageHeight,
-        width: imageWidth,
-        imageUrl: contact.photoUrl,
-        placeholder: (context, url) => Container(
-          height: imageHeight,
-          width: imageWidth,
-          color: Colors.grey,
-        ),
-        errorWidget: (context, url, error) => Container(
-          height: imageHeight,
-          width: imageWidth,
-          color: Colors.grey,
-          child: Icon(Icons.error),
-        ),
-        fit: BoxFit.fitWidth,
-      ),
-      SizedBox(height: 12),
-      Text(
-        contact.name,
-        style: TextStyle(
-          fontSize: 17,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-      SizedBox(height: 20),
-      Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        if (contact.twitterUrl != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: _thirdPartyMediaLinkButton(
-                FontAwesomeIcons.twitter, contact.twitterUrl!),
-          ),
-        if (contact.facebookUrl != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: _thirdPartyMediaLinkButton(
-                FontAwesomeIcons.facebook, contact.facebookUrl!),
-          ),
-        if (contact.instatgramUrl != null)
-          Padding(
-            padding: const EdgeInsets.only(left: 5, right: 5),
-            child: _thirdPartyMediaLinkButton(
-                FontAwesomeIcons.instagram, contact.instatgramUrl!),
-          ),
-      ]),
-    ]);
-  }
-
   Widget _thirdPartyMediaLinkButton(IconData icon, String link) {
-    return ClipOval(
-      child: Material(
-        color: Color(0xffC1C2C2),
-        child: InkWell(
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: FaIcon(icon, size: 18, color: Colors.white),
-            ),
-            onTap: () async {
-              if (await canLaunch(link)) {
-                await launch(link);
-              } else {
-                throw 'Could not launch $link';
-              }
-            }),
+    return ElevatedButton(
+      onPressed: () async {
+        if (await canLaunch(link)) {
+          await launch(link);
+        } else {
+          throw 'Could not launch $link';
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: FaIcon(icon, size: 20, color: Colors.white),
+      ),
+      style: ElevatedButton.styleFrom(
+        primary: Color(0xffC1C2C2),
+        elevation: 5,
+        shape: CircleBorder(),
       ),
     );
   }
