@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -32,28 +33,16 @@ class OmbudsButton extends StatelessWidget {
           ),
           Container(
             width: width,
+            height: 85,
             color: Colors.white,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    title1,
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                        color: themeColor,
-                        height: 1.7),
-                  ),
-                  Text(
-                    title2,
-                    style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w500,
-                        color: themeColor,
-                        height: 1.7),
-                  ),
-                ],
+            padding: const EdgeInsets.all(8.0),
+            child: AutoSizeText(
+              '$title1\n$title2',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.w500,
+                color: themeColor,
               ),
             ),
           ),
