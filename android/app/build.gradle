@@ -57,6 +57,10 @@ android {
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+        ndkVersion "23.1.7779620"
+        ndk {
+            debugSymbolLevel 'FULL'
+        }
     }
     
     signingConfigs {
@@ -107,9 +111,6 @@ android {
             productFlavors.prod.signingConfig signingConfigs.prod
             shrinkResources true
             minifyEnabled true
-            ndk {
-                debugSymbolLevel 'FULL'
-            }
         }
     }
 }
