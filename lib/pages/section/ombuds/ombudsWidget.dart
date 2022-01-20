@@ -227,12 +227,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         ),
       ),
       SizedBox(height: 36),
-      _appealButton(
-        width,
-        '向公評人申訴',
-        () => RouteGenerator.navigateToStory(context, 'complaint'),
-      ),
-      SizedBox(height: 12),
+      // _appealButton(
+      //   width,
+      //   '向公評人申訴',
+      //   () => RouteGenerator.navigateToStory(context, 'complaint'),
+      // ),
+      // SizedBox(height: 12),
       _appealButton(width, '向客服申訴', () async {
         final Uri emailLaunchUri = Uri(
           scheme: 'mailto',
@@ -285,68 +285,61 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   }
 
   Widget _ombudsIntroBlock(double width) {
-    double ombudsWidth = width / 2 - 24 - 4;
+    double ombudsWidth = (width - 48 - 26) / 2;
+    double aspectRatio = ombudsWidth / 121;
 
-    return Column(
+    return GridView(
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 26,
+        childAspectRatio: aspectRatio,
+      ),
+      padding: const EdgeInsets.all(0),
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
       children: [
-        Row(
-          children: [
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: tvSvg,
-              title1: '關於鏡電視',
-              title2: '公評人',
-              onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
-            ),
-            SizedBox(width: 8),
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: phoneSvg,
-              title1: '申訴',
-              title2: '流程',
-              onTap: () => RouteGenerator.navigateToStory(context, 'complaint'),
-            ),
-          ],
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: tvSvg,
+          title1: '關於鏡電視',
+          title2: '公評人',
+          onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
         ),
-        SizedBox(height: 24),
-        Row(
-          children: [
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: hammerSvg,
-              title1: '外部公評人',
-              title2: '設置章程',
-              onTap: () => RouteGenerator.navigateToStory(context, 'law'),
-            ),
-            SizedBox(width: 8),
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: paperSvg,
-              title1: '新聞自律 /',
-              title2: '他律規範',
-              onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
-            ),
-          ],
+        // OmbudsButton(
+        //   width: ombudsWidth,
+        //   imageLocationString: phoneSvg,
+        //   title1: '申訴',
+        //   title2: '流程',
+        //   onTap: () => RouteGenerator.navigateToStory(context, 'complaint'),
+        // ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: hammerSvg,
+          title1: '外部公評人',
+          title2: '設置章程',
+          onTap: () => RouteGenerator.navigateToStory(context, 'law'),
         ),
-        SizedBox(height: 24),
-        Row(
-          children: [
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: faqSvg,
-              title1: '常見問題',
-              title2: 'FAQ',
-              onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
-            ),
-            SizedBox(width: 8),
-            OmbudsButton(
-              width: ombudsWidth,
-              imageLocationString: reportSvg,
-              title1: '季報',
-              title2: '年報',
-              onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
-            ),
-          ],
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: paperSvg,
+          title1: '新聞自律 /',
+          title2: '他律規範',
+          onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
+        ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: faqSvg,
+          title1: '常見問題',
+          title2: 'FAQ',
+          onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
+        ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: reportSvg,
+          title1: '季報',
+          title2: '年報',
+          onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
         ),
       ],
     );
