@@ -57,9 +57,6 @@ android {
         multiDexEnabled true
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        ndk {
-            debugSymbolLevel 'FULL'
-        }
     }
     
     signingConfigs {
@@ -110,6 +107,9 @@ android {
             productFlavors.prod.signingConfig signingConfigs.prod
             shrinkResources true
             minifyEnabled true
+            ndk {
+                debugSymbolLevel 'FULL'
+            }
         }
     }
 }
@@ -124,4 +124,3 @@ dependencies {
 }
 
 apply plugin: 'com.google.gms.google-services'
-android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
