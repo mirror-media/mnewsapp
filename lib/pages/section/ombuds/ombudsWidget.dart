@@ -103,10 +103,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               SizedBox(
                 height: 28,
               ),
-              _appealBlock(width),
-              SizedBox(
-                height: 28,
-              ),
+              // _appealBlock(width),
+              // SizedBox(
+              //   height: 28,
+              // ),
               _ombudsIntroBlock(width),
               SizedBox(
                 height: 28,
@@ -207,6 +207,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     ]);
   }
 
+  // ignore: unused_element
   Widget _appealBlock(double width) {
     return Column(children: [
       Text(
@@ -334,13 +335,13 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: 'FAQ',
           onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
         ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: reportSvg,
-          title1: '季報',
-          title2: '年報',
-          onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
-        ),
+        // OmbudsButton(
+        //   width: ombudsWidth,
+        //   imageLocationString: reportSvg,
+        //   title1: '季報',
+        //   title2: '年報',
+        //   onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
+        // ),
       ],
     );
   }
