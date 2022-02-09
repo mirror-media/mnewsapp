@@ -6,3 +6,10 @@ class FetchCategories extends CategoriesEvents {
     return 'Fetch Categories';
   }
 }
+
+class FetchVideoCategories extends CategoriesEvents {
+  @override
+  String toString() {
+    return 'Fetch Video Categories';
+  }
+}

@@ -33,12 +33,20 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
   }
 
   _loadCategoryList() async {
-    context.read<CategoriesBloc>().add(FetchCategories());
+    context.read<CategoriesBloc>().add(FetchVideoCategories());
   }
 
-  _initializeTabController(CategoryList categoryList) {
+  _initializeTabController(
+      CategoryList categoryList, bool hasEditorChoice, bool hasPopular) {
     _tabs.clear();
     _tabWidgets.clear();
+    if (!hasPopular) {
+      categoryList.removeAt(1);
+    }
+
+    if (!hasEditorChoice) {
+      categoryList.removeAt(0);
+    }
 
     for (int i = 0; i < categoryList.length; i++) {
       Category category = categoryList[i];
@@ -87,9 +95,10 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
 
         return error.renderWidget(isNoButton: true);
       }
-      if (state is CategoriesLoaded) {
+      if (state is VideoCategoriesLoaded) {
         CategoryList categoryList = state.categoryList;
-        _initializeTabController(categoryList);
+        _initializeTabController(
+            categoryList, state.hasEditorChoice, state.hasPopular);
 
         return _buildTabs(_tabs, _tabWidgets, _tabController!);
       }
