@@ -13,7 +13,7 @@ class LiveWidget extends StatefulWidget {
   final String livePostId;
   LiveWidget({
     this.needBuildLiveTitle = true,
-    this.liveTitle = '鏡電視 Live',
+    this.liveTitle = '鏡新聞 Live',
     this.icon = FontAwesomeIcons.podcast,
     this.showIcon = true,
     required this.livePostId,
