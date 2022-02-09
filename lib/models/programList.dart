@@ -20,7 +20,9 @@ class ProgramList extends CustomizedList<ProgramListItem> {
     programList.sort((ProgramListItem a, ProgramListItem b) {
       int compare = a.year.compareTo(b.year);
       if (compare != 0) return compare;
-      compare = a.weekDay.compareTo(b.weekDay);
+      compare = a.month.compareTo(b.month);
+      if (compare != 0) return compare;
+      compare = a.day.compareTo(b.day);
       if (compare != 0) return compare;
       compare = a.startTimeHour.compareTo(b.startTimeHour);
       if (compare != 0) return compare;

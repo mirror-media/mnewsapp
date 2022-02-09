@@ -8,7 +8,10 @@ import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/categoryService.dart';
+import 'package:tv/services/editorChoiceService.dart';
+import 'package:tv/services/tabStoryListService.dart';
 
 class CategoriesBloc extends Bloc<CategoriesEvents, CategoriesState> {
   final CategoryRepos categoryRepos;
@@ -24,6 +27,26 @@ class CategoriesBloc extends Bloc<CategoriesEvents, CategoriesState> {
       if (event is FetchCategories) {
         categoryList = await categoryRepos.fetchCategoryList();
         yield CategoriesLoaded(categoryList: categoryList);
+      } else if (event is FetchVideoCategories) {
+        bool hasEditorChoice = true;
+        bool hasPopular = true;
+        await Future.wait([
+          categoryRepos
+              .fetchCategoryList()
+              .then((value) => categoryList = value),
+          EditorChoiceServices()
+              .fetchVideoEditorChoiceList()
+              .then((value) => hasEditorChoice = value.isNotEmpty),
+          TabStoryListServices(postStyle: 'videoNews')
+              .fetchPopularStoryList()
+              .then((value) => hasPopular = value.isNotEmpty),
+        ]);
+
+        yield VideoCategoriesLoaded(
+          categoryList: categoryList,
+          hasEditorChoice: hasEditorChoice,
+          hasPopular: hasPopular,
+        );
       }
     } on SocketException {
       yield CategoriesError(
