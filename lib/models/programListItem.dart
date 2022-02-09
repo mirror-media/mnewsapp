@@ -1,3 +1,5 @@
+import 'package:tv/models/baseModel.dart';
+
 class ProgramListItem {
   final String channelId;
   final int year;
@@ -12,8 +14,8 @@ class ProgramListItem {
   final String? seasonNo;
   final String showClass;
   final String txCategory;
-  final String month;
-  final String day;
+  final int month;
+  final int day;
 
   ProgramListItem({
     required this.channelId,
@@ -59,21 +61,21 @@ class ProgramListItem {
         break;
     }
     return ProgramListItem(
-      channelId: json['Channel ID'],
-      year: json['Year'],
+      channelId: json['Channel ID'] ?? "鏡新聞",
+      year: int.parse(json['Year']),
       weekDay: weekday,
-      startTimeHour: json['Start Time(hh)'],
-      startTimeMinute: json['Start Time(mm)'],
-      duration: json['Duration'],
+      startTimeHour: int.parse(json['Start Time(hh)']),
+      startTimeMinute: int.parse(json['Start Time(mm)']),
+      duration: int.tryParse(json['Duration']),
       programme: json['Programme'],
       programmeEn: json['Programme(en)'],
-      epNo: json['ep no'],
+      epNo: double.tryParse(json['ep no']),
       epName: json['ep name'],
       seasonNo: json['season no'],
       showClass: json['Class'],
       txCategory: json['TxCategory'],
-      month: json['Month'],
-      day: json['Day'],
+      month: int.parse(json['Month']),
+      day: int.parse(json['Day']),
     );
   }
 

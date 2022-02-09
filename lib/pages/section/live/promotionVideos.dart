@@ -5,7 +5,7 @@ import 'package:tv/blocs/promotionVideo/bloc.dart';
 import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
 import 'package:tv/models/youtubePlaylistItemList.dart';
-import 'package:tv/widgets/youtubeLiveViewer.dart';
+import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class PromotionVideos extends StatefulWidget {
@@ -130,7 +130,7 @@ class _PromotionVideosState extends State<PromotionVideos> {
                   ),
                 ],
               )
-            : YoutubeLiveViewer(
+            : YoutubePlayer(
                 videoID,
                 autoPlay: true,
               ),

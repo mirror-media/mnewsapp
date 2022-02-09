@@ -1,8 +1,8 @@
 import 'dart:io';
 import 'package:chewie/chewie.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:video_player/video_player.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubeViewer extends StatefulWidget {
@@ -21,8 +21,7 @@ class YoutubeViewer extends StatefulWidget {
   _YoutubeViewerState createState() => _YoutubeViewerState();
 }
 
-class _YoutubeViewerState extends State<YoutubeViewer>
-    with AutomaticKeepAliveClientMixin {
+class _YoutubeViewerState extends State<YoutubeViewer> {
   // ignore: close_sinks
   late VideoPlayerController _videoPlayerController;
   late ChewieController _chewieController;
@@ -31,9 +30,6 @@ class _YoutubeViewerState extends State<YoutubeViewer>
   bool isInitialized = false;
   bool isFinished = false;
   bool isDisposed = false;
-
-  @override
-  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -47,7 +43,7 @@ class _YoutubeViewerState extends State<YoutubeViewer>
       // Highest resolution is 720P
       // Only use this for get not live video
       var manifest = await yt.videos.streamsClient.getManifest(widget.videoID);
-      var streamInfo = manifest.muxed.withHighestBitrate();
+      var streamInfo = manifest.muxed.sortByVideoQuality().first;
       String videoUrl = streamInfo.url.toString();
       _videoPlayerController = VideoPlayerController.network(
         videoUrl,
@@ -60,6 +56,10 @@ class _YoutubeViewerState extends State<YoutubeViewer>
         autoInitialize: true,
         autoPlay: widget.autoPlay,
         showOptions: false,
+        deviceOrientationsAfterFullScreen: [
+          DeviceOrientation.portraitUp,
+          DeviceOrientation.portraitDown
+        ],
       );
       if (widget.mute) _chewieController.setVolume(0.0);
       if (widget.whenFinished != null) {
@@ -94,7 +94,6 @@ class _YoutubeViewerState extends State<YoutubeViewer>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     return FutureBuilder<bool>(
       future: _configChewieFuture,
       builder: (context, snapshot) {
@@ -126,19 +125,11 @@ class _YoutubeViewerState extends State<YoutubeViewer>
               );
             }
 
-            return VisibilityDetector(
-              key: UniqueKey(),
-              child: Container(
-                width: constraints.maxWidth,
-                height: constraints.maxWidth /
-                    _videoPlayerController.value.aspectRatio,
-                child: _videoPlayer,
-              ),
-              onVisibilityChanged: (visibility) {
-                if (visibility.visibleFraction == 0 && !isDisposed) {
-                  _chewieController.pause();
-                }
-              },
+            return Container(
+              width: constraints.maxWidth,
+              height: constraints.maxWidth /
+                  _videoPlayerController.value.aspectRatio,
+              child: _videoPlayer,
             );
           },
         );

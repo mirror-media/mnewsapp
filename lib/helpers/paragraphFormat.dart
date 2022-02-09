@@ -158,9 +158,12 @@ class ParagraphFormat {
       case 'youtube':
         {
           if (paragraph.contents!.length > 0) {
+            var splitList = paragraph.contents![0].data.split(': ');
+            String id = splitList[1].split(',')[0];
+            var description = splitList[2].split('}')[0];
             return YoutubeWidget(
-              youtubeId: paragraph.contents![0].data,
-              description: paragraph.contents![0].description,
+              youtubeId: id,
+              description: description,
               textSize: textSize,
             );
           }

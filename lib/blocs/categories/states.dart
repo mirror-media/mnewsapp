@@ -12,6 +12,17 @@ class CategoriesLoaded extends CategoriesState {
   CategoriesLoaded({required this.categoryList});
 }
 
+class VideoCategoriesLoaded extends CategoriesState {
+  final CategoryList categoryList;
+  final bool hasEditorChoice;
+  final bool hasPopular;
+  VideoCategoriesLoaded({
+    required this.categoryList,
+    this.hasEditorChoice = true,
+    this.hasPopular = true,
+  });
+}
+
 class CategoriesError extends CategoriesState {
   final MNewException? error;
   CategoriesError({this.error});

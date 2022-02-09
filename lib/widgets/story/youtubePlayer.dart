@@ -78,12 +78,12 @@ class _YoutubePlayerState extends State<YoutubePlayer> {
             : widget.isLive
                 ? YoutubeLiveViewer(
                     widget.videoID,
-                    autoPlay: widget.autoPlay,
+                    autoPlay: true,
                     mute: widget.mute,
                   )
                 : YoutubeViewer(
                     widget.videoID,
-                    autoPlay: widget.autoPlay,
+                    autoPlay: true,
                     mute: widget.mute,
                   ),
       ),

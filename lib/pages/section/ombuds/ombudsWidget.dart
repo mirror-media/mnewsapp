@@ -303,7 +303,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         OmbudsButton(
           width: ombudsWidth,
           imageLocationString: tvSvg,
-          title1: '關於鏡電視',
+          title1: '關於鏡新聞',
           title2: '公評人',
           onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
         ),

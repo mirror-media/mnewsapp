@@ -138,10 +138,12 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     ProgramList _pickedProgramList = new ProgramList();
     int start = programList.indexWhere((element) =>
         element.year == _selectedDate.year &&
-        element.weekDay == _selectedDate.weekday);
+        element.month == _selectedDate.month &&
+        element.day == _selectedDate.day);
     int end = programList.lastIndexWhere((element) =>
         element.year == _selectedDate.year &&
-        element.weekDay == _selectedDate.weekday);
+        element.month == _selectedDate.month &&
+        element.day == _selectedDate.day);
 
     if (start == -1 || end == -1) {
       return TabContentNoResultWidget();
@@ -154,22 +156,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     if (end != programList.length - 1) {
       _pickedProgramList.add(programList[end + 1]);
     } else {
-      if (_selectedDate.weekday == 7) {
-        _pickedProgramList.add(programList.firstWhere(
-            (element) =>
-                element.weekDay == 1 && element.year == _selectedDate.year,
-            orElse: () {
-          return programList.firstWhere((element) => element.weekDay == 1);
-        }));
-      } else {
-        _pickedProgramList.add(programList.firstWhere(
-            (element) =>
-                element.weekDay == _selectedDate.weekday + 1 &&
-                element.year == _selectedDate.year, orElse: () {
-          return programList.firstWhere(
-              (element) => element.weekDay == _selectedDate.weekday + 1);
-        }));
-      }
+      _pickedProgramList.add(programList[0]);
     }
 
     return ListView.separated(
