@@ -191,17 +191,17 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     if (endHour == '00' && endMinute == '00') endHour = '24';
     String time = '$startHour:$startMinute-$endHour:$endMinute';
 
-    Widget newOrRepeat;
-    if (today.txCategory == 'Repeat')
-      newOrRepeat = Text(
-        '(重播)',
-        style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
-      );
-    else
-      newOrRepeat = Text(
-        '(新播)',
-        style: TextStyle(fontSize: 15),
-      );
+    // Widget newOrRepeat;
+    // if (today.txCategory == 'Repeat')
+    //   newOrRepeat = Text(
+    //     '(重播)',
+    //     style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
+    //   );
+    // else
+    //   newOrRepeat = Text(
+    //     '(新播)',
+    //     style: TextStyle(fontSize: 15),
+    //   );
     Widget name = Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -214,9 +214,9 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
             ),
           ),
           SizedBox(
-            width: 5,
+            width: 45,
           ),
-          newOrRepeat
+          // newOrRepeat
         ],
       ),
     );
