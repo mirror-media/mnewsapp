@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:tv/blocs/programList/program_list_cubit.dart';
@@ -175,48 +173,48 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     );
   }
 
-  Widget _programListViewItem(ProgramListItem today, ProgramListItem tomorrow) {
-    String startHour = (today.startTimeHour < 10)
-        ? '0${today.startTimeHour.toString()}'
-        : today.startTimeHour.toString();
-    String startMinute = (today.startTimeMinute < 10)
-        ? '0${today.startTimeMinute.toString()}'
-        : today.startTimeMinute.toString();
-    String endHour = (tomorrow.startTimeHour < 10)
-        ? '0${tomorrow.startTimeHour.toString()}'
-        : tomorrow.startTimeHour.toString();
-    String endMinute = (tomorrow.startTimeMinute < 10)
-        ? '0${tomorrow.startTimeMinute.toString()}'
-        : tomorrow.startTimeMinute.toString();
+  Widget _programListViewItem(ProgramListItem now, ProgramListItem next) {
+    String startHour = (now.startTimeHour < 10)
+        ? '0${now.startTimeHour.toString()}'
+        : now.startTimeHour.toString();
+    String startMinute = (now.startTimeMinute < 10)
+        ? '0${now.startTimeMinute.toString()}'
+        : now.startTimeMinute.toString();
+    String endHour = (next.startTimeHour < 10)
+        ? '0${next.startTimeHour.toString()}'
+        : next.startTimeHour.toString();
+    String endMinute = (next.startTimeMinute < 10)
+        ? '0${next.startTimeMinute.toString()}'
+        : next.startTimeMinute.toString();
     if (endHour == '00' && endMinute == '00') endHour = '24';
     String time = '$startHour:$startMinute-$endHour:$endMinute';
 
-    Widget newOrRepeat;
-    if (today.txCategory == 'Repeat')
-      newOrRepeat = Text(
-        '(重播)',
-        style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
-      );
-    else
-      newOrRepeat = Text(
-        '(新播)',
-        style: TextStyle(fontSize: 15),
-      );
+    // Widget newOrRepeat;
+    // if (now.txCategory == 'Repeat')
+    //   newOrRepeat = Text(
+    //     '(重播)',
+    //     style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
+    //   );
+    // else
+    //   newOrRepeat = Text(
+    //     '(新播)',
+    //     style: TextStyle(fontSize: 15),
+    //   );
     Widget name = Expanded(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Expanded(
             child: Text(
-              today.programme,
+              now.programme,
               style: TextStyle(fontSize: 15),
               textAlign: TextAlign.center,
             ),
           ),
           SizedBox(
-            width: 5,
+            width: 45,
           ),
-          newOrRepeat
+          // newOrRepeat
         ],
       ),
     );
@@ -235,7 +233,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
           width: 20,
         ),
         Text(
-          today.showClass,
+          now.showClass,
           style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
         )
       ],
