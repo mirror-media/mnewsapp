@@ -8,7 +8,6 @@ import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/storyService.dart';
-import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/storyWidget.dart';
 
 class StoryPage extends StatefulWidget {

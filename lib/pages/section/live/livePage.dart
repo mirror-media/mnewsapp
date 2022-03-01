@@ -9,7 +9,6 @@ import 'package:tv/pages/section/live/liveCams.dart';
 import 'package:tv/widgets/liveWidget.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class LivePage extends StatelessWidget {
   final AdUnitId? adUnitId;

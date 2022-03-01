@@ -1,16 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
   @override
@@ -19,7 +16,7 @@ class NewsPopularTabStoryList extends StatefulWidget {
 }
 
 class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
-  late AdUnitId _adUnitId;
+  // late AdUnitId _adUnitId;
   @override
   void initState() {
     _fetchPopularStoryList();
@@ -72,7 +69,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
           );
         }
 
-        if (state.adUnitId != null) _adUnitId = state.adUnitId!;
+        // if (state.adUnitId != null) _adUnitId = state.adUnitId!;
 
         return _tabStoryList(
           storyListItemList: storyListItemList,

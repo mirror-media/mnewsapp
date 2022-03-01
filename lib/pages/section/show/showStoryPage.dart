@@ -10,7 +10,6 @@ import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 
 class ShowStoryPage extends StatefulWidget {

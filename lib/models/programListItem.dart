@@ -1,5 +1,3 @@
-import 'package:tv/models/baseModel.dart';
-
 class ProgramListItem {
   final String channelId;
   final int year;
