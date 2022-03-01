@@ -10,10 +10,12 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
       String? nextPageToken, List<dynamic> parsedJson) {
     YoutubePlaylistItemList youtubePlaylistItems =
         YoutubePlaylistItemList(nextPageToken: nextPageToken);
-    List parseList =
+    List<YoutubePlaylistItem> parseList =
         parsedJson.map((i) => YoutubePlaylistItem.fromJson(i)).toList();
     parseList.forEach((element) {
-      youtubePlaylistItems.add(element);
+      if (element.name != 'Private video') {
+        youtubePlaylistItems.add(element);
+      }
     });
 
     return youtubePlaylistItems;
@@ -22,11 +24,13 @@ class YoutubePlaylistItemList extends CustomizedList<YoutubePlaylistItem> {
   factory YoutubePlaylistItemList.fromPromotionVideosJson(
       List<dynamic> parsedJson) {
     YoutubePlaylistItemList youtubePlaylistItems = YoutubePlaylistItemList();
-    List parseList = parsedJson
+    List<YoutubePlaylistItem> parseList = parsedJson
         .map((i) => YoutubePlaylistItem.fromPromotionVideosJson(i))
         .toList();
     parseList.forEach((element) {
-      youtubePlaylistItems.add(element);
+      if (element.name != 'Private video') {
+        youtubePlaylistItems.add(element);
+      }
     });
 
     return youtubePlaylistItems;
