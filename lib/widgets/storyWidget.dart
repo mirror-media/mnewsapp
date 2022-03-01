@@ -11,7 +11,6 @@ import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
@@ -26,7 +25,6 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
-import 'inlineBannerAdWidget.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
@@ -40,7 +38,7 @@ class StoryWidget extends StatefulWidget {
 
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
-  late AdUnitId _adUnitId;
+  // late AdUnitId _adUnitId;
   late double _textSize;
   late Story _story;
 
@@ -80,7 +78,7 @@ class _StoryWidgetState extends State<StoryWidget> {
           return Container();
         }
         _story = story;
-        _adUnitId = state.adUnitId;
+        // _adUnitId = state.adUnitId;
         _textSize = state.textSize;
         AnalyticsHelper.logStory(
             slug: _currentSlug,

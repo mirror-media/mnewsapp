@@ -8,7 +8,6 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;

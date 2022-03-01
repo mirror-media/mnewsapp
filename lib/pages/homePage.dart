@@ -14,10 +14,8 @@ import 'package:tv/pages/section/programList/programListPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/topic/topicListPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
-import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
-import 'package:tv/widgets/interstitialAdWidget.dart';
 
 class HomePage extends StatefulWidget {
   final TopicList topics;
