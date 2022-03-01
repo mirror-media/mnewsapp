@@ -8,7 +8,6 @@ import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/categoryList.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/categoryService.dart';
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';

@@ -19,7 +19,7 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
       yield ConfigLoading();
       bool isSuccess = await configRepos.loadTheConfig(event.context);
       // fetch min app version setting in firebase_remote_config
-      RemoteConfig remoteConfig = RemoteConfig.instance;
+      FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
       await remoteConfig.setConfigSettings(RemoteConfigSettings(
         fetchTimeout: Duration(seconds: 10),
         minimumFetchInterval: Duration(hours: 12),

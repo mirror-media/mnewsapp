@@ -1,15 +1,12 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -22,7 +19,7 @@ class VideoTabStoryList extends StatefulWidget {
 }
 
 class _VideoTabStoryListState extends State<VideoTabStoryList> {
-  late AdUnitId _adUnitId;
+  // late AdUnitId _adUnitId;
 
   @override
   void initState() {
@@ -85,7 +82,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
           );
         }
 
-        if (state.adUnitId != null) _adUnitId = state.adUnitId!;
+        // if (state.adUnitId != null) _adUnitId = state.adUnitId!;
 
         return _tabStoryList(
           storyListItemList: storyListItemList,
