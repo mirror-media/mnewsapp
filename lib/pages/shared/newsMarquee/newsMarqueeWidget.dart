@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -125,11 +126,11 @@ class _NewsMarqueeState extends State<NewsMarquee> {
     for (int i = 0; i < newsList.length; i++) {
       resultList.add(InkWell(
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.symmetric(horizontal: 12),
           child: SizedBox(
             width: width,
             child: MarqueeWidget(
-              child: Text(
+              child: AutoSizeText(
                 newsList[i].name,
                 style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
               ),
