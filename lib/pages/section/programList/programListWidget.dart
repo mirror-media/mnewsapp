@@ -81,7 +81,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
                   currentTime: DateTime.now(),
                   maxTime: DateTime.now().add(const Duration(days: 6)),
                   locale: LocaleType.zh),
-              locale: LocaleType.zh, onConfirm: (date) {
+              locale: LocaleType.tw, onConfirm: (date) {
             setState(() {
               _selectedDate = date;
               _buttonText =
