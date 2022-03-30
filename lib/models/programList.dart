@@ -9,13 +9,9 @@ class ProgramList extends CustomizedList<ProgramListItem> {
 
   factory ProgramList.fromJson(List<dynamic> parsedJson) {
     ProgramList programList = ProgramList();
-    List parseList = List.empty(growable: true);
     for (int i = 0; i < parsedJson.length; i++) {
-      parseList.add(ProgramListItem.fromJson(parsedJson[i]));
+      programList.add(ProgramListItem.fromJson(parsedJson[i]));
     }
-    parseList.forEach((element) {
-      programList.add(element);
-    });
 
     programList.sort((ProgramListItem a, ProgramListItem b) {
       int compare = a.year.compareTo(b.year);
