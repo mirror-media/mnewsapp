@@ -9,6 +9,10 @@ class MNewsApp extends StatelessWidget {
     AnalyticsHelper.logAppOpen();
     return MaterialApp(
       title: 'mnews',
+      supportedLocales: [
+        const Locale.fromSubtags(languageCode: 'zh'),
+        const Locale('en', 'US'),
+      ],
       theme: ThemeData(
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
