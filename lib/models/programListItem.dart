@@ -58,22 +58,62 @@ class ProgramListItem {
         weekday = 7;
         break;
     }
+
+    int? duration;
+    if (json['Duration'] != null) {
+      duration = int.tryParse(json['Duration']);
+    }
+
+    int year;
+    if (json['Year'] is int) {
+      year = json['Year'];
+    } else {
+      year = int.parse(json['Year']);
+    }
+
+    int startTimeHour;
+    if (json['Start Time(hh)'] is int) {
+      startTimeHour = json['Start Time(hh)'];
+    } else {
+      startTimeHour = int.parse(json['Start Time(hh)']);
+    }
+
+    int startTimeMinute;
+    if (json['Start Time(mm)'] is int) {
+      startTimeMinute = json['Start Time(mm)'];
+    } else {
+      startTimeMinute = int.parse(json['Start Time(mm)']);
+    }
+
+    int month;
+    if (json['Month'] is int) {
+      month = json['Month'];
+    } else {
+      month = int.parse(json['Month']);
+    }
+
+    int day;
+    if (json['Day'] is int) {
+      day = json['Day'];
+    } else {
+      day = int.parse(json['Day']);
+    }
+
     return ProgramListItem(
       channelId: json['Channel ID'] ?? "鏡新聞",
-      year: int.parse(json['Year']),
+      year: year,
       weekDay: weekday,
-      startTimeHour: int.parse(json['Start Time(hh)']),
-      startTimeMinute: int.parse(json['Start Time(mm)']),
-      duration: int.tryParse(json['Duration']),
+      startTimeHour: startTimeHour,
+      startTimeMinute: startTimeMinute,
+      duration: duration,
       programme: json['Programme'],
       programmeEn: json['Programme(en)'],
-      epNo: double.tryParse(json['ep no']),
       epName: json['ep name'],
       seasonNo: json['season no'],
       showClass: json['Class'],
       txCategory: json['TxCategory'],
-      month: int.parse(json['Month']),
-      day: int.parse(json['Day']),
+      month: month,
+      day: day,
     );
   }
 
