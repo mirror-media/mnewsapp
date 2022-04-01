@@ -22,6 +22,7 @@ import 'package:tv/models/tagList.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
+import 'package:tv/widgets/story/relatedStoryPainter.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
@@ -576,42 +577,20 @@ class _StoryWidgetState extends State<StoryWidget> {
               return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0.0, 0.0, frameWidth, 0.0),
-                      child: Column(
-                        children: [
-                          ClipPath(
-                            clipper: StoryBriefTopFrameClipper(),
-                            child: Container(
-                              height: 14,
-                              decoration: BoxDecoration(
-                                color: storyBriefFrameColor,
-                              ),
-                            ),
+                    CustomPaint(
+                      painter: RelatedStoryPainter(),
+                      child: Container(
+                        padding:
+                            const EdgeInsets.fromLTRB(14.0, 4.5, 14.0, 4.5),
+                        child: AutoSizeText(
+                          '相關文章',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w500,
+                            color: storyWidgetColor,
                           ),
-                          Container(
-                            width: 120,
-                            padding:
-                                const EdgeInsets.fromLTRB(14.0, 0.0, 14.0, 0.0),
-                            child: AutoSizeText(
-                              '相關文章',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: storyWidgetColor,
-                              ),
-                              maxLines: 1,
-                            ),
-                          ),
-                          ClipPath(
-                            clipper: StoryBriefBottomFrameClipper(),
-                            child: Container(
-                              height: 14,
-                              decoration: BoxDecoration(
-                                color: storyBriefFrameColor,
-                              ),
-                            ),
-                          ),
-                        ],
+                          maxLines: 1,
+                        ),
                       ),
                     ),
                     SizedBox(height: 16),
