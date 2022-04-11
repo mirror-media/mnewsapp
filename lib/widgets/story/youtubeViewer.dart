@@ -103,7 +103,7 @@ class _YoutubeViewerState extends State<YoutubeViewer> {
               return Container(
                   width: constraints.maxWidth,
                   height: constraints.maxWidth / (16 / 9),
-                  child: Center(child: CircularProgressIndicator()));
+                  child: Center(child: CircularProgressIndicator.adaptive()));
             }
 
             if (!snapshot.data!) {

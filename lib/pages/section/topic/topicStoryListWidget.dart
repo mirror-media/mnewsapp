@@ -83,7 +83,9 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           return _buildTopicStoryList();
         }
 
-        return CircularProgressIndicator();
+        return Center(
+          child: CircularProgressIndicator.adaptive(),
+        );
       },
     );
   }
