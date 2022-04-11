@@ -562,7 +562,6 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
     double width = MediaQuery.of(context).size.width;
-    double frameWidth = width - 24 - 120 - 12;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.separated(
