@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
-import 'package:tv/models/sectionList.dart';
+import 'package:tv/models/section.dart';
 import 'package:tv/models/topicList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -133,8 +133,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
-    SectionList sectionList =
-        SectionList.fromJson(Environment().config.mNewsSectionList);
+    List<Section> sectionList = List<Section>.from(Environment()
+        .config
+        .mNewsSectionList
+        .map((section) => Section.fromJson(section)));
 
     return ListView.builder(
         shrinkWrap: true,
