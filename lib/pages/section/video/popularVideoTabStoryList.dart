@@ -4,7 +4,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
@@ -55,7 +55,7 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
         );
       }
       if (state.status == TabStoryListStatus.loaded) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
@@ -88,7 +88,7 @@ class _PopularVideoTabStoryListState extends State<PopularVideoTabStoryList> {
   }
 
   Widget _tabStoryList({
-    required StoryListItemList storyListItemList,
+    required List<StoryListItem> storyListItemList,
   }) {
     List<Widget> _storyListWithAd = [];
     // List<String?> _adPositions = [

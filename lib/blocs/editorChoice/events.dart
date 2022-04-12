@@ -1,9 +1,9 @@
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class EditorChoiceEvents {}
 
 class TabStoryListIsLoaded extends EditorChoiceEvents {
-  final StoryListItemList storyListItemList;
+  final List<StoryListItem> storyListItemList;
   TabStoryListIsLoaded(this.storyListItemList);
 }
 

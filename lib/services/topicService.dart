@@ -185,13 +185,10 @@ class TopicService {
           headers: {"Content-Type": "application/json"});
     }
 
-    TopicStoryList topicStoryList =
-        TopicStoryList.fromJson(jsonResponse['data']['allTopics'][0]);
-
-    if (withCount && topicStoryList.storyListItemList != null) {
-      topicStoryList.storyListItemList!.allStoryCount =
-          jsonResponse['data']['allTopics'][0]['_postMeta']['count'];
-    }
+    TopicStoryList topicStoryList = TopicStoryList.fromJson(
+      jsonResponse['data']['allTopics'][0],
+      withCount: withCount,
+    );
 
     return topicStoryList;
   }

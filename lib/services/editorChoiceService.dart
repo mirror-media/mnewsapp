@@ -4,18 +4,18 @@ import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class EditorChoiceRepos {
-  Future<StoryListItemList> fetchEditorChoiceList();
-  Future<StoryListItemList> fetchVideoEditorChoiceList();
+  Future<List<StoryListItem>> fetchEditorChoiceList();
+  Future<List<StoryListItem>> fetchVideoEditorChoiceList();
 }
 
 class EditorChoiceServices implements EditorChoiceRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<StoryListItemList> fetchEditorChoiceList() async {
+  Future<List<StoryListItem>> fetchEditorChoiceList() async {
     final key = 'fetchEditorChoiceList';
 
     String query = """
@@ -68,12 +68,13 @@ class EditorChoiceServices implements EditorChoiceRepos {
     for (int i = 0; i < jsonResponse['data']['allEditorChoices'].length; i++) {
       parsedJson.add(jsonResponse['data']['allEditorChoices'][i]['choice']);
     }
-    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);
+    List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
+        parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)));
     return editorChoiceList;
   }
 
   @override
-  Future<StoryListItemList> fetchVideoEditorChoiceList() async {
+  Future<List<StoryListItem>> fetchVideoEditorChoiceList() async {
     final key = 'fetchVideoEditorChoiceList';
 
     String query = """
@@ -130,7 +131,8 @@ class EditorChoiceServices implements EditorChoiceRepos {
       parsedJson
           .add(jsonResponse['data']['allVideoEditorChoices'][i]['videoEditor']);
     }
-    StoryListItemList editorChoiceList = StoryListItemList.fromJson(parsedJson);
+    List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
+        parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)));
     return editorChoiceList;
   }
 }

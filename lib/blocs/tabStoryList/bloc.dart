@@ -11,7 +11,7 @@ import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/adUnitId.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
 class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
@@ -27,19 +27,24 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
     try {
       if (event is FetchStoryList) {
         yield TabStoryListState.loading();
-        StoryListItemList storyListItemList =
+        List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryList();
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
         AdUnitId adUnitId =
             AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
-            storyListItemList: storyListItemList, adUnitId: adUnitId);
-      } else if (event is FetchNextPage) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+          storyListItemList: storyListItemList,
+          adUnitId: adUnitId,
+          allStoryCount: tabStoryListRepos.allStoryCount,
+        );
+      }
+
+      if (event is FetchNextPage) {
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         yield TabStoryListState.loadingMore(
             storyListItemList: storyListItemList);
-        StoryListItemList newStoryListItemList =
+        List<StoryListItem> newStoryListItemList =
             await tabStoryListRepos.fetchStoryList(
           skip: storyListItemList.length,
           first: storyListItemList.length + event.loadingMorePage,
@@ -48,10 +53,15 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
           newStoryListItemList.removeWhere((element) => element.id == item.id);
         }
         storyListItemList.addAll(newStoryListItemList);
-        yield TabStoryListState.loaded(storyListItemList: storyListItemList);
-      } else if (event is FetchStoryListByCategorySlug) {
+        yield TabStoryListState.loaded(
+          storyListItemList: storyListItemList,
+          allStoryCount: tabStoryListRepos.allStoryCount,
+        );
+      }
+
+      if (event is FetchStoryListByCategorySlug) {
         yield TabStoryListState.loading();
-        StoryListItemList storyListItemList =
+        List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(event.slug);
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
@@ -62,12 +72,17 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
           adUnitId = AdUnitId.fromJson(fixedAdUnitId, event.slug);
         }
         yield TabStoryListState.loaded(
-            storyListItemList: storyListItemList, adUnitId: adUnitId);
-      } else if (event is FetchNextPageByCategorySlug) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+          storyListItemList: storyListItemList,
+          adUnitId: adUnitId,
+          allStoryCount: tabStoryListRepos.allStoryCount,
+        );
+      }
+
+      if (event is FetchNextPageByCategorySlug) {
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         yield TabStoryListState.loadingMore(
             storyListItemList: storyListItemList);
-        StoryListItemList newStoryListItemList =
+        List<StoryListItem> newStoryListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(
           event.slug,
           skip: storyListItemList.length,
@@ -77,17 +92,25 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
           newStoryListItemList.removeWhere((element) => element.id == item.id);
         }
         storyListItemList.addAll(newStoryListItemList);
-        yield TabStoryListState.loaded(storyListItemList: storyListItemList);
-      } else if (event is FetchPopularStoryList) {
+        yield TabStoryListState.loaded(
+          storyListItemList: storyListItemList,
+          allStoryCount: tabStoryListRepos.allStoryCount,
+        );
+      }
+
+      if (event is FetchPopularStoryList) {
         yield TabStoryListState.loading();
-        StoryListItemList storyListItemList =
+        List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchPopularStoryList();
         String jsonFixed = await rootBundle.loadString(adUnitIdJson);
         final fixedAdUnitId = json.decode(jsonFixed);
         AdUnitId adUnitId =
             AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
-            storyListItemList: storyListItemList, adUnitId: adUnitId);
+          storyListItemList: storyListItemList,
+          adUnitId: adUnitId,
+          allStoryCount: tabStoryListRepos.allStoryCount,
+        );
       }
     } catch (e) {
       if (event is FetchNextPage) {

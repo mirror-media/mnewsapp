@@ -6,7 +6,6 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
@@ -27,7 +26,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   late TopicStoryList _topicStoryList;
   late final _storySlug;
   bool _isAllLoaded = false;
-  StoryListItemList _storyListItemList = StoryListItemList();
+  List<StoryListItem> _storyListItemList = [];
   CarouselController carouselController = CarouselController();
 
   @override
@@ -76,7 +75,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             _storyListItemList = _topicStoryList.storyListItemList!;
           }
 
-          if (_storyListItemList.length == _storyListItemList.allStoryCount) {
+          if (_storyListItemList.length == _topicStoryList.allStoryCount) {
             _isAllLoaded = true;
           }
 

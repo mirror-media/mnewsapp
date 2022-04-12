@@ -15,7 +15,6 @@ import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
@@ -558,7 +557,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
   }
 
-  Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
+  Widget _buildRelatedWidget(double width, List<StoryListItem> relatedStories) {
     double width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),

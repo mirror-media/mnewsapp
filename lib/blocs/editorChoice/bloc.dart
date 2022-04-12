@@ -7,14 +7,14 @@ import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/editorChoiceService.dart';
 
 class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
   final EditorChoiceRepos editorChoiceRepos;
   final TabStoryListBloc? tabStoryListBloc;
   late StreamSubscription tabStoryListBlocSubscription;
-  StoryListItemList editorChoiceList = StoryListItemList();
+  List<StoryListItem> editorChoiceList = [];
 
   EditorChoiceBloc({required this.editorChoiceRepos, this.tabStoryListBloc})
       : super(EditorChoiceLoading()) {

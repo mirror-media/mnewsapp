@@ -3,7 +3,7 @@ import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tagList.dart';
 
 class Story {
@@ -29,7 +29,7 @@ class Story {
   final String? otherbyline;
 
   final TagList? tags;
-  final StoryListItemList? relatedStories;
+  final List<StoryListItem>? relatedStories;
   final List<String>? imageUrlList;
 
   Story({
@@ -126,7 +126,8 @@ class Story {
           json['vocals'].map((vocal) => People.fromJson(vocal))),
       otherbyline: json['otherbyline'],
       tags: TagList.fromJson(json['tags']),
-      relatedStories: StoryListItemList.fromJson(json['relatedPosts']),
+      relatedStories: List<StoryListItem>.from(
+          json['relatedPosts'].map((post) => StoryListItem.fromJson(post))),
       imageUrlList: imageUrlList,
     );
   }

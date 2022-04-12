@@ -4,7 +4,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
@@ -56,7 +56,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
         );
       }
       if (state.status == TabStoryListStatus.loaded) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
@@ -89,7 +89,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
   }
 
   Widget _tabStoryList({
-    required StoryListItemList storyListItemList,
+    required List<StoryListItem> storyListItemList,
   }) {
     List<Widget> _storyListWithAd = [];
     // List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
