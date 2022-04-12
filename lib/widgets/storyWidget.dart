@@ -15,7 +15,7 @@ import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/tagList.dart';
+import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
@@ -510,7 +510,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTags(TagList? tags) {
+  Widget _buildTags(List<Tag>? tags) {
     if (tags == null) {
       return Container();
     } else {
