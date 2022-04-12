@@ -6,7 +6,6 @@ import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/topic.dart';
-import 'package:tv/models/topicList.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class TopicListWidget extends StatefulWidget {
@@ -15,7 +14,7 @@ class TopicListWidget extends StatefulWidget {
 }
 
 class _TopicListWidgetState extends State<TopicListWidget> {
-  TopicList topicList = TopicList();
+  List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
   @override
   void initState() {

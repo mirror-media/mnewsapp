@@ -5,11 +5,11 @@ import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/section.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
-  final TopicList topics;
+  final List<Topic> topics;
   const HomeDrawer(this.topics);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
