@@ -10,7 +10,6 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:tv/models/paragrpahList.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AnchorpersonStoryWidget extends StatefulWidget {
@@ -145,7 +144,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
     );
   }
 
-  Widget _buildBioWidget(ParagraphList? bio) {
+  Widget _buildBioWidget(List<Paragraph>? bio) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     if (bio != null) {
       return Center(

@@ -1,7 +1,7 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/models/paragrpahList.dart';
+import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
@@ -9,8 +9,8 @@ import 'package:tv/models/tagList.dart';
 class Story {
   final String? style;
   final String? name;
-  final ParagraphList? brief;
-  final ParagraphList? contentApiData;
+  final List<Paragraph>? brief;
+  final List<Paragraph>? contentApiData;
   final String? publishTime;
   final String? updatedAt;
 
@@ -56,18 +56,18 @@ class Story {
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
-    ParagraphList brief = ParagraphList();
+    List<Paragraph>? brief;
     if (BaseModel.hasKey(json, 'briefApiData') &&
         json["briefApiData"] != 'NaN') {
-      brief = ParagraphList.parseResponseBody(json['briefApiData']);
+      brief = Paragraph.parseResponseBody(json['briefApiData']);
     }
 
     List<String>? imageUrlList = [];
 
-    ParagraphList contentApiData = ParagraphList();
+    List<Paragraph>? contentApiData;
     if (BaseModel.hasKey(json, 'contentApiData') &&
         json["contentApiData"] != 'NaN') {
-      contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
+      contentApiData = Paragraph.parseResponseBody(json["contentApiData"]);
       for (var paragraph in contentApiData) {
         if (paragraph.contents != null &&
             paragraph.contents!.length > 0 &&

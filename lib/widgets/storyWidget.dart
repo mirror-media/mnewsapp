@@ -12,7 +12,6 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
@@ -381,7 +380,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   // only display unstyled paragraph type in brief
-  Widget _buildBrief(ParagraphList articles) {
+  Widget _buildBrief(List<Paragraph> articles) {
     if (articles.length > 0) {
       List<Widget> articleWidgets = List.empty(growable: true);
 
@@ -446,7 +445,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     return Container();
   }
 
-  Widget _buildContent(ParagraphList storyContents) {
+  Widget _buildContent(List<Paragraph> storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
     // if(storyContents.length > 0)
