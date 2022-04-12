@@ -13,7 +13,6 @@ import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
-import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
@@ -362,7 +361,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  List<Widget> _addAuthorItems(PeopleList peopleList) {
+  List<Widget> _addAuthorItems(List<People> peopleList) {
     List<Widget> authorItems = List.empty(growable: true);
 
     for (People author in peopleList) {

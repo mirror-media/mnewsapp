@@ -2,7 +2,7 @@ import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:tv/models/peopleList.dart';
+import 'package:tv/models/people.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tagList.dart';
 
@@ -20,12 +20,12 @@ class Story {
 
   final List<Category>? categoryList;
 
-  final PeopleList? writers;
-  final PeopleList? photographers;
-  final PeopleList? cameraOperators;
-  final PeopleList? designers;
-  final PeopleList? engineers;
-  final PeopleList? vocals;
+  final List<People>? writers;
+  final List<People>? photographers;
+  final List<People>? cameraOperators;
+  final List<People>? designers;
+  final List<People>? engineers;
+  final List<People>? vocals;
   final String? otherbyline;
 
   final TagList? tags;
@@ -112,12 +112,18 @@ class Story {
       heroVideo: videoUrl,
       heroCaption: json['heroCaption'],
       categoryList: categoryList,
-      writers: PeopleList.fromJson(json['writers']),
-      photographers: PeopleList.fromJson(json['photographers']),
-      cameraOperators: PeopleList.fromJson(json['cameraOperators']),
-      designers: PeopleList.fromJson(json['designers']),
-      engineers: PeopleList.fromJson(json['engineers']),
-      vocals: PeopleList.fromJson(json['vocals']),
+      writers: List<People>.from(
+          json['writers'].map((writer) => People.fromJson(writer))),
+      photographers: List<People>.from(json['photographers']
+          .map((photographer) => People.fromJson(photographer))),
+      cameraOperators: List<People>.from(json['cameraOperators']
+          .map((cameraOperator) => People.fromJson(cameraOperator))),
+      designers: List<People>.from(
+          json['designers'].map((designer) => People.fromJson(designer))),
+      engineers: List<People>.from(
+          json['engineers'].map((engineer) => People.fromJson(engineer))),
+      vocals: List<People>.from(
+          json['vocals'].map((vocal) => People.fromJson(vocal))),
       otherbyline: json['otherbyline'],
       tags: TagList.fromJson(json['tags']),
       relatedStories: StoryListItemList.fromJson(json['relatedPosts']),
