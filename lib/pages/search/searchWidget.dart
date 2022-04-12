@@ -255,6 +255,6 @@ class _SearchWidgetState extends State<SearchWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 }

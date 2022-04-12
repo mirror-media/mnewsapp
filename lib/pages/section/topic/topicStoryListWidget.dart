@@ -129,7 +129,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             return Container();
           }
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator.adaptive(),
           );
         }
         return InkWell(

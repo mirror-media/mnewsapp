@@ -67,7 +67,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildChooseButton() {

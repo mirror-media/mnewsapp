@@ -51,7 +51,7 @@ class _ImageViewerWidgetState extends State<ImageViewerWidget> {
               child: Container(
                 width: 20.0,
                 height: 20.0,
-                child: CircularProgressIndicator(),
+                child: CircularProgressIndicator.adaptive(),
               ),
             ),
             backgroundDecoration: BoxDecoration(color: Colors.black),

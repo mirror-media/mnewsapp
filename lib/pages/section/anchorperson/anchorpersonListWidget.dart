@@ -102,7 +102,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildContactTypeTitle(String title, double width) {

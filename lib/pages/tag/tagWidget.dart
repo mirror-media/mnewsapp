@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/tag/bloc.dart';
@@ -79,11 +76,7 @@ class _TagWidgetState extends State<TagWidget> {
         return _buildList(_tagStoryList);
       }
       // state is Init, loading, or other
-      return Center(
-        child: Platform.isAndroid
-            ? const CircularProgressIndicator()
-            : const CupertinoActivityIndicator(),
-      );
+      return Center(child: const CircularProgressIndicator.adaptive());
     });
   }
 
@@ -103,11 +96,7 @@ class _TagWidgetState extends State<TagWidget> {
             );
           }
           if (!loadingMore) _fetchNextPageByTagSlug();
-          return Center(
-            child: Platform.isAndroid
-                ? const CircularProgressIndicator()
-                : const CupertinoActivityIndicator(),
-          );
+          return Center(child: const CircularProgressIndicator.adaptive());
         }
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),

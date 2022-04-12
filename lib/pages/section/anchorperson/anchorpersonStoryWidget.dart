@@ -64,7 +64,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildAnchorpersonStory(Contact contact, double width) {

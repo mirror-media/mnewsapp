@@ -97,7 +97,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _storyContent(double width, Story story) {

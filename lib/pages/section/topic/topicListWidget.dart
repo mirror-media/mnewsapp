@@ -54,7 +54,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
         }
 
         return Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         );
       },
     );

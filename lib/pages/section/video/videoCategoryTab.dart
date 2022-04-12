@@ -109,7 +109,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildTabs(
