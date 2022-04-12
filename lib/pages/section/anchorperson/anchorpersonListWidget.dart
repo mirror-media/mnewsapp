@@ -7,7 +7,6 @@ import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/contact.dart';
-import 'package:tv/models/contactList.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
   @override
@@ -42,7 +41,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         return error.renderWidget(isNoButton: true);
       }
       if (state is ContactListLoaded) {
-        ContactList contactList = state.contactList;
+        List<Contact> contactList = state.contactList;
         List<Contact> anchorpersonContactList =
             contactList.where((contact) => contact.isAnchorperson).toList();
         List<Contact> hostContactList =
