@@ -1,9 +1,9 @@
-import 'package:tv/models/contentList.dart';
+import 'package:tv/models/content.dart';
 
 class Paragraph {
   String? styles;
   String? type;
-  ContentList? contents;
+  List<Content>? contents;
 
   Paragraph({
     this.styles,
@@ -16,8 +16,8 @@ class Paragraph {
       return Paragraph();
     }
 
-    ContentList contents;
-    contents = ContentList.fromJson(json["content"]);
+    List<Content> contents = List<Content>.from(
+        json["content"].map((content) => Content.fromJson(content)));
 
     return Paragraph(
       type: json['type'],

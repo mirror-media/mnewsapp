@@ -3,10 +3,10 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/contentList.dart';
+import 'package:tv/models/content.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
-  final ContentList contentList;
+  final List<Content> contentList;
   final double textSize;
   final List<String> imageUrlList;
   ImageAndDescriptionSlideShowWidget({
@@ -23,7 +23,7 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
 class _ImageAndDescriptionSlideShowWidgetState
     extends State<ImageAndDescriptionSlideShowWidget> {
   int currentPage = 1;
-  late ContentList contentList;
+  late List<Content> contentList;
   late CarouselOptions options;
   CarouselController imageCarouselController = CarouselController();
   CarouselController textCarouselController = CarouselController();
