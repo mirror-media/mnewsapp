@@ -105,7 +105,7 @@ class _YoutubeLiveViewerState extends State<YoutubeLiveViewer>
                 width: constraints.maxWidth,
                 height: constraints.maxWidth / (16 / 9),
                 child: Center(
-                  child: CircularProgressIndicator(),
+                  child: CircularProgressIndicator.adaptive(),
                 ),
               );
             }

@@ -336,7 +336,7 @@ packages:
       path: "."
       ref: master
       resolved-ref: "95478c59c01d509b268cdaf64e4c1fa6dfe72d80"
-      url: "git://github.com/mirror-media/flutter_embedded_webview.git"
+      url: "https://github.com/mirror-media/flutter_embedded_webview.git"
     source: git
     version: "0.2.0"
   flutter_launcher_icons:
