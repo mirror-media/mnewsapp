@@ -3,26 +3,17 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/services/editorChoiceService.dart';
 
 abstract class TabStoryListRepos {
-  Future<StoryListItemList> fetchStoryList({
-    int skip = 0,
-    int first = 20,
-    bool withCount = true
-  });
-  Future<StoryListItemList> fetchStoryListByCategorySlug(
-    String slug,
-    {
-      int skip = 0,
-      int first = 20,
-      bool withCount = true
-    }
-  );
+  Future<StoryListItemList> fetchStoryList(
+      {int skip = 0, int first = 20, bool withCount = true});
+  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug,
+      {int skip = 0, int first = 20, bool withCount = true});
   Future<StoryListItemList> fetchPopularStoryList();
 }
 
@@ -63,11 +54,8 @@ class TabStoryListServices implements TabStoryListRepos {
   }
 
   @override
-  Future<StoryListItemList> fetchStoryList({
-    int skip = 0,
-    int first = 20,
-    bool withCount = true
-  }) async {
+  Future<StoryListItemList> fetchStoryList(
+      {int skip = 0, int first = 20, bool withCount = true}) async {
     String key = 'fetchStoryList?skip=$skip&first=$first';
     if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
@@ -124,14 +112,8 @@ class TabStoryListServices implements TabStoryListRepos {
   }
 
   @override
-  Future<StoryListItemList> fetchStoryListByCategorySlug(
-    String slug,
-    {
-      int skip = 0,
-      int first = 20,
-      bool withCount = true
-    }
-  ) async {
+  Future<StoryListItemList> fetchStoryListByCategorySlug(String slug,
+      {int skip = 0, int first = 20, bool withCount = true}) async {
     String key =
         'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
     if (postStyle != null) {
@@ -191,8 +173,9 @@ class TabStoryListServices implements TabStoryListRepos {
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
-    CategoryList _categoryList =
-        CategoryList.fromJson(jsonResponseGCP['allCategories']);
+    List<Category> _categoryList = List<Category>.from(
+        jsonResponseGCP['allCategories']
+            .map((category) => Category.fromJson(category)));
     String? _categoryId =
         _categoryList.firstWhere((element) => element.slug == slug).id;
 

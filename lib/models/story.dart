@@ -1,6 +1,6 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/storyListItemList.dart';
@@ -18,7 +18,7 @@ class Story {
   final String? heroVideo;
   final String? heroCaption;
 
-  final CategoryList? categoryList;
+  final List<Category>? categoryList;
 
   final PeopleList? writers;
   final PeopleList? photographers;
@@ -95,6 +95,12 @@ class Story {
       videoUrl = json['heroVideo']['url'];
     }
 
+    List<Category>? categoryList;
+    if (BaseModel.checkJsonKeys(json, ['categories'])) {
+      categoryList = List<Category>.from(
+          json['categories'].map((category) => Category.fromJson(category)));
+    }
+
     return Story(
       style: json['style'],
       name: json[BaseModel.nameKey],
@@ -105,7 +111,7 @@ class Story {
       heroImage: photoUrl,
       heroVideo: videoUrl,
       heroCaption: json['heroCaption'],
-      categoryList: CategoryList.fromJson(json['categories']),
+      categoryList: categoryList,
       writers: PeopleList.fromJson(json['writers']),
       photographers: PeopleList.fromJson(json['photographers']),
       cameraOperators: PeopleList.fromJson(json['cameraOperators']),

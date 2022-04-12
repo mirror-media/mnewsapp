@@ -6,7 +6,6 @@ import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/models/categoryList.dart';
 import 'package:tv/pages/section/show/showTabContent.dart';
 
 class ShowCategoryTab extends StatefulWidget {
@@ -33,7 +32,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
     context.read<CategoriesBloc>().add(FetchCategories());
   }
 
-  _initializeTabController(CategoryList categoryList) {
+  _initializeTabController(List<Category> categoryList) {
     _tabs.clear();
     _tabWidgets.clear();
 
@@ -84,7 +83,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
         return error.renderWidget(isNoButton: true);
       }
       if (state is CategoriesLoaded) {
-        CategoryList categoryList = state.categoryList;
+        List<Category> categoryList = state.categoryList;
         _initializeTabController(categoryList);
 
         return _buildTabs(_tabs, _tabWidgets, _tabController!);

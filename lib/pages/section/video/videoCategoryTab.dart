@@ -7,7 +7,6 @@ import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
 import 'package:tv/pages/section/video/videoTabContent.dart';
@@ -37,7 +36,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
   }
 
   _initializeTabController(
-      CategoryList categoryList, bool hasEditorChoice, bool hasPopular) {
+      List<Category> categoryList, bool hasEditorChoice, bool hasPopular) {
     _tabs.clear();
     _tabWidgets.clear();
     if (!hasPopular) {
@@ -96,7 +95,7 @@ class _VideoCategoryTabState extends State<VideoCategoryTab>
         return error.renderWidget(isNoButton: true);
       }
       if (state is VideoCategoriesLoaded) {
-        CategoryList categoryList = state.categoryList;
+        List<Category> categoryList = state.categoryList;
         _initializeTabController(
             categoryList, state.hasEditorChoice, state.hasPopular);
 
