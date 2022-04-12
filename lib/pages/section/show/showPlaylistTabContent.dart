@@ -10,7 +10,6 @@ import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/events.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
 
 class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
@@ -32,7 +31,6 @@ class ShowPlaylistTabContent extends StatefulWidget {
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   final int _fetchPlaylistMaxResult = 10;
   late bool _isLoading;
-  String? _nextPagetoken;
 
   @override
   void initState() {
@@ -42,11 +40,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     widget.listviewController.addListener(() {
       if (widget.listviewController.position.pixels ==
               widget.listviewController.position.maxScrollExtent &&
-          !_isLoading &&
-          _nextPagetoken != '' &&
-          _nextPagetoken != null) {
+          !_isLoading) {
         _fetchSnippetByPlaylistIdAndPageToken(
-            widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
+            widget.youtubePlaylistInfo.youtubePlayListId);
       }
     });
     super.initState();
@@ -65,15 +61,14 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         .add(FetchSnippetByPlaylistId(id, maxResults: _fetchPlaylistMaxResult));
   }
 
-  _fetchSnippetByPlaylistIdAndPageToken(String id, String pageToken) async {
+  _fetchSnippetByPlaylistIdAndPageToken(String id) async {
     context.read<YoutubePlaylistBloc>().add(
-        FetchSnippetByPlaylistIdAndPageToken(id, pageToken,
+        FetchSnippetByPlaylistIdAndPageToken(id,
             maxResults: _fetchPlaylistMaxResult));
   }
 
   _initPagetokenAndIsLoading() {
     _isLoading = true;
-    _nextPagetoken = '';
   }
 
   @override
@@ -87,7 +82,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       }
       if (state is YoutubePlaylistLoadingMore) {
         _isLoading = true;
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -95,10 +90,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             isLoading: true);
       }
       if (state is YoutubePlaylistLoadingMoreFail) {
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         _isLoading = false;
-        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
         return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -106,10 +100,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             isLoading: true);
       }
       if (state is YoutubePlaylistLoaded) {
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         _isLoading = false;
-        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
         return _buildYoutubePlaylistItemList(
           widget.youtubePlaylistInfo.youtubePlayListId,
@@ -122,8 +115,8 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     });
   }
 
-  Widget _buildYoutubePlaylistItemList(
-      String youtubePlayListId, YoutubePlaylistItemList youtubePlaylistItemList,
+  Widget _buildYoutubePlaylistItemList(String youtubePlayListId,
+      List<YoutubePlaylistItem> youtubePlaylistItemList,
       {bool isLoading = false}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
