@@ -1,7 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tv/helpers/routeGenerator.dart';
+import 'package:get/get.dart';
 import 'package:tv/models/storyListItem.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class VideoStoryListItem extends StatelessWidget {
   final StoryListItem storyListItem;
@@ -38,7 +39,9 @@ class VideoStoryListItem extends StatelessWidget {
           ],
         ),
         onTap: () {
-          RouteGenerator.navigateToStory(context, storyListItem.slug);
+          Get.to(() => StoryPage(
+                slug: storyListItem.slug,
+              ));
         });
   }
 

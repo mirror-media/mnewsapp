@@ -1,11 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/tag/bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tag.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class TagWidget extends StatefulWidget {
   final Tag tag;
@@ -144,7 +145,9 @@ class _TagWidgetState extends State<TagWidget> {
         ],
       ),
       onTap: () {
-        RouteGenerator.navigateToStory(context, story.slug);
+        Get.to(() => StoryPage(
+              slug: story.slug,
+            ));
       },
     );
   }

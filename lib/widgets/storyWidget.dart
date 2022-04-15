@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
@@ -10,13 +11,14 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/tag/tagPage.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
@@ -142,11 +144,10 @@ class _StoryWidgetState extends State<StoryWidget> {
               if (index == -1) {
                 index = 0;
               }
-              RouteGenerator.navigateToImageViewer(
-                context,
+              Get.to(ImageViewerWidget(
                 story.imageUrlList ?? [story.heroImage!],
                 openIndex: index,
-              );
+              ));
             },
             child: CachedNetworkImage(
               width: width,
@@ -523,7 +524,9 @@ class _StoryWidgetState extends State<StoryWidget> {
               onTap: () {
                 AnalyticsHelper.logClick(
                     slug: '', title: tags[i].name, location: 'Article_關鍵字');
-                RouteGenerator.navigateToTagStoryListPage(context, tags[i]);
+                Get.to(() => TagPage(
+                      tag: tags[i],
+                    ));
               },
               child: Container(
                 decoration: BoxDecoration(

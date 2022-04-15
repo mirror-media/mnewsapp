@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/topic.dart';
+import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
@@ -103,7 +104,7 @@ class _HomePageState extends State<HomePage> {
         IconButton(
           icon: Icon(Icons.search),
           tooltip: 'Search',
-          onPressed: () => RouteGenerator.navigateToSearch(context),
+          onPressed: () => Get.to(() => SearchPage()),
         ),
       ],
     );

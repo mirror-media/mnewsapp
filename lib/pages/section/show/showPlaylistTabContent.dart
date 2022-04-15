@@ -1,8 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,6 +10,7 @@ import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/events.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
+import 'package:tv/pages/section/show/showStoryPage.dart';
 
 class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
@@ -207,13 +208,27 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToShowStory(
-        context,
-        youtubePlayListId,
-        youtubePlaylistItem,
-        widget.adUnitId,
-        widget.isMoreShow,
-      ),
+      onTap: () {
+        if (widget.isMoreShow) {
+          Get.off(
+            () => ShowStoryPage(
+              youtubePlayListId: youtubePlayListId,
+              youtubePlaylistItem: youtubePlaylistItem,
+              adUnitId: widget.adUnitId,
+            ),
+            preventDuplicates: false,
+          );
+        } else {
+          Get.to(
+            () => ShowStoryPage(
+              youtubePlayListId: youtubePlayListId,
+              youtubePlaylistItem: youtubePlaylistItem,
+              adUnitId: widget.adUnitId,
+            ),
+            preventDuplicates: false,
+          );
+        }
+      },
     );
   }
 

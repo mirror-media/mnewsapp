@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/topicList/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/topic.dart';
+import 'package:tv/pages/section/topic/topicStoryListPage.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class TopicListWidget extends StatefulWidget {
@@ -240,10 +241,9 @@ class _TopicListWidgetState extends State<TopicListWidget> {
       height: 48,
       child: TextButton(
         onPressed: () {
-          RouteGenerator.navigateToTopicStoryListPage(
-            context,
-            topic,
-          );
+          Get.to(() => TopicStoryListPage(
+                topic: topic,
+              ));
         },
         child: Text('進入專題'),
         style: TextButton.styleFrom(

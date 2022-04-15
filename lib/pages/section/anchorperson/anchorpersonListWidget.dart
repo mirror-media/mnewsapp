@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/contact.dart';
+import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
   @override
@@ -169,13 +170,10 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                   ),
                 ),
               ]),
-              onTap: () {
-                RouteGenerator.navigateToAnchorpersonStory(
-                  context,
-                  contactList[index].id,
-                  contactList[index].name,
-                );
-              },
+              onTap: () => Get.to(() => AnchorpersonStoryPage(
+                    anchorpersonId: contactList[index].id,
+                    anchorpersonName: contactList[index].name,
+                  )),
             ),
           );
         });

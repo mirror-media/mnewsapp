@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:tv/helpers/routeGenerator.dart';
+import 'package:get/get.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
 
 class ImageDescriptionWidget extends StatelessWidget {
   final String imageUrl;
@@ -59,11 +60,10 @@ class ImageDescriptionWidget extends StatelessWidget {
         if (index == -1) {
           index = 0;
         }
-        RouteGenerator.navigateToImageViewer(
-          context,
-          imageUrlList,
-          openIndex: index,
-        );
+        Get.to(() => ImageViewerWidget(
+              imageUrlList,
+              openIndex: index,
+            ));
       },
     );
   }

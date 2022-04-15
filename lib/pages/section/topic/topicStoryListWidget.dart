@@ -1,15 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
@@ -137,8 +138,9 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             child: _buildTopicStoryListItem(_storyListItemList[index - 1]),
           ),
           onTap: () {
-            RouteGenerator.navigateToStory(
-                context, _storyListItemList[index - 1].slug);
+            Get.to(() => StoryPage(
+                  slug: _storyListItemList[index - 1].slug,
+                ));
           },
         );
       },
