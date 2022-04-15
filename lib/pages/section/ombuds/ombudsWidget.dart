@@ -11,6 +11,7 @@ import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/video.dart' as myVideo;
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
+import 'package:tv/pages/section/ombuds/ombudsNewsListPage.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
@@ -311,6 +312,13 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           onTap: () => Get.to(() => StoryPage(
                 slug: 'biography',
               )),
+        ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: phoneSvg,
+          title1: '最新',
+          title2: '消息',
+          onTap: () => Get.to(() => OmbudsNewsListPage()),
         ),
         // OmbudsButton(
         //   width: ombudsWidth,
