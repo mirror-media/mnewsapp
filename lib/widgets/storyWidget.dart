@@ -2,7 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/file.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
+import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
@@ -41,6 +44,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   // late AdUnitId _adUnitId;
   late double _textSize;
   late Story _story;
+  late File _ombudsLawFile;
 
   @override
   void initState() {
@@ -54,6 +58,9 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   _loadStory(String slug) async {
+    if (_currentSlug == 'law') {
+      _ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
+    }
     context.read<StoryBloc>().add(FetchPublishedStoryBySlug(slug));
   }
 
@@ -101,6 +108,7 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   Widget _storyContent(double width, Story story) {
     return ListView(
+      shrinkWrap: true,
       children: [
         // InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
         _buildHeroWidget(width, story),
@@ -445,6 +453,25 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   Widget _buildContent(List<Paragraph> storyContents) {
+    if (_currentSlug == 'law') {
+      return PdfDocumentLoader.openFile(
+        _ombudsLawFile.path,
+        documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
+          builder: (context, constraints) => ListView.builder(
+            itemCount: pageCount,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) => Container(
+              color: Colors.black12,
+              child: PdfPageView(
+                pdfDocument: pdfDocument,
+                pageNumber: index + 1,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
     // if(storyContents.length > 0)
