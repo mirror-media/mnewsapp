@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/tagStoryListService.dart';
 
 part 'events.dart';
@@ -13,7 +13,7 @@ part 'states.dart';
 
 class TagStoryListBloc extends Bloc<TagStoryListEvents, TagStoryListState> {
   final TagStoryListRepos tagStoryListRepos = TagStoryListServices();
-  StoryListItemList tagStoryList = StoryListItemList();
+  List<StoryListItem> tagStoryList = [];
 
   TagStoryListBloc() : super(const TagStoryListState.initial());
 
@@ -28,13 +28,16 @@ class TagStoryListBloc extends Bloc<TagStoryListEvents, TagStoryListState> {
 
         yield TagStoryListState.loaded(
           tagStoryList: tagStoryList,
+          allStoryCount: tagStoryListRepos.allStoryCount,
         );
-      } else if (event is FetchNextPageByTagSlug) {
+      }
+
+      if (event is FetchNextPageByTagSlug) {
         yield TagStoryListState.loadingMore(
           tagStoryList: tagStoryList,
         );
 
-        StoryListItemList newStoryListItemList =
+        List<StoryListItem> newStoryListItemList =
             await tagStoryListRepos.fetchStoryListByTagSlug(
           event.slug,
           skip: tagStoryList.length,
@@ -46,6 +49,7 @@ class TagStoryListBloc extends Bloc<TagStoryListEvents, TagStoryListState> {
         tagStoryList.addAll(newStoryListItemList);
         yield TagStoryListState.loaded(
           tagStoryList: tagStoryList,
+          allStoryCount: tagStoryListRepos.allStoryCount,
         );
       }
     } catch (e) {

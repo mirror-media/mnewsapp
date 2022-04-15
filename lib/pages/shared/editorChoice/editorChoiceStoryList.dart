@@ -9,7 +9,6 @@ import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class BuildEditorChoiceStoryList extends StatefulWidget {
@@ -66,7 +65,7 @@ class _BuildEditorChoiceStoryListState
         );
       }
       if (state is EditorChoiceLoaded) {
-        StoryListItemList editorChoiceList = state.editorChoiceList;
+        List<StoryListItem> editorChoiceList = state.editorChoiceList;
 
         if (editorChoiceList.length == 0) {
           return SliverList(
@@ -96,7 +95,7 @@ class _BuildEditorChoiceStoryListState
   }
 
   Widget _tabStoryList({
-    required StoryListItemList storyListItemList,
+    required List<StoryListItem> storyListItemList,
   }) {
     return SliverList(
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {

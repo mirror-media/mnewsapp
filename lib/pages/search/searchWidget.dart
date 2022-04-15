@@ -9,7 +9,6 @@ import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/pages/search/searchNoResultWidget.dart';
 
 class SearchWidget extends StatefulWidget {
@@ -94,9 +93,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
           if (state is SearchLoaded) {
             _isLoading = false;
-            StoryListItemList storyListItemList = state.storyListItemList;
-            _isLoadingMax =
-                storyListItemList.length == storyListItemList.allStoryCount;
+            List<StoryListItem> storyListItemList = state.storyListItemList;
+            _isLoadingMax = storyListItemList.length == state.allStoryCount;
 
             return Expanded(
               child: _buildSearchList(
@@ -106,7 +104,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
           if (state is SearchLoadingMore) {
             _isLoading = true;
-            StoryListItemList storyListItemList = state.storyListItemList;
+            List<StoryListItem> storyListItemList = state.storyListItemList;
 
             return Expanded(
               child: _buildSearchList(
@@ -171,7 +169,7 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   Widget _buildSearchList(
     BuildContext context,
-    StoryListItemList storyListItemList,
+    List<StoryListItem> storyListItemList,
     String keyword, {
     bool isLoadingMore = false,
   }) {

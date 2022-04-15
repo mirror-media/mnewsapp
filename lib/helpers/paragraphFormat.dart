@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/models/contentList.dart';
+import 'package:tv/models/content.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
 import 'package:tv/widgets/story/annotationWidget.dart';
@@ -186,7 +186,7 @@ class ParagraphFormat {
     }
   }
 
-  List<String?> _convertStrangeDataList(ContentList contentList) {
+  List<String?> _convertStrangeDataList(List<Content> contentList) {
     List<String?> resultList = List.empty(growable: true);
     if (contentList.length == 1 && contentList[0].data[0] == '[') {
       // api data is strange [[...]]
@@ -201,7 +201,7 @@ class ParagraphFormat {
     return resultList;
   }
 
-  Widget buildOrderListWidget(ContentList contentList, double textSize) {
+  Widget buildOrderListWidget(List<Content> contentList, double textSize) {
     List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(
@@ -229,7 +229,7 @@ class ParagraphFormat {
     );
   }
 
-  Widget buildUnorderListWidget(ContentList contentList, double textSize) {
+  Widget buildUnorderListWidget(List<Content> contentList, double textSize) {
     List<String?> dataList = _convertStrangeDataList(contentList);
 
     return ListView.builder(

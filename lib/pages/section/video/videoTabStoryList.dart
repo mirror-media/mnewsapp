@@ -4,7 +4,7 @@ import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
@@ -20,6 +20,7 @@ class VideoTabStoryList extends StatefulWidget {
 
 class _VideoTabStoryListState extends State<VideoTabStoryList> {
   // late AdUnitId _adUnitId;
+  int _allStoryCount = 0;
 
   @override
   void initState() {
@@ -69,7 +70,8 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
         );
       }
       if (state.status == TabStoryListStatus.loaded) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
+        _allStoryCount = state.allStoryCount!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
@@ -90,13 +92,13 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
       }
 
       if (state.status == TabStoryListStatus.loadingMore) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         return _tabStoryList(
             storyListItemList: storyListItemList, isLoading: true);
       }
 
       if (state.status == TabStoryListStatus.loadingMoreError) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         _fetchNextPageByCategorySlug();
         return _tabStoryList(
             storyListItemList: storyListItemList, isLoading: true);
@@ -115,7 +117,8 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
   }
 
   Widget _tabStoryList(
-      {required StoryListItemList storyListItemList, bool isLoading = false}) {
+      {required List<StoryListItem> storyListItemList,
+      bool isLoading = false}) {
     List<Widget> _storyListWithAd = [];
     // List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
     int _howManyAds = 0;
@@ -160,7 +163,7 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
       delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
         if (!isLoading &&
             index == storyListItemList.length - 5 &&
-            storyListItemList.length < storyListItemList.allStoryCount) {
+            storyListItemList.length < _allStoryCount) {
           _fetchNextPageByCategorySlug();
         }
 

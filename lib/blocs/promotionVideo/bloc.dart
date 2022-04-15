@@ -5,7 +5,7 @@ import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/services/promotionVideosService.dart';
 
 class PromotionVideoBloc
@@ -22,7 +22,7 @@ class PromotionVideoBloc
     try {
       if (event is FetchAllPromotionVideos) {
         yield PromotionVideoLoading();
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             await promotionVideosRepos.fetchAllPromotionVideos();
         yield PromotionVideoLoaded(
             youtubePlaylistItemList: youtubePlaylistItemList);

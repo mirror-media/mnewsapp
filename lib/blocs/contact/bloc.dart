@@ -6,7 +6,6 @@ import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/contact.dart';
-import 'package:tv/models/contactList.dart';
 import 'package:tv/services/contactService.dart';
 
 class ContactBloc extends Bloc<ContactEvents, ContactState> {
@@ -20,7 +19,7 @@ class ContactBloc extends Bloc<ContactEvents, ContactState> {
     try {
       yield ContactLoading();
       if (event is FetchAnchorpersonOrHostContactList) {
-        ContactList contactList =
+        List<Contact> contactList =
             await contactRepos.fetchAnchorpersonOrHostContactList();
         yield ContactListLoaded(contactList: contactList);
       } else if (event is FetchContactById) {

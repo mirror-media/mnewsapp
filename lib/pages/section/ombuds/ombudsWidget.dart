@@ -7,7 +7,7 @@ import 'package:tv/blocs/video/video_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/paragrpahList.dart';
+import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/video.dart' as myVideo;
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
@@ -155,8 +155,8 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     );
   }
 
-  Widget _buildBrief(ParagraphList brief) {
-    ParagraphList unstyledBrief = ParagraphList();
+  Widget _buildBrief(List<Paragraph> brief) {
+    List<Paragraph> unstyledBrief = [];
     for (int i = 0; i < brief.length; i++) {
       if (brief[i].type == 'unstyled') {
         unstyledBrief.add(brief[i]);

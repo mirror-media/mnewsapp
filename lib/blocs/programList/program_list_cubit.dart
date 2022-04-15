@@ -4,7 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/programList.dart';
+import 'package:tv/models/programListItem.dart';
 import 'package:tv/services/programListService.dart';
 
 part 'program_list_state.dart';
@@ -15,7 +15,8 @@ class ProgramListCubit extends Cubit<ProgramListState> {
   void fetchProgramList() async {
     print('FetchProgramList');
     try {
-      ProgramList programList = await ProgramListServices().fetchProgramList();
+      List<ProgramListItem> programList =
+          await ProgramListServices().fetchProgramList();
       emit(ProgramListLoaded(programList: programList));
     } on SocketException {
       emit(ProgramListError(

@@ -5,7 +5,7 @@ import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/adUnitId.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topic.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
@@ -18,7 +18,7 @@ import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  final TopicList topics;
+  final List<Topic> topics;
   const HomePage(this.topics);
   @override
   _HomePageState createState() => _HomePageState();

@@ -5,17 +5,17 @@ import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class NewsMarqueeRepos {
-  Future<StoryListItemList> fetchNewsList();
+  Future<List<StoryListItem>> fetchNewsList();
 }
 
 class NewsMarqueeServices implements NewsMarqueeRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<StoryListItemList> fetchNewsList() async {
+  Future<List<StoryListItem>> fetchNewsList() async {
     final key = 'fetchNewsMarqueeList';
 
     String query = """
@@ -59,8 +59,9 @@ class NewsMarqueeServices implements NewsMarqueeRepos {
         maxAge: newsMarqueeCacheDuration,
         headers: {"Content-Type": "application/json"});
 
-    StoryListItemList newsList =
-        StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
+            ['allPosts']
+        .map((post) => StoryListItem.fromJson(post)));
     return newsList;
   }
 }

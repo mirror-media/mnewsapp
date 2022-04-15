@@ -6,13 +6,13 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/blocs/youtubePlaylist/events.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 
 class YoutubePlaylistBloc
     extends Bloc<YoutubePlaylistEvents, YoutubePlaylistState> {
   final YoutubePlaylistRepos youtubePlaylistRepos;
-  YoutubePlaylistItemList youtubePlaylistItemList = YoutubePlaylistItemList();
+  List<YoutubePlaylistItem> youtubePlaylistItemList = [];
 
   YoutubePlaylistBloc({required this.youtubePlaylistRepos})
       : super(YoutubePlaylistInitState());
@@ -32,12 +32,10 @@ class YoutubePlaylistBloc
       } else if (event is FetchSnippetByPlaylistIdAndPageToken) {
         yield YoutubePlaylistLoadingMore(
             youtubePlaylistItemList: youtubePlaylistItemList);
-        YoutubePlaylistItemList newYoutubePlaylistItemList =
+        List<YoutubePlaylistItem> newYoutubePlaylistItemList =
             await youtubePlaylistRepos.fetchSnippetByPlaylistIdAndPageToken(
-                event.playlistId, event.pageToken,
+                event.playlistId,
                 maxResults: event.maxResults);
-        youtubePlaylistItemList.nextPageToken =
-            newYoutubePlaylistItemList.nextPageToken;
         youtubePlaylistItemList.addAll(newYoutubePlaylistItemList);
 
         yield YoutubePlaylistLoaded(

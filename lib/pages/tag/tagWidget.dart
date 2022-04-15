@@ -5,7 +5,6 @@ import 'package:tv/blocs/tag/bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tag.dart';
 
 class TagWidget extends StatefulWidget {
@@ -18,7 +17,8 @@ class TagWidget extends StatefulWidget {
 
 class _TagWidgetState extends State<TagWidget> {
   bool loadingMore = false;
-  late StoryListItemList _tagStoryList;
+  late List<StoryListItem> _tagStoryList;
+  int _allStoryCount = 0;
 
   @override
   void initState() {
@@ -73,6 +73,7 @@ class _TagWidgetState extends State<TagWidget> {
       if (state.status == TagStoryListStatus.loaded) {
         _tagStoryList = state.tagStoryList!;
         loadingMore = false;
+        _allStoryCount = state.allStoryCount!;
         return _buildList(_tagStoryList);
       }
       // state is Init, loading, or other
@@ -80,9 +81,9 @@ class _TagWidgetState extends State<TagWidget> {
     });
   }
 
-  Widget _buildList(StoryListItemList tagStoryList) {
+  Widget _buildList(List<StoryListItem> tagStoryList) {
     bool isAll = false;
-    if (tagStoryList.length == tagStoryList.allStoryCount) {
+    if (tagStoryList.length == _allStoryCount) {
       isAll = true;
     }
     return ListView.builder(

@@ -1,4 +1,4 @@
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 
 abstract class PromotionVideoState {}
 
@@ -7,7 +7,7 @@ class PromotionVideoInitState extends PromotionVideoState {}
 class PromotionVideoLoading extends PromotionVideoState {}
 
 class PromotionVideoLoaded extends PromotionVideoState {
-  final YoutubePlaylistItemList youtubePlaylistItemList;
+  final List<YoutubePlaylistItem> youtubePlaylistItemList;
   PromotionVideoLoaded({required this.youtubePlaylistItemList});
 }
 

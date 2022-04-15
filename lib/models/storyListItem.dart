@@ -1,6 +1,6 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 
 class StoryListItem {
   String? id;
@@ -8,7 +8,7 @@ class StoryListItem {
   String slug;
   String? style;
   String photoUrl;
-  CategoryList? categoryList;
+  List<Category>? categoryList;
 
   StoryListItem({
     required this.id,
@@ -32,9 +32,10 @@ class StoryListItem {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
-    CategoryList? allPostsCategory;
+    List<Category>? allPostsCategory;
     if (json['categories'] != null) {
-      allPostsCategory = CategoryList.fromJson(json['categories']);
+      allPostsCategory = List<Category>.from(
+          json['categories'].map((category) => Category.fromJson(category)));
     }
 
     String? style;

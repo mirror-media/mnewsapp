@@ -1,16 +1,16 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/categoryList.dart';
-import 'package:tv/models/paragrpahList.dart';
-import 'package:tv/models/peopleList.dart';
-import 'package:tv/models/storyListItemList.dart';
-import 'package:tv/models/tagList.dart';
+import 'package:tv/models/category.dart';
+import 'package:tv/models/paragraph.dart';
+import 'package:tv/models/people.dart';
+import 'package:tv/models/storyListItem.dart';
+import 'package:tv/models/tag.dart';
 
 class Story {
   final String? style;
   final String? name;
-  final ParagraphList? brief;
-  final ParagraphList? contentApiData;
+  final List<Paragraph>? brief;
+  final List<Paragraph>? contentApiData;
   final String? publishTime;
   final String? updatedAt;
 
@@ -18,18 +18,18 @@ class Story {
   final String? heroVideo;
   final String? heroCaption;
 
-  final CategoryList? categoryList;
+  final List<Category>? categoryList;
 
-  final PeopleList? writers;
-  final PeopleList? photographers;
-  final PeopleList? cameraOperators;
-  final PeopleList? designers;
-  final PeopleList? engineers;
-  final PeopleList? vocals;
+  final List<People>? writers;
+  final List<People>? photographers;
+  final List<People>? cameraOperators;
+  final List<People>? designers;
+  final List<People>? engineers;
+  final List<People>? vocals;
   final String? otherbyline;
 
-  final TagList? tags;
-  final StoryListItemList? relatedStories;
+  final List<Tag>? tags;
+  final List<StoryListItem>? relatedStories;
   final List<String>? imageUrlList;
 
   Story({
@@ -56,18 +56,18 @@ class Story {
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
-    ParagraphList brief = ParagraphList();
+    List<Paragraph>? brief;
     if (BaseModel.hasKey(json, 'briefApiData') &&
         json["briefApiData"] != 'NaN') {
-      brief = ParagraphList.parseResponseBody(json['briefApiData']);
+      brief = Paragraph.parseResponseBody(json['briefApiData']);
     }
 
     List<String>? imageUrlList = [];
 
-    ParagraphList contentApiData = ParagraphList();
+    List<Paragraph>? contentApiData;
     if (BaseModel.hasKey(json, 'contentApiData') &&
         json["contentApiData"] != 'NaN') {
-      contentApiData = ParagraphList.parseResponseBody(json["contentApiData"]);
+      contentApiData = Paragraph.parseResponseBody(json["contentApiData"]);
       for (var paragraph in contentApiData) {
         if (paragraph.contents != null &&
             paragraph.contents!.length > 0 &&
@@ -95,6 +95,12 @@ class Story {
       videoUrl = json['heroVideo']['url'];
     }
 
+    List<Category>? categoryList;
+    if (BaseModel.checkJsonKeys(json, ['categories'])) {
+      categoryList = List<Category>.from(
+          json['categories'].map((category) => Category.fromJson(category)));
+    }
+
     return Story(
       style: json['style'],
       name: json[BaseModel.nameKey],
@@ -105,16 +111,23 @@ class Story {
       heroImage: photoUrl,
       heroVideo: videoUrl,
       heroCaption: json['heroCaption'],
-      categoryList: CategoryList.fromJson(json['categories']),
-      writers: PeopleList.fromJson(json['writers']),
-      photographers: PeopleList.fromJson(json['photographers']),
-      cameraOperators: PeopleList.fromJson(json['cameraOperators']),
-      designers: PeopleList.fromJson(json['designers']),
-      engineers: PeopleList.fromJson(json['engineers']),
-      vocals: PeopleList.fromJson(json['vocals']),
+      categoryList: categoryList,
+      writers: List<People>.from(
+          json['writers'].map((writer) => People.fromJson(writer))),
+      photographers: List<People>.from(json['photographers']
+          .map((photographer) => People.fromJson(photographer))),
+      cameraOperators: List<People>.from(json['cameraOperators']
+          .map((cameraOperator) => People.fromJson(cameraOperator))),
+      designers: List<People>.from(
+          json['designers'].map((designer) => People.fromJson(designer))),
+      engineers: List<People>.from(
+          json['engineers'].map((engineer) => People.fromJson(engineer))),
+      vocals: List<People>.from(
+          json['vocals'].map((vocal) => People.fromJson(vocal))),
       otherbyline: json['otherbyline'],
-      tags: TagList.fromJson(json['tags']),
-      relatedStories: StoryListItemList.fromJson(json['relatedPosts']),
+      tags: List<Tag>.from(json['tags'].map((tag) => Tag.fromJson(tag))),
+      relatedStories: List<StoryListItem>.from(
+          json['relatedPosts'].map((post) => StoryListItem.fromJson(post))),
       imageUrlList: imageUrlList,
     );
   }

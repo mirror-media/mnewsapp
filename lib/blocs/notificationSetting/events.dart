@@ -1,4 +1,4 @@
-import 'package:tv/models/notificationSettingList.dart';
+import 'package:tv/models/notificationSetting.dart';
 
 abstract class NotificationSettingEvents {}
 
@@ -8,7 +8,7 @@ class GetNotificationSettingList extends NotificationSettingEvents {
 }
 
 class NotificationOnExpansionChanged extends NotificationSettingEvents {
-  final NotificationSettingList inputNotificationSettingList;
+  final List<NotificationSetting> inputNotificationSettingList;
   final int index;
   final bool value;
   NotificationOnExpansionChanged(
@@ -19,8 +19,8 @@ class NotificationOnExpansionChanged extends NotificationSettingEvents {
 }
 
 class NotificationOnCheckBoxChanged extends NotificationSettingEvents {
-  final NotificationSettingList inputNotificationSettingList;
-  final NotificationSettingList checkboxList;
+  final List<NotificationSetting> inputNotificationSettingList;
+  final List<NotificationSetting> checkboxList;
   final int index;
   final bool isRepeatable;
   NotificationOnCheckBoxChanged(this.inputNotificationSettingList,

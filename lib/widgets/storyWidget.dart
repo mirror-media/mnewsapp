@@ -12,13 +12,10 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
-import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
-import 'package:tv/models/tagList.dart';
+import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
@@ -363,7 +360,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  List<Widget> _addAuthorItems(PeopleList peopleList) {
+  List<Widget> _addAuthorItems(List<People> peopleList) {
     List<Widget> authorItems = List.empty(growable: true);
 
     for (People author in peopleList) {
@@ -381,7 +378,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   // only display unstyled paragraph type in brief
-  Widget _buildBrief(ParagraphList articles) {
+  Widget _buildBrief(List<Paragraph> articles) {
     if (articles.length > 0) {
       List<Widget> articleWidgets = List.empty(growable: true);
 
@@ -446,7 +443,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     return Container();
   }
 
-  Widget _buildContent(ParagraphList storyContents) {
+  Widget _buildContent(List<Paragraph> storyContents) {
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
     // if(storyContents.length > 0)
@@ -513,7 +510,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTags(TagList? tags) {
+  Widget _buildTags(List<Tag>? tags) {
     if (tags == null) {
       return Container();
     } else {
@@ -560,7 +557,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
   }
 
-  Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
+  Widget _buildRelatedWidget(double width, List<StoryListItem> relatedStories) {
     double width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),

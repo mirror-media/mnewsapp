@@ -4,15 +4,14 @@ import 'package:flutter/services.dart';
 import 'package:localstorage/localstorage.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/notificationSetting.dart';
-import 'package:tv/models/notificationSettingList.dart';
 
 abstract class NotificationSettingRepos {
-  Future<NotificationSettingList> getNotificationSettingList();
-  NotificationSettingList onExpansionChanged(
-      NotificationSettingList notificationSettingList, int index, bool value);
-  NotificationSettingList onCheckBoxChanged(
-    NotificationSettingList notificationSettingList,
-    NotificationSettingList checkboxList,
+  Future<List<NotificationSetting>> getNotificationSettingList();
+  List<NotificationSetting> onExpansionChanged(
+      List<NotificationSetting> notificationSettingList, int index, bool value);
+  List<NotificationSetting> onCheckBoxChanged(
+    List<NotificationSetting> notificationSettingList,
+    List<NotificationSetting> checkboxList,
     int index,
     bool isRepeatable,
   );
@@ -22,39 +21,47 @@ class NotificationSettingServices implements NotificationSettingRepos {
   final LocalStorage _storage = LocalStorage('setting');
 
   @override
-  Future<NotificationSettingList> getNotificationSettingList() async {
-    NotificationSettingList notificationSettingList;
-    NotificationSettingList? storageNotification;
+  Future<List<NotificationSetting>> getNotificationSettingList() async {
+    List<NotificationSetting> notificationSettingList = [];
+    List<NotificationSetting>? storageNotification;
     if (await _storage.ready) {
       var notificationMapList = await _storage.getItem("notification");
-      storageNotification = notificationMapList != null
-          ? NotificationSettingList.fromJson(notificationMapList)
-          : null;
+      if (notificationMapList != null) {
+        storageNotification = List<NotificationSetting>.from(
+            notificationMapList.map((notificationSetting) =>
+                NotificationSetting.fromJson(notificationSetting)));
+      }
     }
 
     if (storageNotification == null) {
       notificationSettingList = await _fetchDefaultNotificationList();
-      _storage.setItem("notification", notificationSettingList.toJson());
     } else {
-      notificationSettingList =
-          NotificationSettingList.fromJson(_storage.getItem("notification"));
-      NotificationSettingList notificationSettingListFromAsset =
+      notificationSettingList = List<NotificationSetting>.from(_storage
+          .getItem("notification")
+          .map((notificationSetting) =>
+              NotificationSetting.fromJson(notificationSetting)));
+      List<NotificationSetting> notificationSettingListFromAsset =
           await _fetchDefaultNotificationList();
       checkAndSyncNotificationSettingList(
           notificationSettingListFromAsset, notificationSettingList);
       notificationSettingList = notificationSettingListFromAsset;
-      _storage.setItem("notification", notificationSettingList.toJson());
     }
+
+    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
+        .map((notificationSetting) => notificationSetting.toJson()));
+    _storage.setItem("notification", json.encode(notificationSettingMaps));
 
     return notificationSettingList;
   }
 
-  Future<NotificationSettingList> _fetchDefaultNotificationList() async {
+  Future<List<NotificationSetting>> _fetchDefaultNotificationList() async {
     var jsonSetting = await rootBundle.loadString(defaultNotificationListJson);
     var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
 
-    NotificationSettingList notificationSettingList =
-        NotificationSettingList.fromJson(jsonSettingList);
+    List<NotificationSetting> notificationSettingList =
+        List<NotificationSetting>.from(jsonSettingList.map(
+            (notificationSetting) =>
+                NotificationSetting.fromJson(notificationSetting)));
 
     return notificationSettingList;
   }
@@ -63,11 +70,12 @@ class NotificationSettingServices implements NotificationSettingRepos {
   /// userList is from storage notification
   /// change the title and topic from assetList
   /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(NotificationSettingList? assetList,
-      NotificationSettingList? userList) async {
+  checkAndSyncNotificationSettingList(List<NotificationSetting>? assetList,
+      List<NotificationSetting>? userList) async {
     if (assetList != null) {
       assetList.forEach((asset) {
-        NotificationSetting? user = userList?.getById(asset.id);
+        NotificationSetting? user =
+            userList?.firstWhere((element) => element.id == asset.id);
         if (user != null && user.id == asset.id) {
           // if(user.topic != asset.topic && user.value) {
           //   _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
@@ -97,18 +105,22 @@ class NotificationSettingServices implements NotificationSettingRepos {
   }
 
   @override
-  NotificationSettingList onExpansionChanged(
-      NotificationSettingList notificationSettingList, int index, bool value) {
+  List<NotificationSetting> onExpansionChanged(
+      List<NotificationSetting> notificationSettingList,
+      int index,
+      bool value) {
     notificationSettingList[index].value = value;
-    _storage.setItem("notification", notificationSettingList.toJson());
+    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
+        .map((notificationSetting) => notificationSetting.toJson()));
+    _storage.setItem("notification", json.encode(notificationSettingMaps));
     //_firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[index]);
     return notificationSettingList;
   }
 
   @override
-  NotificationSettingList onCheckBoxChanged(
-      NotificationSettingList notificationSettingList,
-      NotificationSettingList checkboxList,
+  List<NotificationSetting> onCheckBoxChanged(
+      List<NotificationSetting> notificationSettingList,
+      List<NotificationSetting> checkboxList,
       int index,
       bool isRepeatable) {
     if (isRepeatable) {
@@ -119,7 +131,9 @@ class NotificationSettingServices implements NotificationSettingRepos {
       });
       checkboxList[index].value = true;
     }
-    _storage.setItem("notification", notificationSettingList.toJson());
+    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
+        .map((notificationSetting) => notificationSetting.toJson()));
+    _storage.setItem("notification", json.encode(notificationSettingMaps));
     //_firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
     return notificationSettingList;
   }

@@ -5,7 +5,7 @@ import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
@@ -21,6 +21,7 @@ class NewsTabStoryList extends StatefulWidget {
 
 class _NewsTabStoryListState extends State<NewsTabStoryList> {
   // late AdUnitId _adUnitId;
+  int _allStoryCount = 0;
 
   @override
   void initState() {
@@ -89,8 +90,9 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
         );
       }
       if (state.status == TabStoryListStatus.loaded) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         // if (state.adUnitId != null) _adUnitId = state.adUnitId!;
+        _allStoryCount = state.allStoryCount!;
 
         if (storyListItemList.length == 0) {
           return SliverList(
@@ -110,7 +112,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
       }
 
       if (state.status == TabStoryListStatus.loadingMore) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         return _tabStoryList(
           storyListItemList: storyListItemList,
           needCarousel: widget.needCarousel,
@@ -119,7 +121,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
       }
 
       if (state.status == TabStoryListStatus.loadingMoreError) {
-        StoryListItemList storyListItemList = state.storyListItemList!;
+        List<StoryListItem> storyListItemList = state.storyListItemList!;
         if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
           _fetchNextPage();
         } else {
@@ -144,7 +146,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
   }
 
   Widget _tabStoryList({
-    required StoryListItemList storyListItemList,
+    required List<StoryListItem> storyListItemList,
     bool needCarousel = false,
     bool isLoading = false,
   }) {
@@ -234,7 +236,7 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
         (BuildContext context, int index) {
           if (!isLoading &&
               index == _storyListWithAd.length - 5 &&
-              storyListItemList.length < storyListItemList.allStoryCount) {
+              storyListItemList.length < _allStoryCount) {
             if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
               _fetchNextPage();
             } else {

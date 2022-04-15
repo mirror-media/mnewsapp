@@ -4,13 +4,13 @@ import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topic.dart';
 import 'package:tv/models/topicStoryList.dart';
 
 class TopicService {
   ApiBaseHelper _helper = ApiBaseHelper();
 
-  Future<TopicList> fetchFeaturedTopics() async {
+  Future<List<Topic>> fetchFeaturedTopics() async {
     String key = 'fetchFeaturedTopics';
 
     Map<String, dynamic> variables = {
@@ -48,12 +48,13 @@ class TopicService {
         maxAge: featuredTopicCacheDuration,
         headers: {"Content-Type": "application/json"});
 
-    TopicList topics = TopicList.fromJson(jsonResponse['data']['allTopics']);
+    List<Topic> topics = List<Topic>.from(jsonResponse['data']['allTopics']
+        .map((topic) => Topic.fromJson(topic)));
 
     return topics;
   }
 
-  Future<TopicList> fetchTopicList() async {
+  Future<List<Topic>> fetchTopicList() async {
     String key = 'fetchTopicList';
 
     Map<String, dynamic> variables = {
@@ -92,7 +93,8 @@ class TopicService {
         maxAge: topicListCacheDuration,
         headers: {"Content-Type": "application/json"});
 
-    TopicList topics = TopicList.fromJson(jsonResponse['data']['allTopics']);
+    List<Topic> topics = List<Topic>.from(jsonResponse['data']['allTopics']
+        .map((topic) => Topic.fromJson(topic)));
     return topics;
   }
 
@@ -185,13 +187,10 @@ class TopicService {
           headers: {"Content-Type": "application/json"});
     }
 
-    TopicStoryList topicStoryList =
-        TopicStoryList.fromJson(jsonResponse['data']['allTopics'][0]);
-
-    if (withCount && topicStoryList.storyListItemList != null) {
-      topicStoryList.storyListItemList!.allStoryCount =
-          jsonResponse['data']['allTopics'][0]['_postMeta']['count'];
-    }
+    TopicStoryList topicStoryList = TopicStoryList.fromJson(
+      jsonResponse['data']['allTopics'][0],
+      withCount: withCount,
+    );
 
     return topicStoryList;
   }

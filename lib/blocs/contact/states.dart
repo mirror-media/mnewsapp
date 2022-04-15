@@ -1,5 +1,4 @@
 import 'package:tv/models/contact.dart';
-import 'package:tv/models/contactList.dart';
 
 abstract class ContactState {}
 
@@ -8,7 +7,7 @@ class ContactInitState extends ContactState {}
 class ContactLoading extends ContactState {}
 
 class ContactListLoaded extends ContactState {
-  final ContactList contactList;
+  final List<Contact> contactList;
   ContactListLoaded({required this.contactList});
 }
 

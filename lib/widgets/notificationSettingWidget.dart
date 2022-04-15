@@ -6,7 +6,6 @@ import 'package:tv/blocs/notificationSetting/events.dart';
 import 'package:tv/blocs/notificationSetting/states.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/notificationSetting.dart';
-import 'package:tv/models/notificationSettingList.dart';
 
 class NotificationSettingWidget extends StatefulWidget {
   @override
@@ -25,15 +24,15 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
     context.read<NotificationSettingBloc>().add(GetNotificationSettingList());
   }
 
-  _onExpansionChanged(NotificationSettingList notificationSettingList,
+  _onExpansionChanged(List<NotificationSetting> notificationSettingList,
       int index, bool value) async {
     context.read<NotificationSettingBloc>().add(
         NotificationOnExpansionChanged(notificationSettingList, index, value));
   }
 
   _onCheckBoxChanged(
-      NotificationSettingList notificationSettingList,
-      NotificationSettingList checkboxList,
+      List<NotificationSetting> notificationSettingList,
+      List<NotificationSetting> checkboxList,
       int index,
       bool isRepeatable) async {
     context.read<NotificationSettingBloc>().add(
@@ -52,7 +51,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
         return Container();
       }
       if (state is NotificationSettingLoaded) {
-        NotificationSettingList notificationSettingList =
+        List<NotificationSetting> notificationSettingList =
             state.notificationSettingList;
 
         return _buildNotificationSettingListSection(notificationSettingList);
@@ -95,14 +94,10 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
               ),
               onExpansionChanged: (bool value) {
                 _onExpansionChanged(
-                    notificationSettingList as NotificationSettingList,
-                    listViewIndex,
-                    value);
+                    notificationSettingList, listViewIndex, value);
               },
               children: _renderCheckBoxChildren(
-                  context,
-                  notificationSettingList as NotificationSettingList,
-                  listViewIndex),
+                  context, notificationSettingList, listViewIndex),
             ),
           ),
         );
@@ -111,7 +106,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
   }
 
   List<Widget> _renderCheckBoxChildren(BuildContext context,
-      NotificationSettingList notificationSettingList, int index) {
+      List<NotificationSetting> notificationSettingList, int index) {
     if (notificationSettingList[index].id == 'notification') {
       return [
         _buildCheckbox(context, notificationSettingList, index, true, 4, 2.0)
@@ -123,7 +118,7 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
 
   Widget _buildCheckbox(
       BuildContext context,
-      NotificationSettingList notificationSettingList,
+      List<NotificationSetting> notificationSettingList,
       int index,
       bool isRepeatable,
       int count,
@@ -141,11 +136,8 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
         itemBuilder: (context, checkboxIndex) {
           return InkWell(
             onTap: () {
-              _onCheckBoxChanged(
-                  notificationSettingList,
-                  checkboxList as NotificationSettingList,
-                  checkboxIndex,
-                  isRepeatable);
+              _onCheckBoxChanged(notificationSettingList, checkboxList,
+                  checkboxIndex, isRepeatable);
             },
             child: IgnorePointer(
               child: Row(children: [

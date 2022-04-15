@@ -4,9 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/paragrpahList.dart';
+import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/topic.dart';
-import 'package:tv/models/topicList.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 
 class TopicListWidget extends StatefulWidget {
@@ -15,7 +14,7 @@ class TopicListWidget extends StatefulWidget {
 }
 
 class _TopicListWidgetState extends State<TopicListWidget> {
-  TopicList topicList = TopicList();
+  List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
   @override
   void initState() {
@@ -118,14 +117,16 @@ class _TopicListWidgetState extends State<TopicListWidget> {
 
   Widget _buildItem(Topic topic) {
     double width = MediaQuery.of(context).size.width;
-    ParagraphList brief = topic.brief!;
+    List<Paragraph>? brief = topic.brief;
     List<Widget> briefContent = [];
-    for (var paragraph in brief) {
-      if (paragraph.contents != null &&
-          paragraph.contents!.length > 0 &&
-          !_isNullOrEmpty(paragraph.contents![0].data)) {
-        briefContent
-            .add(paragraphFormat.parseTheParagraph(paragraph, context, 17));
+    if (brief != null) {
+      for (var paragraph in brief) {
+        if (paragraph.contents != null &&
+            paragraph.contents!.length > 0 &&
+            !_isNullOrEmpty(paragraph.contents![0].data)) {
+          briefContent
+              .add(paragraphFormat.parseTheParagraph(paragraph, context, 17));
+        }
       }
     }
     if (briefContent.isEmpty) {

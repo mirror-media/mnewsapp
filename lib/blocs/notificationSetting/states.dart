@@ -1,4 +1,4 @@
-import 'package:tv/models/notificationSettingList.dart';
+import 'package:tv/models/notificationSetting.dart';
 
 abstract class NotificationSettingState {}
 
@@ -7,7 +7,7 @@ class NotificationSettingInitState extends NotificationSettingState {}
 class NotificationSettingLoading extends NotificationSettingState {}
 
 class NotificationSettingLoaded extends NotificationSettingState {
-  final NotificationSettingList notificationSettingList;
+  final List<NotificationSetting> notificationSettingList;
   NotificationSettingLoaded({required this.notificationSettingList});
 }
 
