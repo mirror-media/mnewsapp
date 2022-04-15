@@ -4,6 +4,8 @@ import 'package:tv/models/baseModel.dart';
 /// url link
 const mNewsMail = 'mnews.cs@mnews.tw';
 const youtubeLink = 'https://www.youtube.com/';
+const ombudsLaw =
+    'https://storage.googleapis.com/static-mnews-tw-prod/regulation/ombuds_law_20211123.pdf';
 
 /// assets
 const String menuJson = 'assets/json/menu.json';
