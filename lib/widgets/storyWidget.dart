@@ -22,6 +22,7 @@ import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/pages/tag/tagPage.dart';
 import 'package:tv/widgets/imageViewerWidget.dart';
+import 'package:tv/widgets/story/fileDownloadWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
@@ -115,13 +116,19 @@ class _StoryWidgetState extends State<StoryWidget> {
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
         SizedBox(height: 10),
-        _buildStoryTitle(story.name!),
+        _buildStoryTitle(story.name ?? ''),
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        _buildBrief(story.brief!),
-        _buildContent(story.contentApiData!),
-        SizedBox(height: 16),
+        _buildBrief(story.brief ?? []),
+        _buildContent(story.contentApiData ?? []),
+        if (story.downloadFileList != null &&
+            story.downloadFileList!.isNotEmpty)
+          FileDownloadWidget(
+            story.downloadFileList!,
+            textSize: _textSize,
+          ),
+        SizedBox(height: 24),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
