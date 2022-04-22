@@ -29,13 +29,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryList();
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId =
-            AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }
@@ -63,17 +58,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(event.slug);
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId;
-        if (event.isVideo) {
-          adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'video');
-        } else {
-          adUnitId = AdUnitId.fromJson(fixedAdUnitId, event.slug);
-        }
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }
@@ -102,13 +88,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchPopularStoryList();
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId =
-            AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }

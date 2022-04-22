@@ -13,14 +13,12 @@ enum TabStoryListStatus {
 class TabStoryListState {
   final TabStoryListStatus status;
   final List<StoryListItem>? storyListItemList;
-  final AdUnitId? adUnitId;
   final dynamic errorMessages;
   final int? allStoryCount;
 
   const TabStoryListState._({
     required this.status,
     this.storyListItemList,
-    this.adUnitId,
     this.errorMessages,
     this.allStoryCount,
   });
@@ -33,10 +31,8 @@ class TabStoryListState {
   const TabStoryListState.loaded({
     required List<StoryListItem> storyListItemList,
     required int allStoryCount,
-    AdUnitId? adUnitId,
   }) : this._(
           status: TabStoryListStatus.loaded,
-          adUnitId: adUnitId,
           storyListItemList: storyListItemList,
           allStoryCount: allStoryCount,
         );

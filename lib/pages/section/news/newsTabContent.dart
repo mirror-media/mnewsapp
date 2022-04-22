@@ -33,20 +33,15 @@ class _NewsTabContentState extends State<NewsTabContent> {
       AnalyticsHelper.sendScreenView(
           screenName: 'NewsPage categorySlug=${widget.categorySlug}');
     }
-    return CustomScrollView(
-      slivers: [
+    return ListView(
+      children: [
         if (widget.needCarousel)
-          SliverToBoxAdapter(
-            child: BlocProvider(
-              create: (context) => EditorChoiceBloc(
-                editorChoiceRepos: EditorChoiceServices(),
-                tabStoryListBloc: tabStoryListBloc,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 16),
-                child: BuildEditorChoiceCarousel(),
-              ),
+          BlocProvider(
+            create: (context) => EditorChoiceBloc(
+              editorChoiceRepos: EditorChoiceServices(),
+              tabStoryListBloc: tabStoryListBloc,
             ),
+            child: BuildEditorChoiceCarousel(),
           ),
         BlocProvider(
           create: (context) => tabStoryListBloc,
