@@ -5,11 +5,13 @@ class InlineBannerAdWidget extends StatefulWidget {
   final String adUnitId;
   final List<AdSize> sizes;
   final bool addHorizontalMargin;
+  final bool wantKeepAlive;
   InlineBannerAdWidget({
     required this.adUnitId,
     required this.sizes,
     Key? key,
     this.addHorizontalMargin = true,
+    this.wantKeepAlive = false,
   }) : super(key: key);
   @override
   _InlineBannerAdWidgetState createState() => _InlineBannerAdWidgetState();
@@ -22,19 +24,19 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
   AdSize? _adSize;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    if (mounted) {
-      _loadAd();
-    }
+  void initState() {
+    super.initState();
+    _loadAd();
   }
 
   Future<void> _loadAd() async {
     await _inlineAdaptiveAd?.dispose();
-    setState(() {
-      _inlineAdaptiveAd = null;
-      _isLoaded = false;
-    });
+    if (mounted) {
+      setState(() {
+        _inlineAdaptiveAd = null;
+        _isLoaded = false;
+      });
+    }
 
     _inlineAdaptiveAd = AdManagerBannerAd(
       adUnitId: widget.adUnitId,
@@ -54,11 +56,13 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
             return;
           }
 
-          setState(() {
-            _inlineAdaptiveAd = bannerAd;
-            _isLoaded = true;
-            _adSize = size;
-          });
+          if (mounted) {
+            setState(() {
+              _inlineAdaptiveAd = bannerAd;
+              _isLoaded = true;
+              _adSize = size;
+            });
+          }
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('Inline adaptive banner failedToLoad: $error');
@@ -108,5 +112,5 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
   }
 
   @override
-  bool get wantKeepAlive => true;
+  bool get wantKeepAlive => widget.wantKeepAlive;
 }
