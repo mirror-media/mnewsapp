@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/topic.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
@@ -76,7 +75,7 @@ class _HomePageState extends State<HomePage> {
           return Column(
             children: [
               Expanded(
-                child: _buildBody(sectionId, adUnitId: state.adUnitId),
+                child: _buildBody(sectionId),
               ),
               // AnchoredBannerAdWidget(),
             ],
@@ -110,14 +109,12 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget _buildBody(MNewsSection sectionId, {AdUnitId? adUnitId}) {
+  Widget _buildBody(MNewsSection sectionId) {
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();
       case MNewsSection.live:
-        return LivePage(
-          adUnitId: adUnitId,
-        );
+        return LivePage();
       case MNewsSection.video:
         return VideoPage();
       case MNewsSection.show:

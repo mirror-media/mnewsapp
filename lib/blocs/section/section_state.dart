@@ -2,8 +2,8 @@ part of 'section_cubit.dart';
 
 abstract class SectionStateCubit {
   final MNewsSection sectionId;
-  final AdUnitId? adUnitId;
-  SectionStateCubit({required this.sectionId, this.adUnitId});
+
+  SectionStateCubit({required this.sectionId});
 }
 
 class SectionInitState extends SectionStateCubit {
@@ -12,8 +12,7 @@ class SectionInitState extends SectionStateCubit {
 }
 
 class SectionLoaded extends SectionStateCubit {
-  SectionLoaded({required sectionId, adUnitId})
-      : super(sectionId: sectionId, adUnitId: adUnitId);
+  SectionLoaded({required sectionId}) : super(sectionId: sectionId);
 }
 
 class SectionError extends SectionStateCubit {
