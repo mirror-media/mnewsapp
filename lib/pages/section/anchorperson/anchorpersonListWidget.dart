@@ -2,12 +2,15 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
   @override
@@ -50,10 +53,14 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
         return ListView(
           children: [
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorHD'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+              ],
+            ),
             if (anchorpersonContactList.length > 0) ...[
-              SizedBox(
-                height: 24,
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 24,
@@ -71,10 +78,15 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 child: _buildContactList(anchorpersonContactList, width),
               ),
             ],
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT1'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+                AdSize(width: 320, height: 480),
+              ],
+            ),
             if (hostContactList.length > 0) ...[
-              SizedBox(
-                height: 24,
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 24,
@@ -92,6 +104,13 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 child: _buildContactList(hostContactList, width),
               ),
             ],
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT2'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+              ],
+            ),
           ],
         );
       }
