@@ -17,11 +17,11 @@ class AdUnitIdHelper {
 
   static String _getAndroidBannerAdUnitId(String position) {
     switch (position) {
-      case 'AT1':
+      case 'NewsAT1':
         return '';
-      case 'AT2':
+      case 'NewsAT2':
         return '';
-      case 'AT3':
+      case 'NewsAT3':
         return '';
       case 'LiveAT1':
         return '';
@@ -60,11 +60,11 @@ class AdUnitIdHelper {
 
   static String _getIosBannerAdUnitId(String position) {
     switch (position) {
-      case 'AT1':
+      case 'NewsAT1':
         return '';
-      case 'AT2':
+      case 'NewsAT2':
         return '';
-      case 'AT3':
+      case 'NewsAT3':
         return '';
       case 'LiveAT1':
         return '';
