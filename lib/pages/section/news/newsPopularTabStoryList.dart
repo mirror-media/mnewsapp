@@ -11,7 +11,6 @@ import 'package:tv/pages/section/news/shared/newsStoryFirstItem.dart';
 import 'package:tv/pages/section/news/shared/newsStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
-import 'package:visibility_detector/visibility_detector.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
   @override
