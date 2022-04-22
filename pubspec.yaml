@@ -79,7 +79,7 @@ dependencies:
       ref: master
 
   # google mobile ad
-  google_mobile_ads: ^1.0.1
+  google_mobile_ads: ^1.2.0
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
