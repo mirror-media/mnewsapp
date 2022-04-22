@@ -15,7 +15,7 @@ class InterstitialAdController {
     await showInterstitialAd(AdUnitIdHelper.getInterstitialAdUnitId('Story'));
   }
 
-  Future<void> loadRamdomInterstitialAd() async {
+  Future<void> ramdomShowInterstitialAd() async {
     final randomNumberGenerator = Random();
     final randomBoolean = randomNumberGenerator.nextBool();
     if (randomBoolean) {
