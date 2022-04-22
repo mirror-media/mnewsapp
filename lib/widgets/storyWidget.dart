@@ -10,6 +10,7 @@ import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -48,6 +49,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   late double _textSize;
   late Story _story;
   late File _ombudsLawFile;
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
@@ -71,37 +73,46 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<StoryBloc, StoryState>(
-        builder: (BuildContext context, StoryState state) {
-      if (state is StoryError) {
-        final error = state.error;
-        print('NewsCategoriesError: ${error.message}');
-        if (error is NoInternetException) {
-          return error.renderWidget(onPressed: () => _loadStory(_currentSlug));
+    return BlocConsumer<StoryBloc, StoryState>(
+      listener: (BuildContext context, StoryState state) async {
+        if (state is StoryLoaded) {
+          if (interstitialAdController.storyCounter.isOdd) {
+            await interstitialAdController.showStoryInterstitialAd();
+          }
+        }
+      },
+      builder: (BuildContext context, StoryState state) {
+        if (state is StoryError) {
+          final error = state.error;
+          print('NewsCategoriesError: ${error.message}');
+          if (error is NoInternetException) {
+            return error.renderWidget(
+                onPressed: () => _loadStory(_currentSlug));
+          }
+
+          return error.renderWidget();
+        }
+        if (state is StoryLoaded) {
+          Story? story = state.story;
+          if (story == null) {
+            return Container();
+          }
+          _story = story;
+          _textSize = state.textSize;
+          AnalyticsHelper.logStory(
+              slug: _currentSlug,
+              title: story.name ?? '',
+              category: story.categoryList);
+          return _storyContent(width, story);
+        } else if (state is TextSizeChanged) {
+          _textSize = state.textSize;
+          return _storyContent(width, _story);
         }
 
-        return error.renderWidget();
-      }
-      if (state is StoryLoaded) {
-        Story? story = state.story;
-        if (story == null) {
-          return Container();
-        }
-        _story = story;
-        _textSize = state.textSize;
-        AnalyticsHelper.logStory(
-            slug: _currentSlug,
-            title: story.name ?? '',
-            category: story.categoryList);
-        return _storyContent(width, story);
-      } else if (state is TextSizeChanged) {
-        _textSize = state.textSize;
-        return _storyContent(width, _story);
-      }
-
-      // state is Init, loading, or other
-      return _loadingWidget();
-    });
+        // state is Init, loading, or other
+        return _loadingWidget();
+      },
+    );
   }
 
   Widget _loadingWidget() => Center(
@@ -674,6 +685,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             slug: story.slug, title: story.name, location: 'Article_相關文章');
         _currentSlug = story.slug;
         StoryPage.of(context)!.slug = _currentSlug;
+        interstitialAdController.openStory();
         _loadStory(_currentSlug);
       },
     );
