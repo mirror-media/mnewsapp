@@ -16,8 +16,10 @@ import 'package:tv/widgets/storyWidget.dart';
 
 class StoryPage extends StatefulWidget {
   final String slug;
+  final bool showAds;
   StoryPage({
     required this.slug,
+    this.showAds = true,
   });
 
   @override
@@ -40,7 +42,9 @@ class _StoryPageState extends State<StoryPage> {
   void initState() {
     _slug = widget.slug;
     _getTextSizeSetting();
-    interstitialAdController.openStory();
+    if (widget.showAds) {
+      interstitialAdController.openStory();
+    }
     super.initState();
   }
 
@@ -63,12 +67,13 @@ class _StoryPageState extends State<StoryPage> {
         child: Column(
           children: [
             Expanded(
-              child: StoryWidget(slug: _slug),
+              child: StoryWidget(slug: _slug, showAds: widget.showAds),
             ),
             Obx(
               () {
                 if (interstitialAdController.storyCounter.isEven &&
-                    interstitialAdController.storyCounter.value != 0) {
+                    interstitialAdController.storyCounter.value != 0 &&
+                    widget.showAds) {
                   return AnchoredBannerAdWidget(
                     adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryFooter'),
                   );

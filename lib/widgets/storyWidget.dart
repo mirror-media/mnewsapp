@@ -36,8 +36,10 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
+  final bool showAds;
   StoryWidget({
     required this.slug,
+    this.showAds = true,
   });
 
   @override
@@ -76,7 +78,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     return BlocConsumer<StoryBloc, StoryState>(
       listener: (BuildContext context, StoryState state) async {
         if (state is StoryLoaded) {
-          if (interstitialAdController.storyCounter.isOdd) {
+          if (interstitialAdController.storyCounter.isOdd && widget.showAds) {
             await interstitialAdController.showStoryInterstitialAd();
           }
         }
@@ -123,13 +125,14 @@ class _StoryWidgetState extends State<StoryWidget> {
     return ListView(
       shrinkWrap: true,
       children: [
-        InlineBannerAdWidget(
-          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryHD'),
-          sizes: [
-            AdSize.mediumRectangle,
-            AdSize(width: 336, height: 280),
-          ],
-        ),
+        if (widget.showAds)
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryHD'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+          ),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -146,13 +149,14 @@ class _StoryWidgetState extends State<StoryWidget> {
             story.downloadFileList!,
             textSize: _textSize,
           ),
-        InlineBannerAdWidget(
-          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT2'),
-          sizes: [
-            AdSize.mediumRectangle,
-            AdSize(width: 336, height: 280),
-          ],
-        ),
+        if (widget.showAds)
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+          ),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
@@ -502,14 +506,18 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
     }
     if (storyContents.isEmpty) {
-      return InlineBannerAdWidget(
-        adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
-        sizes: [
-          AdSize.mediumRectangle,
-          AdSize(width: 336, height: 280),
-          AdSize(width: 320, height: 480),
-        ],
-      );
+      if (widget.showAds) {
+        return InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+            AdSize(width: 320, height: 480),
+          ],
+        );
+      } else {
+        return Container();
+      }
     }
     ParagraphFormat paragraphFormat = ParagraphFormat();
     return ListView.builder(
@@ -518,14 +526,18 @@ class _StoryWidgetState extends State<StoryWidget> {
       itemCount: storyContents.length + 1,
       itemBuilder: (context, index) {
         if (index == 1) {
-          return InlineBannerAdWidget(
-            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-              AdSize(width: 320, height: 480),
-            ],
-          );
+          if (widget.showAds) {
+            return InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+                AdSize(width: 320, height: 480),
+              ],
+            );
+          } else {
+            return Container();
+          }
         }
         int contentIndex = index;
         if (index > 1) {
