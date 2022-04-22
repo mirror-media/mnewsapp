@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/topic.dart';
 import 'package:tv/pages/search/searchPage.dart';
@@ -26,7 +27,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _scaffoldkey = GlobalKey<ScaffoldState>();
-  // InterstitialAdWidget interstitial = InterstitialAdWidget();
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
@@ -50,11 +51,6 @@ class _HomePageState extends State<HomePage> {
         },
       );
       await prefs.setBool("isFirstLaunch", false);
-      // } else {
-      //   interstitial.createInterstitialAd();
-      //   await Future.delayed(Duration(seconds: 1));
-      //   interstitial.showInterstitialAd();
-      // }
     }
   }
 
@@ -110,6 +106,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(MNewsSection sectionId) {
+    interstitialAdController.ramdomShowInterstitialAd();
     switch (sectionId) {
       case MNewsSection.news:
         return NewsPage();

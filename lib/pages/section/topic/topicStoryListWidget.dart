@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -34,11 +35,13 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   List<StoryListItem> _storyListItemList = [];
   CarouselController carouselController = CarouselController();
   bool _isLoading = false;
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
     _storySlug = widget.slug;
     _fetchTopicStoryList();
+    interstitialAdController.ramdomShowInterstitialAd();
     super.initState();
   }
 

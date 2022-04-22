@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -29,6 +31,7 @@ class ShowStoryPage extends StatefulWidget {
 class _ShowStoryPageState extends State<ShowStoryPage> {
   ScrollController _listviewController = ScrollController();
   DateTimeFormat _dateTimeFormat = DateTimeFormat();
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void dispose() {
@@ -40,6 +43,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
   Widget build(BuildContext context) {
     AnalyticsHelper.sendScreenView(
         screenName: 'ShowStoryPage title=${widget.youtubePlaylistItem.name}');
+    interstitialAdController.ramdomShowInterstitialAd();
     return Scaffold(
       appBar: _buildBar(context),
       body: ListView(

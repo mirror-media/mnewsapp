@@ -2,10 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -27,6 +29,7 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 }
 
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
+  final interstitialAdController = Get.find<InterstitialAdController>();
   @override
   void initState() {
     _fetchContactById(widget.anchorpersonId);
@@ -57,6 +60,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         Contact contact = state.contact;
         AnalyticsHelper.sendScreenView(
             screenName: 'AnchorpersonStoryPage name=${contact.name}');
+        interstitialAdController.ramdomShowInterstitialAd();
         return _buildAnchorpersonStory(contact, width);
       }
 
