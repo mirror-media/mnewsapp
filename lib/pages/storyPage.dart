@@ -1,19 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/services/storyService.dart';
+import 'package:tv/widgets/anchoredBannerAdWidget.dart';
 import 'package:tv/widgets/storyWidget.dart';
 
 class StoryPage extends StatefulWidget {
   final String slug;
+  final bool showAds;
   StoryPage({
     required this.slug,
+    this.showAds = true,
   });
 
   @override
@@ -27,6 +33,7 @@ class _StoryPageState extends State<StoryPage> {
   late String _slug;
   set slug(String value) => _slug = value;
   StoryBloc _bloc = StoryBloc(storyRepos: StoryServices());
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   double _initTextSize = 20;
   double _selectTextSize = 20;
@@ -35,6 +42,9 @@ class _StoryPageState extends State<StoryPage> {
   void initState() {
     _slug = widget.slug;
     _getTextSizeSetting();
+    if (widget.showAds) {
+      interstitialAdController.openStory();
+    }
     super.initState();
   }
 
@@ -51,17 +61,30 @@ class _StoryPageState extends State<StoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: _buildBar(context),
-        body: BlocProvider(
-            create: (context) => _bloc,
-            child: Column(
-              children: [
-                Expanded(
-                  child: StoryWidget(slug: _slug),
-                ),
-                // AnchoredBannerAdWidget(isKeepAlive: false,),
-              ],
-            )));
+      appBar: _buildBar(context),
+      body: BlocProvider(
+        create: (context) => _bloc,
+        child: Column(
+          children: [
+            Expanded(
+              child: StoryWidget(slug: _slug, showAds: widget.showAds),
+            ),
+            Obx(
+              () {
+                if (interstitialAdController.storyCounter.isEven &&
+                    interstitialAdController.storyCounter.value != 0 &&
+                    widget.showAds) {
+                  return AnchoredBannerAdWidget(
+                    adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryFooter'),
+                  );
+                }
+                return Container();
+              },
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   PreferredSizeWidget _buildBar(BuildContext context) {

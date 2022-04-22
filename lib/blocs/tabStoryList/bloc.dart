@@ -1,16 +1,11 @@
-import 'dart:convert';
 import 'dart:io';
-
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
 import 'package:tv/helpers/apiException.dart';
-import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
@@ -29,13 +24,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryList();
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId =
-            AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }
@@ -63,17 +53,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchStoryListByCategorySlug(event.slug);
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId;
-        if (event.isVideo) {
-          adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'video');
-        } else {
-          adUnitId = AdUnitId.fromJson(fixedAdUnitId, event.slug);
-        }
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }
@@ -102,13 +83,8 @@ class TabStoryListBloc extends Bloc<TabStoryListEvents, TabStoryListState> {
         yield TabStoryListState.loading();
         List<StoryListItem> storyListItemList =
             await tabStoryListRepos.fetchPopularStoryList();
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId =
-            AdUnitId.fromJson(fixedAdUnitId, event.isVideo ? 'video' : 'news');
         yield TabStoryListState.loaded(
           storyListItemList: storyListItemList,
-          adUnitId: adUnitId,
           allStoryCount: tabStoryListRepos.allStoryCount,
         );
       }

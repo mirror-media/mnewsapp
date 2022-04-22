@@ -2,14 +2,19 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/contact.dart';
 import 'package:tv/models/paragraph.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AnchorpersonStoryWidget extends StatefulWidget {
@@ -24,6 +29,7 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 }
 
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
+  final interstitialAdController = Get.find<InterstitialAdController>();
   @override
   void initState() {
     _fetchContactById(widget.anchorpersonId);
@@ -54,6 +60,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         Contact contact = state.contact;
         AnalyticsHelper.sendScreenView(
             screenName: 'AnchorpersonStoryPage name=${contact.name}');
+        interstitialAdController.ramdomShowInterstitialAd();
         return _buildAnchorpersonStory(contact, width);
       }
 
@@ -74,6 +81,14 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
       child: ListView(
         padding: const EdgeInsets.all(0),
         children: [
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorHD'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
+          ),
           CachedNetworkImage(
             height: imageHeight,
             width: imageWidth,
@@ -91,7 +106,15 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
             ),
             fit: BoxFit.fitWidth,
           ),
-          SizedBox(height: 24),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT1'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+            wantKeepAlive: true,
+          ),
           _buildBioWidget(contact.bio),
           SizedBox(height: 8),
           Row(
@@ -116,6 +139,14 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
                       FontAwesomeIcons.instagram, contact.instatgramUrl!),
                 ),
             ],
+          ),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
           ),
           SizedBox(height: 24),
         ],

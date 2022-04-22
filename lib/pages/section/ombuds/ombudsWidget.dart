@@ -206,6 +206,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         ),
         onTap: () => Get.to(() => StoryPage(
               slug: 'biography',
+              showAds: false,
             )),
       )
     ]);
@@ -311,6 +312,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: '公評人',
           onTap: () => Get.to(() => StoryPage(
                 slug: 'biography',
+                showAds: false,
               )),
         ),
         OmbudsButton(
@@ -334,6 +336,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: '設置章程',
           onTap: () => Get.to(() => StoryPage(
                 slug: 'law',
+                showAds: false,
               )),
         ),
         OmbudsButton(
@@ -343,6 +346,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: '他律規範',
           onTap: () => Get.to(() => StoryPage(
                 slug: 'standards',
+                showAds: false,
               )),
         ),
         OmbudsButton(
@@ -352,6 +356,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: 'FAQ',
           onTap: () => Get.to(() => StoryPage(
                 slug: 'faq',
+                showAds: false,
               )),
         ),
         // OmbudsButton(
