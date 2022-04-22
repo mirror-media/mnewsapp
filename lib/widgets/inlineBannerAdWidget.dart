@@ -2,88 +2,87 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 
 class InlineBannerAdWidget extends StatefulWidget {
-  final String? adUnitId;
-  final bool isKeepAlive;
-  final bool isInArticle;
+  final String adUnitId;
+  final List<AdSize> sizes;
   InlineBannerAdWidget({
     required this.adUnitId,
-    this.isKeepAlive = true,
-    this.isInArticle = false,
-  });
+    required this.sizes,
+    Key? key,
+  }) : super(key: key);
   @override
   _InlineBannerAdWidgetState createState() => _InlineBannerAdWidgetState();
 }
 
 class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
     with AutomaticKeepAliveClientMixin {
-  BannerAd? _inlineBanner;
-  bool _loadingInlineBanner = false;
+  AdManagerBannerAd? _inlineAdaptiveAd;
+  bool _isLoaded = false;
+  AdSize? _adSize;
 
   @override
-  bool get wantKeepAlive => widget.isKeepAlive;
-
-  @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (mounted) {
+      _loadAd();
+    }
   }
 
-  Future<void> _createInlineBanner(BuildContext context, String id) async {
-    final BannerAd banner = BannerAd(
-      size: AdSize.mediumRectangle,
-      request: AdRequest(),
-      adUnitId: id,
-      listener: BannerAdListener(
-        onAdLoaded: (Ad ad) {
-          print('InlineBannerAd loaded.');
+  Future<void> _loadAd() async {
+    await _inlineAdaptiveAd?.dispose();
+    setState(() {
+      _inlineAdaptiveAd = null;
+      _isLoaded = false;
+    });
+
+    _inlineAdaptiveAd = AdManagerBannerAd(
+      adUnitId: widget.adUnitId,
+      sizes: widget.sizes,
+      request: AdManagerAdRequest(),
+      listener: AdManagerBannerAdListener(
+        onAdLoaded: (Ad ad) async {
+          print('Inline adaptive banner loaded');
+
+          // After the ad is loaded, get the platform ad size and use it to
+          // update the height of the container. This is necessary because the
+          // height can change after the ad is loaded.
+          AdManagerBannerAd bannerAd = (ad as AdManagerBannerAd);
+          final AdSize? size = await bannerAd.getPlatformAdSize();
+          if (size == null) {
+            print('Error: getPlatformAdSize() returned null for $bannerAd');
+            return;
+          }
+
           setState(() {
-            _inlineBanner = ad as BannerAd?;
+            _inlineAdaptiveAd = bannerAd;
+            _isLoaded = true;
+            _adSize = size;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('InlineBannerAd failedToLoad: $error');
+          print('Inline adaptive banner failedToLoad: $error');
           ad.dispose();
         },
-        onAdOpened: (Ad ad) => print('InlineBannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('InlineBannerAd onAdClosed.'),
       ),
     );
-    _loadingInlineBanner = true;
-    return banner.load();
+    await _inlineAdaptiveAd!.load();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    double _horizontalPadding = 37.5;
 
-    if (widget.isInArticle) {
-      _horizontalPadding = 13.5;
-    }
-
-    if (!_loadingInlineBanner) {
-      _loadingInlineBanner = true;
-      String? _adUnitId = widget.adUnitId;
-      if (_adUnitId != null) {
-        _createInlineBanner(context, _adUnitId);
-      } else {
-        return Container(
-          alignment: Alignment.center,
-          width: 300,
-          height: 250,
-          margin: EdgeInsets.symmetric(
-              vertical: 24, horizontal: _horizontalPadding),
-        );
-      }
-    }
-
-    if (_inlineBanner != null) {
+    if (_isLoaded) {
+      double horizontalMargin =
+          (MediaQuery.of(context).size.width - _adSize!.width.toDouble()) / 2;
       return Container(
         alignment: Alignment.center,
-        width: _inlineBanner!.size.width.toDouble(),
-        height: _inlineBanner!.size.height.toDouble(),
-        child: AdWidget(ad: _inlineBanner!),
-        margin:
-            EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
+        width: _adSize!.width.toDouble(),
+        height: _adSize!.height.toDouble(),
+        child: AdWidget(ad: _inlineAdaptiveAd!),
+        margin: EdgeInsets.symmetric(
+          vertical: 24,
+          horizontal: horizontalMargin,
+        ),
       );
     }
 
@@ -91,14 +90,18 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
       alignment: Alignment.center,
       width: 300,
       height: 250,
-      margin:
-          EdgeInsets.symmetric(vertical: 24, horizontal: _horizontalPadding),
+      margin: EdgeInsets.symmetric(
+        vertical: 24,
+      ),
     );
   }
 
   @override
   void dispose() {
     super.dispose();
-    _inlineBanner?.dispose();
+    _inlineAdaptiveAd?.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }
