@@ -9,95 +9,95 @@ class AdUnitIdHelper {
     }
 
     if (GetPlatform.isAndroid) {
-      return _getAndroidBannerAdUnitId(position);
+      return '/22699107359/' + _getAndroidBannerAdUnitId(position);
     } else {
-      return _getIosBannerAdUnitId(position);
+      return '/22699107359/' + _getIosBannerAdUnitId(position);
     }
   }
 
   static String _getAndroidBannerAdUnitId(String position) {
     switch (position) {
       case 'NewsAT1':
-        return '';
+        return 'mnews_app_news_top_list_Android';
       case 'NewsAT2':
-        return '';
+        return 'mnews_app_news_middle_list_Android';
       case 'NewsAT3':
-        return '';
+        return 'mnews_app_news_end_list_Android';
       case 'LiveAT1':
-        return '';
+        return 'mnews_app_live_top_Android';
       case 'LiveAT2':
-        return '';
+        return 'mnews_app_live_middle_Android';
       case 'LiveAT3':
-        return '';
+        return 'mnews_app_live_end_Android';
       case 'AnchorHD':
-        return '';
+        return 'mnews_app_anchor_top_Android';
       case 'AnchorAT1':
-        return '';
+        return 'mnews_app_anchor_middle_Android';
       case 'AnchorAT2':
-        return '';
+        return 'mnews_app_anchor_end_Android';
       case 'StoryHD':
-        return '';
+        return 'mnews_app_article_top_Android';
       case 'StoryAT1':
-        return '';
+        return 'mnews_app_article_middle_Android';
       case 'StoryAT2':
-        return '';
+        return 'mnews_app_article_end_Android';
       case 'TopicHD':
-        return '';
+        return 'mnews_app_topic_top_Android';
       case 'TopicAT1':
-        return '';
+        return 'mnews_app_topic_middle_Android';
       case 'TopicAT2':
-        return '';
+        return 'mnews_app_topic_end_Android';
       case 'ShowAT1':
-        return '';
+        return 'mnews_app_global_top_Android';
       case 'ShowAT2':
-        return '';
+        return 'mnews_app_global_middle_Android';
       case 'ShowAT3':
-        return '';
+        return 'mnews_app_global_end_Android';
       default:
-        return '';
+        return 'mnews_app_news_top_list_Android';
     }
   }
 
   static String _getIosBannerAdUnitId(String position) {
     switch (position) {
       case 'NewsAT1':
-        return '';
+        return 'mnews_app_news_top_list_ios';
       case 'NewsAT2':
-        return '';
+        return 'mnews_app_news_middle_list_ios';
       case 'NewsAT3':
-        return '';
+        return 'mnews_app_news_end_list_ios';
       case 'LiveAT1':
-        return '';
+        return 'mnews_app_live_top_ios';
       case 'LiveAT2':
-        return '';
+        return 'mnews_app_live_middle_ios';
       case 'LiveAT3':
-        return '';
+        return 'mnews_app_live_end_ios';
       case 'AnchorHD':
-        return '';
+        return 'mnews_app_anchor_top__ios';
       case 'AnchorAT1':
-        return '';
+        return 'mnews_app_anchor_middle_ios';
       case 'AnchorAT2':
-        return '';
+        return 'mnews_app_anchor_end_ios';
       case 'StoryHD':
-        return '';
+        return 'mnews_app_article_top_ios';
       case 'StoryAT1':
-        return '';
+        return 'mnews_app_article_middle_ios';
       case 'StoryAT2':
-        return '';
+        return 'mnews_app_article_end_ios';
       case 'TopicHD':
-        return '';
+        return 'mnews_app_topic_top_ios';
       case 'TopicAT1':
-        return '';
+        return 'mnews_app_topic_middle_ios';
       case 'TopicAT2':
-        return '';
+        return 'mnews_app_topic_end_ios';
       case 'ShowAT1':
-        return '';
+        return 'mnews_app_global_top_ios';
       case 'ShowAT2':
-        return '';
+        return 'mnews_app_global_middle_ios';
       case 'ShowAT3':
-        return '';
+        return 'mnews_app_global_end_ios';
       default:
-        return '';
+        return 'mnews_app_news_top_list_ios';
     }
   }
 
@@ -107,9 +107,9 @@ class AdUnitIdHelper {
     }
 
     if (GetPlatform.isAndroid) {
-      return _getAndroidInterstitialAdUnitId(position);
+      return '/22699107359/' + _getAndroidInterstitialAdUnitId(position);
     } else {
-      return _getIosInterstitialAdUnitId(position);
+      return '/22699107359/' + _getIosInterstitialAdUnitId(position);
     }
   }
 
