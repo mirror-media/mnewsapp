@@ -67,7 +67,7 @@ class TopicService {
   ) {
     allTopics(
       where: \$where,
-      sortBy: [sortOrder_ASC, isFeatured_DESC, updatedBy_DESC ]
+      sortBy: [sortOrder_ASC, updatedBy_DESC ]
     ) {
       id
       slug
