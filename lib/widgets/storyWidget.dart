@@ -501,13 +501,37 @@ class _StoryWidgetState extends State<StoryWidget> {
         ),
       );
     }
+    if (storyContents.isEmpty) {
+      return InlineBannerAdWidget(
+        adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+        sizes: [
+          AdSize.mediumRectangle,
+          AdSize(width: 336, height: 280),
+          AdSize(width: 320, height: 480),
+        ],
+      );
+    }
     ParagraphFormat paragraphFormat = ParagraphFormat();
-    return ListView.separated(
+    return ListView.builder(
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
-      itemCount: storyContents.length,
+      itemCount: storyContents.length + 1,
       itemBuilder: (context, index) {
-        Paragraph paragraph = storyContents[index];
+        if (index == 1) {
+          return InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+          );
+        }
+        int contentIndex = index;
+        if (index > 1) {
+          contentIndex = index - 1;
+        }
+        Paragraph paragraph = storyContents[contentIndex];
         if (paragraph.contents != null &&
             paragraph.contents!.length > 0 &&
             !_isNullOrEmpty(paragraph.contents![0].data)) {
@@ -522,19 +546,6 @@ class _StoryWidgetState extends State<StoryWidget> {
           );
         }
 
-        return Container();
-      },
-      separatorBuilder: (BuildContext context, int index) {
-        if (index == 0) {
-          return InlineBannerAdWidget(
-            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-              AdSize(width: 320, height: 480),
-            ],
-          );
-        }
         return Container();
       },
     );
