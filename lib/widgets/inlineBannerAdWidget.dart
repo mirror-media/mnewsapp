@@ -4,10 +4,12 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 class InlineBannerAdWidget extends StatefulWidget {
   final String adUnitId;
   final List<AdSize> sizes;
+  final bool addHorizontalMargin;
   InlineBannerAdWidget({
     required this.adUnitId,
     required this.sizes,
     Key? key,
+    this.addHorizontalMargin = true,
   }) : super(key: key);
   @override
   _InlineBannerAdWidgetState createState() => _InlineBannerAdWidgetState();
@@ -72,8 +74,11 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
     super.build(context);
 
     if (_isLoaded) {
-      double horizontalMargin =
-          (MediaQuery.of(context).size.width - _adSize!.width.toDouble()) / 2;
+      double horizontalMargin = 0;
+      if (widget.addHorizontalMargin) {
+        horizontalMargin =
+            (MediaQuery.of(context).size.width - _adSize!.width.toDouble()) / 2;
+      }
       return Container(
         alignment: Alignment.center,
         width: _adSize!.width.toDouble(),
