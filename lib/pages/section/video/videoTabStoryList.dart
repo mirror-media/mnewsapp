@@ -1,12 +1,16 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/tabStoryList/bloc.dart';
 import 'package:tv/blocs/tabStoryList/events.dart';
 import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
@@ -19,7 +23,6 @@ class VideoTabStoryList extends StatefulWidget {
 }
 
 class _VideoTabStoryListState extends State<VideoTabStoryList> {
-  // late AdUnitId _adUnitId;
   int _allStoryCount = 0;
 
   @override
@@ -48,140 +51,129 @@ class _VideoTabStoryListState extends State<VideoTabStoryList> {
         final error = state.errorMessages;
         print('TabStoryListError: ${error.message}');
         if (error is NoInternetException) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return error.renderWidget(
-                    onPressed: () => _fetchStoryListByCategorySlug(),
-                    isColumn: true);
-              },
-              childCount: 1,
-            ),
-          );
+          return error.renderWidget(
+              onPressed: () => _fetchStoryListByCategorySlug(), isColumn: true);
         }
 
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return error.renderWidget(isNoButton: true, isColumn: true);
-            },
-            childCount: 1,
-          ),
-        );
+        return error.renderWidget(isNoButton: true, isColumn: true);
       }
       if (state.status == TabStoryListStatus.loaded) {
         List<StoryListItem> storyListItemList = state.storyListItemList!;
         _allStoryCount = state.allStoryCount!;
 
         if (storyListItemList.length == 0) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return TabContentNoResultWidget();
-              },
-              childCount: 1,
-            ),
-          );
+          return TabContentNoResultWidget();
         }
 
-        // if (state.adUnitId != null) _adUnitId = state.adUnitId!;
-
-        return _tabStoryList(
+        return _buildBody(
           storyListItemList: storyListItemList,
         );
       }
 
       if (state.status == TabStoryListStatus.loadingMore) {
         List<StoryListItem> storyListItemList = state.storyListItemList!;
-        return _tabStoryList(
+        return _buildBody(
             storyListItemList: storyListItemList, isLoading: true);
       }
 
       if (state.status == TabStoryListStatus.loadingMoreError) {
         List<StoryListItem> storyListItemList = state.storyListItemList!;
         _fetchNextPageByCategorySlug();
-        return _tabStoryList(
+        return _buildBody(
             storyListItemList: storyListItemList, isLoading: true);
       }
 
       // state is Init, loading, or other
-      return SliverList(
-        delegate: SliverChildBuilderDelegate(
-          (BuildContext context, int index) {
-            return Center(child: CupertinoActivityIndicator());
-          },
-          childCount: 1,
-        ),
-      );
+      return Center(child: CircularProgressIndicator.adaptive());
     });
   }
 
-  Widget _tabStoryList(
-      {required List<StoryListItem> storyListItemList,
-      bool isLoading = false}) {
-    List<Widget> _storyListWithAd = [];
-    // List<String?> _adPositions = [_adUnitId.at1AdUnitId, _adUnitId.at2AdUnitId, _adUnitId.at3AdUnitId];
-    int _howManyAds = 0;
-    // int _adCounter = 0;
-    for (int i = 0; i < storyListItemList.length; i++) {
-      //   if (i % 4 == 1) {
-      //     _storyListWithAd.add(InlineBannerAdWidget(
-      //       adUnitId: _adPositions[_adCounter],
-      //     ));
-      //     _howManyAds++;
-      //     _adCounter++;
-      //     if(_adCounter == 3)
-      //       _adCounter = 0;
-      //   }
-      //   else {
-      _storyListWithAd.add(Padding(
-        padding: const EdgeInsets.only(bottom: 16.0),
-        child: VideoStoryListItem(
-            storyListItem: storyListItemList[i - _howManyAds]),
-      ));
-      //   }
+  Widget _buildBody({
+    required List<StoryListItem> storyListItemList,
+    bool isLoading = false,
+  }) {
+    List<StoryListItem> twoToFour = [];
+    List<StoryListItem> fiveToSeven = [];
+    List<StoryListItem> others = [];
+    for (int i = 1; i < storyListItemList.length; i++) {
+      if (i < 4) {
+        twoToFour.add(storyListItemList[i]);
+      } else if (i < 7) {
+        fiveToSeven.add(storyListItemList[i]);
+      } else {
+        others.add(storyListItemList[i]);
+      }
     }
-    // if (storyListItemList.length == 1) {
-    //   _storyListWithAd.add(InlineBannerAdWidget(
-    //     adUnitId: _adUnitId.at1AdUnitId,
-    //   ));
-    //   _howManyAds++;
-    // }
-    // else if (storyListItemList.length == 5) {
-    //   _storyListWithAd.add(InlineBannerAdWidget(
-    //     adUnitId: _adUnitId.at2AdUnitId,
-    //   ));
-    //   _howManyAds++;
-    // }
-    // else if (storyListItemList.length == 8) {
-    //   _storyListWithAd.add(InlineBannerAdWidget(
-    //     adUnitId: _adUnitId.at3AdUnitId,
-    //   ));
-    //   _howManyAds++;
-    // }
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        if (!isLoading &&
-            index == storyListItemList.length - 5 &&
-            storyListItemList.length < _allStoryCount) {
-          _fetchNextPageByCategorySlug();
-        }
-
-        return Column(
-          children: [
-            _storyListWithAd[index],
-            if (index == _storyListWithAd.length - 1 && isLoading)
-              _loadMoreWidget(),
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        VideoStoryListItem(storyListItem: storyListItemList[0]),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT1'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
           ],
-        );
-      }, childCount: _storyListWithAd.length),
+        ),
+        _tabStoryList(storyListItemList: twoToFour),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT2'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+            AdSize(width: 320, height: 480),
+          ],
+        ),
+        _tabStoryList(storyListItemList: fiveToSeven),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT3'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+        ),
+        _tabStoryList(storyListItemList: others),
+        _loadMoreWidget(storyListItemList.length >= _allStoryCount, isLoading),
+      ],
     );
   }
 
-  Widget _loadMoreWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(child: CupertinoActivityIndicator()),
+  Widget _tabStoryList({
+    required List<StoryListItem> storyListItemList,
+  }) {
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return VideoStoryListItem(storyListItem: storyListItemList[index]);
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(
+          height: 24,
+        );
+      },
+      itemCount: storyListItemList.length,
+    );
+  }
+
+  Widget _loadMoreWidget(bool isAll, bool isLoading) {
+    if (isAll) {
+      return Container();
+    }
+
+    return VisibilityDetector(
+      key: Key('VideoTabStoryListLoadingMore'),
+      onVisibilityChanged: (visibilityInfo) {
+        var visiblePercentage = visibilityInfo.visibleFraction * 100;
+        if (visiblePercentage > 30 && !isLoading) {
+          _fetchNextPageByCategorySlug();
+        }
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Center(child: CircularProgressIndicator.adaptive()),
+      ),
     );
   }
 }
