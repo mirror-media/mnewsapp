@@ -1,14 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicList/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/topic.dart';
 import 'package:tv/pages/section/topic/topicStoryListPage.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class TopicListWidget extends StatefulWidget {
   @override
@@ -49,7 +52,6 @@ class _TopicListWidgetState extends State<TopicListWidget> {
           }
           return Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 24, left: 24, right: 24),
             child: _buildTopicList(),
           );
         }
@@ -62,16 +64,63 @@ class _TopicListWidgetState extends State<TopicListWidget> {
   }
 
   Widget _buildTopicList() {
+    List<Topic> firstSixTopics = [];
+    List<Topic> sixToTwelveTopics = [];
+    List<Topic> otherTopics = [];
+    for (int i = 0; i < topicList.length; i++) {
+      if (i < 6) {
+        firstSixTopics.add(topicList[i]);
+      } else if (i < 12) {
+        sixToTwelveTopics.add(topicList[i]);
+      } else {
+        otherTopics.add(topicList[i]);
+      }
+    }
     return SafeArea(
-      child: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-          mainAxisSpacing: 24,
-          crossAxisSpacing: 19,
-          childAspectRatio: 1.4,
-        ),
-        children: topicList.map((topic) => _buildItem(topic)).toList(),
+      child: ListView(
+        children: [
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicHD'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+          ),
+          _buildGridView(firstSixTopics),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT1'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+          ),
+          _buildGridView(sixToTwelveTopics),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+          ),
+          _buildGridView(otherTopics),
+        ],
       ),
+    );
+  }
+
+  Widget _buildGridView(List<Topic> topicList) {
+    return GridView(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 19,
+        childAspectRatio: 1.4,
+      ),
+      children: topicList.map((topic) => _buildItem(topic)).toList(),
     );
   }
 
