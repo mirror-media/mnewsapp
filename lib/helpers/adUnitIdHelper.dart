@@ -41,6 +41,8 @@ class AdUnitIdHelper {
         return 'mnews_app_article_middle_Android';
       case 'StoryAT2':
         return 'mnews_app_article_end_Android';
+      case 'StoryFooter':
+        return 'mnews_app_article_footer_Android';
       case 'TopicHD':
         return 'mnews_app_topic_top_Android';
       case 'TopicAT1':
@@ -84,6 +86,8 @@ class AdUnitIdHelper {
         return 'mnews_app_article_middle_ios';
       case 'StoryAT2':
         return 'mnews_app_article_end_ios';
+      case 'StoryFooter':
+        return 'mnews_app_article_footer_ios';
       case 'TopicHD':
         return 'mnews_app_topic_top_ios';
       case 'TopicAT1':
@@ -115,23 +119,23 @@ class AdUnitIdHelper {
 
   static String _getAndroidInterstitialAdUnitId(String position) {
     switch (position) {
-      case 'Home':
-        return '';
+      case 'Others':
+        return 'mnews_app_CoverPage_Android';
       case 'Story':
-        return '';
+        return 'mnews_app_CoverPage_inter_Android';
       default:
-        return '';
+        return 'mnews_app_CoverPage_Android';
     }
   }
 
   static String _getIosInterstitialAdUnitId(String position) {
     switch (position) {
-      case 'Home':
-        return '';
+      case 'Others':
+        return 'mnews_app_CoverPage_iOS';
       case 'Story':
-        return '';
+        return 'mnews_app_CoverPage_inter_ios';
       default:
-        return '';
+        return 'mnews_app_CoverPage_iOS';
     }
   }
 }
