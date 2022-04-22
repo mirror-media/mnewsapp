@@ -1,15 +1,10 @@
-import 'dart:convert';
 import 'dart:io';
-
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/helpers/apiException.dart';
-import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
 
@@ -25,12 +20,9 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
       try {
         yield StoryLoading();
         Story story = await storyRepos.fetchPublishedStoryBySlug(event.slug);
-        String jsonFixed = await rootBundle.loadString(adUnitIdJson);
-        final fixedAdUnitId = json.decode(jsonFixed);
-        AdUnitId adUnitId = AdUnitId.fromJson(fixedAdUnitId, 'story');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         double textSize = prefs.getDouble('textSize') ?? 20;
-        yield StoryLoaded(story: story, adUnitId: adUnitId, textSize: textSize);
+        yield StoryLoaded(story: story, textSize: textSize);
       } on SocketException {
         yield StoryError(
           error: NoInternetException('No Internet'),

@@ -5,10 +5,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
@@ -22,6 +24,7 @@ import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/pages/tag/tagPage.dart';
 import 'package:tv/widgets/imageViewerWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/fileDownloadWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
@@ -42,7 +45,6 @@ class StoryWidget extends StatefulWidget {
 
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
-  // late AdUnitId _adUnitId;
   late double _textSize;
   late Story _story;
   late File _ombudsLawFile;
@@ -86,7 +88,6 @@ class _StoryWidgetState extends State<StoryWidget> {
           return Container();
         }
         _story = story;
-        // _adUnitId = state.adUnitId;
         _textSize = state.textSize;
         AnalyticsHelper.logStory(
             slug: _currentSlug,
@@ -111,7 +112,13 @@ class _StoryWidgetState extends State<StoryWidget> {
     return ListView(
       shrinkWrap: true,
       children: [
-        // InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryHD'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+        ),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
@@ -128,19 +135,23 @@ class _StoryWidgetState extends State<StoryWidget> {
             story.downloadFileList!,
             textSize: _textSize,
           ),
-        SizedBox(height: 24),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT2'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+        ),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        // InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
         if (story.relatedStories!.length > 0) ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        // InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
       ],
     );
   }
@@ -480,54 +491,41 @@ class _StoryWidgetState extends State<StoryWidget> {
       );
     }
     ParagraphFormat paragraphFormat = ParagraphFormat();
-    int _numOfAds = 0;
-    // if(storyContents.length > 0)
-    //   _numOfAds = 1;
-    // else if(storyContents.length >= 5 && storyContents.length < 10)
-    //   _numOfAds = 2;
-    // else if(storyContents.length >= 10)
-    //   _numOfAds = 3;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: storyContents.length + _numOfAds,
-        itemBuilder: (context, index) {
-          // if(index == 1){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
-          // }
-          // else if(index == 6){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
-          // }
-          // else if(index == 12){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
-          // }
-          int _trueIndex = index;
-          // if(index > 1 && index < 6)
-          //   _trueIndex--;
-          // else if(index > 6 && index < 12)
-          //   _trueIndex = _trueIndex - 2;
-          // else if(index > 12)
-          //   _trueIndex = _trueIndex - 3;
-          Paragraph paragraph = storyContents[_trueIndex];
-          if (paragraph.contents != null &&
-              paragraph.contents!.length > 0 &&
-              !_isNullOrEmpty(paragraph.contents![0].data)) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: paragraphFormat.parseTheParagraph(
-                paragraph,
-                context,
-                _textSize,
-                imageUrlList: _story.imageUrlList,
-              ),
-            );
-          }
+    return ListView.separated(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: storyContents.length,
+      itemBuilder: (context, index) {
+        Paragraph paragraph = storyContents[index];
+        if (paragraph.contents != null &&
+            paragraph.contents!.length > 0 &&
+            !_isNullOrEmpty(paragraph.contents![0].data)) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+            child: paragraphFormat.parseTheParagraph(
+              paragraph,
+              context,
+              _textSize,
+              imageUrlList: _story.imageUrlList,
+            ),
+          );
+        }
 
-          return Container();
-        },
-      ),
+        return Container();
+      },
+      separatorBuilder: (BuildContext context, int index) {
+        if (index == 0) {
+          return InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+          );
+        }
+        return Container();
+      },
     );
   }
 

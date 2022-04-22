@@ -1,4 +1,3 @@
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/story.dart';
 
 abstract class StoryState {
@@ -12,10 +11,8 @@ class StoryLoading extends StoryState {}
 
 class StoryLoaded extends StoryState {
   final Story? story;
-  final AdUnitId adUnitId;
   final double textSize;
-  StoryLoaded(
-      {required this.story, required this.adUnitId, required this.textSize});
+  StoryLoaded({required this.story, required this.textSize});
 }
 
 class TextSizeChanged extends StoryState {
