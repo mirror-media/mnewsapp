@@ -1,43 +1,59 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 
 abstract class YoutubePlaylistRepos {
-  Future<YoutubePlaylistItemList> fetchSnippetByPlaylistId(String playlistId,
+  Future<List<YoutubePlaylistItem>> fetchSnippetByPlaylistId(String playlistId,
       {int maxResults = 5});
-  Future<YoutubePlaylistItemList> fetchSnippetByPlaylistIdAndPageToken(
-      String playlistId, String pageToken,
+  Future<List<YoutubePlaylistItem>> fetchSnippetByPlaylistIdAndPageToken(
+      String playlistId,
       {int maxResults = 5});
 }
 
 class YoutubePlaylistServices implements YoutubePlaylistRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
+  String? _nextPageToken;
 
   @override
-  Future<YoutubePlaylistItemList> fetchSnippetByPlaylistId(String playlistId,
+  Future<List<YoutubePlaylistItem>> fetchSnippetByPlaylistId(String playlistId,
       {int maxResults = 5}) async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
         Environment().config.youtubeApi +
             '/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults',
         maxAge: youtubePlayListCacheDuration);
 
-    YoutubePlaylistItemList youtubePlaylistItemList =
-        YoutubePlaylistItemList.fromJson(
-            jsonResponse['nextPageToken'], jsonResponse['items']);
+    _nextPageToken = jsonResponse['nextPageToken'];
+
+    List<YoutubePlaylistItem> youtubePlaylistItemList =
+        List<YoutubePlaylistItem>.from(jsonResponse['items']
+            .map((ytVideo) => YoutubePlaylistItem.fromJson(ytVideo)));
+
+    youtubePlaylistItemList
+        .removeWhere((element) => element.name == 'Private video');
     return youtubePlaylistItemList;
   }
 
   @override
-  Future<YoutubePlaylistItemList> fetchSnippetByPlaylistIdAndPageToken(
-      String playlistId, String pageToken,
+  Future<List<YoutubePlaylistItem>> fetchSnippetByPlaylistIdAndPageToken(
+      String playlistId,
       {int maxResults = 5}) async {
-    final jsonResponse = await _helper.getByUrl(Environment().config.youtubeApi +
-        '/playlistItems?part=snippet&playlistId=$playlistId&pageToken=$pageToken&maxResults=$maxResults');
+    if (_nextPageToken == null) {
+      return [];
+    }
+    final jsonResponse = await _helper.getByUrl(Environment()
+            .config
+            .youtubeApi +
+        '/playlistItems?part=snippet&playlistId=$playlistId&pageToken=$_nextPageToken&maxResults=$maxResults');
 
-    YoutubePlaylistItemList youtubePlaylistItemList =
-        YoutubePlaylistItemList.fromJson(
-            jsonResponse['nextPageToken'], jsonResponse['items']);
+    _nextPageToken = jsonResponse['nextPageToken'];
+
+    List<YoutubePlaylistItem> youtubePlaylistItemList =
+        List<YoutubePlaylistItem>.from(jsonResponse['items']
+            .map((ytVideo) => YoutubePlaylistItem.fromJson(ytVideo)));
+
+    youtubePlaylistItemList
+        .removeWhere((element) => element.name == 'Private video');
     return youtubePlaylistItemList;
   }
 }

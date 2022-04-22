@@ -1,5 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 
 class AnalyticsHelper {
   static final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
@@ -19,7 +19,7 @@ class AnalyticsHelper {
   static logStory({
     required String slug,
     required String title,
-    required CategoryList? category,
+    required List<Category>? category,
   }) async {
     String categoryName = '';
     if (category != null) {

@@ -1,4 +1,4 @@
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class NewsMarqueeState {}
 
@@ -7,7 +7,7 @@ class NewsMarqueeInitState extends NewsMarqueeState {}
 class NewsMarqueeLoading extends NewsMarqueeState {}
 
 class NewsMarqueeLoaded extends NewsMarqueeState {
-  final StoryListItemList newsList;
+  final List<StoryListItem> newsList;
   NewsMarqueeLoaded({required this.newsList});
 }
 

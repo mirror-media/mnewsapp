@@ -6,7 +6,7 @@ abstract class ProgramListState {}
 class ProgramListInitial extends ProgramListState {}
 
 class ProgramListLoaded extends ProgramListState {
-  final ProgramList programList;
+  final List<ProgramListItem> programList;
   ProgramListLoaded({required this.programList});
 }
 

@@ -1,27 +1,27 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/events.dart';
 import 'package:tv/blocs/youtubePlaylist/states.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/pages/section/show/showStoryPage.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
   final ScrollController listviewController;
-  final AdUnitId adUnitId;
   final bool isMoreShow;
   ShowPlaylistTabContent({
     Key? key,
     required this.youtubePlaylistInfo,
     required this.listviewController,
-    required this.adUnitId,
     this.isMoreShow = false,
   }) : super(key: key);
 
@@ -32,7 +32,6 @@ class ShowPlaylistTabContent extends StatefulWidget {
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   final int _fetchPlaylistMaxResult = 10;
   late bool _isLoading;
-  String? _nextPagetoken;
 
   @override
   void initState() {
@@ -42,11 +41,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     widget.listviewController.addListener(() {
       if (widget.listviewController.position.pixels ==
               widget.listviewController.position.maxScrollExtent &&
-          !_isLoading &&
-          _nextPagetoken != '' &&
-          _nextPagetoken != null) {
+          !_isLoading) {
         _fetchSnippetByPlaylistIdAndPageToken(
-            widget.youtubePlaylistInfo.youtubePlayListId, _nextPagetoken!);
+            widget.youtubePlaylistInfo.youtubePlayListId);
       }
     });
     super.initState();
@@ -65,15 +62,14 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         .add(FetchSnippetByPlaylistId(id, maxResults: _fetchPlaylistMaxResult));
   }
 
-  _fetchSnippetByPlaylistIdAndPageToken(String id, String pageToken) async {
+  _fetchSnippetByPlaylistIdAndPageToken(String id) async {
     context.read<YoutubePlaylistBloc>().add(
-        FetchSnippetByPlaylistIdAndPageToken(id, pageToken,
+        FetchSnippetByPlaylistIdAndPageToken(id,
             maxResults: _fetchPlaylistMaxResult));
   }
 
   _initPagetokenAndIsLoading() {
     _isLoading = true;
-    _nextPagetoken = '';
   }
 
   @override
@@ -87,7 +83,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
       }
       if (state is YoutubePlaylistLoadingMore) {
         _isLoading = true;
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -95,10 +91,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             isLoading: true);
       }
       if (state is YoutubePlaylistLoadingMoreFail) {
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         _isLoading = false;
-        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
         return _buildYoutubePlaylistItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
@@ -106,10 +101,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             isLoading: true);
       }
       if (state is YoutubePlaylistLoaded) {
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
         _isLoading = false;
-        _nextPagetoken = youtubePlaylistItemList.nextPageToken;
 
         return _buildYoutubePlaylistItemList(
           widget.youtubePlaylistInfo.youtubePlayListId,
@@ -122,24 +116,81 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     });
   }
 
-  Widget _buildYoutubePlaylistItemList(
-      String youtubePlayListId, YoutubePlaylistItemList youtubePlaylistItemList,
+  Widget _buildYoutubePlaylistItemList(String youtubePlayListId,
+      List<YoutubePlaylistItem> youtubePlaylistItemList,
       {bool isLoading = false}) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    List<YoutubePlaylistItem> firstToFive = [];
+    List<YoutubePlaylistItem> sixToTen = [];
+    List<YoutubePlaylistItem> others = [];
+    for (int i = 0; i < youtubePlaylistItemList.length; i++) {
+      if (i < 5) {
+        firstToFive.add(youtubePlaylistItemList[i]);
+      } else if (i < 10) {
+        sixToTen.add(youtubePlaylistItemList[i]);
+      } else {
+        others.add(youtubePlaylistItemList[i]);
+      }
+    }
+
+    return ListView(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
       children: [
         SizedBox(height: 24),
         ListView.separated(
-            //controller: widget.listviewController,
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            separatorBuilder: (BuildContext context, int index) =>
-                SizedBox(height: 16.0),
-            itemCount: youtubePlaylistItemList.length,
-            itemBuilder: (context, index) {
-              return _buildListItem(
-                  context, youtubePlayListId, youtubePlaylistItemList[index]);
-            }),
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: 16.0),
+          itemCount: firstToFive.length,
+          itemBuilder: (context, index) {
+            return _buildListItem(
+                context, youtubePlayListId, firstToFive[index]);
+          },
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+            addHorizontalMargin: false,
+          ),
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: 16.0),
+          itemCount: sixToTen.length,
+          itemBuilder: (context, index) {
+            return _buildListItem(context, youtubePlayListId, sixToTen[index]);
+          },
+        ),
+        Align(
+          alignment: Alignment.center,
+          child: InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT3'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            addHorizontalMargin: false,
+          ),
+        ),
+        ListView.separated(
+          shrinkWrap: true,
+          physics: NeverScrollableScrollPhysics(),
+          separatorBuilder: (BuildContext context, int index) =>
+              SizedBox(height: 16.0),
+          itemCount: others.length,
+          itemBuilder: (context, index) {
+            return _buildListItem(context, youtubePlayListId, others[index]);
+          },
+        ),
         if (isLoading) _loadMoreWidget(),
       ],
     );
@@ -214,13 +265,25 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
           ),
         ],
       ),
-      onTap: () => RouteGenerator.navigateToShowStory(
-        context,
-        youtubePlayListId,
-        youtubePlaylistItem,
-        widget.adUnitId,
-        widget.isMoreShow,
-      ),
+      onTap: () {
+        if (widget.isMoreShow) {
+          Get.off(
+            () => ShowStoryPage(
+              youtubePlayListId: youtubePlayListId,
+              youtubePlaylistItem: youtubePlaylistItem,
+            ),
+            preventDuplicates: false,
+          );
+        } else {
+          Get.to(
+            () => ShowStoryPage(
+              youtubePlayListId: youtubePlayListId,
+              youtubePlaylistItem: youtubePlaylistItem,
+            ),
+            preventDuplicates: false,
+          );
+        }
+      },
     );
   }
 

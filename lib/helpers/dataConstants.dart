@@ -4,6 +4,8 @@ import 'package:tv/models/baseModel.dart';
 /// url link
 const mNewsMail = 'mnews.cs@mnews.tw';
 const youtubeLink = 'https://www.youtube.com/';
+const ombudsLaw =
+    'https://storage.googleapis.com/static-mnews-tw-prod/regulation/ombuds_law_20211123.pdf';
 
 /// assets
 const String menuJson = 'assets/json/menu.json';
@@ -25,6 +27,7 @@ const String logoPng = 'assets/image/logo.png';
 const String hammerSvg = 'assets/image/ombuds/hammer.svg';
 const String adUnitIdJson = 'assets/json/adUnitId.json';
 const String reportSvg = 'assets/image/ombuds/report.svg';
+const String downloadSvg = 'assets/image/download.svg';
 
 /// color
 const Color themeColor = Color(0xff003366);

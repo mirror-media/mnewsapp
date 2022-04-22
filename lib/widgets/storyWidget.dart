@@ -2,24 +2,31 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/file.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
+import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/people.dart';
-import 'package:tv/models/peopleList.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
-import 'package:tv/models/tagList.dart';
+import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/tag/tagPage.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
+import 'package:tv/widgets/story/fileDownloadWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
@@ -29,8 +36,10 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class StoryWidget extends StatefulWidget {
   final String slug;
+  final bool showAds;
   StoryWidget({
     required this.slug,
+    this.showAds = true,
   });
 
   @override
@@ -39,9 +48,10 @@ class StoryWidget extends StatefulWidget {
 
 class _StoryWidgetState extends State<StoryWidget> {
   late String _currentSlug;
-  // late AdUnitId _adUnitId;
   late double _textSize;
   late Story _story;
+  late File _ombudsLawFile;
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
@@ -55,6 +65,9 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   _loadStory(String slug) async {
+    if (_currentSlug == 'law') {
+      _ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
+    }
     context.read<StoryBloc>().add(FetchPublishedStoryBySlug(slug));
   }
 
@@ -62,71 +75,100 @@ class _StoryWidgetState extends State<StoryWidget> {
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<StoryBloc, StoryState>(
-        builder: (BuildContext context, StoryState state) {
-      if (state is StoryError) {
-        final error = state.error;
-        print('NewsCategoriesError: ${error.message}');
-        if (error is NoInternetException) {
-          return error.renderWidget(onPressed: () => _loadStory(_currentSlug));
+    return BlocConsumer<StoryBloc, StoryState>(
+      listener: (BuildContext context, StoryState state) async {
+        if (state is StoryLoaded) {
+          if (interstitialAdController.storyCounter.isOdd && widget.showAds) {
+            await interstitialAdController.showStoryInterstitialAd();
+          }
+        }
+      },
+      builder: (BuildContext context, StoryState state) {
+        if (state is StoryError) {
+          final error = state.error;
+          print('NewsCategoriesError: ${error.message}');
+          if (error is NoInternetException) {
+            return error.renderWidget(
+                onPressed: () => _loadStory(_currentSlug));
+          }
+
+          return error.renderWidget();
+        }
+        if (state is StoryLoaded) {
+          Story? story = state.story;
+          if (story == null) {
+            return Container();
+          }
+          _story = story;
+          _textSize = state.textSize;
+          AnalyticsHelper.logStory(
+              slug: _currentSlug,
+              title: story.name ?? '',
+              category: story.categoryList);
+          return _storyContent(width, story);
+        } else if (state is TextSizeChanged) {
+          _textSize = state.textSize;
+          return _storyContent(width, _story);
         }
 
-        return error.renderWidget();
-      }
-      if (state is StoryLoaded) {
-        Story? story = state.story;
-        if (story == null) {
-          return Container();
-        }
-        _story = story;
-        // _adUnitId = state.adUnitId;
-        _textSize = state.textSize;
-        AnalyticsHelper.logStory(
-            slug: _currentSlug,
-            title: story.name ?? '',
-            category: story.categoryList);
-        return _storyContent(width, story);
-      } else if (state is TextSizeChanged) {
-        _textSize = state.textSize;
-        return _storyContent(width, _story);
-      }
-
-      // state is Init, loading, or other
-      return _loadingWidget();
-    });
+        // state is Init, loading, or other
+        return _loadingWidget();
+      },
+    );
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _storyContent(double width, Story story) {
     return ListView(
+      shrinkWrap: true,
       children: [
-        // InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
+        if (widget.showAds)
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryHD'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
+          ),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
         SizedBox(height: 10),
-        _buildStoryTitle(story.name!),
+        _buildStoryTitle(story.name ?? ''),
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        _buildBrief(story.brief!),
-        _buildContent(story.contentApiData!),
-        SizedBox(height: 16),
+        _buildBrief(story.brief ?? []),
+        _buildContent(story.contentApiData ?? []),
+        if (story.downloadFileList != null &&
+            story.downloadFileList!.isNotEmpty)
+          FileDownloadWidget(
+            story.downloadFileList!,
+            textSize: _textSize,
+          ),
+        if (widget.showAds)
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
+          ),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
           _buildTags(story.tags),
           SizedBox(height: 16),
         ],
-        // InlineBannerAdWidget(adUnitId: _adUnitId.e1AdUnitId,),
         if (story.relatedStories!.length > 0) ...[
           _buildRelatedWidget(width, story.relatedStories!),
           SizedBox(height: 16),
         ],
-        // InlineBannerAdWidget(adUnitId: _adUnitId.ftAdUnitId,)
       ],
     );
   }
@@ -145,11 +187,10 @@ class _StoryWidgetState extends State<StoryWidget> {
               if (index == -1) {
                 index = 0;
               }
-              RouteGenerator.navigateToImageViewer(
-                context,
+              Get.to(ImageViewerWidget(
                 story.imageUrlList ?? [story.heroImage!],
                 openIndex: index,
-              );
+              ));
             },
             child: CachedNetworkImage(
               width: width,
@@ -363,7 +404,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  List<Widget> _addAuthorItems(PeopleList peopleList) {
+  List<Widget> _addAuthorItems(List<People> peopleList) {
     List<Widget> authorItems = List.empty(growable: true);
 
     for (People author in peopleList) {
@@ -381,7 +422,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   // only display unstyled paragraph type in brief
-  Widget _buildBrief(ParagraphList articles) {
+  Widget _buildBrief(List<Paragraph> articles) {
     if (articles.length > 0) {
       List<Widget> articleWidgets = List.empty(growable: true);
 
@@ -446,56 +487,83 @@ class _StoryWidgetState extends State<StoryWidget> {
     return Container();
   }
 
-  Widget _buildContent(ParagraphList storyContents) {
-    ParagraphFormat paragraphFormat = ParagraphFormat();
-    int _numOfAds = 0;
-    // if(storyContents.length > 0)
-    //   _numOfAds = 1;
-    // else if(storyContents.length >= 5 && storyContents.length < 10)
-    //   _numOfAds = 2;
-    // else if(storyContents.length >= 10)
-    //   _numOfAds = 3;
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        itemCount: storyContents.length + _numOfAds,
-        itemBuilder: (context, index) {
-          // if(index == 1){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at1AdUnitId, isInArticle: true,);
-          // }
-          // else if(index == 6){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at2AdUnitId, isInArticle: true);
-          // }
-          // else if(index == 12){
-          //   return InlineBannerAdWidget(adUnitId: _adUnitId.at3AdUnitId, isInArticle: true);
-          // }
-          int _trueIndex = index;
-          // if(index > 1 && index < 6)
-          //   _trueIndex--;
-          // else if(index > 6 && index < 12)
-          //   _trueIndex = _trueIndex - 2;
-          // else if(index > 12)
-          //   _trueIndex = _trueIndex - 3;
-          Paragraph paragraph = storyContents[_trueIndex];
-          if (paragraph.contents != null &&
-              paragraph.contents!.length > 0 &&
-              !_isNullOrEmpty(paragraph.contents![0].data)) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16.0),
-              child: paragraphFormat.parseTheParagraph(
-                paragraph,
-                context,
-                _textSize,
-                imageUrlList: _story.imageUrlList,
+  Widget _buildContent(List<Paragraph> storyContents) {
+    if (_currentSlug == 'law') {
+      return PdfDocumentLoader.openFile(
+        _ombudsLawFile.path,
+        documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
+          builder: (context, constraints) => ListView.builder(
+            itemCount: pageCount,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) => Container(
+              color: Colors.black12,
+              child: PdfPageView(
+                pdfDocument: pdfDocument,
+                pageNumber: index + 1,
               ),
+            ),
+          ),
+        ),
+      );
+    }
+    if (storyContents.isEmpty) {
+      if (widget.showAds) {
+        return InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+            AdSize(width: 320, height: 480),
+          ],
+          wantKeepAlive: true,
+        );
+      } else {
+        return Container();
+      }
+    }
+    ParagraphFormat paragraphFormat = ParagraphFormat();
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      itemCount: storyContents.length + 1,
+      itemBuilder: (context, index) {
+        if (index == 1) {
+          if (widget.showAds) {
+            return InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+                AdSize(width: 320, height: 480),
+              ],
+              wantKeepAlive: true,
             );
+          } else {
+            return Container();
           }
+        }
+        int contentIndex = index;
+        if (index > 1) {
+          contentIndex = index - 1;
+        }
+        Paragraph paragraph = storyContents[contentIndex];
+        if (paragraph.contents != null &&
+            paragraph.contents!.length > 0 &&
+            !_isNullOrEmpty(paragraph.contents![0].data)) {
+          return Padding(
+            padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
+            child: paragraphFormat.parseTheParagraph(
+              paragraph,
+              context,
+              _textSize,
+              imageUrlList: _story.imageUrlList,
+            ),
+          );
+        }
 
-          return Container();
-        },
-      ),
+        return Container();
+      },
     );
   }
 
@@ -513,7 +581,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     );
   }
 
-  Widget _buildTags(TagList? tags) {
+  Widget _buildTags(List<Tag>? tags) {
     if (tags == null) {
       return Container();
     } else {
@@ -526,7 +594,9 @@ class _StoryWidgetState extends State<StoryWidget> {
               onTap: () {
                 AnalyticsHelper.logClick(
                     slug: '', title: tags[i].name, location: 'Article_關鍵字');
-                RouteGenerator.navigateToTagStoryListPage(context, tags[i]);
+                Get.to(() => TagPage(
+                      tag: tags[i],
+                    ));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -560,7 +630,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     }
   }
 
-  Widget _buildRelatedWidget(double width, StoryListItemList relatedStories) {
+  Widget _buildRelatedWidget(double width, List<StoryListItem> relatedStories) {
     double width = MediaQuery.of(context).size.width;
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
@@ -642,6 +712,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             slug: story.slug, title: story.name, location: 'Article_相關文章');
         _currentSlug = story.slug;
         StoryPage.of(context)!.slug = _currentSlug;
+        interstitialAdController.openStory();
         _loadStory(_currentSlug);
       },
     );

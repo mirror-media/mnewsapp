@@ -1,16 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/events.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
-import 'package:tv/helpers/analyticsHelper.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class BuildEditorChoiceStoryList extends StatefulWidget {
   final EditorChoiceEvents editorChoiceEvent;
@@ -43,158 +42,91 @@ class _BuildEditorChoiceStoryListState
         final error = state.error;
         print('EditorChoiceError: ${error.message}');
         if (error is NoInternetException) {
-          return SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return error.renderWidget(
-                    onPressed: () =>
-                        _loadEditorChoiceList(widget.editorChoiceEvent),
-                    isColumn: true);
-              },
-              childCount: 1,
-            ),
-          );
+          return error.renderWidget(
+              onPressed: () => _loadEditorChoiceList(widget.editorChoiceEvent),
+              isColumn: true);
         }
 
-        return SliverList(
-          delegate: SliverChildBuilderDelegate(
-            (BuildContext context, int index) {
-              return error.renderWidget(isNoButton: true, isColumn: true);
-            },
-            childCount: 1,
-          ),
-        );
+        return error.renderWidget(isNoButton: true, isColumn: true);
       }
       if (state is EditorChoiceLoaded) {
-        StoryListItemList editorChoiceList = state.editorChoiceList;
+        List<StoryListItem> editorChoiceList = state.editorChoiceList;
 
         if (editorChoiceList.length == 0) {
-          return SliverList(
-            delegate:
-                SliverChildBuilderDelegate((BuildContext context, int index) {
-              return TabContentNoResultWidget();
-            }, childCount: 1),
-          );
+          return TabContentNoResultWidget();
         }
-        return _tabStoryList(storyListItemList: editorChoiceList);
+        return _buildBody(storyListItemList: editorChoiceList);
       }
 
       // state is Init, loading, or other
-      return SliverList(
-        delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-          return _loadMoreWidget();
-        }, childCount: 1),
-      );
+      return Center(child: CircularProgressIndicator.adaptive());
     });
   }
 
-  Widget _loadMoreWidget() {
-    return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Center(child: CupertinoActivityIndicator()),
+  Widget _buildBody({
+    required List<StoryListItem> storyListItemList,
+  }) {
+    List<StoryListItem> twoToFour = [];
+    List<StoryListItem> fiveToSeven = [];
+    List<StoryListItem> others = [];
+    for (int i = 1; i < storyListItemList.length; i++) {
+      if (i < 4) {
+        twoToFour.add(storyListItemList[i]);
+      } else if (i < 7) {
+        fiveToSeven.add(storyListItemList[i]);
+      } else {
+        others.add(storyListItemList[i]);
+      }
+    }
+    return ListView(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      children: [
+        VideoStoryListItem(storyListItem: storyListItemList[0]),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT1'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+        ),
+        _tabStoryList(storyListItemList: twoToFour),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT2'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+            AdSize(width: 320, height: 480),
+          ],
+        ),
+        _tabStoryList(storyListItemList: fiveToSeven),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT3'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+        ),
+        _tabStoryList(storyListItemList: others),
+      ],
     );
   }
 
   Widget _tabStoryList({
-    required StoryListItemList storyListItemList,
+    required List<StoryListItem> storyListItemList,
   }) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate((BuildContext context, int index) {
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 24.0),
-          child: _buildListItem(context, storyListItemList[index]),
+    return ListView.separated(
+      physics: const NeverScrollableScrollPhysics(),
+      shrinkWrap: true,
+      itemBuilder: (context, index) {
+        return VideoStoryListItem(storyListItem: storyListItemList[index]);
+      },
+      separatorBuilder: (context, index) {
+        return const SizedBox(
+          height: 24,
         );
-      }, childCount: storyListItemList.length),
-    );
-  }
-
-  Widget _buildListItem(BuildContext context, StoryListItem storyListItem) {
-    return InkWell(
-        child: Column(
-          children: [
-            _displayStoryImage(storyListItem.photoUrl),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 0.0),
-              child: RichText(
-                overflow: TextOverflow.ellipsis,
-                maxLines: 2,
-                text: TextSpan(
-                  style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 22.0,
-                      height: 1.5,
-                      fontWeight: FontWeight.w500),
-                  text: storyListItem.name,
-                ),
-              ),
-            ),
-          ],
-        ),
-        onTap: () {
-          AnalyticsHelper.logClick(
-              slug: storyListItem.slug,
-              title: storyListItem.name,
-              location: 'HomePage_編輯精選');
-          RouteGenerator.navigateToStory(context, storyListItem.slug);
-        });
-  }
-
-  Widget _displayStoryImage(String photoUrl) {
-    var width = MediaQuery.of(context).size.width;
-
-    return SizedBox(
-      height: width / 16 * 9,
-      width: width,
-      child: Stack(
-        children: [
-          CachedNetworkImage(
-            height: width / 16 * 9,
-            width: width,
-            imageUrl: photoUrl,
-            placeholder: (context, url) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: width / 16 * 9,
-              width: width,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
-            fit: BoxFit.cover,
-          ),
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  width: 40.0 + 8.0,
-                  color: Colors.black45,
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.play_arrow,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                        SizedBox(width: 4),
-                        Text(
-                          '影音',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                )),
-          ),
-        ],
-      ),
+      },
+      itemCount: storyListItemList.length,
     );
   }
 }

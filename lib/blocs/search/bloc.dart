@@ -5,12 +5,12 @@ import 'package:tv/blocs/search/events.dart';
 import 'package:tv/blocs/search/states.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/searchService.dart';
 
 class SearchBloc extends Bloc<SearchEvents, SearchState> {
   final SearchRepos searchRepos;
-  StoryListItemList storyListItemList = StoryListItemList();
+  List<StoryListItem> storyListItemList = [];
 
   SearchBloc({required this.searchRepos}) : super(SearchInitState());
 
@@ -22,13 +22,19 @@ class SearchBloc extends Bloc<SearchEvents, SearchState> {
       if (event is SearchNewsStoryByKeyword) {
         storyListItemList =
             await searchRepos.searchNewsStoryByKeyword(event.keyword);
-        yield SearchLoaded(storyListItemList: storyListItemList);
+        yield SearchLoaded(
+          storyListItemList: storyListItemList,
+          allStoryCount: searchRepos.allStoryCount,
+        );
       } else if (event is SearchNextPageByKeyword) {
         yield SearchLoadingMore(storyListItemList: storyListItemList);
-        StoryListItemList newStoryListItemList =
+        List<StoryListItem> newStoryListItemList =
             await searchRepos.searchNextPageByKeyword(event.keyword);
         storyListItemList.addAll(newStoryListItemList);
-        yield SearchLoaded(storyListItemList: storyListItemList);
+        yield SearchLoaded(
+          storyListItemList: storyListItemList,
+          allStoryCount: searchRepos.allStoryCount,
+        );
       } else if (event is ClearKeyword) {
         yield SearchInitState();
       }

@@ -1,4 +1,4 @@
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topic.dart';
 
 abstract class ConfigState {}
 
@@ -9,7 +9,7 @@ class ConfigLoading extends ConfigState {}
 class ConfigLoaded extends ConfigState {
   final bool isSuccess;
   final String minAppVersion;
-  final TopicList topics;
+  final List<Topic> topics;
   ConfigLoaded({
     required this.isSuccess,
     required this.minAppVersion,

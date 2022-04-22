@@ -3,17 +3,17 @@ import 'dart:convert';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 
 abstract class PromotionVideosRepos {
-  Future<YoutubePlaylistItemList> fetchAllPromotionVideos();
+  Future<List<YoutubePlaylistItem>> fetchAllPromotionVideos();
 }
 
 class PromotionVideosServices implements PromotionVideosRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<YoutubePlaylistItemList> fetchAllPromotionVideos() async {
+  Future<List<YoutubePlaylistItem>> fetchAllPromotionVideos() async {
     final String query = """
     query {
       allPromotionVideos(
@@ -39,9 +39,12 @@ class PromotionVideosServices implements PromotionVideosRepos {
         Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
         headers: {"Content-Type": "application/json"});
 
-    YoutubePlaylistItemList youtubePlaylistItemList =
-        YoutubePlaylistItemList.fromPromotionVideosJson(
-            jsonResponse['data']['allPromotionVideos']);
+    List<YoutubePlaylistItem> youtubePlaylistItemList =
+        List<YoutubePlaylistItem>.from(
+            jsonResponse['data']['allPromotionVideos'].map((ytVideo) =>
+                YoutubePlaylistItem.fromPromotionVideosJson(ytVideo)));
+    youtubePlaylistItemList
+        .removeWhere((element) => element.name == 'Private video');
     return youtubePlaylistItemList;
   }
 }

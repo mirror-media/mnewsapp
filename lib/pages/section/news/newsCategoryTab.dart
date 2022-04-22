@@ -7,7 +7,6 @@ import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/models/categoryList.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
 import 'package:tv/pages/section/news/newsTabContent.dart';
@@ -36,7 +35,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
     context.read<CategoriesBloc>().add(FetchCategories());
   }
 
-  _initializeTabController(CategoryList categoryList) {
+  _initializeTabController(List<Category> categoryList) {
     _tabs.clear();
     _tabWidgets.clear();
 
@@ -90,7 +89,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
         return error.renderWidget(isNoButton: true);
       }
       if (state is CategoriesLoaded) {
-        CategoryList categoryList = state.categoryList;
+        List<Category> categoryList = state.categoryList;
         _initializeTabController(categoryList);
 
         return _buildTabs(_tabs, _tabWidgets, _tabController!);
@@ -102,7 +101,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildTabs(

@@ -1,15 +1,12 @@
-import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/tag/bloc.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/tag.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class TagWidget extends StatefulWidget {
   final Tag tag;
@@ -21,7 +18,8 @@ class TagWidget extends StatefulWidget {
 
 class _TagWidgetState extends State<TagWidget> {
   bool loadingMore = false;
-  late StoryListItemList _tagStoryList;
+  late List<StoryListItem> _tagStoryList;
+  int _allStoryCount = 0;
 
   @override
   void initState() {
@@ -76,20 +74,17 @@ class _TagWidgetState extends State<TagWidget> {
       if (state.status == TagStoryListStatus.loaded) {
         _tagStoryList = state.tagStoryList!;
         loadingMore = false;
+        _allStoryCount = state.allStoryCount!;
         return _buildList(_tagStoryList);
       }
       // state is Init, loading, or other
-      return Center(
-        child: Platform.isAndroid
-            ? const CircularProgressIndicator()
-            : const CupertinoActivityIndicator(),
-      );
+      return Center(child: const CircularProgressIndicator.adaptive());
     });
   }
 
-  Widget _buildList(StoryListItemList tagStoryList) {
+  Widget _buildList(List<StoryListItem> tagStoryList) {
     bool isAll = false;
-    if (tagStoryList.length == tagStoryList.allStoryCount) {
+    if (tagStoryList.length == _allStoryCount) {
       isAll = true;
     }
     return ListView.builder(
@@ -103,11 +98,7 @@ class _TagWidgetState extends State<TagWidget> {
             );
           }
           if (!loadingMore) _fetchNextPageByTagSlug();
-          return Center(
-            child: Platform.isAndroid
-                ? const CircularProgressIndicator()
-                : const CupertinoActivityIndicator(),
-          );
+          return Center(child: const CircularProgressIndicator.adaptive());
         }
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),
@@ -154,7 +145,9 @@ class _TagWidgetState extends State<TagWidget> {
         ],
       ),
       onTap: () {
-        RouteGenerator.navigateToStory(context, story.slug);
+        Get.to(() => StoryPage(
+              slug: story.slug,
+            ));
       },
     );
   }

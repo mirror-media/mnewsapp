@@ -4,19 +4,18 @@ import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/models/contact.dart';
-import 'package:tv/models/contactList.dart';
 import 'package:tv/models/graphqlBody.dart';
 
 abstract class ContactRepos {
   Future<Contact> fetchContactById(String contactId);
-  Future<ContactList> fetchAnchorpersonOrHostContactList();
+  Future<List<Contact>> fetchAnchorpersonOrHostContactList();
 }
 
 class ContactServices implements ContactRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<ContactList> fetchAnchorpersonOrHostContactList() async {
+  Future<List<Contact>> fetchAnchorpersonOrHostContactList() async {
     final key = 'fetchAnchorpersonOrHostContactList';
 
     String query = """
@@ -59,8 +58,10 @@ class ContactServices implements ContactRepos {
         maxAge: anchorPersonListCacheDuration,
         headers: {"Content-Type": "application/json"});
 
-    ContactList contactList =
-        ContactList.fromJson(jsonResponse['data']['allContacts']);
+    List<Contact> contactList = List<Contact>.from(jsonResponse['data']
+            ['allContacts']
+        .map((contact) => Contact.fromJson(contact)));
+
     return contactList;
   }
 

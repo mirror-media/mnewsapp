@@ -1,65 +1,61 @@
-import 'package:tv/models/adUnitId.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
-enum TabStoryListStatus { 
-  initial, 
-  loading, 
-  loaded, 
-  error, 
-  loadingMore, 
-  loadingMoreError 
+enum TabStoryListStatus {
+  initial,
+  loading,
+  loaded,
+  error,
+  loadingMore,
+  loadingMoreError
 }
 
 class TabStoryListState {
   final TabStoryListStatus status;
-  final StoryListItemList? storyListItemList;
-  final AdUnitId? adUnitId;
+  final List<StoryListItem>? storyListItemList;
   final dynamic errorMessages;
+  final int? allStoryCount;
 
   const TabStoryListState._({
     required this.status,
     this.storyListItemList,
-    this.adUnitId,
     this.errorMessages,
+    this.allStoryCount,
   });
 
-  const TabStoryListState.init()
-      : this._(status: TabStoryListStatus.initial);
+  const TabStoryListState.init() : this._(status: TabStoryListStatus.initial);
 
   const TabStoryListState.loading()
       : this._(status: TabStoryListStatus.loading);
 
   const TabStoryListState.loaded({
-    required StoryListItemList storyListItemList,
-    AdUnitId? adUnitId,
-  })  : this._(
-        status: TabStoryListStatus.loaded,
-        adUnitId: adUnitId,
-        storyListItemList: storyListItemList,
-      );
+    required List<StoryListItem> storyListItemList,
+    required int allStoryCount,
+  }) : this._(
+          status: TabStoryListStatus.loaded,
+          storyListItemList: storyListItemList,
+          allStoryCount: allStoryCount,
+        );
 
-  const TabStoryListState.error({
-    dynamic errorMessages
-  })  : this._(
-        status: TabStoryListStatus.error,
-        errorMessages: errorMessages,
-      );
+  const TabStoryListState.error({dynamic errorMessages})
+      : this._(
+          status: TabStoryListStatus.error,
+          errorMessages: errorMessages,
+        );
 
   const TabStoryListState.loadingMore({
-    required StoryListItemList storyListItemList,
-  })  : this._(
-        status: TabStoryListStatus.loadingMore,
-        storyListItemList: storyListItemList,
-      );
+    required List<StoryListItem> storyListItemList,
+  }) : this._(
+          status: TabStoryListStatus.loadingMore,
+          storyListItemList: storyListItemList,
+        );
 
-  const TabStoryListState.loadingMoreError({
-    required StoryListItemList storyListItemList,
-    dynamic errorMessages
-  })  : this._(
-        status: TabStoryListStatus.loadingMoreError,
-        storyListItemList: storyListItemList,
-        errorMessages: errorMessages,
-      );
+  const TabStoryListState.loadingMoreError(
+      {required List<StoryListItem> storyListItemList, dynamic errorMessages})
+      : this._(
+          status: TabStoryListStatus.loadingMoreError,
+          storyListItemList: storyListItemList,
+          errorMessages: errorMessages,
+        );
 
   @override
   String toString() {

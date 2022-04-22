@@ -2,21 +2,24 @@ import 'dart:convert';
 
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class SearchRepos {
-  Future<StoryListItemList> searchNewsStoryByKeyword(String keyword,
+  Future<List<StoryListItem>> searchNewsStoryByKeyword(String keyword,
       {int from = 0, int size = 20});
-  Future<StoryListItemList> searchNextPageByKeyword(String keyword,
+  Future<List<StoryListItem>> searchNextPageByKeyword(String keyword,
       {int loadingMorePage = 20});
+  int allStoryCount = 0;
 }
 
 class SearchServices implements SearchRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
   int from = 0, size = 20;
+  @override
+  int allStoryCount = 0;
 
   @override
-  Future<StoryListItemList> searchNewsStoryByKeyword(String keyword,
+  Future<List<StoryListItem>> searchNewsStoryByKeyword(String keyword,
       {int from = 0, int size = 20}) async {
     this.from = from;
     this.size = size;
@@ -27,16 +30,17 @@ class SearchServices implements SearchRepos {
         Environment().config.searchApi, jsonEncode(query),
         headers: {"Content-Type": "application/json"});
 
-    StoryListItemList storyListItemList =
-        StoryListItemList.fromJson(jsonResponse["body"]["hits"]["hits"]);
-    storyListItemList.allStoryCount =
-        jsonResponse["body"]["hits"]["total"]["value"];
+    List<StoryListItem> storyListItemList = List<StoryListItem>.from(
+        jsonResponse["body"]["hits"]["hits"]
+            .map((post) => StoryListItem.fromJson(post)));
+
+    allStoryCount = jsonResponse["body"]["hits"]["total"]["value"];
 
     return storyListItemList;
   }
 
   @override
-  Future<StoryListItemList> searchNextPageByKeyword(String keyword,
+  Future<List<StoryListItem>> searchNextPageByKeyword(String keyword,
       {int loadingMorePage = 20}) async {
     from = from + size;
     size = loadingMorePage;

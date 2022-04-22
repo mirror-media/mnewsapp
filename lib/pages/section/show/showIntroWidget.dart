@@ -1,13 +1,15 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/show/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/adUnitId.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/pages/section/show/showPlaylistWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class BuildShowIntro extends StatefulWidget {
   final String showCategoryId;
@@ -46,11 +48,9 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
       }
       if (state is ShowIntroLoaded) {
         ShowIntro showIntro = state.showIntro;
-        AdUnitId adUnitId = state.adUnitId;
 
         return ShowIntroWidget(
           showIntro: showIntro,
-          adUnitId: adUnitId,
         );
       }
 
@@ -62,8 +62,7 @@ class _BuildShowIntroState extends State<BuildShowIntro> {
 
 class ShowIntroWidget extends StatefulWidget {
   final ShowIntro showIntro;
-  final AdUnitId adUnitId;
-  ShowIntroWidget({required this.showIntro, required this.adUnitId});
+  ShowIntroWidget({required this.showIntro});
 
   @override
   _ShowIntroWidgetState createState() => _ShowIntroWidgetState();
@@ -123,16 +122,19 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
           ),
         ),
       ),
-      // InlineBannerAdWidget(
-      //   adUnitId: widget.adUnitId.at1AdUnitId,
-      // ),
+      InlineBannerAdWidget(
+        adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT1'),
+        sizes: [
+          AdSize.mediumRectangle,
+          AdSize(width: 336, height: 280),
+        ],
+      ),
       SizedBox(height: 24),
       Padding(
         padding: const EdgeInsets.only(left: 24, right: 24),
         child: ShowPlaylistWidget(
           showIntro: widget.showIntro,
           listviewController: _listviewController,
-          adUnitId: widget.adUnitId,
         ),
       ),
     ]);

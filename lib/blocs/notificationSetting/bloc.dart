@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/notificationSetting/events.dart';
 import 'package:tv/blocs/notificationSetting/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/notificationSettingList.dart';
+import 'package:tv/models/notificationSetting.dart';
 import 'package:tv/services/notificationSettingService.dart';
 
 class NotificationSettingBloc
@@ -21,12 +21,12 @@ class NotificationSettingBloc
     try {
       if (event is GetNotificationSettingList) {
         yield NotificationSettingLoading();
-        NotificationSettingList notificationSettingList =
+        List<NotificationSetting> notificationSettingList =
             await notificationSettingRepos.getNotificationSettingList();
         yield NotificationSettingLoaded(
             notificationSettingList: notificationSettingList);
       } else if (event is NotificationOnExpansionChanged) {
-        NotificationSettingList notificationSettingList =
+        List<NotificationSetting> notificationSettingList =
             notificationSettingRepos.onExpansionChanged(
           event.inputNotificationSettingList,
           event.index,
@@ -35,7 +35,7 @@ class NotificationSettingBloc
         yield NotificationSettingLoaded(
             notificationSettingList: notificationSettingList);
       } else if (event is NotificationOnCheckBoxChanged) {
-        NotificationSettingList notificationSettingList =
+        List<NotificationSetting> notificationSettingList =
             notificationSettingRepos.onCheckBoxChanged(
           event.inputNotificationSettingList,
           event.checkboxList,

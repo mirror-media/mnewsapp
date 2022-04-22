@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:tv/blocs/programList/program_list_cubit.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/programList.dart';
 import 'package:tv/models/programListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/customPicker.dart';
@@ -67,7 +66,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildChooseButton() {
@@ -132,8 +131,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     );
   }
 
-  Widget _buildContent(ProgramList programList) {
-    ProgramList _pickedProgramList = new ProgramList();
+  Widget _buildContent(List<ProgramListItem> programList) {
+    List<ProgramListItem> _pickedProgramList = [];
     int start = programList.indexWhere((element) =>
         element.year == _selectedDate.year &&
         element.month == _selectedDate.month &&

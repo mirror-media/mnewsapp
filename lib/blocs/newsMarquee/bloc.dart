@@ -4,12 +4,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 
 class NewsMarqueeBloc extends Bloc<NewsMarqueeEvents, NewsMarqueeState> {
   final NewsMarqueeRepos newsMarqueeRepos;
-  StoryListItemList newsList = StoryListItemList();
+  List<StoryListItem> newsList = [];
 
   NewsMarqueeBloc({required this.newsMarqueeRepos})
       : super(NewsMarqueeInitState());

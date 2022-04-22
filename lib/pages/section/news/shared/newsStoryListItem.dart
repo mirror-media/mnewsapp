@@ -1,8 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class NewsStoryListItem extends StatelessWidget {
   final StoryListItem storyListItem;
@@ -68,7 +69,9 @@ class NewsStoryListItem extends StatelessWidget {
             location:
                 categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
           );
-          RouteGenerator.navigateToStory(context, storyListItem.slug);
+          Get.to(() => StoryPage(
+                slug: storyListItem.slug,
+              ));
         });
   }
 }

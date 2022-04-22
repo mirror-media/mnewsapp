@@ -33,8 +33,8 @@ class _VideoTabContentState extends State<VideoTabContent> {
       AnalyticsHelper.sendScreenView(
           screenName: 'VideoPage categorySlug=${widget.categorySlug}');
     }
-    return CustomScrollView(
-      slivers: [
+    return ListView(
+      children: [
         if (widget.isFeaturedSlug)
           BlocProvider(
             create: (context) =>

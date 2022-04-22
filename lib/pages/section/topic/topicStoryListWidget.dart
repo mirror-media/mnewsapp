@@ -1,19 +1,24 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
+import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/models/storyListItemList.dart';
 import 'package:tv/models/topicStoryList.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/pages/storyPage.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
@@ -27,13 +32,16 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   late TopicStoryList _topicStoryList;
   late final _storySlug;
   bool _isAllLoaded = false;
-  StoryListItemList _storyListItemList = StoryListItemList();
+  List<StoryListItem> _storyListItemList = [];
   CarouselController carouselController = CarouselController();
+  bool _isLoading = false;
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
     _storySlug = widget.slug;
     _fetchTopicStoryList();
+    interstitialAdController.ramdomShowInterstitialAd();
     super.initState();
   }
 
@@ -63,7 +71,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
 
         if (state.status == TopicStoryListStatus.loadingMoreFail) {
           _fetchTopicStoryListMore();
-          return _buildTopicStoryList();
+          return _buildBody();
         }
 
         if (state.status == TopicStoryListStatus.loaded) {
@@ -76,11 +84,17 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             _storyListItemList = _topicStoryList.storyListItemList!;
           }
 
-          if (_storyListItemList.length == _storyListItemList.allStoryCount) {
+          if (_storyListItemList.isEmpty) {
+            return TabContentNoResultWidget();
+          }
+
+          if (_storyListItemList.length == _topicStoryList.allStoryCount) {
             _isAllLoaded = true;
           }
 
-          return _buildTopicStoryList();
+          _isLoading = false;
+
+          return _buildBody();
         }
 
         return Center(
@@ -90,23 +104,66 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     );
   }
 
-  Widget _buildTopicStoryList() {
+  Widget _buildBody() {
     double width = MediaQuery.of(context).size.width;
     double height = width / 16 * 9;
-
-    if (_storyListItemList.isEmpty) {
-      return TabContentNoResultWidget();
+    List<StoryListItem> firstFour = [];
+    List<StoryListItem> fiveToEight = [];
+    List<StoryListItem> others = [];
+    for (int i = 0; i < _storyListItemList.length; i++) {
+      if (i < 4) {
+        firstFour.add(_storyListItemList[i]);
+      } else if (i < 8) {
+        fiveToEight.add(_storyListItemList[i]);
+      } else {
+        others.add(_storyListItemList[i]);
+      }
     }
+    return ListView(
+      children: [
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicHD'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+          wantKeepAlive: true,
+        ),
+        _buildLeading(width, height),
+        const SizedBox(
+          height: 16,
+        ),
+        _buildTopicStoryList(firstFour),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT1'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+            AdSize(width: 320, height: 480),
+          ],
+          wantKeepAlive: true,
+        ),
+        _buildTopicStoryList(fiveToEight),
+        InlineBannerAdWidget(
+          adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT2'),
+          sizes: [
+            AdSize.mediumRectangle,
+            AdSize(width: 336, height: 280),
+          ],
+          wantKeepAlive: true,
+        ),
+        _buildTopicStoryList(others),
+        _loadMoreWidget(),
+      ],
+    );
+  }
 
+  Widget _buildTopicStoryList(List<StoryListItem> storyListItemList) {
     return ListView.separated(
-      itemCount: _storyListItemList.length + 2,
-      padding: EdgeInsets.only(bottom: 28),
+      itemCount: storyListItemList.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       separatorBuilder: (context, index) {
-        if (index == 0 || index == _storyListItemList.length) {
-          return const SizedBox(
-            height: 16,
-          );
-        }
         return const Divider(
           height: 16,
           thickness: 1,
@@ -116,30 +173,15 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         );
       },
       itemBuilder: (context, index) {
-        if (index == _storyListItemList.length && !_isAllLoaded) {
-          _fetchTopicStoryListMore();
-        }
-
-        if (index == 0) {
-          return _buildLeading(width, height);
-        }
-
-        if (index == _storyListItemList.length + 1) {
-          if (_isAllLoaded) {
-            return Container();
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        }
         return InkWell(
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: 24),
-            child: _buildTopicStoryListItem(_storyListItemList[index - 1]),
+            child: _buildTopicStoryListItem(storyListItemList[index]),
           ),
           onTap: () {
-            RouteGenerator.navigateToStory(
-                context, _storyListItemList[index - 1].slug);
+            Get.to(() => StoryPage(
+                  slug: storyListItemList[index].slug,
+                ));
           },
         );
       },
@@ -383,6 +425,26 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _loadMoreWidget() {
+    if (_isAllLoaded) {
+      return SizedBox(
+        height: 28,
+      );
+    }
+
+    return VisibilityDetector(
+      key: Key('TopicStoryListLoadingMore'),
+      onVisibilityChanged: (visibilityInfo) {
+        var visiblePercentage = visibilityInfo.visibleFraction * 100;
+        if (visiblePercentage > 30 && !_isLoading) {
+          _fetchTopicStoryListMore();
+          _isLoading = true;
+        }
+      },
+      child: Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 }
