@@ -106,23 +106,29 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(MNewsSection sectionId) {
-    interstitialAdController.ramdomShowInterstitialAd();
     switch (sectionId) {
       case MNewsSection.news:
+        interstitialAdController.ramdomShowInterstitialAd();
         return NewsPage();
       case MNewsSection.live:
+        interstitialAdController.ramdomShowInterstitialAd();
         return LivePage();
       case MNewsSection.video:
+        interstitialAdController.ramdomShowInterstitialAd();
         return VideoPage();
       case MNewsSection.show:
+        interstitialAdController.ramdomShowInterstitialAd();
         return ShowPage();
       case MNewsSection.anchorperson:
+        interstitialAdController.ramdomShowInterstitialAd();
         return AnchorpersonPage();
       case MNewsSection.ombuds:
         return OmbudsPage();
       case MNewsSection.programList:
+        interstitialAdController.ramdomShowInterstitialAd();
         return ProgramListPage();
       case MNewsSection.topicList:
+        interstitialAdController.ramdomShowInterstitialAd();
         return TopicListPage();
     }
   }
