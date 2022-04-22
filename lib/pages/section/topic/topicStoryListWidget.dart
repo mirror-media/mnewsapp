@@ -127,6 +127,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             AdSize.mediumRectangle,
             AdSize(width: 336, height: 280),
           ],
+          wantKeepAlive: true,
         ),
         _buildLeading(width, height),
         const SizedBox(
@@ -140,6 +141,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             AdSize(width: 336, height: 280),
             AdSize(width: 320, height: 480),
           ],
+          wantKeepAlive: true,
         ),
         _buildTopicStoryList(fiveToEight),
         InlineBannerAdWidget(
@@ -148,6 +150,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             AdSize.mediumRectangle,
             AdSize(width: 336, height: 280),
           ],
+          wantKeepAlive: true,
         ),
         _buildTopicStoryList(others),
         _loadMoreWidget(),

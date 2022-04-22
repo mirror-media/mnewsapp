@@ -59,6 +59,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 AdSize.mediumRectangle,
                 AdSize(width: 336, height: 280),
               ],
+              wantKeepAlive: true,
             ),
             if (anchorpersonContactList.length > 0) ...[
               Padding(
@@ -85,6 +86,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 AdSize(width: 336, height: 280),
                 AdSize(width: 320, height: 480),
               ],
+              wantKeepAlive: true,
             ),
             if (hostContactList.length > 0) ...[
               Padding(
@@ -110,6 +112,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 AdSize.mediumRectangle,
                 AdSize(width: 336, height: 280),
               ],
+              wantKeepAlive: true,
             ),
           ],
         );

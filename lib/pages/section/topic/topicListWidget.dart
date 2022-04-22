@@ -85,6 +85,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
           _buildGridView(firstSixTopics),
           InlineBannerAdWidget(
@@ -94,6 +95,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
               AdSize(width: 336, height: 280),
               AdSize(width: 320, height: 480),
             ],
+            wantKeepAlive: true,
           ),
           _buildGridView(sixToTwelveTopics),
           InlineBannerAdWidget(
@@ -102,6 +104,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
           _buildGridView(otherTopics),
         ],

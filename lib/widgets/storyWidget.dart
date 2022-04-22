@@ -132,6 +132,7 @@ class _StoryWidgetState extends State<StoryWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
@@ -156,6 +157,7 @@ class _StoryWidgetState extends State<StoryWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
@@ -514,6 +516,7 @@ class _StoryWidgetState extends State<StoryWidget> {
             AdSize(width: 336, height: 280),
             AdSize(width: 320, height: 480),
           ],
+          wantKeepAlive: true,
         );
       } else {
         return Container();
@@ -534,6 +537,7 @@ class _StoryWidgetState extends State<StoryWidget> {
                 AdSize(width: 336, height: 280),
                 AdSize(width: 320, height: 480),
               ],
+              wantKeepAlive: true,
             );
           } else {
             return Container();

@@ -87,6 +87,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
           CachedNetworkImage(
             height: imageHeight,
@@ -112,6 +113,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
               AdSize(width: 336, height: 280),
               AdSize(width: 320, height: 480),
             ],
+            wantKeepAlive: true,
           ),
           _buildBioWidget(contact.bio),
           SizedBox(height: 8),
@@ -144,6 +146,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
               AdSize.mediumRectangle,
               AdSize(width: 336, height: 280),
             ],
+            wantKeepAlive: true,
           ),
           SizedBox(height: 24),
         ],
