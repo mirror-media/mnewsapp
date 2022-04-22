@@ -461,6 +461,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.6.2+2"
+  get:
+    dependency: "direct main"
+    description:
+      name: get
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "4.6.1"
   google_mobile_ads:
     dependency: "direct main"
     description:
@@ -706,6 +713,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.0.5"
+  pdf_render:
+    dependency: "direct main"
+    description:
+      name: pdf_render
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.23"
   pedantic:
     dependency: transitive
     description:

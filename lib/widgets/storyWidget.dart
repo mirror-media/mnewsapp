@@ -2,6 +2,10 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_cache_manager/file.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:get/get.dart';
+import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/states.dart';
@@ -10,13 +14,15 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tag.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/tag/tagPage.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
+import 'package:tv/widgets/story/fileDownloadWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
@@ -39,6 +45,7 @@ class _StoryWidgetState extends State<StoryWidget> {
   // late AdUnitId _adUnitId;
   late double _textSize;
   late Story _story;
+  late File _ombudsLawFile;
 
   @override
   void initState() {
@@ -52,6 +59,9 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   _loadStory(String slug) async {
+    if (_currentSlug == 'law') {
+      _ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
+    }
     context.read<StoryBloc>().add(FetchPublishedStoryBySlug(slug));
   }
 
@@ -99,19 +109,26 @@ class _StoryWidgetState extends State<StoryWidget> {
 
   Widget _storyContent(double width, Story story) {
     return ListView(
+      shrinkWrap: true,
       children: [
         // InlineBannerAdWidget(adUnitId: _adUnitId.hdAdUnitId,),
         _buildHeroWidget(width, story),
         SizedBox(height: 24),
         _buildCategoryAndPublishedDate(story),
         SizedBox(height: 10),
-        _buildStoryTitle(story.name!),
+        _buildStoryTitle(story.name ?? ''),
         SizedBox(height: 8),
         _buildAuthors(story),
         SizedBox(height: 32),
-        _buildBrief(story.brief!),
-        _buildContent(story.contentApiData!),
-        SizedBox(height: 16),
+        _buildBrief(story.brief ?? []),
+        _buildContent(story.contentApiData ?? []),
+        if (story.downloadFileList != null &&
+            story.downloadFileList!.isNotEmpty)
+          FileDownloadWidget(
+            story.downloadFileList!,
+            textSize: _textSize,
+          ),
+        SizedBox(height: 24),
         Center(child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
@@ -142,11 +159,10 @@ class _StoryWidgetState extends State<StoryWidget> {
               if (index == -1) {
                 index = 0;
               }
-              RouteGenerator.navigateToImageViewer(
-                context,
+              Get.to(ImageViewerWidget(
                 story.imageUrlList ?? [story.heroImage!],
                 openIndex: index,
-              );
+              ));
             },
             child: CachedNetworkImage(
               width: width,
@@ -444,6 +460,25 @@ class _StoryWidgetState extends State<StoryWidget> {
   }
 
   Widget _buildContent(List<Paragraph> storyContents) {
+    if (_currentSlug == 'law') {
+      return PdfDocumentLoader.openFile(
+        _ombudsLawFile.path,
+        documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
+          builder: (context, constraints) => ListView.builder(
+            itemCount: pageCount,
+            physics: const NeverScrollableScrollPhysics(),
+            shrinkWrap: true,
+            itemBuilder: (context, index) => Container(
+              color: Colors.black12,
+              child: PdfPageView(
+                pdfDocument: pdfDocument,
+                pageNumber: index + 1,
+              ),
+            ),
+          ),
+        ),
+      );
+    }
     ParagraphFormat paragraphFormat = ParagraphFormat();
     int _numOfAds = 0;
     // if(storyContents.length > 0)
@@ -523,7 +558,9 @@ class _StoryWidgetState extends State<StoryWidget> {
               onTap: () {
                 AnalyticsHelper.logClick(
                     slug: '', title: tags[i].name, location: 'Article_關鍵字');
-                RouteGenerator.navigateToTagStoryListPage(context, tags[i]);
+                Get.to(() => TagPage(
+                      tag: tags[i],
+                    ));
               },
               child: Container(
                 decoration: BoxDecoration(

@@ -2,14 +2,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/search/bloc.dart';
 import 'package:tv/blocs/search/events.dart';
 import 'package:tv/blocs/search/states.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/search/searchNoResultWidget.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class SearchWidget extends StatefulWidget {
   @override
@@ -247,9 +248,9 @@ class _SearchWidgetState extends State<SearchWidget> {
             ],
           ),
         ),
-        onTap: () {
-          RouteGenerator.navigateToStory(context, storyListItem.slug);
-        });
+        onTap: () => Get.to(() => StoryPage(
+              slug: storyListItem.slug,
+            )));
   }
 
   Widget _loadingWidget() => Center(

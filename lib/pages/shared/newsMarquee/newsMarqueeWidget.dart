@@ -2,14 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/shared/newsMarquee/marqueeWidget.dart';
+import 'package:tv/pages/storyPage.dart';
 
 class BuildNewsMarquee extends StatefulWidget {
   @override
@@ -143,7 +144,9 @@ class _NewsMarqueeState extends State<NewsMarquee> {
               slug: newsList[i].slug,
               title: newsList[i].name,
               location: 'HomePage_快訊跑馬燈');
-          RouteGenerator.navigateToStory(context, newsList[i].slug);
+          Get.to(() => StoryPage(
+                slug: newsList[i].slug,
+              ));
         },
       ));
     }

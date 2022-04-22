@@ -1,6 +1,7 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
+import 'package:tv/models/downloadFile.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/people.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -31,6 +32,7 @@ class Story {
   final List<Tag>? tags;
   final List<StoryListItem>? relatedStories;
   final List<String>? imageUrlList;
+  final List<DownloadFile>? downloadFileList;
 
   Story({
     this.style,
@@ -53,6 +55,7 @@ class Story {
     this.tags,
     this.relatedStories,
     this.imageUrlList,
+    this.downloadFileList,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -63,6 +66,7 @@ class Story {
     }
 
     List<String>? imageUrlList = [];
+    List<DownloadFile>? downloadFileList = [];
 
     List<Paragraph>? contentApiData;
     if (BaseModel.hasKey(json, 'contentApiData') &&
@@ -129,6 +133,7 @@ class Story {
       relatedStories: List<StoryListItem>.from(
           json['relatedPosts'].map((post) => StoryListItem.fromJson(post))),
       imageUrlList: imageUrlList,
+      downloadFileList: downloadFileList,
     );
   }
 }

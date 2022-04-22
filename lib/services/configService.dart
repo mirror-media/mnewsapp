@@ -9,7 +9,7 @@ class ConfigServices implements ConfigRepos {
   @override
   Future<bool> loadTheConfig(BuildContext context) async {
     FirebaseMessagingHelper firebaseMessagingHelper = FirebaseMessagingHelper();
-    await firebaseMessagingHelper.configFirebaseMessaging(context);
+    await firebaseMessagingHelper.configFirebaseMessaging();
     return true;
   }
 }

@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
-import 'package:tv/helpers/routeGenerator.dart';
+import 'package:tv/initialApp.dart';
+import 'package:tv/services/configService.dart';
 
 class MNewsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AnalyticsHelper.logAppOpen();
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'mnews',
       builder: (context, widget) {
         if (widget == null) {
@@ -27,8 +31,10 @@ class MNewsApp extends StatelessWidget {
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
-      initialRoute: RouteGenerator.root,
-      onGenerateRoute: RouteGenerator.generateRoute,
+      home: BlocProvider(
+        create: (context) => ConfigBloc(configRepos: ConfigServices()),
+        child: InitialApp(),
+      ),
     );
   }
 }

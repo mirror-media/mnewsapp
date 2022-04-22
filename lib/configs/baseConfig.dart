@@ -1,4 +1,7 @@
+enum Flavor { dev, prod }
+
 abstract class BaseConfig {
+  Flavor get flavor;
   String get graphqlApi;
   String get searchApi;
   String get youtubeApi;

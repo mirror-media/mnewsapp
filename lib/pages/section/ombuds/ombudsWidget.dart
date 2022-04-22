@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/blocs/video/video_cubit.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/models/video.dart' as myVideo;
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
+import 'package:tv/pages/section/ombuds/ombudsNewsListPage.dart';
+import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -202,7 +204,9 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
+        onTap: () => Get.to(() => StoryPage(
+              slug: 'biography',
+            )),
       )
     ]);
   }
@@ -305,7 +309,16 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           imageLocationString: tvSvg,
           title1: '關於鏡新聞',
           title2: '公評人',
-          onTap: () => RouteGenerator.navigateToStory(context, 'biography'),
+          onTap: () => Get.to(() => StoryPage(
+                slug: 'biography',
+              )),
+        ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: phoneSvg,
+          title1: '最新',
+          title2: '消息',
+          onTap: () => Get.to(() => OmbudsNewsListPage()),
         ),
         // OmbudsButton(
         //   width: ombudsWidth,
@@ -319,21 +332,27 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           imageLocationString: hammerSvg,
           title1: '外部公評人',
           title2: '設置章程',
-          onTap: () => RouteGenerator.navigateToStory(context, 'law'),
+          onTap: () => Get.to(() => StoryPage(
+                slug: 'law',
+              )),
         ),
         OmbudsButton(
           width: ombudsWidth,
           imageLocationString: paperSvg,
           title1: '新聞自律 /',
           title2: '他律規範',
-          onTap: () => RouteGenerator.navigateToStory(context, 'standards'),
+          onTap: () => Get.to(() => StoryPage(
+                slug: 'standards',
+              )),
         ),
         OmbudsButton(
           width: ombudsWidth,
           imageLocationString: faqSvg,
           title1: '常見問題',
           title2: 'FAQ',
-          onTap: () => RouteGenerator.navigateToStory(context, 'faq'),
+          onTap: () => Get.to(() => StoryPage(
+                slug: 'faq',
+              )),
         ),
         // OmbudsButton(
         //   width: ombudsWidth,
