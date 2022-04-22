@@ -3,19 +3,19 @@ import 'package:tv/configs/baseConfig.dart';
 import 'package:tv/helpers/environment.dart';
 
 class AdUnitIdHelper {
-  static String getAdUnitId(String position) {
+  static String getBannerAdUnitId(String position) {
     if (Environment().config.flavor == Flavor.dev) {
       return '/6499/example/banner';
     }
 
     if (GetPlatform.isAndroid) {
-      return _getAndroidAdUnitId(position);
+      return _getAndroidBannerAdUnitId(position);
     } else {
-      return _getIosAdUnitId(position);
+      return _getIosBannerAdUnitId(position);
     }
   }
 
-  static String _getAndroidAdUnitId(String position) {
+  static String _getAndroidBannerAdUnitId(String position) {
     switch (position) {
       case 'AT1':
         return '';
@@ -58,7 +58,7 @@ class AdUnitIdHelper {
     }
   }
 
-  static String _getIosAdUnitId(String position) {
+  static String _getIosBannerAdUnitId(String position) {
     switch (position) {
       case 'AT1':
         return '';
@@ -95,6 +95,40 @@ class AdUnitIdHelper {
       case 'ShowAT2':
         return '';
       case 'ShowAT3':
+        return '';
+      default:
+        return '';
+    }
+  }
+
+  static String getInterstitialAdUnitId(String position) {
+    if (Environment().config.flavor == Flavor.dev) {
+      return '/6499/example/interstitial';
+    }
+
+    if (GetPlatform.isAndroid) {
+      return _getAndroidInterstitialAdUnitId(position);
+    } else {
+      return _getIosInterstitialAdUnitId(position);
+    }
+  }
+
+  static String _getAndroidInterstitialAdUnitId(String position) {
+    switch (position) {
+      case 'Home':
+        return '';
+      case 'Story':
+        return '';
+      default:
+        return '';
+    }
+  }
+
+  static String _getIosInterstitialAdUnitId(String position) {
+    switch (position) {
+      case 'Home':
+        return '';
+      case 'Story':
         return '';
       default:
         return '';
