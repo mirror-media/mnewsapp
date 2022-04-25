@@ -8,6 +8,7 @@ import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
 import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -30,6 +31,7 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   final interstitialAdController = Get.find<InterstitialAdController>();
+  final TextScaleFactorController textScaleFactorController = Get.find();
   @override
   void initState() {
     _fetchContactById(widget.anchorpersonId);
@@ -192,8 +194,13 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
                   !_isNullOrEmpty(paragraph.contents![0].data)) {
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 16.0),
-                  child:
-                      paragraphFormat.parseTheParagraph(paragraph, context, 17),
+                  child: Obx(
+                    () => paragraphFormat.parseTheParagraph(
+                      paragraph,
+                      context,
+                      17 * textScaleFactorController.textScaleFactor.value,
+                    ),
+                  ),
                 );
               }
 

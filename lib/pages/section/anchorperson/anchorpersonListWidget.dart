@@ -6,6 +6,7 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/contact.dart';
@@ -18,6 +19,7 @@ class AnchorpersonListWidget extends StatefulWidget {
 }
 
 class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
+  final TextScaleFactorController textScaleFactorController = Get.find();
   @override
   void initState() {
     _fetchAnchorpersonOrHostContactList();
@@ -136,12 +138,16 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 17,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+            child: Obx(
+              () => Text(
+                title,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
               ),
             ),
           ),
@@ -186,9 +192,14 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                   ),
                 ),
                 Center(
-                  child: Text(
-                    contactList[index].name,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                  child: Obx(
+                    () => Text(
+                      contactList[index].name,
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                      textScaleFactor:
+                          textScaleFactorController.textScaleFactor.value,
+                    ),
                   ),
                 ),
               ]),
