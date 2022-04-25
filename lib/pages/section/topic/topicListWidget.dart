@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicList/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -22,6 +23,7 @@ class TopicListWidget extends StatefulWidget {
 class _TopicListWidgetState extends State<TopicListWidget> {
   List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
+  final TextScaleFactorController textScaleFactorController = Get.find();
   @override
   void initState() {
     _fetchTopicList();
@@ -122,7 +124,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
         crossAxisCount: 2,
         mainAxisSpacing: 24,
         crossAxisSpacing: 19,
-        childAspectRatio: 1.4,
+        childAspectRatio: 1.3,
       ),
       children: topicList.map((topic) => _buildItem(topic)).toList(),
     );
@@ -164,16 +166,19 @@ class _TopicListWidgetState extends State<TopicListWidget> {
           const SizedBox(
             height: 8,
           ),
-          ExtendedText(
-            topic.name,
-            joinZeroWidthSpace: true,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: 17,
-              color: themeColor,
+          Obx(
+            () => ExtendedText(
+              topic.name,
+              joinZeroWidthSpace: true,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+                color: themeColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
             ),
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),
