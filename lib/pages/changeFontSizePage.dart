@@ -200,34 +200,37 @@ class ChangeFontSizePage extends StatelessWidget {
   }
 
   Widget _optionButton(String text, double setValue) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Theme(
-          data: ThemeData(
-            unselectedWidgetColor: Colors.white,
+    return GestureDetector(
+      onTap: () => controller.textScaleFactor.value = setValue,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Theme(
+            data: ThemeData(
+              unselectedWidgetColor: Colors.white,
+            ),
+            child: Obx(() => Radio<double>(
+                  value: setValue,
+                  activeColor: Colors.white,
+                  groupValue: controller.textScaleFactor.value,
+                  onChanged: (selectValue) {
+                    controller.textScaleFactor.value = selectValue!;
+                  },
+                )),
           ),
-          child: Obx(() => Radio<double>(
-                value: setValue,
-                activeColor: Colors.white,
-                groupValue: controller.textScaleFactor.value,
-                onChanged: (selectValue) {
-                  controller.textScaleFactor.value = selectValue!;
-                },
-              )),
-        ),
-        const SizedBox(
-          height: 7,
-        ),
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 17,
-            fontWeight: FontWeight.w400,
+          const SizedBox(
+            height: 7,
           ),
-        )
-      ],
+          Text(
+            text,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 17,
+              fontWeight: FontWeight.w400,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
