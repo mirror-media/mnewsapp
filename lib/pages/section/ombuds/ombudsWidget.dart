@@ -105,10 +105,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               SizedBox(
                 height: 28,
               ),
-              // _appealBlock(width),
-              // SizedBox(
-              //   height: 28,
-              // ),
+              _appealBlock(width),
+              SizedBox(
+                height: 28,
+              ),
               _ombudsIntroBlock(width),
               SizedBox(
                 height: 28,
@@ -233,12 +233,15 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         ),
       ),
       SizedBox(height: 36),
-      // _appealButton(
-      //   width,
-      //   '向公評人申訴',
-      //   () => RouteGenerator.navigateToStory(context, 'complaint'),
-      // ),
-      // SizedBox(height: 12),
+      _appealButton(
+        width,
+        '向公評人申訴',
+        () => Get.to(() => StoryPage(
+              slug: 'complaint',
+              showAds: false,
+            )),
+      ),
+      SizedBox(height: 12),
       _appealButton(width, '向客服申訴', () async {
         final Uri emailLaunchUri = Uri(
           scheme: 'mailto',
@@ -322,13 +325,16 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           title2: '消息',
           onTap: () => Get.to(() => OmbudsNewsListPage()),
         ),
-        // OmbudsButton(
-        //   width: ombudsWidth,
-        //   imageLocationString: phoneSvg,
-        //   title1: '申訴',
-        //   title2: '流程',
-        //   onTap: () => RouteGenerator.navigateToStory(context, 'complaint'),
-        // ),
+        OmbudsButton(
+          width: ombudsWidth,
+          imageLocationString: paperSvg,
+          title1: '申訴',
+          title2: '流程',
+          onTap: () => Get.to(() => StoryPage(
+                slug: 'complaint',
+                showAds: false,
+              )),
+        ),
         OmbudsButton(
           width: ombudsWidth,
           imageLocationString: hammerSvg,
