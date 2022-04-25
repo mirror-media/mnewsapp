@@ -1,3 +1,4 @@
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:share_plus/share_plus.dart';
@@ -32,8 +33,9 @@ class TopicStoryListPage extends StatelessWidget {
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
-      title: Text(
+      title: ExtendedText(
         topic.name,
+        joinZeroWidthSpace: true,
         style: TextStyle(
           fontSize: 17,
           color: Colors.white,
