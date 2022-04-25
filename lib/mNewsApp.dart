@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/services/configService.dart';
@@ -14,6 +15,10 @@ class MNewsApp extends StatelessWidget {
     AnalyticsHelper.logAppOpen();
     Get.put<InterstitialAdController>(
       InterstitialAdController(),
+      permanent: true,
+    );
+    Get.put<TextScaleFactorController>(
+      TextScaleFactorController(),
       permanent: true,
     );
     return GetMaterialApp(
