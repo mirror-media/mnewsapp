@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -76,6 +77,7 @@ class NewsMarquee extends StatefulWidget {
 class _NewsMarqueeState extends State<NewsMarquee> {
   CarouselController? _carouselController;
   late CarouselOptions _options;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -105,10 +107,13 @@ class _NewsMarqueeState extends State<NewsMarquee> {
           color: newsMarqueeLeadingColor,
           child: Padding(
             padding: const EdgeInsets.all(12.0),
-            child: Text(
-              '最新',
-              style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-            ),
+            child: Obx(() => Text(
+                  '最新',
+                  style:
+                      TextStyle(fontSize: 17, color: newsMarqueeContentColor),
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
+                )),
           ),
         ),
         Expanded(
@@ -131,10 +136,13 @@ class _NewsMarqueeState extends State<NewsMarquee> {
           child: SizedBox(
             width: width,
             child: MarqueeWidget(
-              child: AutoSizeText(
-                newsList[i].name,
-                style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-              ),
+              child: Obx(() => AutoSizeText(
+                    newsList[i].name,
+                    style:
+                        TextStyle(fontSize: 17, color: newsMarqueeContentColor),
+                    textScaleFactor:
+                        textScaleFactorController.textScaleFactor.value,
+                  )),
               animationDuration: Duration(milliseconds: 4000),
             ),
           ),

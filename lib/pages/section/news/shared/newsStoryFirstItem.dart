@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -15,6 +17,7 @@ class NewsStoryFirstItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final TextScaleFactorController textScaleFactorController = Get.find();
     double width = MediaQuery.of(context).size.width;
     return InkWell(
         child: Column(
@@ -38,16 +41,19 @@ class NewsStoryFirstItem extends StatelessWidget {
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-              child: RichText(
-                overflow: TextOverflow.ellipsis,
-                maxLines: 3,
-                text: TextSpan(
+              child: Obx(
+                () => ExtendedText(
+                  storyListItem.name,
+                  joinZeroWidthSpace: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 20.0,
                     height: 1.5,
                   ),
-                  text: storyListItem.name,
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
                 ),
               ),
             ),
