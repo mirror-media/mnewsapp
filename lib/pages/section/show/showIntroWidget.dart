@@ -1,10 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/show/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/show/events.dart';
 import 'package:tv/blocs/show/states.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/showIntro.dart';
@@ -81,6 +83,7 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = width / 375 * 140;
+    final TextScaleFactorController textScaleFactorController = Get.find();
 
     return ListView(controller: _listviewController, children: [
       CachedNetworkImage(
@@ -103,22 +106,28 @@ class _ShowIntroWidgetState extends State<ShowIntroWidget> {
       SizedBox(height: 32),
       Padding(
         padding: const EdgeInsets.only(left: 24, right: 24),
-        child: Text(
-          widget.showIntro.name,
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
+        child: Obx(
+          () => Text(
+            widget.showIntro.name,
+            style: TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
       ),
       SizedBox(height: 12),
       Padding(
         padding: const EdgeInsets.only(left: 24, right: 24),
-        child: Text(
-          widget.showIntro.introduction,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w400,
+        child: Obx(
+          () => Text(
+            widget.showIntro.introduction,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w400,
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
       ),

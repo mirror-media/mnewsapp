@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
@@ -32,6 +34,7 @@ class ShowPlaylistTabContent extends StatefulWidget {
 class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   final int _fetchPlaylistMaxResult = 10;
   late bool _isLoading;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -234,16 +237,18 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  text: TextSpan(
+                Obx(
+                  () => ExtendedText(
+                    youtubePlaylistItem.name,
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 15.0,
                       fontWeight: FontWeight.w400,
                     ),
-                    text: youtubePlaylistItem.name,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textScaleFactor:
+                        textScaleFactorController.textScaleFactor.value,
                   ),
                 ),
                 if (youtubePlaylistItem.publishedAt != null) ...[
