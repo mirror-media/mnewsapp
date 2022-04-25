@@ -52,8 +52,7 @@ class ChangeFontSizePage extends StatelessWidget {
   }
 
   Widget _buildBody() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
       children: [
         const SizedBox(
           height: 24,
@@ -163,22 +162,20 @@ class ChangeFontSizePage extends StatelessWidget {
         const SizedBox(
           height: 12,
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-            child: Obx(
-              () => ExtendedText(
-                '台灣向世界動物衛生組織申請口蹄疫疫區除名，農委會指出仍未獲相關訊息，原先預估本週結果將會出爐，如今確認除名希望能洗掉23年來的汙名。',
-                style: TextStyle(
-                  fontSize: 17,
-                  height: 2,
-                  color: Colors.black,
-                ),
-                textScaleFactor: controller.textScaleFactor.value,
-                overflow: TextOverflow.ellipsis,
-                joinZeroWidthSpace: true,
-                maxLines: 4,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 28.0),
+          child: Obx(
+            () => ExtendedText(
+              '台灣向世界動物衛生組織申請口蹄疫疫區除名，農委會指出仍未獲相關訊息，原先預估本週結果將會出爐，如今確認除名希望能洗掉23年來的汙名。',
+              style: TextStyle(
+                fontSize: 17,
+                height: 2,
+                color: Colors.black,
               ),
+              textScaleFactor: controller.textScaleFactor.value,
+              overflow: TextOverflow.ellipsis,
+              joinZeroWidthSpace: true,
+              maxLines: 5,
             ),
           ),
         ),
