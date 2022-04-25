@@ -297,7 +297,7 @@ class _StoryWidgetState extends State<StoryWidget> {
     if (story.writers!.length > 0) {
       authorItems.add(
         Text(
-          "作者",
+          "記者",
           style: TextStyle(fontSize: 15, color: authorColor),
         ),
       );
