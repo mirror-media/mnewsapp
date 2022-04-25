@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -163,8 +164,9 @@ class _TopicListWidgetState extends State<TopicListWidget> {
           const SizedBox(
             height: 8,
           ),
-          Text(
+          ExtendedText(
             topic.name,
+            joinZeroWidthSpace: true,
             style: const TextStyle(
               fontWeight: FontWeight.w500,
               fontSize: 17,
