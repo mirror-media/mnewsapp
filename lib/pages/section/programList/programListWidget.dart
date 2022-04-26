@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/programList/program_list_cubit.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/programListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
@@ -16,6 +18,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   DateTime _selectedDate = DateTime.now();
   String _buttonText = "請選擇日期";
   bool _isDefault = true;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -93,11 +96,15 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                _buttonText,
-                style: TextStyle(
-                  color: _isDefault ? Color(0x3f000000) : Colors.black,
-                  fontSize: 17,
+              Obx(
+                () => Text(
+                  _buttonText,
+                  style: TextStyle(
+                    color: _isDefault ? Color(0x3f000000) : Colors.black,
+                    fontSize: 17,
+                  ),
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
                 ),
               ),
               FittedBox(
@@ -112,22 +119,31 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   }
 
   Widget _buildLabel() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          '時間',
-          style: TextStyle(fontSize: 15),
-        ),
-        Text(
-          '節目名稱',
-          style: TextStyle(fontSize: 15),
-        ),
-        Text(
-          '分級',
-          style: TextStyle(fontSize: 15),
-        ),
-      ],
+    return Obx(
+      () => Row(
+        children: [
+          Text(
+            '時間',
+            style: TextStyle(fontSize: 15),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+          const Spacer(),
+          SizedBox(
+            width: 24.5 * textScaleFactorController.textScaleFactor.value,
+          ),
+          Text(
+            '節目名稱',
+            style: TextStyle(fontSize: 15),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+          const Spacer(),
+          Text(
+            '分級',
+            style: TextStyle(fontSize: 15),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+        ],
+      ),
     );
   }
 
@@ -203,39 +219,51 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SizedBox(
+            width: 10,
+          ),
           Expanded(
-            child: Text(
-              now.programme,
-              style: TextStyle(fontSize: 15),
-              textAlign: TextAlign.center,
+            child: Obx(
+              () => Text(
+                now.programme,
+                style: TextStyle(fontSize: 15),
+                textAlign: TextAlign.center,
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
+              ),
             ),
           ),
           SizedBox(
-            width: 45,
+            width: 35,
           ),
           // newOrRepeat
         ],
       ),
     );
 
-    return Row(
-      children: [
-        Text(
-          time,
-          style: TextStyle(fontSize: 15),
-        ),
-        SizedBox(
-          width: 20,
-        ),
-        name,
-        SizedBox(
-          width: 20,
-        ),
-        Text(
-          now.showClass,
-          style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
-        )
-      ],
+    return Obx(
+      () => Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            time,
+            style: TextStyle(fontSize: 15),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+          // SizedBox(
+          //   width: 21,
+          // ),
+          name,
+          // SizedBox(
+          //   width: 15,
+          // ),
+          Text(
+            now.showClass,
+            style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          )
+        ],
+      ),
     );
   }
 }
