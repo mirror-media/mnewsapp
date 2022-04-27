@@ -318,8 +318,8 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     double ombudsWidth = (width - 48 - 26) / 2;
 
     return Obx(() {
-      double aspectRatio = ombudsWidth /
-          (50 * textScaleFactorController.textScaleFactor.value + 72);
+      double height = 54 * textScaleFactorController.textScaleFactor.value + 72;
+      double aspectRatio = ombudsWidth / height;
       return GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -333,6 +333,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         children: [
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: tvSvg,
             title1: textScaleFactorController.textScaleFactor.value > 1.0
                 ? '關於'
@@ -345,6 +346,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: phoneSvg,
             title1: '最新',
             title2: '消息',
@@ -352,6 +354,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: paperSvg,
             title1: '申訴',
             title2: '流程',
@@ -362,6 +365,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: hammerSvg,
             title1: textScaleFactorController.textScaleFactor.value > 1.0
                 ? '公評人'
@@ -374,6 +378,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: paperSvg,
             title1: '新聞自律 /',
             title2: '他律規範',
@@ -384,6 +389,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           ),
           OmbudsButton(
             width: ombudsWidth,
+            height: height,
             imageLocationString: faqSvg,
             title1: '常見問題',
             title2: 'FAQ',

@@ -11,11 +11,13 @@ class OmbudsButton extends StatelessWidget {
   final String title1;
   final String title2;
   final GestureTapCallback? onTap;
+  final double height;
   OmbudsButton({
     required this.width,
     required this.imageLocationString,
     required this.title1,
     required this.title2,
+    required this.height,
     this.onTap,
   });
 
@@ -36,6 +38,7 @@ class OmbudsButton extends StatelessWidget {
           ),
           Container(
             width: width,
+            height: height - 36,
             color: Colors.white,
             padding: const EdgeInsets.all(8.0),
             child: Obx(
