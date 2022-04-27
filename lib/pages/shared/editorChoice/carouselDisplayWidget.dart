@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -19,6 +21,7 @@ class CarouselDisplayWidget extends StatelessWidget {
   });
 
   final double aspectRatio = 16 / 9;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -95,15 +98,17 @@ class CarouselDisplayWidget extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: RichText(
-            overflow: TextOverflow.ellipsis,
-            maxLines: 2,
-            text: TextSpan(
+          child: Obx(
+            () => ExtendedText(
+              storyListItem.name,
+              joinZeroWidthSpace: true,
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2,
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 22.0,
               ),
-              text: storyListItem.name,
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
             ),
           ),
         ),

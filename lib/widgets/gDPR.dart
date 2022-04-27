@@ -86,8 +86,10 @@ class GDPR extends StatelessWidget {
                   ),
                 ),
                 onTap: () async {
-                  if (await canLaunch(Environment().config.privacyPolicyUrl)) {
-                    await launch(Environment().config.privacyPolicyUrl);
+                  Uri? uri =
+                      Uri.tryParse(Environment().config.privacyPolicyUrl);
+                  if (uri != null && await canLaunchUrl(uri)) {
+                    await launchUrl(uri);
                   } else {
                     throw 'Could not launch ${Environment().config.privacyPolicyUrl}';
                   }

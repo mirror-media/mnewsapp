@@ -15,7 +15,6 @@ class TopicListBloc extends Bloc<TopicListEvents, TopicListState> {
 
   TopicListBloc() : super(const TopicListState.initial());
 
-  @override
   Stream<TopicListState> mapEventToState(TopicListEvents event) async* {
     print(event.toString());
     try {

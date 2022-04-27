@@ -13,7 +13,6 @@ class ContactBloc extends Bloc<ContactEvents, ContactState> {
 
   ContactBloc({required this.contactRepos}) : super(ContactInitState());
 
-  @override
   Stream<ContactState> mapEventToState(ContactEvents event) async* {
     print(event.toString());
     try {

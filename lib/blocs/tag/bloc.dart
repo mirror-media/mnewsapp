@@ -17,7 +17,6 @@ class TagStoryListBloc extends Bloc<TagStoryListEvents, TagStoryListState> {
 
   TagStoryListBloc() : super(const TagStoryListState.initial());
 
-  @override
   Stream<TagStoryListState> mapEventToState(TagStoryListEvents event) async* {
     print(event.toString());
     try {

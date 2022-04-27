@@ -35,7 +35,10 @@ class FileDownloadWidget extends StatelessWidget {
           }
           return InkWell(
             onTap: () async {
-              await launch(downloadFileList[index - 1].url);
+              Uri? uri = Uri.tryParse(downloadFileList[index - 1].url);
+              if (uri != null) {
+                await launchUrl(uri);
+              }
             },
             child: Card(
               elevation: 5,

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -36,6 +37,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   CarouselController carouselController = CarouselController();
   bool _isLoading = false;
   final interstitialAdController = Get.find<InterstitialAdController>();
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -293,9 +295,13 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
                     const SizedBox(
                       width: 13,
                     ),
-                    const Text(
-                      '上一則影片',
-                      style: TextStyle(color: themeColor, fontSize: 14),
+                    Obx(
+                      () => Text(
+                        '上一則影片',
+                        style: TextStyle(color: themeColor, fontSize: 14),
+                        textScaleFactor:
+                            textScaleFactorController.textScaleFactor.value,
+                      ),
                     ),
                   ],
                 ),
@@ -307,9 +313,13 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    const Text(
-                      '下一則影片',
-                      style: TextStyle(color: themeColor, fontSize: 14),
+                    Obx(
+                      () => Text(
+                        '下一則影片',
+                        style: TextStyle(color: themeColor, fontSize: 14),
+                        textScaleFactor:
+                            textScaleFactorController.textScaleFactor.value,
+                      ),
                     ),
                     const SizedBox(
                       width: 13,
@@ -393,32 +403,43 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                storyListItem.name,
-                softWrap: true,
-                maxLines: 2,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.w400,
-                  fontSize: 17,
+              Obx(
+                () => Text(
+                  storyListItem.name,
+                  softWrap: true,
+                  maxLines: 2,
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 17,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
                 ),
-                overflow: TextOverflow.ellipsis,
               ),
               if (storyListItem.categoryList != null &&
                   storyListItem.categoryList!.isNotEmpty)
                 Container(
                   color: const Color.fromRGBO(151, 151, 151, 1),
-                  padding: const EdgeInsets.only(left: 6, right: 6, bottom: 3),
-                  child: Text(
-                    storyListItem.categoryList![0].name,
-                    softWrap: true,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 13,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  width: 50,
+                  alignment: Alignment.center,
+                  child: Obx(
+                    () => Text(
+                      storyListItem.categoryList![0].name,
+                      softWrap: true,
+                      maxLines: 1,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      textScaleFactor:
+                          textScaleFactorController.textScaleFactor.value,
                     ),
-                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
             ],

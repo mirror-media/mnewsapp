@@ -13,7 +13,6 @@ class StoryBloc extends Bloc<StoryEvents, StoryState> {
 
   StoryBloc({required this.storyRepos}) : super(StoryInitState());
 
-  @override
   Stream<StoryState> mapEventToState(StoryEvents event) async* {
     if (event is FetchPublishedStoryBySlug) {
       print(this.toString());

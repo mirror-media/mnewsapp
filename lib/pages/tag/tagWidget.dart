@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:tv/blocs/tag/bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tag.dart';
@@ -20,6 +21,7 @@ class _TagWidgetState extends State<TagWidget> {
   bool loadingMore = false;
   late List<StoryListItem> _tagStoryList;
   int _allStoryCount = 0;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -137,9 +139,15 @@ class _TagWidgetState extends State<TagWidget> {
             width: 16,
           ),
           Expanded(
-            child: Text(
-              story.name,
-              style: TextStyle(fontSize: 20),
+            child: Obx(
+              () => Text(
+                story.name,
+                style: TextStyle(fontSize: 20),
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
+              ),
             ),
           ),
         ],

@@ -6,6 +6,7 @@ import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/topic.dart';
+import 'package:tv/pages/changeFontSizePage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
@@ -68,14 +69,7 @@ class _HomePageState extends State<HomePage> {
           return Container();
         } else {
           MNewsSection sectionId = state.sectionId;
-          return Column(
-            children: [
-              Expanded(
-                child: _buildBody(sectionId),
-              ),
-              // AnchoredBannerAdWidget(),
-            ],
-          );
+          return _buildBody(sectionId);
         }
       }),
     );
@@ -97,8 +91,13 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: <Widget>[
         IconButton(
+          icon: Icon(Icons.font_download),
+          tooltip: '更改字體大小',
+          onPressed: () => Get.to(() => ChangeFontSizePage()),
+        ),
+        IconButton(
           icon: Icon(Icons.search),
-          tooltip: 'Search',
+          tooltip: '搜尋',
           onPressed: () => Get.to(() => SearchPage()),
         ),
       ],

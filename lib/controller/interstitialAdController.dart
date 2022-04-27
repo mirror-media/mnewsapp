@@ -7,12 +7,11 @@ import 'package:tv/helpers/adUnitIdHelper.dart';
 class InterstitialAdController {
   var storyCounter = 0.obs;
 
-  void openStory() {
+  void openStory() async {
     storyCounter++;
-  }
-
-  Future<void> showStoryInterstitialAd() async {
-    await showInterstitialAd(AdUnitIdHelper.getInterstitialAdUnitId('Story'));
+    if (storyCounter.isOdd) {
+      await showInterstitialAd(AdUnitIdHelper.getInterstitialAdUnitId('Story'));
+    }
   }
 
   Future<void> ramdomShowInterstitialAd() async {

@@ -17,7 +17,6 @@ class CategoriesBloc extends Bloc<CategoriesEvents, CategoriesState> {
 
   CategoriesBloc({required this.categoryRepos}) : super(CategoriesInitState());
 
-  @override
   Stream<CategoriesState> mapEventToState(CategoriesEvents event) async* {
     print(event.toString());
     try {

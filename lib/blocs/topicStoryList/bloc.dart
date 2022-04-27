@@ -18,7 +18,6 @@ class TopicStoryListBloc
 
   TopicStoryListBloc() : super(const TopicStoryListState.initial());
 
-  @override
   Stream<TopicStoryListState> mapEventToState(
       TopicStoryListEvents event) async* {
     print(event.toString());
