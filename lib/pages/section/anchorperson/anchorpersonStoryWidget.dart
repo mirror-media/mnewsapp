@@ -159,8 +159,9 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   Widget _thirdPartyMediaLinkButton(IconData icon, String link) {
     return ElevatedButton(
       onPressed: () async {
-        if (await canLaunch(link)) {
-          await launch(link);
+        Uri? uri = Uri.tryParse(link);
+        if (uri != null && await canLaunchUrl(uri)) {
+          await launchUrl(uri);
         } else {
           throw 'Could not launch $link';
         }

@@ -266,8 +266,8 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           path: mNewsMail,
         );
 
-        if (await canLaunch(emailLaunchUri.toString())) {
-          await launch(emailLaunchUri.toString());
+        if (await canLaunchUrl(emailLaunchUri)) {
+          await launchUrl(emailLaunchUri);
         } else {
           throw 'Could not launch $mNewsMail';
         }
