@@ -5,6 +5,7 @@ import 'package:tv/blocs/story/bloc.dart';
 import 'package:tv/blocs/story/events.dart';
 import 'package:tv/blocs/story/states.dart';
 import 'package:tv/blocs/video/video_cubit.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/paragraph.dart';
@@ -25,6 +26,7 @@ class OmbudsWidget extends StatefulWidget {
 
 class _OmbudsWidgetState extends State<OmbudsWidget> {
   //double _leftAndRightPaddingNumber = 24.0;
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
@@ -168,11 +170,14 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          '外部公評人翁秀琪',
-          style: TextStyle(
-            fontSize: 20,
-            color: themeColor,
+        Obx(
+          () => Text(
+            '外部公評人翁秀琪',
+            style: TextStyle(
+              fontSize: 20,
+              color: themeColor,
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
         SizedBox(height: 8.0),
@@ -181,10 +186,14 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             physics: NeverScrollableScrollPhysics(),
             itemCount: unstyledBrief.length,
             itemBuilder: (context, index) {
-              return Text(
-                unstyledBrief[index].contents![0].data,
-                style: TextStyle(
-                  fontSize: 17,
+              return Obx(
+                () => Text(
+                  unstyledBrief[index].contents![0].data,
+                  style: TextStyle(
+                    fontSize: 17,
+                  ),
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
                 ),
               );
             }),
@@ -196,12 +205,15 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Container(),
       InkWell(
-        child: Text(
-          '了解更多＞',
-          style: TextStyle(
-            fontSize: 20,
-            decoration: TextDecoration.underline,
-            fontWeight: FontWeight.w600,
+        child: Obx(
+          () => Text(
+            '了解更多＞',
+            style: TextStyle(
+              fontSize: 20,
+              decoration: TextDecoration.underline,
+              fontWeight: FontWeight.w600,
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
         onTap: () => Get.to(() => StoryPage(
@@ -215,21 +227,27 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   // ignore: unused_element
   Widget _appealBlock(double width) {
     return Column(children: [
-      Text(
-        '我要向公評人申訴',
-        style: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.w500,
-          color: Color(0xff004DBC),
+      Obx(
+        () => Text(
+          '我要向公評人申訴',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.w500,
+            color: Color(0xff004DBC),
+          ),
+          textScaleFactor: textScaleFactorController.textScaleFactor.value,
         ),
       ),
       SizedBox(height: 24),
-      Text(
-        '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵；如果您對於我們的客服有意見，請按下方的向客服申訴鍵。',
-        style: TextStyle(
-          fontSize: 15,
-          fontWeight: FontWeight.w400,
-          color: Color(0xff014DB8),
+      Obx(
+        () => Text(
+          '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵；如果您對於我們的客服有意見，請按下方的向客服申訴鍵。',
+          style: TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff014DB8),
+          ),
+          textScaleFactor: textScaleFactorController.textScaleFactor.value,
         ),
       ),
       SizedBox(height: 36),
@@ -267,12 +285,15 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
       child: OutlinedButton(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
-          child: Text(
-            title,
-            style: TextStyle(
-              fontSize: 17,
-              fontWeight: FontWeight.w500,
-              color: Color(0xff014DB8),
+          child: Obx(
+            () => Text(
+              title,
+              style: TextStyle(
+                fontSize: 17,
+                fontWeight: FontWeight.w500,
+                color: Color(0xff014DB8),
+              ),
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
             ),
           ),
         ),
@@ -295,84 +316,91 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
 
   Widget _ombudsIntroBlock(double width) {
     double ombudsWidth = (width - 48 - 26) / 2;
-    double aspectRatio = ombudsWidth / 121;
 
-    return GridView(
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        mainAxisSpacing: 24,
-        crossAxisSpacing: 26,
-        childAspectRatio: aspectRatio,
-      ),
-      padding: const EdgeInsets.all(0),
-      physics: const NeverScrollableScrollPhysics(),
-      shrinkWrap: true,
-      children: [
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: tvSvg,
-          title1: '關於鏡新聞',
-          title2: '公評人',
-          onTap: () => Get.to(() => StoryPage(
-                slug: 'biography',
-                showAds: false,
-              )),
+    return Obx(() {
+      double aspectRatio = ombudsWidth /
+          (50 * textScaleFactorController.textScaleFactor.value + 72);
+      return GridView(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 24 * textScaleFactorController.textScaleFactor.value,
+          crossAxisSpacing: 26,
+          childAspectRatio: aspectRatio,
         ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: phoneSvg,
-          title1: '最新',
-          title2: '消息',
-          onTap: () => Get.to(() => OmbudsNewsListPage()),
-        ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: paperSvg,
-          title1: '申訴',
-          title2: '流程',
-          onTap: () => Get.to(() => StoryPage(
-                slug: 'complaint',
-                showAds: false,
-              )),
-        ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: hammerSvg,
-          title1: '外部公評人',
-          title2: '設置章程',
-          onTap: () => Get.to(() => StoryPage(
-                slug: 'law',
-                showAds: false,
-              )),
-        ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: paperSvg,
-          title1: '新聞自律 /',
-          title2: '他律規範',
-          onTap: () => Get.to(() => StoryPage(
-                slug: 'standards',
-                showAds: false,
-              )),
-        ),
-        OmbudsButton(
-          width: ombudsWidth,
-          imageLocationString: faqSvg,
-          title1: '常見問題',
-          title2: 'FAQ',
-          onTap: () => Get.to(() => StoryPage(
-                slug: 'faq',
-                showAds: false,
-              )),
-        ),
-        // OmbudsButton(
-        //   width: ombudsWidth,
-        //   imageLocationString: reportSvg,
-        //   title1: '季報',
-        //   title2: '年報',
-        //   onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
-        // ),
-      ],
-    );
+        padding: const EdgeInsets.all(0),
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
+        children: [
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: tvSvg,
+            title1: textScaleFactorController.textScaleFactor.value > 1.0
+                ? '關於'
+                : '關於鏡新聞',
+            title2: '公評人',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'biography',
+                  showAds: false,
+                )),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: phoneSvg,
+            title1: '最新',
+            title2: '消息',
+            onTap: () => Get.to(() => OmbudsNewsListPage()),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: paperSvg,
+            title1: '申訴',
+            title2: '流程',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'complaint',
+                  showAds: false,
+                )),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: hammerSvg,
+            title1: textScaleFactorController.textScaleFactor.value > 1.0
+                ? '公評人'
+                : '外部公評人',
+            title2: '設置章程',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'law',
+                  showAds: false,
+                )),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: paperSvg,
+            title1: '新聞自律 /',
+            title2: '他律規範',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'standards',
+                  showAds: false,
+                )),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            imageLocationString: faqSvg,
+            title1: '常見問題',
+            title2: 'FAQ',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'faq',
+                  showAds: false,
+                )),
+          ),
+          // OmbudsButton(
+          //   width: ombudsWidth,
+          //   imageLocationString: reportSvg,
+          //   title1: '季報',
+          //   title2: '年報',
+          //   onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
+          // ),
+        ],
+      );
+    });
   }
 }

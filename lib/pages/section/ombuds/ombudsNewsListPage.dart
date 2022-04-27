@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/ombuds/ombudsNewsController.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -12,6 +13,7 @@ class OmbudsNewsListPage extends StatelessWidget {
   OmbudsNewsListPage({Key? key}) : super(key: key);
   final OmbudsNewsController controller =
       Get.put(OmbudsNewsController(OmbudsService()));
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +34,7 @@ class OmbudsNewsListPage extends StatelessWidget {
           Icons.arrow_back_ios,
           color: Colors.white,
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: () => Get.back(),
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
@@ -119,9 +121,13 @@ class OmbudsNewsListPage extends StatelessWidget {
             width: 16,
           ),
           Expanded(
-            child: Text(
-              story.name,
-              style: TextStyle(fontSize: 20),
+            child: Obx(
+              () => Text(
+                story.name,
+                style: TextStyle(fontSize: 20),
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
+              ),
             ),
           ),
         ],
