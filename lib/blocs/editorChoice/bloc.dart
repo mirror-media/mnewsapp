@@ -27,7 +27,6 @@ class EditorChoiceBloc extends Bloc<EditorChoiceEvents, EditorChoiceState> {
     }
   }
 
-  @override
   Stream<EditorChoiceState> mapEventToState(EditorChoiceEvents event) async* {
     yield EditorChoiceLoading();
     try {

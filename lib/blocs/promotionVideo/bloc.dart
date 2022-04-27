@@ -15,7 +15,6 @@ class PromotionVideoBloc
   PromotionVideoBloc({required this.promotionVideosRepos})
       : super(PromotionVideoInitState());
 
-  @override
   Stream<PromotionVideoState> mapEventToState(
       PromotionVideoEvents event) async* {
     print(event.toString());

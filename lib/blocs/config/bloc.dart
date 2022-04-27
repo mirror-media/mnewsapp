@@ -12,7 +12,6 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
 
   ConfigBloc({required this.configRepos}) : super(ConfigInitState());
 
-  @override
   Stream<ConfigState> mapEventToState(ConfigEvents event) async* {
     print(event.toString());
     try {

@@ -17,7 +17,6 @@ class YoutubePlaylistBloc
   YoutubePlaylistBloc({required this.youtubePlaylistRepos})
       : super(YoutubePlaylistInitState());
 
-  @override
   Stream<YoutubePlaylistState> mapEventToState(
       YoutubePlaylistEvents event) async* {
     print(event.toString());

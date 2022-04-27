@@ -14,7 +14,6 @@ class NotificationSettingBloc
   NotificationSettingBloc({required this.notificationSettingRepos})
       : super(NotificationSettingInitState());
 
-  @override
   Stream<NotificationSettingState> mapEventToState(
       NotificationSettingEvents event) async* {
     print(event.toString());

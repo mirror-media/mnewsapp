@@ -11,7 +11,6 @@ class ShowIntroBloc extends Bloc<ShowEvents, ShowState> {
 
   ShowIntroBloc({required this.showRepos}) : super(ShowInitState());
 
-  @override
   Stream<ShowState> mapEventToState(ShowEvents event) async* {
     print(event.toString());
     try {

@@ -14,7 +14,6 @@ class SearchBloc extends Bloc<SearchEvents, SearchState> {
 
   SearchBloc({required this.searchRepos}) : super(SearchInitState());
 
-  @override
   Stream<SearchState> mapEventToState(SearchEvents event) async* {
     print(event.toString());
     try {
