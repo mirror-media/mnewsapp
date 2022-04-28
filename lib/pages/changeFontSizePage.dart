@@ -102,7 +102,7 @@ class ChangeFontSizePage extends StatelessWidget {
                 Expanded(
                   child: Obx(
                     () => Text(
-                      '把握牛年添好運　易經命理師：6生肖運勢最強',
+                      '上千隻列隊游成魚球　小琉球潛水目睹「梭魚風暴」',
                       overflow: TextOverflow.ellipsis,
                       maxLines: 4,
                       style: TextStyle(
@@ -149,7 +149,7 @@ class ChangeFontSizePage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
           child: Obx(
             () => Text(
-              '等24年等到了好消息  總統蔡英文：口蹄疫疫區台灣確定除名',
+              '1家公司工作84年  百歲老翁獲金氏世界紀錄',
               style: TextStyle(
                 fontSize: 26,
                 fontWeight: FontWeight.w500,
@@ -166,7 +166,7 @@ class ChangeFontSizePage extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 28.0),
           child: Obx(
             () => ExtendedText(
-              '台灣向世界動物衛生組織申請口蹄疫疫區除名，農委會指出仍未獲相關訊息，原先預估本週結果將會出爐，如今確認除名希望能洗掉23年來的汙名。',
+              '工作，累了嗎？相信大家對於拿捏工作和生活的平衡，都有深刻的體會和感觸。巴西南部有一名百歲老翁奧斯曼，在同一家紡織公司連續任職長達84年，他不僅獲得金氏世界紀錄的認證，頒獎後，奧斯曼每到上班日還是鬥志昂揚。外媒訪問奧斯曼「活到老，工作到老」的訣竅，他說做你喜愛做的事，遠離垃圾食物。',
               style: TextStyle(
                 fontSize: 17,
                 height: 2,
