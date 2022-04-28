@@ -10,32 +10,35 @@ import 'package:tv/services/topicService.dart';
 class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
   final ConfigRepos configRepos;
 
-  ConfigBloc({required this.configRepos}) : super(ConfigInitState());
+  ConfigBloc({required this.configRepos}) : super(ConfigInitState()) {
+    on<ConfigEvents>(
+      (event, emit) async {
+        print(event.toString());
+        try {
+          emit(ConfigLoading());
 
-  Stream<ConfigState> mapEventToState(ConfigEvents event) async* {
-    print(event.toString());
-    try {
-      yield ConfigLoading();
-      bool isSuccess = await configRepos.loadTheConfig(event.context);
-      // fetch min app version setting in firebase_remote_config
-      FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-      await remoteConfig.setConfigSettings(RemoteConfigSettings(
-        fetchTimeout: Duration(seconds: 10),
-        minimumFetchInterval: Duration(hours: 12),
-      ));
-      await remoteConfig.fetchAndActivate();
-      String minAppVersion = remoteConfig.getString('min_version_number');
-      // fetch topic list need to show in drawer
-      List<Topic> topics = await TopicService().fetchFeaturedTopics();
-      yield ConfigLoaded(
-        isSuccess: isSuccess,
-        minAppVersion: minAppVersion,
-        topics: topics,
-      );
-    } catch (e) {
-      yield ConfigError(
-        error: UnknownException(e.toString()),
-      );
-    }
+          bool isSuccess = await configRepos.loadTheConfig(event.context);
+          // fetch min app version setting in firebase_remote_config
+          FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+          await remoteConfig.setConfigSettings(RemoteConfigSettings(
+            fetchTimeout: Duration(seconds: 10),
+            minimumFetchInterval: Duration(hours: 12),
+          ));
+          await remoteConfig.fetchAndActivate();
+          String minAppVersion = remoteConfig.getString('min_version_number');
+          // fetch topic list need to show in drawer
+          List<Topic> topics = await TopicService().fetchFeaturedTopics();
+          emit(ConfigLoaded(
+            isSuccess: isSuccess,
+            minAppVersion: minAppVersion,
+            topics: topics,
+          ));
+        } catch (e) {
+          emit(ConfigError(
+            error: UnknownException(e.toString()),
+          ));
+        }
+      },
+    );
   }
 }

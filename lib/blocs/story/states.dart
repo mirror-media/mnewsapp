@@ -11,8 +11,7 @@ class StoryLoading extends StoryState {}
 
 class StoryLoaded extends StoryState {
   final Story? story;
-  final double textSize;
-  StoryLoaded({required this.story, required this.textSize});
+  StoryLoaded({required this.story});
 }
 
 class TextSizeChanged extends StoryState {
