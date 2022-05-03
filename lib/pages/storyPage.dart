@@ -153,6 +153,7 @@ class StoryPage extends StatelessWidget {
             story.downloadFileList!.isNotEmpty)
           FileDownloadWidget(
             story.downloadFileList!,
+            textSize: 17 * textScaleFactorController.textScaleFactor.value,
           ),
         if (showAds)
           InlineBannerAdWidget(

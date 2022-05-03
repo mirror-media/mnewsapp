@@ -66,7 +66,6 @@ class Story {
     }
 
     List<String>? imageUrlList = [];
-    List<DownloadFile>? downloadFileList = [];
 
     List<Paragraph>? contentApiData;
     if (BaseModel.hasKey(json, 'contentApiData') &&
@@ -103,6 +102,12 @@ class Story {
     if (BaseModel.checkJsonKeys(json, ['categories'])) {
       categoryList = List<Category>.from(
           json['categories'].map((category) => Category.fromJson(category)));
+    }
+
+    List<DownloadFile>? downloadFileList = [];
+    if (BaseModel.checkJsonKeys(json, ['download'])) {
+      downloadFileList = List<DownloadFile>.from(
+          json['download'].map((download) => DownloadFile.fromJson(download)));
     }
 
     return Story(
