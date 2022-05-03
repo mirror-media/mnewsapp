@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -37,7 +39,12 @@ class FileDownloadWidget extends StatelessWidget {
             onTap: () async {
               Uri? uri = Uri.tryParse(downloadFileList[index - 1].url);
               if (uri != null) {
-                await launchUrl(uri);
+                await launchUrl(
+                  uri,
+                  mode: Platform.isIOS
+                      ? LaunchMode.platformDefault
+                      : LaunchMode.externalApplication,
+                );
               }
             },
             child: Card(
