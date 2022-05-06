@@ -11,6 +11,7 @@ class AnchoredBannerAdWidget extends StatefulWidget {
 class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> {
   AdManagerBannerAd? _anchoredAdaptiveAd;
   bool _isLoaded = false;
+  bool _loadFailed = false;
 
   @override
   void didChangeDependencies() {
@@ -46,6 +47,9 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> {
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('Anchored adaptive banner failedToLoad: $error');
           ad.dispose();
+          setState(() {
+            _loadFailed = true;
+          });
         },
       ),
     );
@@ -63,15 +67,19 @@ class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> {
           child: AdWidget(ad: _anchoredAdaptiveAd!),
         ),
       );
-    } else {
-      return SafeArea(
-        child: Container(
-          color: Colors.white,
-          width: 320,
-          height: 50,
-        ),
-      );
     }
+
+    if (_loadFailed) {
+      return Container();
+    }
+
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        width: 320,
+        height: 50,
+      ),
+    );
   }
 
   @override

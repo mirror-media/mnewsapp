@@ -21,6 +21,7 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
     with AutomaticKeepAliveClientMixin {
   AdManagerBannerAd? _inlineAdaptiveAd;
   bool _isLoaded = false;
+  bool _loadFailed = false;
   AdSize? _adSize;
 
   @override
@@ -67,6 +68,9 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
           print('Inline adaptive banner failedToLoad: $error');
           ad.dispose();
+          setState(() {
+            _loadFailed = true;
+          });
         },
       ),
     );
@@ -92,6 +96,12 @@ class _InlineBannerAdWidgetState extends State<InlineBannerAdWidget>
           vertical: 24,
           horizontal: horizontalMargin,
         ),
+      );
+    }
+
+    if (_loadFailed) {
+      return Container(
+        height: 24,
       );
     }
 
