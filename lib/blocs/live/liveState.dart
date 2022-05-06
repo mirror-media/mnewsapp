@@ -11,8 +11,8 @@ class LiveIdLoaded extends LiveState {
 }
 
 class LiveIdListLoaded extends LiveState {
-  final List<String> liveIdList;
-  LiveIdListLoaded({required this.liveIdList});
+  final List<LiveCamItem> liveCamList;
+  LiveIdListLoaded({required this.liveCamList});
 }
 
 class LiveError extends LiveState {

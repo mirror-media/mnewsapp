@@ -3,7 +3,9 @@ import 'dart:convert';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
+import 'package:tv/models/liveCamItem.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:http/http.dart' as http;
 
 abstract class LiveRepos {
   Future<String> fetchLiveIdByPostId(String id);
@@ -50,7 +52,7 @@ class LiveServices implements LiveRepos {
     return youtubeId ?? '';
   }
 
-  Future<List<String>> fetchLiveIdByPostCategory(String category) async {
+  Future<List<LiveCamItem>> fetchLiveIdByPostCategory(String category) async {
     final String query = """
     query(
       \$where: VideoWhereInput!,
@@ -81,6 +83,7 @@ class LiveServices implements LiveRepos {
         headers: {"Content-Type": "application/json"});
 
     List<String> youtubeIdList = [];
+    List<LiveCamItem> liveCamList = [];
     try {
       if (jsonResponse['data']['allVideos'] != null) {
         jsonResponse['data']['allVideos'].forEach((video) {
@@ -89,10 +92,29 @@ class LiveServices implements LiveRepos {
             if (youtubeId != null) youtubeIdList.add(youtubeId);
           }
         });
+
+        YoutubeExplode yt = YoutubeExplode();
+        for (var item in youtubeIdList) {
+          Video video = await yt.videos.get(item);
+          String videoUrl;
+          if (video.isLive) {
+            videoUrl = await yt.videos.streamsClient
+                .getHttpLiveStreamUrl(VideoId(item));
+          } else {
+            var manifest = await yt.videos.streamsClient.getManifest(item);
+            var streamInfo = manifest.muxed.sortByVideoQuality().first;
+            videoUrl = streamInfo.url.toString();
+          }
+          final reponse = await http.get(Uri.parse(videoUrl));
+          if (reponse.statusCode == 200) {
+            liveCamList.add(LiveCamItem(youtubeId: item, isLive: video.isLive));
+          }
+        }
+        yt.close();
       }
     } catch (e) {
       throw FormatException(e.toString());
     }
-    return youtubeIdList;
+    return liveCamList;
   }
 }

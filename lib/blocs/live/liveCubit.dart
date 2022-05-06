@@ -4,6 +4,7 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import 'package:tv/helpers/apiException.dart';
 import 'package:tv/helpers/exceptions.dart';
+import 'package:tv/models/liveCamItem.dart';
 import 'package:tv/services/liveService.dart';
 
 part 'liveState.dart';
@@ -58,9 +59,9 @@ class LiveCubit extends Cubit<LiveState> {
   void fetchLiveIdList(String category) async {
     print('Fetch live id list');
     try {
-      List<String> liveIdList =
+      List<LiveCamItem> liveCamList =
           await LiveServices().fetchLiveIdByPostCategory(category);
-      emit(LiveIdListLoaded(liveIdList: liveIdList));
+      emit(LiveIdListLoaded(liveCamList: liveCamList));
     } on SocketException {
       emit(LiveError(
         error: NoInternetException('No Internet'),
