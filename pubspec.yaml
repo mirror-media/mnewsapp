@@ -108,6 +108,8 @@ dependencies:
   app_tracking_transparency: ^2.0.2+4
   # fix error of chinese and english mix text
   extended_text: ^9.0.0
+  # package info
+  package_info_plus: ^1.4.2
 
 flutter_icons:
   android: "launcher_icon"

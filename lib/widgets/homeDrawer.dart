@@ -12,7 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
   final List<Topic> topics;
-  const HomeDrawer(this.topics);
+  final String appVersion;
+  const HomeDrawer(this.topics, this.appVersion);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
 }
@@ -251,6 +252,12 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       '鏡新聞 Instagram', 'https://www.instagram.com/mnewstw/'),
                   _thirdPartyMediaLinkButton(
                       Icons.email, '聯絡我們', 'mailto:mnews.cs@mnews.tw'),
+                  Text(
+                    widget.appVersion,
+                    style: const TextStyle(
+                      fontSize: 12,
+                    ),
+                  ),
                 ],
               ),
             ),

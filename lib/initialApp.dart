@@ -49,7 +49,7 @@ class _InitialAppState extends State<InitialApp> {
               : UpgradeDialogStyle.cupertino,
           child: BlocProvider(
             create: (_) => SectionCubit(),
-            child: HomePage(state.topics),
+            child: HomePage(state.topics, state.appVersion),
           ),
         );
       }

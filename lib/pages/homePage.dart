@@ -21,7 +21,8 @@ import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
   final List<Topic> topics;
-  const HomePage(this.topics);
+  final String appVersion;
+  const HomePage(this.topics, this.appVersion);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -59,7 +60,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      drawer: HomeDrawer(widget.topics),
+      drawer: HomeDrawer(widget.topics, widget.appVersion),
       appBar: _buildBar(context, _scaffoldkey),
       body: BlocBuilder<SectionCubit, SectionStateCubit>(
           builder: (BuildContext context, SectionStateCubit state) {
