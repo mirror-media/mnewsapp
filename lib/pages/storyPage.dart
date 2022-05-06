@@ -65,9 +65,7 @@ class StoryPage extends StatelessWidget {
           }
 
           body = controller.error.renderWidget();
-        }
-
-        if (!controller.isLoading) {
+        } else if (!controller.isLoading) {
           body = Column(
             children: [
               Expanded(
