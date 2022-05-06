@@ -5,10 +5,10 @@ import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 
 abstract class CategoryRepos {
-  Future<CategoryList> fetchCategoryList();
+  Future<List<Category>> fetchCategoryList();
 }
 
 class CategoryServices implements CategoryRepos {
@@ -18,14 +18,15 @@ class CategoryServices implements CategoryRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<CategoryList> fetchCategoryList() async {
+  Future<List<Category>> fetchCategoryList() async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
         Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
-    CategoryList categoryList =
-        CategoryList.fromJson(jsonResponse['allCategories']);
+    List<Category> categoryList = List<Category>.from(
+        jsonResponse['allCategories']
+            .map((category) => Category.fromJson(category)));
 
     /// cuz video page is in the home drawer sections
     categoryList.removeWhere((category) => category.slug == 'video');
@@ -36,7 +37,9 @@ class CategoryServices implements CategoryRepos {
     String menuJsonPath = isVideo ? videoMenuJson : menuJson;
     String jsonFixed = await rootBundle.loadString(menuJsonPath);
     final fixedMenu = json.decode(jsonFixed);
-    CategoryList fixedCategoryList = CategoryList.fromJson(fixedMenu);
+    List<Category> fixedCategoryList = List<Category>.from(
+        fixedMenu.map((category) => Category.fromJson(category)));
+
     fixedCategoryList.addAll(categoryList);
 
     return fixedCategoryList;

@@ -1,9 +1,11 @@
-import 'package:tv/models/contentList.dart';
+import 'dart:convert';
+
+import 'package:tv/models/content.dart';
 
 class Paragraph {
   String? styles;
   String? type;
-  ContentList? contents;
+  List<Content>? contents;
 
   Paragraph({
     this.styles,
@@ -16,12 +18,31 @@ class Paragraph {
       return Paragraph();
     }
 
-    ContentList contents;
-    contents = ContentList.fromJson(json["content"]);
+    List<Content> contents = List<Content>.from(
+        json["content"].map((content) => Content.fromJson(content)));
 
     return Paragraph(
       type: json['type'],
       contents: contents,
     );
+  }
+
+  static List<Paragraph> parseResponseBody(String body,
+      {bool isNotApiData: false}) {
+    try {
+      final jsonData = json.decode(body);
+      if (isNotApiData) {
+        return List<Paragraph>.from(jsonData['apiData']
+            .map((paragraph) => Paragraph.fromJson(paragraph)));
+      }
+      if (jsonData == "" || jsonData == null) {
+        return [];
+      }
+
+      return List<Paragraph>.from(
+          jsonData.map((paragraph) => Paragraph.fromJson(paragraph)));
+    } catch (e) {
+      return [];
+    }
   }
 }

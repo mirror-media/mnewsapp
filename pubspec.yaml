@@ -15,7 +15,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.7+32
+version: 1.0.8+32
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -31,17 +31,17 @@ dependencies:
   # The most important library is intl. 
   intl: ^0.17.0
   # The Font Awesome Icon pack available as set of Flutter Icons.
-  font_awesome_flutter: ^9.0.0
+  font_awesome_flutter: ^10.1.0
   # Launching a URL in the mobile platform.
   url_launcher: ^6.0.4
   # Blocs and cubits.
-  flutter_bloc: ^7.1.0
+  flutter_bloc: ^8.0.1
   # The dart library for making HTTP requests.
   http: ^0.13.3
   # local storage
   localstorage: ^4.0.0+1
   # share url
-  share_plus: ^3.0.4
+  share_plus: ^4.0.4
   # Carousel slider in flutter.
   carousel_slider: ^4.0.0-nullsafety.0
   # Cached network image.
@@ -79,7 +79,7 @@ dependencies:
       ref: master
 
   # google mobile ad
-  google_mobile_ads: ^1.0.1
+  google_mobile_ads: ^1.2.0
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
@@ -100,6 +100,14 @@ dependencies:
   auto_size_text: ^3.0.0
   # zoomable widget
   photo_view: ^0.13.0
+  # getx
+  get: ^4.6.1
+  # pdf viewer
+  pdf_render: ^1.0.23
+  # app tracking
+  app_tracking_transparency: ^2.0.2+4
+  # fix error of chinese and english mix text
+  extended_text: ^9.0.0
 
 flutter_icons:
   android: "launcher_icon"

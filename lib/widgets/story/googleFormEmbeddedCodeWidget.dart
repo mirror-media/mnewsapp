@@ -57,8 +57,9 @@ class _GoogleFormEmbeddedCodeWidgetState
             ),
           ),
           onPressed: () async {
-            if (await canLaunch(_launchUrl)) {
-              await launch(_launchUrl);
+            Uri? uri = Uri.tryParse(_launchUrl);
+            if (uri != null && await canLaunchUrl(uri)) {
+              await launchUrl(uri);
             } else {
               throw 'Could not launch $_launchUrl';
             }

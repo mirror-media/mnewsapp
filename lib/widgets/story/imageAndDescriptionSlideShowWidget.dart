@@ -1,12 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/contentList.dart';
+import 'package:tv/models/content.dart';
+import 'package:tv/widgets/imageViewerWidget.dart';
 
 class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
-  final ContentList contentList;
+  final List<Content> contentList;
   final double textSize;
   final List<String> imageUrlList;
   ImageAndDescriptionSlideShowWidget({
@@ -23,7 +24,7 @@ class ImageAndDescriptionSlideShowWidget extends StatefulWidget {
 class _ImageAndDescriptionSlideShowWidgetState
     extends State<ImageAndDescriptionSlideShowWidget> {
   int currentPage = 1;
-  late ContentList contentList;
+  late List<Content> contentList;
   late CarouselOptions options;
   CarouselController imageCarouselController = CarouselController();
   CarouselController textCarouselController = CarouselController();
@@ -87,11 +88,10 @@ class _ImageAndDescriptionSlideShowWidgetState
               if (index == -1) {
                 index = 0;
               }
-              RouteGenerator.navigateToImageViewer(
-                context,
-                widget.imageUrlList,
-                openIndex: index,
-              );
+              Get.to(() => ImageViewerWidget(
+                    widget.imageUrlList,
+                    openIndex: index,
+                  ));
             },
             child: CachedNetworkImage(
               height: imageHeight,

@@ -11,12 +11,14 @@ enum TagStoryListStatus {
 
 class TagStoryListState {
   final TagStoryListStatus status;
-  final StoryListItemList? tagStoryList;
+  final List<StoryListItem>? tagStoryList;
   final dynamic error;
+  final int? allStoryCount;
   const TagStoryListState._({
     required this.status,
     this.tagStoryList,
     this.error,
+    this.allStoryCount,
   });
 
   const TagStoryListState.initial()
@@ -26,21 +28,23 @@ class TagStoryListState {
       : this._(status: TagStoryListStatus.loading);
 
   const TagStoryListState.loaded({
-    required StoryListItemList tagStoryList,
+    required List<StoryListItem> tagStoryList,
+    required int allStoryCount,
   }) : this._(
           status: TagStoryListStatus.loaded,
           tagStoryList: tagStoryList,
+          allStoryCount: allStoryCount,
         );
 
   const TagStoryListState.loadingMore({
-    required StoryListItemList tagStoryList,
+    required List<StoryListItem> tagStoryList,
   }) : this._(
           status: TagStoryListStatus.loadingMore,
           tagStoryList: tagStoryList,
         );
 
   const TagStoryListState.loadingMoreFail({
-    required StoryListItemList tagStoryList,
+    required List<StoryListItem> tagStoryList,
   }) : this._(
           status: TagStoryListStatus.loadingMoreFail,
           tagStoryList: tagStoryList,

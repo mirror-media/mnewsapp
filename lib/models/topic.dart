@@ -1,6 +1,6 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/paragrpahList.dart';
+import 'package:tv/models/paragraph.dart';
 
 class Topic {
   final String id;
@@ -8,7 +8,7 @@ class Topic {
   final String slug;
   final bool isFeatured;
   final String? photoUrl;
-  final ParagraphList? brief;
+  final List<Paragraph>? brief;
   bool isExpanded;
 
   Topic({
@@ -22,10 +22,9 @@ class Topic {
   });
 
   factory Topic.fromJson(Map<String, dynamic> json) {
-    ParagraphList brief = ParagraphList();
+    List<Paragraph>? brief;
     if (BaseModel.hasKey(json, 'brief') && json["brief"] != 'NaN') {
-      brief =
-          ParagraphList.parseResponseBody(json['brief'], isNotApiData: true);
+      brief = Paragraph.parseResponseBody(json['brief'], isNotApiData: true);
     }
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;

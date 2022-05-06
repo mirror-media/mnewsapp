@@ -1,10 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
 import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
-import 'package:tv/models/youtubePlaylistItemList.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/widgets/story/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -36,7 +38,7 @@ class _PromotionVideosState extends State<PromotionVideos> {
         return Container();
       }
       if (state is PromotionVideoLoaded) {
-        YoutubePlaylistItemList youtubePlaylistItemList =
+        List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
 
         if (youtubePlaylistItemList.length == 0) {
@@ -70,11 +72,15 @@ class _PromotionVideosState extends State<PromotionVideos> {
   }
 
   Widget _buildTitle(String title) {
-    return Text(
-      title,
-      style: TextStyle(
-        fontSize: 17,
-        fontWeight: FontWeight.bold,
+    final TextScaleFactorController textScaleFactorController = Get.find();
+    return Obx(
+      () => Text(
+        title,
+        style: TextStyle(
+          fontSize: 17,
+          fontWeight: FontWeight.bold,
+        ),
+        textScaleFactor: textScaleFactorController.textScaleFactor.value,
       ),
     );
   }

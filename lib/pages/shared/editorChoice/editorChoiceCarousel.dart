@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/helpers/environment.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
 
@@ -30,8 +30,8 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         return Container();
       }
       if (state is EditorChoiceLoadedAfterTabstory) {
-        StoryListItemList editorChoiceList = state.editorChoiceList;
-        StoryListItemList storyListItemList = state.storyListItemList;
+        List<StoryListItem> editorChoiceList = state.editorChoiceList;
+        List<StoryListItem> storyListItemList = state.storyListItemList;
 
         if (editorChoiceList.length == 0) {
           if (storyListItemList.length != 0) {
@@ -73,7 +73,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
 }
 
 class EditorChoiceCarousel extends StatefulWidget {
-  final StoryListItemList editorChoiceList;
+  final List<StoryListItem> editorChoiceList;
   final double aspectRatio;
   EditorChoiceCarousel({
     required this.editorChoiceList,
@@ -164,7 +164,8 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
           );
   }
 
-  List<Widget> _imageSliders(double width, StoryListItemList editorChoiceList) {
+  List<Widget> _imageSliders(
+      double width, List<StoryListItem> editorChoiceList) {
     return editorChoiceList
         .map(
           (item) => CarouselDisplayWidget(

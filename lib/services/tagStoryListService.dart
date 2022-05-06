@@ -4,19 +4,22 @@ import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/graphqlBody.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 
 abstract class TagStoryListRepos {
-  Future<StoryListItemList> fetchStoryListByTagSlug(
+  Future<List<StoryListItem>> fetchStoryListByTagSlug(
     String slug, {
     int skip = 0,
     int first = 10,
     bool withCount = true,
   });
+  int allStoryCount = 0;
 }
 
 class TagStoryListServices implements TagStoryListRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
+  @override
+  int allStoryCount = 0;
 
   final String query = """
   query (
@@ -47,7 +50,7 @@ class TagStoryListServices implements TagStoryListRepos {
   """;
 
   @override
-  Future<StoryListItemList> fetchStoryListByTagSlug(
+  Future<List<StoryListItem>> fetchStoryListByTagSlug(
     String slug, {
     int skip = 0,
     int first = 10,
@@ -84,10 +87,12 @@ class TagStoryListServices implements TagStoryListRepos {
           headers: {"Content-Type": "application/json"});
     }
 
-    StoryListItemList newsList =
-        StoryListItemList.fromJson(jsonResponse['data']['allPosts']);
+    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
+            ['allPosts']
+        .map((post) => StoryListItem.fromJson(post)));
+
     if (withCount) {
-      newsList.allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
     }
 
     return newsList;

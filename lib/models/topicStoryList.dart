@@ -1,15 +1,16 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/storyListItemList.dart';
+import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/video.dart';
 
 class TopicStoryList {
   final String photoUrl;
   final String leading;
-  final StoryListItemList? storyListItemList;
-  final StoryListItemList? headerArticles;
+  final List<StoryListItem>? storyListItemList;
+  final List<StoryListItem>? headerArticles;
   final List<Video>? headerVideoList;
   final Video? headerVideo;
+  final int? allStoryCount;
 
   TopicStoryList({
     required this.photoUrl,
@@ -18,17 +19,24 @@ class TopicStoryList {
     this.headerArticles,
     this.headerVideoList,
     this.headerVideo,
+    this.allStoryCount,
   });
 
-  factory TopicStoryList.fromJson(Map<String, dynamic> json) {
+  factory TopicStoryList.fromJson(Map<String, dynamic> json,
+      {bool withCount = true}) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
     }
 
-    StoryListItemList? storyListItemList;
+    List<StoryListItem>? storyListItemList;
+    int? allStoryCount;
     if (json['post'] != null && json['post'].length > 0) {
-      storyListItemList = StoryListItemList.fromJson(json['post']);
+      storyListItemList = List<StoryListItem>.from(
+          json['post'].map((post) => StoryListItem.fromJson(post)));
+      if (withCount) {
+        allStoryCount = json['_postMeta']['count'];
+      }
     }
 
     String leading = 'image';
@@ -38,7 +46,7 @@ class TopicStoryList {
 
     Video? heroVideo;
     List<Video> headerVideoList = [];
-    StoryListItemList? headerArticles;
+    List<StoryListItem>? headerArticles;
     switch (leading) {
       case 'video':
         if (BaseModel.checkJsonKeys(json, ['heroVideo', 'url'])) {
@@ -58,7 +66,8 @@ class TopicStoryList {
         break;
       case 'slideshow':
         if (json['slideshow'] != null && json['slideshow'].isNotEmpty) {
-          headerArticles = StoryListItemList.fromJson(json['slideshow']);
+          headerArticles = List<StoryListItem>.from(
+              json['slideshow'].map((post) => StoryListItem.fromJson(post)));
         } else {
           leading = 'image';
         }
@@ -72,6 +81,7 @@ class TopicStoryList {
       headerVideo: heroVideo,
       headerArticles: headerArticles,
       headerVideoList: headerVideoList,
+      allStoryCount: allStoryCount,
     );
   }
 }

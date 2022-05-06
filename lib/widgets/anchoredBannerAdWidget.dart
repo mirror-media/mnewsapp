@@ -1,81 +1,90 @@
-import 'dart:io';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/helpers/dataConstants.dart';
 
 class AnchoredBannerAdWidget extends StatefulWidget {
-  final bool isKeepAlive;
-  AnchoredBannerAdWidget({this.isKeepAlive = true});
+  final String adUnitId;
+  AnchoredBannerAdWidget({required this.adUnitId});
   @override
   _AnchoredBannerAdWidgetState createState() => _AnchoredBannerAdWidgetState();
 }
 
-class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget>
-    with AutomaticKeepAliveClientMixin {
-  BannerAd? _anchoredBanner;
-  bool _loadingAnchoredBanner = false;
+class _AnchoredBannerAdWidgetState extends State<AnchoredBannerAdWidget> {
+  AdManagerBannerAd? _anchoredAdaptiveAd;
+  bool _isLoaded = false;
+  bool _loadFailed = false;
 
-  String get stickyBannerAdUnitId {
-    if (Platform.isAndroid) {
-      return androidAnchoredBannerAdUnitId;
-    } else if (Platform.isIOS) {
-      return iOSAnchoredBannerAdUnitId;
-    } else {
-      throw new UnsupportedError("Unsupported platform");
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _loadAd();
   }
 
-  Future<void> _createAnchoredBanner(BuildContext context) async {
-    final BannerAd banner = BannerAd(
-      size: AdSize.banner,
-      request: AdRequest(),
-      adUnitId: stickyBannerAdUnitId,
-      listener: BannerAdListener(
+  Future<void> _loadAd() async {
+    // Get an AnchoredAdaptiveBannerAdSize before loading the ad.
+    final AnchoredAdaptiveBannerAdSize? size =
+        await AdSize.getCurrentOrientationAnchoredAdaptiveBannerAdSize(
+            MediaQuery.of(context).size.width.truncate());
+
+    if (size == null) {
+      print('Unable to get height of anchored banner.');
+      return;
+    }
+
+    _anchoredAdaptiveAd = AdManagerBannerAd(
+      adUnitId: widget.adUnitId,
+      sizes: [size],
+      request: AdManagerAdRequest(),
+      listener: AdManagerBannerAdListener(
         onAdLoaded: (Ad ad) {
-          print('$BannerAd loaded.');
+          print('$ad loaded.');
           setState(() {
-            _anchoredBanner = ad as BannerAd?;
+            // When the ad is loaded, get the ad size and use it to set
+            // the height of the ad container.
+            _anchoredAdaptiveAd = ad as AdManagerBannerAd;
+            _isLoaded = true;
           });
         },
         onAdFailedToLoad: (Ad ad, LoadAdError error) {
-          print('$BannerAd failedToLoad: $error');
+          print('Anchored adaptive banner failedToLoad: $error');
           ad.dispose();
+          setState(() {
+            _loadFailed = true;
+          });
         },
-        onAdOpened: (Ad ad) => print('$BannerAd onAdOpened.'),
-        onAdClosed: (Ad ad) => print('$BannerAd onAdClosed.'),
       ),
     );
-    _loadingAnchoredBanner = true;
-    return banner.load();
+    return _anchoredAdaptiveAd!.load();
   }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-    if (!_loadingAnchoredBanner) {
-      _loadingAnchoredBanner = true;
-      _createAnchoredBanner(context);
+    if (_anchoredAdaptiveAd != null && _isLoaded) {
+      return SafeArea(
+        child: Container(
+          alignment: Alignment.center,
+          width: _anchoredAdaptiveAd!.sizes.first.width.toDouble(),
+          height: _anchoredAdaptiveAd!.sizes.first.height.toDouble(),
+          child: AdWidget(ad: _anchoredAdaptiveAd!),
+        ),
+      );
     }
 
-    if (_anchoredBanner != null) {
-      return Container(
-        alignment: Alignment.center,
-        width: _anchoredBanner!.size.width.toDouble(),
-        height: _anchoredBanner!.size.height.toDouble(),
-        child: AdWidget(ad: _anchoredBanner!),
-        margin: EdgeInsets.only(bottom: 18),
-      );
-    } else {
+    if (_loadFailed) {
       return Container();
     }
+
+    return SafeArea(
+      child: Container(
+        color: Colors.white,
+        width: 320,
+        height: 50,
+      ),
+    );
   }
 
   @override
   void dispose() {
     super.dispose();
-    _anchoredBanner?.dispose();
+    _anchoredAdaptiveAd?.dispose();
   }
-
-  @override
-  bool get wantKeepAlive => widget.isKeepAlive;
 }

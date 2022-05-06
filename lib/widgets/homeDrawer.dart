@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
-import 'package:tv/models/sectionList.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/section.dart';
+import 'package:tv/models/topic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
-  final TopicList topics;
+  final List<Topic> topics;
   const HomeDrawer(this.topics);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
@@ -20,6 +22,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
   _changeSection(MNewsSection sectionId) {
     context.read<SectionCubit>().changeSection(sectionId);
   }
+
+  final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -133,8 +137,10 @@ class _HomeDrawerState extends State<HomeDrawer> {
       );
 
   Widget _drawerButtonBlock(MNewsSection sectionId) {
-    SectionList sectionList =
-        SectionList.fromJson(Environment().config.mNewsSectionList);
+    List<Section> sectionList = List<Section>.from(Environment()
+        .config
+        .mNewsSectionList
+        .map((section) => Section.fromJson(section)));
 
     return ListView.builder(
         shrinkWrap: true,
@@ -146,14 +152,18 @@ class _HomeDrawerState extends State<HomeDrawer> {
             _drawerButton(
                 Row(
                   children: [
-                    Text(
-                      sectionList[index].name,
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.w500,
-                        color: sectionId == sectionList[index].id
-                            ? Color(0xff004DBC)
-                            : null,
+                    Obx(
+                      () => Text(
+                        sectionList[index].name,
+                        style: TextStyle(
+                          fontSize: 17,
+                          fontWeight: FontWeight.w500,
+                          color: sectionId == sectionList[index].id
+                              ? Color(0xff004DBC)
+                              : null,
+                        ),
+                        textScaleFactor:
+                            textScaleFactorController.textScaleFactor.value,
                       ),
                     ),
                     if (sectionList[index].id == MNewsSection.live) ...[
@@ -203,8 +213,9 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
         ),
         onTap: () async {
-          if (await canLaunch(link)) {
-            await launch(link);
+          Uri? uri = Uri.tryParse(link);
+          if (uri != null && await canLaunchUrl(uri)) {
+            await launchUrl(uri);
           } else {
             throw 'Could not launch $link';
           }

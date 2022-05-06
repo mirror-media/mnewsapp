@@ -1,5 +1,5 @@
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 
 abstract class CategoriesState {}
 
@@ -8,12 +8,12 @@ class CategoriesInitState extends CategoriesState {}
 class CategoriesLoading extends CategoriesState {}
 
 class CategoriesLoaded extends CategoriesState {
-  final CategoryList categoryList;
+  final List<Category> categoryList;
   CategoriesLoaded({required this.categoryList});
 }
 
 class VideoCategoriesLoaded extends CategoriesState {
-  final CategoryList categoryList;
+  final List<Category> categoryList;
   final bool hasEditorChoice;
   final bool hasPopular;
   VideoCategoriesLoaded({

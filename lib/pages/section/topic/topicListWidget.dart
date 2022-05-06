@@ -1,13 +1,19 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicList/bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
-import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/paragrpahList.dart';
 import 'package:tv/models/topic.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/pages/section/topic/topicStoryListPage.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class TopicListWidget extends StatefulWidget {
   @override
@@ -15,8 +21,9 @@ class TopicListWidget extends StatefulWidget {
 }
 
 class _TopicListWidgetState extends State<TopicListWidget> {
-  TopicList topicList = TopicList();
+  List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
+  final TextScaleFactorController textScaleFactorController = Get.find();
   @override
   void initState() {
     _fetchTopicList();
@@ -48,215 +55,133 @@ class _TopicListWidgetState extends State<TopicListWidget> {
           }
           return Container(
             color: Colors.white,
-            padding: EdgeInsets.only(top: 16, left: 20, right: 20),
             child: _buildTopicList(),
           );
         }
 
         return Center(
-          child: CircularProgressIndicator(),
+          child: CircularProgressIndicator.adaptive(),
         );
       },
     );
   }
 
   Widget _buildTopicList() {
+    List<Topic> firstSixTopics = [];
+    List<Topic> sixToTwelveTopics = [];
+    List<Topic> otherTopics = [];
+    for (int i = 0; i < topicList.length; i++) {
+      if (i < 6) {
+        firstSixTopics.add(topicList[i]);
+      } else if (i < 12) {
+        sixToTwelveTopics.add(topicList[i]);
+      } else {
+        otherTopics.add(topicList[i]);
+      }
+    }
     return SafeArea(
-      top: false,
-      right: false,
-      left: false,
-      child: SingleChildScrollView(
-        child: ExpansionPanelList(
-          elevation: 0,
-          expansionCallback: (int index, bool isExpanded) {
-            setState(() {
-              topicList[index].isExpanded = !isExpanded;
-            });
-          },
-          children: topicList.map<ExpansionPanel>((topic) {
-            return ExpansionPanel(
-              backgroundColor: Colors.white,
-              isExpanded: topic.isExpanded,
-              canTapOnHeader: true,
-              headerBuilder: (BuildContext context, bool isExpanded) {
-                if (isExpanded) {
-                  return Container(
-                    alignment: Alignment.bottomLeft,
-                    child: Text(
-                      topic.name,
-                      style: TextStyle(
-                        fontSize: 22,
-                        fontWeight: FontWeight.w500,
-                        color: Color.fromRGBO(0, 51, 102, 1),
-                      ),
-                    ),
-                  );
-                }
-                return Container(
-                  padding: EdgeInsets.only(left: 20),
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    topic.name,
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w400,
-                      color: Color.fromRGBO(0, 77, 188, 1),
-                    ),
-                  ),
-                );
-              },
-              body: Container(
-                padding: EdgeInsets.only(bottom: 40),
-                child: _buildItem(topic),
-              ),
-            );
-          }).toList(),
-        ),
+      child: ListView(
+        children: [
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicHD'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
+          ),
+          _buildGridView(firstSixTopics),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT1'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+              AdSize(width: 320, height: 480),
+            ],
+            wantKeepAlive: true,
+          ),
+          _buildGridView(sixToTwelveTopics),
+          InlineBannerAdWidget(
+            adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT2'),
+            sizes: [
+              AdSize.mediumRectangle,
+              AdSize(width: 336, height: 280),
+            ],
+            wantKeepAlive: true,
+          ),
+          _buildGridView(otherTopics),
+        ],
       ),
+    );
+  }
+
+  Widget _buildGridView(List<Topic> topicList) {
+    return GridView(
+      padding: const EdgeInsets.symmetric(horizontal: 24),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 2,
+        mainAxisSpacing: 24,
+        crossAxisSpacing: 19,
+        childAspectRatio: 1.3,
+      ),
+      children: topicList.map((topic) => _buildItem(topic)).toList(),
     );
   }
 
   Widget _buildItem(Topic topic) {
-    double width = MediaQuery.of(context).size.width;
-    ParagraphList brief = topic.brief!;
-    List<Widget> briefContent = [];
-    for (var paragraph in brief) {
-      if (paragraph.contents != null &&
-          paragraph.contents!.length > 0 &&
-          !_isNullOrEmpty(paragraph.contents![0].data)) {
-        briefContent
-            .add(paragraphFormat.parseTheParagraph(paragraph, context, 17));
-      }
-    }
-    if (briefContent.isEmpty) {
-      briefContent = [
-        const SizedBox(height: 140),
-        const SizedBox(height: 20),
-        const SizedBox(height: 48),
-      ];
-    } else if (briefContent.length == 1) {
-      return Container(
-        width: width - 40,
-        // IntrinsicHeight cost expensive, so only use when there is only one item
-        child: IntrinsicHeight(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                width: width - 40 - 140 - 8,
-                child: briefContent[0],
+    double imageWidth = (Get.width - 48 - 19) / 2;
+    double imageHeight = imageWidth / 2;
+    return GestureDetector(
+      onTap: () => Get.to(() => TopicStoryListPage(
+            topic: topic,
+          )),
+      child: Column(
+        children: [
+          if (topic.photoUrl != null)
+            CachedNetworkImage(
+              imageUrl: topic.photoUrl!,
+              width: imageWidth,
+              height: imageHeight,
+              placeholder: (context, url) => Container(
+                width: imageWidth,
+                height: imageHeight,
+                color: Colors.grey,
               ),
-              const SizedBox(
-                width: 8,
+              errorWidget: (context, url, error) => Container(
+                width: imageWidth,
+                height: imageHeight,
+                color: Colors.grey,
+                child: Icon(Icons.error),
               ),
-              Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Image.network(
-                    topic.photoUrl!,
-                    width: 140,
-                    height: 140,
-                    fit: BoxFit.cover,
-                  ),
-                  _intoTopicButton(topic),
-                ],
-              ),
-            ],
+              fit: BoxFit.contain,
+            ),
+          if (topic.photoUrl == null)
+            Container(
+              width: imageWidth,
+              height: imageHeight,
+              color: Colors.grey,
+            ),
+          const SizedBox(
+            height: 8,
           ),
-        ),
-      );
-    }
-
-    return Container(
-      width: width - 40,
-      child: ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: briefContent.length,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: width - 40 - 140 - 8,
-                  child: briefContent[index],
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Image.network(
-                  topic.photoUrl!,
-                  width: 140,
-                  height: 140,
-                  fit: BoxFit.cover,
-                ),
-              ],
-            );
-          } else if (index == briefContent.length - 1) {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Container(
-                  width: width - 40 - 140 - 8,
-                  child: briefContent[index],
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                _intoTopicButton(topic),
-              ],
-            );
-          } else {
-            return Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: width - 40 - 140 - 8,
-                  child: briefContent[index],
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                const SizedBox(
-                  width: 140,
-                ),
-              ],
-            );
-          }
-        },
+          Obx(
+            () => ExtendedText(
+              topic.name,
+              joinZeroWidthSpace: true,
+              style: const TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 17,
+                color: themeColor,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            ),
+          ),
+        ],
       ),
     );
-  }
-
-  Widget _intoTopicButton(Topic topic) {
-    return Container(
-      width: 140,
-      height: 48,
-      child: TextButton(
-        onPressed: () {
-          RouteGenerator.navigateToTopicStoryListPage(
-            context,
-            topic,
-          );
-        },
-        child: Text('進入專題'),
-        style: TextButton.styleFrom(
-          primary: Color.fromRGBO(1, 77, 184, 1),
-          side: BorderSide(
-            color: Color.fromRGBO(1, 77, 184, 1),
-            width: 1,
-          ),
-        ),
-      ),
-    );
-  }
-
-  bool _isNullOrEmpty(String? input) {
-    return input == null || input == '';
   }
 }

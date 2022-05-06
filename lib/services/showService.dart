@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
-import 'package:tv/models/categoryList.dart';
+import 'package:tv/models/category.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/services/categoryService.dart';
@@ -16,13 +16,15 @@ class ShowServices implements CategoryRepos, ShowRepos {
   ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
-  Future<CategoryList> fetchCategoryList() async {
+  Future<List<Category>> fetchCategoryList() async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
         Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
-    CategoryList categoryList = CategoryList.fromJson(jsonResponse['allShows']);
+    List<Category> categoryList = List<Category>.from(jsonResponse['allShows']
+        .map((category) => Category.fromJson(category)));
+
     return categoryList;
   }
 

@@ -1,13 +1,17 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/contact/bloc.dart';
 import 'package:tv/blocs/contact/events.dart';
 import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/helpers/routeGenerator.dart';
 import 'package:tv/models/contact.dart';
-import 'package:tv/models/contactList.dart';
+import 'package:tv/pages/section/anchorperson/anchorpersonStoryPage.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class AnchorpersonListWidget extends StatefulWidget {
   @override
@@ -15,6 +19,7 @@ class AnchorpersonListWidget extends StatefulWidget {
 }
 
 class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
+  final TextScaleFactorController textScaleFactorController = Get.find();
   @override
   void initState() {
     _fetchAnchorpersonOrHostContactList();
@@ -42,7 +47,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         return error.renderWidget(isNoButton: true);
       }
       if (state is ContactListLoaded) {
-        ContactList contactList = state.contactList;
+        List<Contact> contactList = state.contactList;
         List<Contact> anchorpersonContactList =
             contactList.where((contact) => contact.isAnchorperson).toList();
         List<Contact> hostContactList =
@@ -50,10 +55,15 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
 
         return ListView(
           children: [
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorHD'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+              ],
+              wantKeepAlive: true,
+            ),
             if (anchorpersonContactList.length > 0) ...[
-              SizedBox(
-                height: 24,
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 24,
@@ -71,10 +81,16 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 child: _buildContactList(anchorpersonContactList, width),
               ),
             ],
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT1'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+                AdSize(width: 320, height: 480),
+              ],
+              wantKeepAlive: true,
+            ),
             if (hostContactList.length > 0) ...[
-              SizedBox(
-                height: 24,
-              ),
               Padding(
                 padding: const EdgeInsets.only(
                   left: 24,
@@ -92,6 +108,14 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                 child: _buildContactList(hostContactList, width),
               ),
             ],
+            InlineBannerAdWidget(
+              adUnitId: AdUnitIdHelper.getBannerAdUnitId('AnchorAT2'),
+              sizes: [
+                AdSize.mediumRectangle,
+                AdSize(width: 336, height: 280),
+              ],
+              wantKeepAlive: true,
+            ),
           ],
         );
       }
@@ -102,7 +126,7 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
   }
 
   Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator(),
+        child: CircularProgressIndicator.adaptive(),
       );
 
   Widget _buildContactTypeTitle(String title, double width) {
@@ -114,12 +138,16 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         child: Padding(
           padding: const EdgeInsets.all(4.0),
           child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                fontSize: 17,
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+            child: Obx(
+              () => Text(
+                title,
+                style: TextStyle(
+                  fontSize: 17,
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
               ),
             ),
           ),
@@ -164,19 +192,21 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                   ),
                 ),
                 Center(
-                  child: Text(
-                    contactList[index].name,
-                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                  child: Obx(
+                    () => Text(
+                      contactList[index].name,
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
+                      textScaleFactor:
+                          textScaleFactorController.textScaleFactor.value,
+                    ),
                   ),
                 ),
               ]),
-              onTap: () {
-                RouteGenerator.navigateToAnchorpersonStory(
-                  context,
-                  contactList[index].id,
-                  contactList[index].name,
-                );
-              },
+              onTap: () => Get.to(() => AnchorpersonStoryPage(
+                    anchorpersonId: contactList[index].id,
+                    anchorpersonName: contactList[index].name,
+                  )),
             ),
           );
         });

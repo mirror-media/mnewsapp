@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/widgets/youtubeLiveViewer.dart';
 
 class LiveWidget extends StatefulWidget {
@@ -63,13 +65,17 @@ class _LiveWidgetState extends State<LiveWidget> {
   }
 
   Widget _buildLiveTitle(String title, IconData icon) {
+    final TextScaleFactorController textScaleFactorController = Get.find();
     return Row(
       children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.bold,
+        Obx(
+          () => Text(
+            title,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.bold,
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
         SizedBox(width: 8.0),

@@ -9,7 +9,7 @@ enum TopicListStatus {
 
 class TopicListState {
   final TopicListStatus status;
-  final TopicList? topicList;
+  final List<Topic>? topicList;
   final dynamic error;
   const TopicListState._({
     required this.status,
@@ -22,7 +22,7 @@ class TopicListState {
   const TopicListState.loading() : this._(status: TopicListStatus.loading);
 
   const TopicListState.loaded({
-    required TopicList topicList,
+    required List<Topic> topicList,
   }) : this._(
           status: TopicListStatus.loaded,
           topicList: topicList,

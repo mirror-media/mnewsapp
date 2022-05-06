@@ -89,6 +89,10 @@ class StoryServices implements StoryRepos {
             urlMobileSized
           }
         }
+        download{
+          name
+          url
+        }
       }
     }
     """;

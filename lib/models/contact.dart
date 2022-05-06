@@ -1,6 +1,6 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
-import 'package:tv/models/paragrpahList.dart';
+import 'package:tv/models/paragraph.dart';
 
 class Contact {
   final String id;
@@ -14,7 +14,7 @@ class Contact {
   final String? twitterUrl;
   final String? facebookUrl;
   final String? instatgramUrl;
-  final ParagraphList? bio;
+  final List<Paragraph>? bio;
 
   Contact({
     required this.id,
@@ -37,9 +37,9 @@ class Contact {
         json, ['showhostImg', 'urlMobileSized'])) {
       photoUrl = json['showhostImg']['urlMobileSized'];
     }
-    ParagraphList bioApiData = ParagraphList();
+    List<Paragraph>? bioApiData;
     if (BaseModel.hasKey(json, 'bioApiData') && json["bioApiData"] != 'NaN') {
-      bioApiData = ParagraphList.parseResponseBody(json["bioApiData"]);
+      bioApiData = Paragraph.parseResponseBody(json["bioApiData"]);
     }
 
     return Contact(

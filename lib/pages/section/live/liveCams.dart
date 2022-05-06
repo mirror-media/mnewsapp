@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/widgets/youtubeLiveViewer.dart';
 
 class LiveCams extends StatefulWidget {
@@ -29,15 +31,21 @@ class _LiveCamsState extends State<LiveCams> {
             return Container();
           }
           List<Widget> liveCamPlayers = [];
+          final TextScaleFactorController textScaleFactorController =
+              Get.find();
           liveCamPlayers.add(Padding(
             padding: const EdgeInsets.fromLTRB(24, 24, 24, 0),
             child: Row(
               children: [
-                Text(
-                  '直播現場',
-                  style: TextStyle(
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
+                Obx(
+                  () => Text(
+                    '直播現場',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textScaleFactor:
+                        textScaleFactorController.textScaleFactor.value,
                   ),
                 ),
                 SizedBox(width: 8.0),

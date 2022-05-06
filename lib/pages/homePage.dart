@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
+import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/helpers/routeGenerator.dart';
-import 'package:tv/models/adUnitId.dart';
-import 'package:tv/models/topicList.dart';
+import 'package:tv/models/topic.dart';
+import 'package:tv/pages/changeFontSizePage.dart';
+import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
@@ -18,7 +20,7 @@ import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  final TopicList topics;
+  final List<Topic> topics;
   const HomePage(this.topics);
   @override
   _HomePageState createState() => _HomePageState();
@@ -26,7 +28,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _scaffoldkey = GlobalKey<ScaffoldState>();
-  // InterstitialAdWidget interstitial = InterstitialAdWidget();
+  final interstitialAdController = Get.find<InterstitialAdController>();
 
   @override
   void initState() {
@@ -50,11 +52,6 @@ class _HomePageState extends State<HomePage> {
         },
       );
       await prefs.setBool("isFirstLaunch", false);
-      // } else {
-      //   interstitial.createInterstitialAd();
-      //   await Future.delayed(Duration(seconds: 1));
-      //   interstitial.showInterstitialAd();
-      // }
     }
   }
 
@@ -72,14 +69,7 @@ class _HomePageState extends State<HomePage> {
           return Container();
         } else {
           MNewsSection sectionId = state.sectionId;
-          return Column(
-            children: [
-              Expanded(
-                child: _buildBody(sectionId, adUnitId: state.adUnitId),
-              ),
-              // AnchoredBannerAdWidget(),
-            ],
-          );
+          return _buildBody(sectionId);
         }
       }),
     );
@@ -101,33 +91,43 @@ class _HomePageState extends State<HomePage> {
       ),
       actions: <Widget>[
         IconButton(
+          icon: Icon(Icons.font_download),
+          tooltip: '更改字體大小',
+          onPressed: () => Get.to(() => ChangeFontSizePage()),
+        ),
+        IconButton(
           icon: Icon(Icons.search),
-          tooltip: 'Search',
-          onPressed: () => RouteGenerator.navigateToSearch(context),
+          tooltip: '搜尋',
+          onPressed: () => Get.to(() => SearchPage()),
         ),
       ],
     );
   }
 
-  Widget _buildBody(MNewsSection sectionId, {AdUnitId? adUnitId}) {
+  Widget _buildBody(MNewsSection sectionId) {
     switch (sectionId) {
       case MNewsSection.news:
+        interstitialAdController.ramdomShowInterstitialAd();
         return NewsPage();
       case MNewsSection.live:
-        return LivePage(
-          adUnitId: adUnitId,
-        );
+        interstitialAdController.ramdomShowInterstitialAd();
+        return LivePage();
       case MNewsSection.video:
+        interstitialAdController.ramdomShowInterstitialAd();
         return VideoPage();
       case MNewsSection.show:
+        interstitialAdController.ramdomShowInterstitialAd();
         return ShowPage();
       case MNewsSection.anchorperson:
+        interstitialAdController.ramdomShowInterstitialAd();
         return AnchorpersonPage();
       case MNewsSection.ombuds:
         return OmbudsPage();
       case MNewsSection.programList:
+        interstitialAdController.ramdomShowInterstitialAd();
         return ProgramListPage();
       case MNewsSection.topicList:
+        interstitialAdController.ramdomShowInterstitialAd();
         return TopicListPage();
     }
   }
