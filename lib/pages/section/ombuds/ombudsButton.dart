@@ -31,6 +31,7 @@ class OmbudsButton extends StatelessWidget {
             width: width,
             height: 36,
             color: Color(0xff003366),
+            padding: const EdgeInsets.symmetric(vertical: 7),
             child: SvgPicture.asset(
               imageLocationString,
               color: Color.fromARGB(255, 255, 204, 1),

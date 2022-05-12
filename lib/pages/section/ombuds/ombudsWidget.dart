@@ -109,7 +109,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               ),
               _appealBlock(width),
               SizedBox(
-                height: 28,
+                height: 32,
               ),
               _ombudsIntroBlock(width),
               SizedBox(
@@ -231,7 +231,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         () => Text(
           '我要向公評人申訴',
           style: TextStyle(
-            fontSize: 24,
+            fontSize: 22,
             fontWeight: FontWeight.w500,
             color: Color(0xff004DBC),
           ),
@@ -241,7 +241,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
       SizedBox(height: 24),
       Obx(
         () => Text(
-          '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵；如果您對於我們的客服有意見，請按下方的向客服申訴鍵。',
+          '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵。',
           style: TextStyle(
             fontSize: 15,
             fontWeight: FontWeight.w400,
@@ -250,7 +250,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           textScaleFactor: textScaleFactorController.textScaleFactor.value,
         ),
       ),
-      SizedBox(height: 36),
+      SizedBox(height: 32),
       _appealButton(
         width,
         '向公評人申訴',
@@ -259,19 +259,18 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
               showAds: false,
             )),
       ),
-      SizedBox(height: 12),
-      _appealButton(width, '向客服申訴', () async {
-        final Uri emailLaunchUri = Uri(
-          scheme: 'mailto',
-          path: mNewsMail,
-        );
-
-        if (await canLaunchUrl(emailLaunchUri)) {
-          await launchUrl(emailLaunchUri);
-        } else {
-          throw 'Could not launch $mNewsMail';
-        }
-      }),
+      SizedBox(height: 20),
+      Obx(
+        () => Text(
+          '客服事項請打客服專線：（02）7752-5678\n或洽客服信箱：mnews.cs@mnews.com.tw',
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w400,
+            color: Color(0xff014DB8),
+          ),
+          textScaleFactor: textScaleFactorController.textScaleFactor.value,
+        ),
+      ),
     ]);
   }
 
@@ -347,7 +346,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           OmbudsButton(
             width: ombudsWidth,
             height: height,
-            imageLocationString: phoneSvg,
+            imageLocationString: speakerSvg,
             title1: '最新',
             title2: '消息',
             onTap: () => Get.to(() => OmbudsNewsListPage()),
@@ -355,7 +354,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           OmbudsButton(
             width: ombudsWidth,
             height: height,
-            imageLocationString: paperSvg,
+            imageLocationString: phoneSvg,
             title1: '申訴',
             title2: '流程',
             onTap: () => Get.to(() => StoryPage(
@@ -366,10 +365,19 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
           OmbudsButton(
             width: ombudsWidth,
             height: height,
+            imageLocationString: reportSvg,
+            title1: '業務',
+            title2: '報告',
+            onTap: () => Get.to(() => StoryPage(
+                  slug: 'reports',
+                  showAds: false,
+                )),
+          ),
+          OmbudsButton(
+            width: ombudsWidth,
+            height: height,
             imageLocationString: hammerSvg,
-            title1: textScaleFactorController.textScaleFactor.value > 1.0
-                ? '公評人'
-                : '外部公評人',
+            title1: '公評人',
             title2: '設置章程',
             onTap: () => Get.to(() => StoryPage(
                   slug: 'law',
@@ -398,13 +406,6 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
                   showAds: false,
                 )),
           ),
-          // OmbudsButton(
-          //   width: ombudsWidth,
-          //   imageLocationString: reportSvg,
-          //   title1: '季報',
-          //   title2: '年報',
-          //   onTap: () => RouteGenerator.navigateToStory(context, 'reports'),
-          // ),
         ],
       );
     });
