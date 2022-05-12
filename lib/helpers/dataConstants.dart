@@ -28,6 +28,7 @@ const String hammerSvg = 'assets/image/ombuds/hammer.svg';
 const String adUnitIdJson = 'assets/json/adUnitId.json';
 const String reportSvg = 'assets/image/ombuds/report.svg';
 const String downloadSvg = 'assets/image/download.svg';
+const String speakerSvg = 'assets/image/ombuds/speaker.svg';
 
 /// color
 const Color themeColor = Color(0xff003366);
