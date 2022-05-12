@@ -261,12 +261,53 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
       ),
       SizedBox(height: 20),
       Obx(
-        () => Text(
-          '客服事項請打客服專線：（02）7752-5678\n或洽客服信箱：mnews.cs@mnews.com.tw',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff014DB8),
+        () => RichText(
+          text: TextSpan(
+            text: '客服事項請打客服專線：',
+            children: [
+              WidgetSpan(
+                child: GestureDetector(
+                  child: Text(
+                    '（02）7752-5678',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff014DB8),
+                    ),
+                  ),
+                  onTap: () async {
+                    String url = 'tel:02-7752-5678';
+                    if (!await launchUrl(Uri.parse(url)))
+                      throw 'Could not launch $url';
+                  },
+                ),
+              ),
+              TextSpan(text: '\n或洽客服信箱：'),
+              WidgetSpan(
+                child: GestureDetector(
+                  child: Text(
+                    'mnews.cs@mnews.com.tw',
+                    style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Color(0xff014DB8),
+                    ),
+                  ),
+                  onTap: () async {
+                    String url = 'mailto:mnews.cs@mnews.com.tw';
+                    if (!await launchUrl(Uri.parse(url)))
+                      throw 'Could not launch $url';
+                  },
+                ),
+              ),
+            ],
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+              color: Color(0xff014DB8),
+            ),
           ),
           textScaleFactor: textScaleFactorController.textScaleFactor.value,
         ),
