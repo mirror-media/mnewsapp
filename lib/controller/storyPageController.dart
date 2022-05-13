@@ -1,6 +1,7 @@
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/errorHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -36,6 +37,11 @@ class StoryPageController extends GetxController {
         ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
       }
       isError = false;
+      AnalyticsHelper.logStory(
+        slug: slug,
+        title: story.name ?? '無標題',
+        category: story.categoryList,
+      );
     } catch (e) {
       isError = true;
       error = determineException(e);
