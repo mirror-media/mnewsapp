@@ -47,7 +47,7 @@ class TopicStoryListPage extends StatelessWidget {
           tooltip: 'Share',
           onPressed: () {
             String url =
-                Environment().config.mNewsWebsiteLink + '/story/' + topic.slug;
+                Environment().config.mNewsWebsiteLink + '/topic/' + topic.slug;
             Share.share(url);
           },
         ),
