@@ -8,6 +8,7 @@ class InterstitialAdController {
   var storyCounter = 0.obs;
 
   void openStory() async {
+    await Future.delayed(const Duration(milliseconds: 100));
     storyCounter++;
     if (storyCounter.isOdd) {
       await showInterstitialAd(AdUnitIdHelper.getInterstitialAdUnitId('Story'));
