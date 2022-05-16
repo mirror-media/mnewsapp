@@ -25,8 +25,6 @@ class StoryPageController extends GetxController {
     loadStory(currentSlug);
   }
 
-  static StoryPageController get to => Get.find();
-
   void loadStory(String slug) async {
     isLoading = true;
     currentSlug = slug;

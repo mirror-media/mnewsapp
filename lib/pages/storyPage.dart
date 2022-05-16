@@ -53,6 +53,7 @@ class StoryPage extends StatelessWidget {
 
     return GetBuilder<StoryPageController>(
       init: StoryPageController(StoryServices(), slug),
+      tag: slug,
       builder: (controller) {
         Widget body = Center(
           child: CircularProgressIndicator.adaptive(),
@@ -113,10 +114,11 @@ class StoryPage extends StatelessWidget {
           tooltip: 'Share',
           onPressed: () {
             AnalyticsHelper.logShare(
-                name: StoryPageController.to.currentSlug, type: 'story');
+                name: Get.find<StoryPageController>(tag: slug).currentSlug,
+                type: 'story');
             String url = Environment().config.mNewsWebsiteLink +
                 '/story/' +
-                StoryPageController.to.currentSlug;
+                Get.find<StoryPageController>(tag: slug).currentSlug;
             Share.share(url);
           },
         ),
@@ -529,9 +531,9 @@ class StoryPage extends StatelessWidget {
   }
 
   Widget _buildContent(List<Paragraph> storyContents) {
-    if (StoryPageController.to.currentSlug == 'law') {
+    if (Get.find<StoryPageController>(tag: slug).currentSlug == 'law') {
       return PdfDocumentLoader.openFile(
-        StoryPageController.to.ombudsLawFile.path,
+        Get.find<StoryPageController>(tag: slug).ombudsLawFile.path,
         documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
           builder: (context, constraints) => ListView.builder(
             itemCount: pageCount,
@@ -599,7 +601,8 @@ class StoryPage extends StatelessWidget {
                 paragraph,
                 context,
                 17 * textScaleFactorController.textScaleFactor.value,
-                imageUrlList: StoryPageController.to.story.imageUrlList,
+                imageUrlList:
+                    Get.find<StoryPageController>(tag: slug).story.imageUrlList,
               ),
             ),
           );
@@ -770,7 +773,7 @@ class StoryPage extends StatelessWidget {
         if (showAds) {
           interstitialAdController.openStory();
         }
-        StoryPageController.to.loadStory(story.slug);
+        Get.find<StoryPageController>(tag: slug).loadStory(story.slug);
       },
     );
   }
