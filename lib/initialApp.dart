@@ -42,11 +42,13 @@ class _InitialAppState extends State<InitialApp> {
       }
       if (state is ConfigLoaded) {
         return UpgradeAlert(
-          minAppVersion: state.minAppVersion,
-          messages: UpdateMessages(),
-          dialogStyle: Platform.isAndroid
-              ? UpgradeDialogStyle.material
-              : UpgradeDialogStyle.cupertino,
+          upgrader: Upgrader(
+            minAppVersion: state.minAppVersion,
+            messages: UpdateMessages(),
+            dialogStyle: Platform.isAndroid
+                ? UpgradeDialogStyle.material
+                : UpgradeDialogStyle.cupertino,
+          ),
           child: BlocProvider(
             create: (_) => SectionCubit(),
             child: HomePage(state.topics, state.appVersion),
