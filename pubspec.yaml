@@ -45,7 +45,7 @@ dependencies:
   # Carousel slider in flutter.
   carousel_slider: ^4.0.0-nullsafety.0
   # Cached network image.
-  cached_network_image: ^3.0.0
+  cached_network_image: ^3.2.1
   # flutter cache manager
   flutter_cache_manager: ^3.1.2
   # package for working with MIME type definitions
@@ -83,13 +83,13 @@ dependencies:
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
-  upgrader: ^3.5.1
+  upgrader: ^4.1.1
   # firebase remote config
   firebase_remote_config: ^2.0.2
   # get youtube metadata
   youtube_explode_dart: ^1.10.9+1
   # webview
-  webview_flutter: ^2.1.1
+  webview_flutter: ^3.0.4
   # better video player use for yt live only
   better_player: ^0.0.77
   # firebase analytics
@@ -101,13 +101,13 @@ dependencies:
   # zoomable widget
   photo_view: ^0.13.0
   # getx
-  get: ^4.6.1
+  get: ^4.6.3
   # pdf viewer
   pdf_render: ^1.0.23
   # app tracking
   app_tracking_transparency: ^2.0.2+4
   # fix error of chinese and english mix text
-  extended_text: ^9.0.0
+  extended_text: ^9.1.0
   # package info
   package_info_plus: ^1.4.2
 
