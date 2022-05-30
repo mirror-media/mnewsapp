@@ -83,7 +83,7 @@ dependencies:
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
-  upgrader: ^4.1.1
+  upgrader: ^4.1.2
   # firebase remote config
   firebase_remote_config: ^2.0.2
   # get youtube metadata
