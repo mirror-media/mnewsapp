@@ -10,7 +10,7 @@ import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
 import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
 import 'package:tv/pages/section/news/newsTabStoryList.dart';
 
-class NewsTabContent extends StatefulWidget {
+class NewsTabContent extends StatelessWidget {
   final String categorySlug;
   final bool needCarousel;
   NewsTabContent({
@@ -19,23 +19,18 @@ class NewsTabContent extends StatefulWidget {
   });
 
   @override
-  _NewsTabContentState createState() => _NewsTabContentState();
-}
-
-class _NewsTabContentState extends State<NewsTabContent> {
-  TabStoryListBloc tabStoryListBloc =
-      TabStoryListBloc(tabStoryListRepos: TabStoryListServices());
-  @override
   Widget build(BuildContext context) {
-    if (widget.categorySlug == 'latest') {
+    TabStoryListBloc tabStoryListBloc =
+        TabStoryListBloc(tabStoryListRepos: TabStoryListServices());
+    if (categorySlug == 'latest') {
       AnalyticsHelper.sendScreenView(screenName: 'HomePage');
     } else {
       AnalyticsHelper.sendScreenView(
-          screenName: 'NewsPage categorySlug=${widget.categorySlug}');
+          screenName: 'NewsPage categorySlug=$categorySlug');
     }
     return ListView(
       children: [
-        if (widget.needCarousel)
+        if (needCarousel)
           BlocProvider(
             create: (context) => EditorChoiceBloc(
               editorChoiceRepos: EditorChoiceServices(),
@@ -45,11 +40,11 @@ class _NewsTabContentState extends State<NewsTabContent> {
           ),
         BlocProvider(
           create: (context) => tabStoryListBloc,
-          child: widget.categorySlug == 'popular'
+          child: categorySlug == 'popular'
               ? NewsPopularTabStoryList()
               : NewsTabStoryList(
-                  categorySlug: widget.categorySlug,
-                  needCarousel: widget.needCarousel,
+                  categorySlug: categorySlug,
+                  needCarousel: needCarousel,
                 ),
         ),
       ],
