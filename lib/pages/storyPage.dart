@@ -311,7 +311,8 @@ class StoryPage extends StatelessWidget {
     );
 
     if (story.writers!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "記者",
@@ -320,16 +321,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
+      items.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.writers!));
+      items.addAll(_addAuthorItems(story.writers!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (story.photographers!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "攝影",
@@ -338,16 +344,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
+      items.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.photographers!));
+      items.addAll(_addAuthorItems(story.photographers!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (story.cameraOperators!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "影音",
@@ -356,16 +367,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
+      items.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.cameraOperators!));
+      items.addAll(_addAuthorItems(story.cameraOperators!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (story.designers!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "設計",
@@ -374,16 +390,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
+      items.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.designers!));
+      items.addAll(_addAuthorItems(story.designers!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (story.engineers!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "工程",
@@ -392,16 +413,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
+      items.add(myVerticalDivider);
 
-      authorItems.addAll(_addAuthorItems(story.engineers!));
+      items.addAll(_addAuthorItems(story.engineers!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (story.vocals!.length > 0) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "主播",
@@ -410,16 +436,20 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
-
-      authorItems.addAll(_addAuthorItems(story.engineers!));
+      items.add(myVerticalDivider);
+      items.addAll(_addAuthorItems(story.engineers!));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
       authorItems.add(SizedBox(
         width: 12.0,
       ));
     }
 
     if (!_isNullOrEmpty(story.otherbyline)) {
-      authorItems.add(
+      List<Widget> items = [];
+      items.add(
         Obx(
           () => Text(
             "作者",
@@ -428,8 +458,21 @@ class StoryPage extends StatelessWidget {
           ),
         ),
       );
-      authorItems.add(myVerticalDivider);
-      authorItems.add(Text(story.otherbyline!));
+      items.add(myVerticalDivider);
+      items.add(Obx(
+        () => ExtendedText(
+          story.otherbyline!,
+          joinZeroWidthSpace: true,
+          style: TextStyle(
+            fontSize: 15,
+          ),
+          textScaleFactor: textScaleFactorController.textScaleFactor.value,
+        ),
+      ));
+      authorItems.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: items,
+      ));
     }
 
     return Padding(

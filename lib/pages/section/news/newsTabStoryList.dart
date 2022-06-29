@@ -28,11 +28,14 @@ class _NewsTabStoryListState extends State<NewsTabStoryList> {
 
   @override
   void initState() {
-    if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
-      _fetchStoryList();
-    } else {
-      _fetchStoryListByCategorySlug();
+    if (!context.read<TabStoryListBloc>().isClosed) {
+      if (Category.checkIsLatestCategoryBySlug(widget.categorySlug)) {
+        _fetchStoryList();
+      } else {
+        _fetchStoryListByCategorySlug();
+      }
     }
+
     super.initState();
   }
 
