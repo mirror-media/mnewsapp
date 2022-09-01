@@ -7,13 +7,11 @@ import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/section.dart';
-import 'package:tv/models/topic.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class HomeDrawer extends StatefulWidget {
-  final List<Topic> topics;
   final String appVersion;
-  const HomeDrawer(this.topics, this.appVersion);
+  const HomeDrawer(this.appVersion);
   @override
   _HomeDrawerState createState() => _HomeDrawerState();
 }

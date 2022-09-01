@@ -1,9 +1,6 @@
-import 'dart:io';
-
-import 'package:chewie/chewie.dart';
+import 'package:better_player/better_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:video_player/video_player.dart';
 
 class MNewsVideoPlayer extends StatefulWidget {
   /// The baseUrl of the video
@@ -43,88 +40,92 @@ class MNewsVideoPlayer extends StatefulWidget {
 
 class _MNewsVideoPlayerState extends State<MNewsVideoPlayer>
     with AutomaticKeepAliveClientMixin {
-  late VideoPlayerController _videoPlayerController;
-  late ChewieController _chewieController;
-  late Future<bool> _configChewieFuture;
+  late BetterPlayerController _betterPlayerController;
+  bool isInitialized = false;
+  bool isError = false;
 
   @override
   bool get wantKeepAlive => true;
 
   @override
   void initState() {
-    _configChewieFuture = _configVideoPlayer();
+    _configVideoPlayer();
     super.initState();
   }
 
-  Future<bool> _configVideoPlayer() async {
-    _videoPlayerController = VideoPlayerController.network(widget.videourl);
+  Future<void> _configVideoPlayer() async {
     try {
-      await _videoPlayerController.initialize();
-      _chewieController = ChewieController(
-        videoPlayerController: _videoPlayerController,
-        aspectRatio: _videoPlayerController.value.aspectRatio,
-        autoInitialize: true,
-        autoPlay: widget.autoPlay,
-        showOptions: false,
-        deviceOrientationsAfterFullScreen: [
-          DeviceOrientation.portraitUp,
-          DeviceOrientation.portraitDown,
-        ],
+      BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+        BetterPlayerDataSourceType.network,
+        widget.videourl,
       );
-      if (widget.muted) _chewieController.setVolume(0.0);
+      _betterPlayerController = BetterPlayerController(
+        BetterPlayerConfiguration(
+          autoPlay: widget.autoPlay,
+          aspectRatio: widget.aspectRatio,
+          startAt: widget.startAt,
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+            enableAudioTracks: false,
+          ),
+          looping: widget.looping,
+          autoDetectFullscreenAspectRatio: true,
+          autoDetectFullscreenDeviceOrientation: true,
+          fit: BoxFit.contain,
+          showPlaceholderUntilPlay: true,
+          placeholder: Center(
+            child: CircularProgressIndicator.adaptive(),
+          ),
+          translations: [
+            BetterPlayerTranslations(
+              languageCode: "zh",
+              generalDefaultError: "無法播放影片",
+              generalNone: "無",
+              generalDefault: "預設",
+              generalRetry: "重試",
+              playlistLoadingNextVideo: "正在載入下一部影片",
+              controlsLive: "直播",
+              controlsNextVideoIn: "下一部影片",
+              overflowMenuPlaybackSpeed: "播放速度",
+              overflowMenuSubtitles: "字幕",
+              overflowMenuQuality: "畫質",
+              overflowMenuAudioTracks: "音訊",
+              qualityAuto: "自動",
+            ),
+          ],
+          deviceOrientationsAfterFullScreen: [
+            DeviceOrientation.portraitUp,
+            DeviceOrientation.portraitDown,
+          ],
+        ),
+        betterPlayerDataSource: betterPlayerDataSource,
+      );
+      if (widget.muted) _betterPlayerController.setVolume(0.0);
+      setState(() {
+        isInitialized = true;
+      });
     } catch (e) {
-      // TODO: need to return error
-      return false;
+      print('Video player error: $e');
+      setState(() {
+        isError = true;
+      });
     }
-
-    return true;
-  }
-
-  @override
-  void dispose() {
-    _videoPlayerController.dispose();
-    _chewieController.dispose();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return FutureBuilder<bool>(
-        initialData: false,
-        future: _configChewieFuture,
-        builder: (context, snapshot) {
-          return LayoutBuilder(
-              builder: (BuildContext context, BoxConstraints constraints) {
-            if (!snapshot.data!) {
-              return Container(
-                  width: constraints.maxWidth,
-                  height: constraints.maxWidth / widget.aspectRatio,
-                  child: Center(child: CircularProgressIndicator.adaptive()));
-            }
-
-            Widget _videoPlayer = Chewie(
-              controller: _chewieController,
-            );
-
-            if (Platform.isAndroid) {
-              _videoPlayer = Theme(
-                data: ThemeData.light().copyWith(
-                  platform: TargetPlatform.windows,
-                ),
-                child: Chewie(
-                  controller: _chewieController,
-                ),
-              );
-            }
-
-            return Container(
-              width: constraints.maxWidth,
-              height: constraints.maxWidth /
-                  _videoPlayerController.value.aspectRatio,
-              child: _videoPlayer,
-            );
-          });
-        });
+    if (isInitialized) {
+      return AspectRatio(
+        aspectRatio: 16 / 9,
+        child: BetterPlayer(
+          controller: _betterPlayerController,
+        ),
+      );
+    } else if (isError) {
+      return Container();
+    }
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    );
   }
 }

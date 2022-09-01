@@ -5,7 +5,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/blocs/section/section_cubit.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/models/topic.dart';
 import 'package:tv/pages/changeFontSizePage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
@@ -20,9 +19,8 @@ import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
-  final List<Topic> topics;
   final String appVersion;
-  const HomePage(this.topics, this.appVersion);
+  const HomePage(this.appVersion);
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -60,7 +58,7 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldkey,
-      drawer: HomeDrawer(widget.topics, widget.appVersion),
+      drawer: HomeDrawer(widget.appVersion),
       appBar: _buildBar(context, _scaffoldkey),
       body: BlocBuilder<SectionCubit, SectionStateCubit>(
           builder: (BuildContext context, SectionStateCubit state) {

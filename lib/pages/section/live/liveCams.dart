@@ -4,8 +4,7 @@ import 'package:get/get.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
-import 'package:tv/widgets/story/youtubeViewer.dart';
-import 'package:tv/widgets/youtubeLiveViewer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
 
 class LiveCams extends StatefulWidget {
   @override
@@ -59,19 +58,11 @@ class _LiveCamsState extends State<LiveCams> {
             ),
           ));
           state.liveCamList.forEach((element) {
-            if (element.isLive) {
-              liveCamPlayers.add(YoutubeLiveViewer(
-                element.youtubeId,
-                autoPlay: true,
-                mute: true,
-              ));
-            } else {
-              liveCamPlayers.add(YoutubeViewer(
-                element.youtubeId,
-                autoPlay: true,
-                mute: true,
-              ));
-            }
+            liveCamPlayers.add(YoutubePlayer(
+              element.youtubeId,
+              autoPlay: true,
+              mute: true,
+            ));
           });
           return ListView.separated(
             itemBuilder: (context, index) {

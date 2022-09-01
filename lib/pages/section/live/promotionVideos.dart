@@ -7,7 +7,7 @@ import 'package:tv/blocs/promotionVideo/events.dart';
 import 'package:tv/blocs/promotionVideo/states.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
-import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class PromotionVideos extends StatefulWidget {

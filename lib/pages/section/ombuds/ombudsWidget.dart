@@ -15,7 +15,7 @@ import 'package:tv/pages/section/ombuds/ombudsButton.dart';
 import 'package:tv/pages/section/ombuds/ombudsNewsListPage.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
-import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 

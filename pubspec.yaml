@@ -15,13 +15,15 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.12+32
+version: 1.0.14+32
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
+    sdk: flutter
+  flutter_localizations:
     sdk: flutter
 
 
@@ -63,7 +65,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.2.0
+      version: ^0.3.0
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
@@ -83,7 +85,7 @@ dependencies:
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
-  upgrader: ^4.1.1
+  upgrader: ^4.1.2
   # firebase remote config
   firebase_remote_config: ^2.0.2
   # get youtube metadata
