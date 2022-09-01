@@ -13,7 +13,7 @@ import 'package:tv/widgets/story/mNewsAudioPlayer.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
-import 'package:tv/widgets/story/youtubeWidget.dart';
+import 'package:tv/widgets/youtube/youtubeWidget.dart';
 
 class ParagraphFormat {
   Widget parseTheParagraph(

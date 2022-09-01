@@ -32,7 +32,7 @@ import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
-import 'package:tv/widgets/story/youtubePlayer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class StoryPage extends StatelessWidget {

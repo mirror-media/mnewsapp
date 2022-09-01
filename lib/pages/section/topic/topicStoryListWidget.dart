@@ -17,8 +17,8 @@ import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
-import 'package:tv/widgets/story/youtubePlayer.dart';
-import 'package:tv/widgets/story/youtubeViewer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
+import 'package:tv/widgets/youtube/youtubeViewer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
