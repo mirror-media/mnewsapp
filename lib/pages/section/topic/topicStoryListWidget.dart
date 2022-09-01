@@ -18,7 +18,6 @@ import 'package:tv/pages/storyPage.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/youtube/youtubePlayer.dart';
-import 'package:tv/widgets/youtube/youtubeViewer.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
@@ -249,7 +248,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
       for (var item in _topicStoryList.headerVideoList!) {
         String? videoId = VideoId.parseVideoId(item.url);
         if (videoId != null) {
-          items.add(YoutubeViewer(
+          items.add(YoutubePlayer(
             videoId,
             autoPlay: true,
             mute: true,

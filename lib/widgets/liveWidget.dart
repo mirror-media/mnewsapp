@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
-import 'package:tv/widgets/youtube/youtubeLiveViewer.dart';
+import 'package:tv/widgets/youtube/youtubePlayer.dart';
 
 class LiveWidget extends StatefulWidget {
   final bool needBuildLiveTitle;
@@ -51,7 +51,7 @@ class _LiveWidgetState extends State<LiveWidget> {
                       child: _buildLiveTitle(widget.liveTitle, widget.icon),
                     )
                   : Container(),
-              YoutubeLiveViewer(
+              YoutubePlayer(
                 state.liveId,
                 autoPlay: true,
                 mute: true,
