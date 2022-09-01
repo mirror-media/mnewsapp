@@ -18,13 +18,17 @@ class YoutubePlayer extends StatefulWidget {
   _YoutubePlayerState createState() => _YoutubePlayerState();
 }
 
-class _YoutubePlayerState extends State<YoutubePlayer> {
+class _YoutubePlayerState extends State<YoutubePlayer>
+    with AutomaticKeepAliveClientMixin {
   String _youtubeThumbnail = '';
   late double imageWidth;
   late double imageHeight;
   late BetterPlayerController _betterPlayerController;
   bool isInitialized = false;
   bool isError = false;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
