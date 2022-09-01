@@ -9,7 +9,6 @@ import GoogleMobileAds
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     GeneratedPluginRegistrant.register(with: self)
-    GADMobileAds.sharedInstance().requestConfiguration.testDeviceIdentifiers = [ kGADSimulatorID ]
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
 }
