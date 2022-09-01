@@ -54,7 +54,7 @@ class GDPR extends StatelessWidget {
             ),
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: themeColor,
+                backgroundColor: themeColor,
                 padding: const EdgeInsets.only(
                   top: 12,
                   bottom: 12,
