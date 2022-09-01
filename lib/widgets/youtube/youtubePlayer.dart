@@ -168,7 +168,9 @@ class _YoutubePlayerState extends State<YoutubePlayer>
       });
     } catch (e) {
       print('Youtube player error: $e');
-      isError = true;
+      setState(() {
+        isError = true;
+      });
     }
     yt.close();
   }
