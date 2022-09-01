@@ -26,10 +26,10 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
     with AutomaticKeepAliveClientMixin {
   Color _audioColor = Color(0xff014DB8);
   late AudioPlayer _audioPlayer;
-  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.COMPLETED ||
-      _audioPlayer.state == PlayerState.STOPPED ||
-      _audioPlayer.state == PlayerState.PAUSED);
-  int _duration = 0;
+  bool get _checkIsPlaying => !(_audioPlayer.state == PlayerState.completed ||
+      _audioPlayer.state == PlayerState.stopped ||
+      _audioPlayer.state == PlayerState.paused);
+  Duration _duration = Duration();
   late double _textSize;
 
   @override
@@ -44,20 +44,20 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
 
   void _initAudioPlayer() async {
     _audioPlayer = AudioPlayer();
-    await _audioPlayer.setUrl(widget.audioUrl);
+    await _audioPlayer.setSourceUrl(widget.audioUrl);
   }
 
   _start() async {
     try {
-      _duration = await _audioPlayer.getDuration();
-      if (_duration < 0) {
-        _duration = 0;
+      _duration = await _audioPlayer.getDuration() ?? Duration();
+      if (_duration.inMilliseconds < 0) {
+        _duration = Duration();
       }
     } catch (e) {
-      _duration = 0;
+      _duration = Duration();
     }
 
-    await _audioPlayer.play(widget.audioUrl);
+    await _audioPlayer.play(UrlSource(widget.audioUrl));
   }
 
   _play() async {
@@ -69,12 +69,12 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
   }
 
   _playAndPause() {
-    if (_audioPlayer.state == PlayerState.COMPLETED ||
-        _audioPlayer.state == PlayerState.STOPPED) {
+    if (_audioPlayer.state == PlayerState.completed ||
+        _audioPlayer.state == PlayerState.stopped) {
       _start();
-    } else if (_audioPlayer.state == PlayerState.PLAYING) {
+    } else if (_audioPlayer.state == PlayerState.playing) {
       _pause();
-    } else if (_audioPlayer.state == PlayerState.PAUSED) {
+    } else if (_audioPlayer.state == PlayerState.paused) {
       _play();
     }
   }
@@ -155,26 +155,26 @@ class _MNewsAudioPlayerState extends State<MNewsAudioPlayer>
                     }),
                 Expanded(
                   child: StreamBuilder<Duration>(
-                      stream: _audioPlayer.onAudioPositionChanged,
+                      stream: _audioPlayer.onPositionChanged,
                       builder: (context, snapshot) {
                         double sliderPosition = snapshot.data == null
                             ? 0.0
                             : snapshot.data!.inMilliseconds.toDouble();
                         String position =
                             DateTimeFormat.stringDuration(snapshot.data);
-                        String duration = DateTimeFormat.stringDuration(
-                            Duration(milliseconds: _duration));
+                        String duration =
+                            DateTimeFormat.stringDuration(_duration);
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _duration == 0
+                            _duration.inMilliseconds == 0
                                 ? Slider(
                                     value: 0,
                                     onChanged: (v) {},
                                   )
                                 : Slider(
                                     min: 0.0,
-                                    max: _duration.toDouble(),
+                                    max: _duration.inMilliseconds.toDouble(),
                                     value: sliderPosition,
                                     activeColor: _audioColor,
                                     inactiveColor: Color(0xff979797),

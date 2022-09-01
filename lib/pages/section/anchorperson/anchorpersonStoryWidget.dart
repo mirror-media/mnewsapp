@@ -171,7 +171,7 @@ class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
         child: FaIcon(icon, size: 20, color: Colors.white),
       ),
       style: ElevatedButton.styleFrom(
-        primary: Color(0xffC1C2C2),
+        backgroundColor: Color(0xffC1C2C2),
         elevation: 5,
         shape: CircleBorder(),
       ),
