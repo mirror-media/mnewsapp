@@ -143,7 +143,7 @@ class _YoutubePlayerState extends State<YoutubePlayer>
             BetterPlayerTranslations(
               languageCode: "zh",
               generalDefaultError: "無法播放影片",
-              generalNone: "沒有",
+              generalNone: "無",
               generalDefault: "預設",
               generalRetry: "重試",
               playlistLoadingNextVideo: "正在載入下一部影片",
