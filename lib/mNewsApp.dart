@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:get/get.dart';
 import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
@@ -41,6 +42,18 @@ class MNewsApp extends StatelessWidget {
           systemOverlayStyle: SystemUiOverlayStyle.light,
         ),
       ),
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('en', ''),
+        Locale('zh', 'TW'),
+        Locale('zh', ''),
+      ],
+      locale: Get.deviceLocale,
+      fallbackLocale: const Locale('en'),
       home: BlocProvider(
         create: (context) => ConfigBloc(configRepos: ConfigServices()),
         child: InitialApp(),
