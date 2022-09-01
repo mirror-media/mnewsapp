@@ -39,6 +39,7 @@ class _YoutubePlayerState extends State<YoutubePlayer>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     imageWidth = MediaQuery.of(context).size.width;
     imageHeight = imageWidth / 16 * 9;
 
