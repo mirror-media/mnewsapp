@@ -4,9 +4,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:tv/blocs/config/events.dart';
 import 'package:tv/blocs/config/states.dart';
 import 'package:tv/helpers/exceptions.dart';
-import 'package:tv/models/topic.dart';
 import 'package:tv/services/configService.dart';
-import 'package:tv/services/topicService.dart';
 
 class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
   final ConfigRepos configRepos;
@@ -27,15 +25,13 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
           ));
           await remoteConfig.fetchAndActivate();
           String minAppVersion = remoteConfig.getString('min_version_number');
-          // fetch topic list need to show in drawer
-          List<Topic> topics = await TopicService().fetchFeaturedTopics();
+
           PackageInfo packageInfo = await PackageInfo.fromPlatform();
           String appVersion =
               'v${packageInfo.version}(${packageInfo.buildNumber})';
           emit(ConfigLoaded(
             isSuccess: isSuccess,
             minAppVersion: minAppVersion,
-            topics: topics,
             appVersion: appVersion,
           ));
         } catch (e) {
