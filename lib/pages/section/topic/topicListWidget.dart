@@ -124,7 +124,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
         crossAxisCount: 2,
         mainAxisSpacing: 24,
         crossAxisSpacing: 19,
-        childAspectRatio: 1.3,
+        childAspectRatio: 1.23,
       ),
       children: topicList.map((topic) => _buildItem(topic)).toList(),
     );

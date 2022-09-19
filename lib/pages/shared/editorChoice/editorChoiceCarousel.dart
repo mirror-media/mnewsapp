@@ -114,7 +114,7 @@ class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
       autoPlayInterval: Duration(seconds: 8),
       enlargeCenterPage: true,
       onPageChanged: (index, reason) {},
-      height: height,
+      height: height + 20,
     );
     return widget.editorChoiceList.length == 0
         ? Container()

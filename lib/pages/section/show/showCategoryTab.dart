@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
@@ -40,10 +42,14 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
       Category category = categoryList[i];
       _tabs.add(
         Tab(
-          child: Text(
-            category.name,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          child: Obx(
+            () => Text(
+              category.name,
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+              ),
+              textScaleFactor:
+                  Get.find<TextScaleFactorController>().textScaleFactor.value,
             ),
           ),
         ),
