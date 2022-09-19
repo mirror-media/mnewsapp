@@ -11,6 +11,7 @@ class TextScaleFactorController extends GetxController {
     debounce<double>(
       textScaleFactor,
       (_) async => await _prefs.setDouble('textScaleFactor', _),
+      time: 1.seconds,
     );
     super.onInit();
   }
@@ -18,5 +19,9 @@ class TextScaleFactorController extends GetxController {
   void init() async {
     _prefs = await SharedPreferences.getInstance();
     textScaleFactor.value = _prefs.getDouble('textScaleFactor') ?? 1.0;
+    //migrate from old version
+    if (textScaleFactor.value == 1.2) {
+      textScaleFactor.value = 1.7;
+    }
   }
 }

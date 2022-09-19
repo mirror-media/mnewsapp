@@ -193,7 +193,7 @@ class ChangeFontSizePage extends StatelessWidget {
           _optionButton('小', 0.9),
           _optionButton('預設', 1.0),
           _optionButton('中', 1.1),
-          _optionButton('大', 1.2),
+          _optionButton('大', 1.7),
         ],
       ),
     );
