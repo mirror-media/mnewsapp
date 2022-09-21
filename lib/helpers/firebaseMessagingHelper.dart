@@ -41,9 +41,12 @@ class FirebaseMessagingHelper {
     // Stream listener
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       if (message.data.containsKey('news_story_slug')) {
-        Get.to(() => StoryPage(
-              slug: message.data['news_story_slug'],
-            ));
+        Get.to(
+          () => StoryPage(
+            slug: message.data['news_story_slug'],
+          ),
+          preventDuplicates: false,
+        );
       }
     });
   }

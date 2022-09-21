@@ -40,7 +40,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
 
         return Drawer(
           child: CustomScrollView(
-            physics: const NeverScrollableScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             slivers: [
               SliverToBoxAdapter(
                 child: Container(
@@ -201,11 +201,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 ),
               ),
               SizedBox(width: 16.0),
-              Text(
-                title,
-                style: TextStyle(
-                  fontSize: 15,
-                  fontWeight: FontWeight.w400,
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.w400,
+                  ),
+                  textScaleFactor: Get.find<TextScaleFactorController>()
+                      .textScaleFactor
+                      .value,
                 ),
               ),
             ],

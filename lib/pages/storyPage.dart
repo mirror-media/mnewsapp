@@ -164,7 +164,10 @@ class StoryPage extends StatelessWidget {
             ],
             wantKeepAlive: true,
           ),
-        Center(child: _buildUpdatedTime(story.updatedAt!)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: _buildUpdatedTime(story.updatedAt!),
+        ),
         SizedBox(height: 32),
         if (story.tags != null && story.tags!.length > 0) ...[
           _buildTags(story.tags),
@@ -249,8 +252,8 @@ class StoryPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
       child: Obx(
-        () => Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        () => Wrap(
+          alignment: WrapAlignment.spaceBetween,
           children: [
             if (story.categoryList!.length == 0) Container(),
             if (story.categoryList!.length > 0)
@@ -272,6 +275,8 @@ class StoryPage extends StatelessWidget {
                 color: Color(0xff757575),
               ),
               textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
             ),
           ],
         ),
@@ -669,6 +674,7 @@ class StoryPage extends StatelessWidget {
           color: Color(0xff757575),
         ),
         textScaleFactor: textScaleFactorController.textScaleFactor.value,
+        textAlign: TextAlign.center,
       ),
     );
   }
@@ -802,6 +808,8 @@ class StoryPage extends StatelessWidget {
               () => ExtendedText(
                 story.name,
                 joinZeroWidthSpace: true,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 20),
                 textScaleFactor:
                     textScaleFactorController.textScaleFactor.value,
