@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
@@ -37,23 +39,31 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
     _tabs = <int, Widget>{
       0: Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
-        child: Text(
-          showIntro.playList01!.name,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
+        child: Obx(
+          () => Text(
+            showIntro.playList01!.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+            textScaleFactor:
+                Get.find<TextScaleFactorController>().textScaleFactor.value,
           ),
         ),
       ),
       1: Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
-        child: Text(
-          showIntro.playList02!.name,
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 17,
-            fontWeight: FontWeight.w500,
+        child: Obx(
+          () => Text(
+            showIntro.playList02!.name,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 17,
+              fontWeight: FontWeight.w500,
+            ),
+            textScaleFactor:
+                Get.find<TextScaleFactorController>().textScaleFactor.value,
           ),
         ),
       ),

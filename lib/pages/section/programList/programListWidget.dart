@@ -202,7 +202,6 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
         ? '0${next.startTimeMinute.toString()}'
         : next.startTimeMinute.toString();
     if (endHour == '00' && endMinute == '00') endHour = '24';
-    String time = '$startHour:$startMinute-$endHour:$endMinute';
 
     // Widget newOrRepeat;
     // if (now.txCategory == 'Repeat')
@@ -242,28 +241,34 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
     );
 
     return Obx(
-      () => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            time,
-            style: TextStyle(fontSize: 15),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
-          ),
-          // SizedBox(
-          //   width: 21,
-          // ),
-          name,
-          // SizedBox(
-          //   width: 15,
-          // ),
-          Text(
-            now.showClass,
-            style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
-          )
-        ],
-      ),
+      () {
+        String time = '$startHour:$startMinute-$endHour:$endMinute';
+        if (textScaleFactorController.textScaleFactor.value > 1.5) {
+          time = '$startHour:$startMinute-\n$endHour:$endMinute';
+        }
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              time,
+              style: TextStyle(fontSize: 15),
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            ),
+            // SizedBox(
+            //   width: 21,
+            // ),
+            name,
+            // SizedBox(
+            //   width: 15,
+            // ),
+            Text(
+              now.showClass,
+              style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            )
+          ],
+        );
+      },
     );
   }
 }
