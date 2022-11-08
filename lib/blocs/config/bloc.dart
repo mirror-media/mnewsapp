@@ -21,7 +21,7 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
           FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
           await remoteConfig.setConfigSettings(RemoteConfigSettings(
             fetchTimeout: Duration(seconds: 10),
-            minimumFetchInterval: Duration(hours: 12),
+            minimumFetchInterval: Duration(hours: 1),
           ));
           await remoteConfig.fetchAndActivate();
           String minAppVersion = remoteConfig.getString('min_version_number');
@@ -33,6 +33,7 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
             isSuccess: isSuccess,
             minAppVersion: minAppVersion,
             appVersion: appVersion,
+            electionJsonApi: remoteConfig.getString('election_api'),
           ));
         } catch (e) {
           emit(ConfigError(
