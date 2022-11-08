@@ -53,7 +53,7 @@ dependencies:
   # package for working with MIME type definitions
   mime: ^1.0.0
   # video player
-  video_player: ^2.4.4
+  video_player: 2.4.4
   # audio service
   audioplayers: ^1.0.1
   # a friendly Material or Cupertino UI for video
