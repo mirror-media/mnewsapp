@@ -20,7 +20,8 @@ import 'package:tv/widgets/homeDrawer.dart';
 
 class HomePage extends StatefulWidget {
   final String appVersion;
-  const HomePage(this.appVersion);
+  final String electionJsonApi;
+  const HomePage({required this.appVersion, required this.electionJsonApi});
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -107,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     switch (sectionId) {
       case MNewsSection.news:
         interstitialAdController.ramdomShowInterstitialAd();
-        return NewsPage();
+        return NewsPage(widget.electionJsonApi);
       case MNewsSection.live:
         interstitialAdController.ramdomShowInterstitialAd();
         return LivePage();
