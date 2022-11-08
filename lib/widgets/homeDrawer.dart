@@ -249,7 +249,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                       FontAwesomeIcons.youtube,
                       '鏡新聞 YouTube 頻道',
                       'https://www.youtube.com/channel/UC4LjkybVKXCDlneVXlKAbmw'),
-                  _thirdPartyMediaLinkButton(FontAwesomeIcons.facebookSquare,
+                  _thirdPartyMediaLinkButton(FontAwesomeIcons.squareFacebook,
                       '鏡新聞 粉絲專頁', 'https://www.facebook.com/mnewstw'),
                   _thirdPartyMediaLinkButton(FontAwesomeIcons.instagram,
                       '鏡新聞 Instagram', 'https://www.instagram.com/mnewstw/'),
