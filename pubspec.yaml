@@ -43,7 +43,7 @@ dependencies:
   # local storage
   localstorage: ^4.0.0+1
   # share url
-  share_plus: ^4.0.4
+  share_plus: ^6.2.0
   # Carousel slider in flutter.
   carousel_slider: ^4.0.0-nullsafety.0
   # Cached network image.
@@ -53,7 +53,7 @@ dependencies:
   # package for working with MIME type definitions
   mime: ^1.0.0
   # video player
-  video_player: 2.4.4
+  video_player: ^2.4.4
   # audio service
   audioplayers: ^1.0.1
   # a friendly Material or Cupertino UI for video
@@ -69,9 +69,9 @@ dependencies:
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
-  firebase_core: ^1.6.0
+  firebase_core: ^2.1.1
   # firebase cloud messaging
-  firebase_messaging: ^13.0.0
+  firebase_messaging: ^14.0.4
   # svg file loader
   flutter_svg: ^1.0.0
   # ios look date picker
@@ -85,9 +85,9 @@ dependencies:
   # shared_preferences
   shared_preferences: ^2.0.7
   # version update
-  upgrader: ^4.1.2
+  upgrader: ^5.0.0-alpha.1
   # firebase remote config
-  firebase_remote_config: ^2.0.2
+  firebase_remote_config: ^3.0.4
   # get youtube metadata
   youtube_explode_dart: ^1.10.9+1
   # webview
@@ -95,7 +95,7 @@ dependencies:
   # better video player use for yt live only
   better_player: ^0.0.77
   # firebase analytics
-  firebase_analytics: ^9.0.2
+  firebase_analytics: ^10.0.4
   # visibility detector
   visibility_detector: ^0.3.3
   # auto size text
@@ -111,7 +111,7 @@ dependencies:
   # fix error of chinese and english mix text
   extended_text: ^9.1.0
   # package info
-  package_info_plus: ^1.4.2
+  package_info_plus: ^3.0.1
   # compare objects
   equatable: ^2.0.5
   # for election
