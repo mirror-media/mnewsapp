@@ -112,6 +112,10 @@ dependencies:
   extended_text: ^9.1.0
   # package info
   package_info_plus: ^1.4.2
+  # compare objects
+  equatable: ^2.0.5
+  # for election
+  percent_indicator: ^4.2.2
 
 flutter_icons:
   android: "launcher_icon"
@@ -142,6 +146,7 @@ flutter:
     - assets/image/
     - assets/image/ombuds/
     - assets/image/search/
+    - assets/image/election/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
