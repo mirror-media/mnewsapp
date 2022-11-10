@@ -26,8 +26,4 @@ class ElectionCubit extends Cubit<ElectionState> {
       }
     }
   }
-
-  void hideElectionBlock() {
-    emit(HideElectionBlock());
-  }
 }

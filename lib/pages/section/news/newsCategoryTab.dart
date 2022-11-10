@@ -4,13 +4,11 @@ import 'package:get/get.dart';
 import 'package:tv/blocs/categories/bloc.dart';
 import 'package:tv/blocs/categories/events.dart';
 import 'package:tv/blocs/categories/states.dart';
-import 'package:tv/blocs/election/election_cubit.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/pages/section/news/election/electionWidget.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
 import 'package:tv/pages/section/news/newsTabContent.dart';
@@ -64,6 +62,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
         NewsTabContent(
           categorySlug: category.slug!,
           needCarousel: categoryList[i].isLatestCategory(),
+          showElectronBlock: i == 0,
         ),
       );
     }
@@ -75,14 +74,6 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController!.index,
     );
-
-    _tabController!.addListener(() {
-      if(_tabController!.index == 0){
-        context.read<ElectionCubit>().fetchMunicipalityData();
-      }else{
-        context.read<ElectionCubit>().hideElectionBlock();
-      }
-    });
   }
 
   @override
@@ -139,15 +130,6 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
               controller: tabController,
             ),
           ),
-        ),
-        BlocBuilder<ElectionCubit, ElectionState>(
-          builder: (context, state) {
-            if (state is HideElectionBlock) {
-              return const SizedBox();
-            }
-
-            return ElectionWidget();
-          },
         ),
         BlocProvider(
           create: (context) =>
