@@ -79,6 +79,13 @@ class MunicipalityItem extends StatelessWidget {
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          color: Color.fromRGBO(0, 0, 0, 0.3),
+                          offset: Offset(0, 1),
+                          blurRadius: 1,
+                        ),
+                      ],
                     ),
                   ),
                 ],
