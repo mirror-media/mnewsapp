@@ -18,6 +18,4 @@ class ElectionDataLoaded extends ElectionState {
       {required this.municipalityList, required this.lastUpdateTime});
 }
 
-class HideElectionBlock extends ElectionState {}
-
 class ElectionDataError extends ElectionState {}

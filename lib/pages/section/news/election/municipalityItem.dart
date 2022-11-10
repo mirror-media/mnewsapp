@@ -92,7 +92,7 @@ class MunicipalityItem extends StatelessWidget {
               ),
               lineHeight: 24,
               animation: true,
-              backgroundColor: const Color.fromRGBO(244, 245, 246, 1),
+              backgroundColor: const Color.fromRGBO(206, 206, 207, 1),
               progressColor: item.elected
                   ? const Color.fromRGBO(216, 76, 101, 1)
                   : const Color.fromRGBO(0, 51, 102, 1),
