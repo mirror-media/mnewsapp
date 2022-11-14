@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 import 'package:tv/blocs/election/election_cubit.dart';
+import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/models/election/municipality.dart';
 import 'package:tv/pages/section/news/election/municipalityItem.dart';
 
@@ -29,7 +30,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   void initState() {
     fetchMunicipalityData();
     autoUpdateTimer = Timer.periodic(
-        const Duration(minutes: 3), (timer) => fetchMunicipalityData());
+        const Duration(minutes: 1), (timer) => fetchMunicipalityData());
     super.initState();
   }
 
@@ -87,7 +88,11 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                     Row(
                       children: [
                         GestureDetector(
-                          onTap: () => carouselController.previousPage(),
+                          onTap: () {
+                            AnalyticsHelper.logElectionEvent(
+                                eventName: 'country_button');
+                            carouselController.previousPage();
+                          },
                           child: Icon(
                             CupertinoIcons.arrowtriangle_left_fill,
                             size: 20,
@@ -105,7 +110,11 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         ),
                         const Spacer(),
                         GestureDetector(
-                          onTap: () => carouselController.nextPage(),
+                          onTap: () {
+                            AnalyticsHelper.logElectionEvent(
+                                eventName: 'country_button');
+                            carouselController.nextPage();
+                          },
                           child: Icon(
                             CupertinoIcons.arrowtriangle_right_fill,
                             size: 20,
@@ -143,7 +152,12 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                     Align(
                       alignment: Alignment.center,
                       child: GestureDetector(
-                        onTap: () => launchUrlString('https://www.mnews.tw/'),
+                        onTap: () {
+                          AnalyticsHelper.logElectionEvent(
+                              eventName: 'to_2022Election');
+                          launchUrlString(
+                              'https://mnews.tw/projects/election2022');
+                        },
                         child: const Text(
                           '查看更多',
                           style: TextStyle(
