@@ -29,7 +29,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   void initState() {
     fetchMunicipalityData();
     autoUpdateTimer = Timer.periodic(
-        const Duration(minutes: 3), (timer) => fetchMunicipalityData());
+        const Duration(minutes: 1), (timer) => fetchMunicipalityData());
     super.initState();
   }
 
