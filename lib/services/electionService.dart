@@ -12,7 +12,7 @@ class ElectionService implements ElectionRepos {
   Future<Map<String, dynamic>> fetchMunicipalityData(String jsonApi) async {
     var jsonResponse = await _helper.getByCacheAndAutoCache(
       jsonApi,
-      maxAge: const Duration(minutes: 2),
+      maxAge: const Duration(seconds: 40),
     );
 
     List<Municipality> municipalityList = [];
