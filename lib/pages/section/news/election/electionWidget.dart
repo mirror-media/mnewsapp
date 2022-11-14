@@ -155,7 +155,8 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         onTap: () {
                           AnalyticsHelper.logElectionEvent(
                               eventName: 'to_2022Election');
-                          launchUrlString('https://www.mnews.tw/');
+                          launchUrlString(
+                              'https://mnews.tw/projects/election2022');
                         },
                         child: const Text(
                           '查看更多',
