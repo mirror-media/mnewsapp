@@ -52,4 +52,8 @@ class AnalyticsHelper {
   }) async {
     await analytics.logShare(contentType: type, itemId: name, method: "");
   }
+
+  static logElectionEvent({required String eventName}) async {
+    await analytics.logEvent(name: eventName);
+  }
 }
