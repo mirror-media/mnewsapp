@@ -51,7 +51,10 @@ class _InitialAppState extends State<InitialApp> {
           ),
           child: BlocProvider(
             create: (_) => SectionCubit(),
-            child: HomePage(state.appVersion),
+            child: HomePage(
+              appVersion: state.appVersion,
+              electionJsonApi: state.electionJsonApi,
+            ),
           ),
         );
       }

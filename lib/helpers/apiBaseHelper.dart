@@ -182,7 +182,9 @@ dynamic returnResponse(http.Response response, {bool skipCheck = false}) {
             // category json
             responseJson.containsKey('allCategories') ||
             responseJson.containsKey('allPosts') ||
-            responseJson.containsKey('allShows');
+            responseJson.containsKey('allShows') ||
+            // election json
+            responseJson.containsKey('polling');
       }
 
       if (!hasData && !skipCheck) {
