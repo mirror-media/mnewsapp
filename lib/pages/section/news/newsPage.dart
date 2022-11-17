@@ -8,9 +8,6 @@ import 'package:tv/pages/section/news/newsCategoryTab.dart';
 import 'package:tv/services/electionService.dart';
 
 class NewsPage extends StatelessWidget {
-  final String electionJsonApi;
-  const NewsPage(this.electionJsonApi);
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
@@ -24,7 +21,6 @@ class NewsPage extends StatelessWidget {
         BlocProvider(
           create: (context) => ElectionCubit(
             repos: ElectionService(),
-            jsonApi: electionJsonApi,
           ),
         ),
       ],

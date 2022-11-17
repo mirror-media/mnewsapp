@@ -53,7 +53,6 @@ class _InitialAppState extends State<InitialApp> {
             create: (_) => SectionCubit(),
             child: HomePage(
               appVersion: state.appVersion,
-              electionJsonApi: state.electionJsonApi,
             ),
           ),
         );
