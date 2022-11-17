@@ -62,7 +62,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
         NewsTabContent(
           categorySlug: category.slug!,
           needCarousel: categoryList[i].isLatestCategory(),
-          showElectronBlock: i == 0,
+          showElectionBlock: i == 0,
         ),
       );
     }
