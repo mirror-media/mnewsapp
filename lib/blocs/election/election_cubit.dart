@@ -22,4 +22,8 @@ class ElectionCubit extends Cubit<ElectionState> {
       emit(ElectionDataError());
     }
   }
+
+  void hideWidget() {
+    emit(HideWidget());
+  }
 }
