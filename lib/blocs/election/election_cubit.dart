@@ -7,23 +7,23 @@ part 'election_state.dart';
 
 class ElectionCubit extends Cubit<ElectionState> {
   final ElectionRepos repos;
-  final String jsonApi;
-  ElectionCubit({required this.repos, required this.jsonApi})
-      : super(ElectionInitial());
+  ElectionCubit({required this.repos}) : super(ElectionInitial());
 
-  void fetchMunicipalityData() async {
-    if (jsonApi.isNotEmpty) {
-      emit(UpdatingElectionData());
-      try {
-        var result = await repos.fetchMunicipalityData(jsonApi);
-        emit(ElectionDataLoaded(
-          lastUpdateTime: result['lastUpdateTime'],
-          municipalityList: result['municipalityList'],
-        ));
-      } catch (e) {
-        print('Fetch election data failed: $e');
-        emit(ElectionDataError());
-      }
+  void fetchMunicipalityData(String api) async {
+    emit(UpdatingElectionData());
+    try {
+      var result = await repos.fetchMunicipalityData(api);
+      emit(ElectionDataLoaded(
+        lastUpdateTime: result['lastUpdateTime'],
+        municipalityList: result['municipalityList'],
+      ));
+    } catch (e) {
+      print('Fetch election data failed: $e');
+      emit(ElectionDataError());
     }
+  }
+
+  void hideWidget() {
+    emit(HideWidget());
   }
 }

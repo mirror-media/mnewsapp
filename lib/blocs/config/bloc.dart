@@ -33,7 +33,6 @@ class ConfigBloc extends Bloc<ConfigEvents, ConfigState> {
             isSuccess: isSuccess,
             minAppVersion: minAppVersion,
             appVersion: appVersion,
-            electionJsonApi: remoteConfig.getString('election_api'),
           ));
         } catch (e) {
           emit(ConfigError(

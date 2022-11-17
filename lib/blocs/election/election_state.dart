@@ -19,3 +19,5 @@ class ElectionDataLoaded extends ElectionState {
 }
 
 class ElectionDataError extends ElectionState {}
+
+class HideWidget extends ElectionState {}

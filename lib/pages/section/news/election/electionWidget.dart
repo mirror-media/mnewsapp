@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,31 +25,56 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   List<Municipality> municipalityList = [];
   late DateTime lastUpdateTime;
   final CarouselController carouselController = CarouselController();
-  late final Timer autoUpdateTimer;
+  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
+  late final Timer? autoUpdateTimer;
   int currentIndex = 0;
+  late final String api;
+  late final DateTime startShowTime;
+  late final DateTime endShowTime;
 
   @override
   void initState() {
-    fetchMunicipalityData();
-    autoUpdateTimer = Timer.periodic(
-        const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+    var electionJsonString = remoteConfig.getString('election');
+    try {
+      var electionJson = jsonDecode(electionJsonString);
+      api = electionJson['api'];
+      startShowTime = DateTime.parse(electionJson['startTime']);
+      endShowTime = DateTime.parse(electionJson['endTime']);
+      fetchMunicipalityData();
+      autoUpdateTimer = Timer.periodic(
+          const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+    } catch (e) {
+      print('Init election widget error: $e');
+      autoUpdateTimer = null;
+      context.read<ElectionCubit>().hideWidget();
+    }
+
     super.initState();
   }
 
   @override
   void dispose() {
-    autoUpdateTimer.cancel();
+    autoUpdateTimer?.cancel();
     super.dispose();
   }
 
   void fetchMunicipalityData() {
-    context.read<ElectionCubit>().fetchMunicipalityData();
+    var now = DateTime.now();
+    if (now.isBefore(startShowTime) || now.isAfter(endShowTime)) {
+      context.read<ElectionCubit>().hideWidget();
+    } else {
+      context.read<ElectionCubit>().fetchMunicipalityData(api);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ElectionCubit, ElectionState>(
       builder: (context, state) {
+        if (state is HideWidget) {
+          return const SizedBox();
+        }
+
         if (state is ElectionDataLoaded) {
           municipalityList = state.municipalityList;
           lastUpdateTime = state.lastUpdateTime;

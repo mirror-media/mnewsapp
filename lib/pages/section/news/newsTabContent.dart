@@ -14,11 +14,11 @@ import 'package:tv/pages/section/news/newsTabStoryList.dart';
 class NewsTabContent extends StatelessWidget {
   final String categorySlug;
   final bool needCarousel;
-  final bool showElectronBlock;
+  final bool showElectionBlock;
   NewsTabContent({
     required this.categorySlug,
     this.needCarousel = false,
-    this.showElectronBlock = false,
+    this.showElectionBlock = false,
   });
 
   @override
@@ -33,7 +33,7 @@ class NewsTabContent extends StatelessWidget {
     }
     return ListView(
       children: [
-        if (showElectronBlock) ElectionWidget(),
+        if (showElectionBlock) ElectionWidget(),
         if (needCarousel)
           BlocProvider(
             create: (context) => EditorChoiceBloc(
