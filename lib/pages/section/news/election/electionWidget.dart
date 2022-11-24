@@ -29,6 +29,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   late final Timer? autoUpdateTimer;
   int currentIndex = 0;
   late final String api;
+  late final String readmoreUrl;
   late final DateTime startShowTime;
   late final DateTime endShowTime;
 
@@ -38,6 +39,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
     try {
       var electionJson = jsonDecode(electionJsonString);
       api = electionJson['api'];
+      readmoreUrl = electionJson['readMoreUrl'];
       startShowTime = DateTime.parse(electionJson['startTime']);
       endShowTime = DateTime.parse(electionJson['endTime']);
       fetchMunicipalityData();
@@ -182,8 +184,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         onTap: () {
                           AnalyticsHelper.logElectionEvent(
                               eventName: 'to_2022Election');
-                          launchUrlString(
-                              'https://mnews.tw/projects/election2022');
+                          launchUrlString(readmoreUrl);
                         },
                         child: const Text(
                           '查看更多',
