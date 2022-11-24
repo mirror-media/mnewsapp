@@ -93,7 +93,10 @@ dependencies:
   # webview
   webview_flutter: ^3.0.4
   # better video player use for yt live only
-  better_player: ^0.0.77
+  better_player: 
+    git:
+      url: https://github.com/AhmedOsman14/betterplayer.git
+      ref: issue_android
   # firebase analytics
   firebase_analytics: ^10.0.4
   # visibility detector
