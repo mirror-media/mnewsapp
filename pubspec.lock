@@ -102,9 +102,11 @@ packages:
   better_player:
     dependency: "direct main"
     description:
-      name: better_player
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: issue_android
+      resolved-ref: "9ae4f6e05ab9cfdea416988093aa785d8bc034b4"
+      url: "https://github.com/AhmedOsman14/betterplayer.git"
+    source: git
     version: "0.0.83"
   bloc:
     dependency: transitive
