@@ -62,7 +62,10 @@ class _ElectionWidgetState extends State<ElectionWidget> {
 
   void fetchMunicipalityData() {
     var now = DateTime.now();
-    if (now.isBefore(startShowTime) || now.isAfter(endShowTime)) {
+    if (now.isAfter(endShowTime)) {
+      context.read<ElectionCubit>().hideWidget();
+      autoUpdateTimer?.cancel();
+    } else if (now.isBefore(startShowTime)) {
       context.read<ElectionCubit>().hideWidget();
     } else {
       context.read<ElectionCubit>().fetchMunicipalityData(api);
