@@ -119,7 +119,9 @@ class StoryPage extends StatelessWidget {
             String url = Environment().config.mNewsWebsiteLink +
                 '/story/' +
                 Get.find<StoryPageController>(tag: slug).currentSlug;
-            Share.share(url);
+
+            Share.share(url
+            ,sharePositionOrigin: Rect.fromLTWH(Get.width-100, 0,100,100));
           },
         ),
       ],
