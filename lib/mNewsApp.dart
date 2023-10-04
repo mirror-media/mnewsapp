@@ -7,6 +7,7 @@ import 'package:tv/blocs/config/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
+import 'package:tv/home_binding.dart';
 import 'package:tv/initialApp.dart';
 import 'package:tv/services/configService.dart';
 
@@ -54,6 +55,7 @@ class MNewsApp extends StatelessWidget {
       ],
       locale: Get.deviceLocale,
       fallbackLocale: const Locale('en'),
+      initialBinding: HomeBinding(),
       home: BlocProvider(
         create: (context) => ConfigBloc(configRepos: ConfigServices()),
         child: InitialApp(),

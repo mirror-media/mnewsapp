@@ -25,7 +25,8 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-
+  sprintf: ^7.0.0
+  graphql_flutter: ^5.1.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -43,7 +44,7 @@ dependencies:
   # local storage
   localstorage: ^4.0.0+1
   # share url
-  share_plus: ^6.2.0
+  share_plus: 6.2.0
   # Carousel slider in flutter.
   carousel_slider: ^4.0.0-nullsafety.0
   # Cached network image.
@@ -92,6 +93,7 @@ dependencies:
   youtube_explode_dart: ^1.10.9+1
   # webview
   webview_flutter: ^3.0.4
+  youtube_player_flutter: ^8.1.2
   # better video player use for yt live only
   better_player: 
     git:
@@ -112,7 +114,7 @@ dependencies:
   # app tracking
   app_tracking_transparency: ^2.0.2+4
   # fix error of chinese and english mix text
-  extended_text: ^9.1.0
+  extended_text: ^10.0.0
   # package info
   package_info_plus: ^3.0.1
   # compare objects

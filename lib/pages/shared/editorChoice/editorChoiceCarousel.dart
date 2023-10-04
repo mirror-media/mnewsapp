@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/storyListItem.dart';
+import 'package:tv/pages/section/news/news_page_controller.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
+import 'package:tv/widgets/youtube_stream_widget.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
   @override
@@ -15,6 +18,8 @@ class BuildEditorChoiceCarousel extends StatefulWidget {
 }
 
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
+  final NewsPageController controller = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -51,10 +56,32 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         }
         return Column(
           children: [
-            LiveWidget(
-              needBuildLiveTitle: false,
-              livePostId: Environment().config.mNewsLivePostId,
-            ),
+            Obx(() {
+              final mnewLiveUrl = controller.rxnNewLiveUrl.value;
+              return mnewLiveUrl != null
+                  ? Column(
+                      children: [
+                        YoutubeStreamWidget(youtubeUrl: mnewLiveUrl),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink();
+            }),
+            Obx(() {
+              final liveCameList = controller.rxLiveCamList;
+              return liveCameList.isNotEmpty
+                  ? Column(
+                      children: [
+                        YoutubeStreamWidget(youtubeUrl: liveCameList[0]),
+                        const SizedBox(
+                          height: 12,
+                        ),
+                      ],
+                    )
+                  : SizedBox.shrink();
+            }),
             SizedBox(
               height: 12,
             ),

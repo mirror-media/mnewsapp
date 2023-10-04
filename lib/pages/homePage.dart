@@ -9,7 +9,9 @@ import 'package:tv/pages/changeFontSizePage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
+import 'package:tv/pages/section/live/live_page_controller.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
+import 'package:tv/pages/section/news/news_page_controller.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/programList/programListPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
@@ -107,9 +109,13 @@ class _HomePageState extends State<HomePage> {
     switch (sectionId) {
       case MNewsSection.news:
         interstitialAdController.ramdomShowInterstitialAd();
+        Get.delete<NewsPageController>();
+        Get.put(NewsPageController());
         return NewsPage();
       case MNewsSection.live:
         interstitialAdController.ramdomShowInterstitialAd();
+        Get.delete<LivePageController>();
+        Get.put(LivePageController());
         return LivePage();
       case MNewsSection.video:
         interstitialAdController.ramdomShowInterstitialAd();
