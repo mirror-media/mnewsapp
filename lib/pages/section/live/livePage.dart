@@ -1,30 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/blocs/promotionVideo/bloc.dart';
+import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
-import 'package:tv/helpers/environment.dart';
-import 'package:tv/pages/section/live/liveCams.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
-import 'package:tv/widgets/liveWidget.dart';
+import 'package:tv/pages/section/live/live_page_controller.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
 import 'package:tv/services/promotionVideosService.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
+import 'package:tv/widgets/youtube_stream_widget.dart';
 
-class LivePage extends StatelessWidget {
+class LivePage extends GetView<LivePageController> {
   @override
   Widget build(BuildContext context) {
     AnalyticsHelper.sendScreenView(screenName: 'LivePage');
+    final TextScaleFactorController textScaleFactorController = Get.find();
     return ListView(
       children: [
         Column(
           children: [
-            BlocProvider(
-                create: (context) => LiveCubit(),
-                child: LiveWidget(
-                  livePostId: Environment().config.mNewsLivePostId,
-                )),
+            const SizedBox(height: 24.0),
+            Row(
+              children: [
+                const SizedBox(width: 24.0),
+                Obx(() {
+                  return Text(
+                    '鏡新聞 Live',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textScaleFactor:
+                        textScaleFactorController.textScaleFactor.value,
+                  );
+                }),
+                const SizedBox(width: 8.0),
+                const FaIcon(
+                  FontAwesomeIcons.podcast,
+                  size: 18,
+                  color: Colors.red,
+                )
+              ],
+            ),
+            const SizedBox(height: 24),
+            Obx(() {
+              final mnewsLiveUrl = controller.rxnNewLiveUrl.value;
+              return mnewsLiveUrl != null
+                  ? YoutubeStreamWidget(youtubeUrl: mnewsLiveUrl)
+                  : SizedBox.shrink();
+            }),
             InlineBannerAdWidget(
               adUnitId: AdUnitIdHelper.getBannerAdUnitId('NewsAT1'),
               sizes: [
@@ -32,10 +59,46 @@ class LivePage extends StatelessWidget {
                 AdSize(width: 336, height: 280),
               ],
             ),
-            BlocProvider(
-              create: (context) => LiveCubit(),
-              child: LiveCams(),
+            Row(
+              children: [
+                const SizedBox(width: 24.0),
+                Obx(() {
+                  return Text(
+                    '直播現場',
+                    style: TextStyle(
+                      fontSize: 17,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textScaleFactor:
+                        textScaleFactorController.textScaleFactor.value,
+                  );
+                }),
+                const SizedBox(width: 8.0),
+                const FaIcon(
+                  FontAwesomeIcons.podcast,
+                  size: 18,
+                  color: Colors.red,
+                )
+              ],
             ),
+            const SizedBox(height: 24),
+            Obx(() {
+              final liveCameList = controller.rxLiveCamList;
+              return liveCameList.isNotEmpty
+                  ? Column(
+                      children: liveCameList
+                          .map((element) => Column(
+                            children: [
+                              YoutubeStreamWidget(
+                                    youtubeUrl: element,
+                                  ),
+                              const SizedBox(height: 12,)
+                            ],
+                          ))
+                          .toList(),
+                    )
+                  : SizedBox.shrink();
+            }),
             InlineBannerAdWidget(
               adUnitId: AdUnitIdHelper.getBannerAdUnitId('NewsAT2'),
               sizes: [
