@@ -31,27 +31,29 @@ class NewsTabContent extends StatelessWidget {
       AnalyticsHelper.sendScreenView(
           screenName: 'NewsPage categorySlug=$categorySlug');
     }
-    return ListView(
-      children: [
-        if (showElectionBlock) ElectionWidget(),
-        if (needCarousel)
-          BlocProvider(
-            create: (context) => EditorChoiceBloc(
-              editorChoiceRepos: EditorChoiceServices(),
-              tabStoryListBloc: tabStoryListBloc,
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          if (showElectionBlock) ElectionWidget(),
+          if (needCarousel)
+            BlocProvider(
+              create: (context) => EditorChoiceBloc(
+                editorChoiceRepos: EditorChoiceServices(),
+                tabStoryListBloc: tabStoryListBloc,
+              ),
+              child: BuildEditorChoiceCarousel(),
             ),
-            child: BuildEditorChoiceCarousel(),
+          BlocProvider(
+            create: (context) => tabStoryListBloc,
+            child: categorySlug == 'popular'
+                ? NewsPopularTabStoryList()
+                : NewsTabStoryList(
+                    categorySlug: categorySlug,
+                    needCarousel: needCarousel,
+                  ),
           ),
-        BlocProvider(
-          create: (context) => tabStoryListBloc,
-          child: categorySlug == 'popular'
-              ? NewsPopularTabStoryList()
-              : NewsTabStoryList(
-                  categorySlug: categorySlug,
-                  needCarousel: needCarousel,
-                ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }
