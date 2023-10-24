@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:tv/widgets/youtube/youtubePlayer.dart';
+import 'package:tv/widgets/youtube_stream_widget.dart';
 
 class YoutubeWidget extends StatefulWidget {
   final String youtubeId;
   final String? description;
   final double textSize;
+
   YoutubeWidget(
       {required this.youtubeId, this.description, this.textSize = 20});
 
@@ -14,6 +15,7 @@ class YoutubeWidget extends StatefulWidget {
 
 class _YoutubeWidgetState extends State<YoutubeWidget> {
   late double textSize;
+
   @override
   void initState() {
     super.initState();
@@ -25,7 +27,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        YoutubePlayer(widget.youtubeId),
+        YoutubeStreamWidget(youtubeId: widget.youtubeId),
         if (widget.description != null && widget.description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
