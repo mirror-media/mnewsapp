@@ -11,9 +11,9 @@ import 'package:tv/controller/storyPageController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/helpers/environment.dart';
-import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/helpers/paragraphFormat.dart';
 import 'package:tv/models/paragraph.dart';
@@ -32,16 +32,17 @@ import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
-import 'package:tv/widgets/youtube/youtubePlayer.dart';
-import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:tv/widgets/youtube_stream_widget.dart';
 
 class StoryPage extends StatelessWidget {
   final String slug;
   final bool showAds;
+
   StoryPage({
     required this.slug,
     this.showAds = true,
   });
+
   final interstitialAdController = Get.find<InterstitialAdController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
 
@@ -120,8 +121,9 @@ class StoryPage extends StatelessWidget {
                 '/story/' +
                 Get.find<StoryPageController>(tag: slug).currentSlug;
 
-            Share.share(url
-            ,sharePositionOrigin: Rect.fromLTWH(Get.width-100, 0,100,100));
+            Share.share(url,
+                sharePositionOrigin:
+                    Rect.fromLTWH(Get.width - 100, 0, 100, 100));
           },
         ),
       ],
@@ -238,8 +240,9 @@ class StoryPage extends StatelessWidget {
   _buildVideoWidget(String videoUrl) {
     String youtubeString = 'youtube';
     if (videoUrl.contains(youtubeString)) {
-      String? ytId = VideoId.parseVideoId(videoUrl) ?? '';
-      return YoutubePlayer(ytId);
+      return YoutubeStreamWidget(
+        youtubeUrl: videoUrl,
+      );
     }
 
     return MNewsVideoPlayer(
