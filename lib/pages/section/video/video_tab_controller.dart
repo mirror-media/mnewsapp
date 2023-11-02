@@ -29,7 +29,6 @@ class VideoTabController extends GetxController {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       loadMorePost();
-      print('mike is end');
     }
   }
 
