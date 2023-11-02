@@ -1,58 +1,82 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/editorChoice/bloc.dart';
-import 'package:tv/blocs/editorChoice/events.dart';
-import 'package:tv/blocs/tabStoryList/bloc.dart';
+import 'package:get/get.dart';
+import 'package:google_mobile_ads/google_mobile_ads.dart';
+import 'package:tv/core/enum/page_status.dart';
+import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
-import 'package:tv/services/editorChoiceService.dart';
-import 'package:tv/services/tabStoryListService.dart';
-import 'package:tv/pages/shared/editorChoice/editorChoiceStoryList.dart';
-import 'package:tv/pages/section/video/popularVideoTabStoryList.dart';
-import 'package:tv/pages/section/video/videoTabStoryList.dart';
+import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
+import 'package:tv/pages/section/video/video_tab_controller.dart';
+import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
-class VideoTabContent extends StatefulWidget {
+class VideoTabContent extends StatelessWidget {
   final String categorySlug;
   final bool isFeaturedSlug;
+
   VideoTabContent({
     required this.categorySlug,
     this.isFeaturedSlug = false,
   });
 
   @override
-  _VideoTabContentState createState() => _VideoTabContentState();
-}
-
-class _VideoTabContentState extends State<VideoTabContent> {
-  @override
   Widget build(BuildContext context) {
-    if (widget.isFeaturedSlug) {
+    VideoTabController controller = Get.find(tag: categorySlug);
+    if (isFeaturedSlug) {
       AnalyticsHelper.sendScreenView(
           screenName: 'VideoPage categorySlug=featured');
     } else {
       AnalyticsHelper.sendScreenView(
-          screenName: 'VideoPage categorySlug=${widget.categorySlug}');
+          screenName: 'VideoPage categorySlug=$categorySlug');
     }
-    return ListView(
+    return Column(
       children: [
-        if (widget.isFeaturedSlug)
-          BlocProvider(
-            create: (context) =>
-                EditorChoiceBloc(editorChoiceRepos: EditorChoiceServices()),
-            child: BuildEditorChoiceStoryList(
-                editorChoiceEvent: FetchVideoEditorChoiceList()),
-          ),
-        if (!widget.isFeaturedSlug)
-          BlocProvider(
-            create: (context) => TabStoryListBloc(
-                tabStoryListRepos:
-                    TabStoryListServices(postStyle: 'videoNews')),
-            child: widget.categorySlug == 'popular'
-                ? PopularVideoTabStoryList()
-                : VideoTabStoryList(
-                    categorySlug: widget.categorySlug,
-                  ),
-          ),
+        Obx(() {
+          final storyList = controller.rxStoryList;
+          return Expanded(
+            child: ListView.separated(
+                controller: controller.scrollController,
+                itemBuilder: (context, index) {
+                  return VideoStoryListItem(storyListItem: storyList[index]);
+                },
+                separatorBuilder: (context, index) {
+                  switch (index) {
+                    case 0:
+                      return InlineBannerAdWidget(
+                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT1'),
+                        sizes: [
+                          AdSize.mediumRectangle,
+                          AdSize(width: 336, height: 280),
+                        ],
+                      );
+                    case 3:
+                      return InlineBannerAdWidget(
+                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT2'),
+                        sizes: [
+                          AdSize.mediumRectangle,
+                          AdSize(width: 336, height: 280),
+                          AdSize(width: 320, height: 480),
+                        ],
+                      );
+                    case 6:
+                      return InlineBannerAdWidget(
+                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT3'),
+                        sizes: [
+                          AdSize.mediumRectangle,
+                          AdSize(width: 336, height: 280),
+                        ],
+                      );
+                    default:
+                      return const SizedBox(height: 24);
+                  }
+                },
+                itemCount: storyList.length),
+          );
+        }),
+        Obx(() {
+          final pageStatus = controller.rxPageStatus.value;
+          return pageStatus == PageStatus.loading
+              ? Center(child: CircularProgressIndicator())
+              : const SizedBox.shrink();
+        }),
       ],
     );
   }
