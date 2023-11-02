@@ -44,7 +44,7 @@ class VideoPage extends GetView<VideoPageController> {
           }),
         ),
 
-        ///跑馬燈如果要拔除Bloc改為 GetX
+        ///跑馬燈保持用Bloc 代後續跟其他的跑馬燈一起修改
         BlocProvider(
           create: (context) =>
               NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),

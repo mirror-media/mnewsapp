@@ -11,7 +11,7 @@ import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-
+///棄用 待刪除
 class VideoTabStoryList extends StatefulWidget {
   final String categorySlug;
   VideoTabStoryList({
