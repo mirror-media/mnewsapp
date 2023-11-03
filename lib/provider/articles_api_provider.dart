@@ -65,15 +65,27 @@ class ArticlesApiProvider extends GetConnect {
 
   Future<List<StoryListItem>> getVideoPostsList(
       {required String slug, int? skip = 0, int? take = 20}) async {
-    String queryString =
-        QueryCommand.getVideoPostList.format([slug, skip, take]);
-    final result =
-        await client?.value.query(QueryOptions(document: gql(queryString)));
-    if (result == null ||
-        result.data == null ||
-        !result.data!.containsKey('allPosts')) return [];
-    final postList = result.data!['allPosts'] as List<dynamic>;
-    return postList.map((e) => StoryListItem.fromJson(e)).toList();
+
+    ///熱門頁面 透過Json file更新 並且沒有第二頁的機制因此回傳空陣列
+    if (slug == 'popular') {
+      if (skip != 0) return [];
+      final jsonResponse =
+          await _helper.getByUrl(Environment().config.videoPopularListUrl)
+              as Map<String, dynamic>;
+      if (!jsonResponse.containsKey('report')) return [];
+      final postList = jsonResponse['report'] as List<dynamic>;
+      return postList.map((e) => StoryListItem.fromJson(e)).toList();
+    } else {
+      String queryString =
+          QueryCommand.getVideoPostList.format([slug, skip, take]);
+      final result =
+          await client?.value.query(QueryOptions(document: gql(queryString)));
+      if (result == null ||
+          result.data == null ||
+          !result.data!.containsKey('allPosts')) return [];
+      final postList = result.data!['allPosts'] as List<dynamic>;
+      return postList.map((e) => StoryListItem.fromJson(e)).toList();
+    }
   }
 
   Future<List<Category>> getVideoPageCategoryList() async {
@@ -98,8 +110,7 @@ class ArticlesApiProvider extends GetConnect {
         fixedMenu.map((category) => Category.fromJson(category)));
 
     fixedCategoryList.addAll(categoryList);
-    fixedCategoryList
-        .removeWhere((element) => element.name == "精選" || element.name == "熱門");
+    fixedCategoryList.removeWhere((element) => element.name == "精選");
     return fixedCategoryList;
   }
 }

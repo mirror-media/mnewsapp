@@ -6,6 +6,7 @@ import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/pages/section/video/shared/videoStoryListItem.dart';
 import 'package:tv/pages/section/video/video_tab_controller.dart';
+import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class VideoTabContent extends StatelessWidget {
@@ -31,45 +32,52 @@ class VideoTabContent extends StatelessWidget {
       children: [
         Obx(() {
           final storyList = controller.rxStoryList;
-          return Expanded(
-            child: ListView.separated(
-                controller: controller.scrollController,
-                itemBuilder: (context, index) {
-                  return VideoStoryListItem(storyListItem: storyList[index]);
-                },
-                separatorBuilder: (context, index) {
-                  switch (index) {
-                    case 0:
-                      return InlineBannerAdWidget(
-                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT1'),
-                        sizes: [
-                          AdSize.mediumRectangle,
-                          AdSize(width: 336, height: 280),
-                        ],
-                      );
-                    case 3:
-                      return InlineBannerAdWidget(
-                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT2'),
-                        sizes: [
-                          AdSize.mediumRectangle,
-                          AdSize(width: 336, height: 280),
-                          AdSize(width: 320, height: 480),
-                        ],
-                      );
-                    case 6:
-                      return InlineBannerAdWidget(
-                        adUnitId: AdUnitIdHelper.getBannerAdUnitId('VideoAT3'),
-                        sizes: [
-                          AdSize.mediumRectangle,
-                          AdSize(width: 336, height: 280),
-                        ],
-                      );
-                    default:
-                      return const SizedBox(height: 24);
-                  }
-                },
-                itemCount: storyList.length),
-          );
+          final pageStatus = controller.rxPageStatus.value;
+          return storyList.isEmpty && pageStatus == PageStatus.normal
+              ? TabContentNoResultWidget()
+              : Expanded(
+                  child: ListView.separated(
+                      controller: controller.scrollController,
+                      itemBuilder: (context, index) {
+                        return VideoStoryListItem(
+                            storyListItem: storyList[index]);
+                      },
+                      separatorBuilder: (context, index) {
+                        switch (index) {
+                          case 0:
+                            return InlineBannerAdWidget(
+                              adUnitId:
+                                  AdUnitIdHelper.getBannerAdUnitId('VideoAT1'),
+                              sizes: [
+                                AdSize.mediumRectangle,
+                                AdSize(width: 336, height: 280),
+                              ],
+                            );
+                          case 3:
+                            return InlineBannerAdWidget(
+                              adUnitId:
+                                  AdUnitIdHelper.getBannerAdUnitId('VideoAT2'),
+                              sizes: [
+                                AdSize.mediumRectangle,
+                                AdSize(width: 336, height: 280),
+                                AdSize(width: 320, height: 480),
+                              ],
+                            );
+                          case 6:
+                            return InlineBannerAdWidget(
+                              adUnitId:
+                                  AdUnitIdHelper.getBannerAdUnitId('VideoAT3'),
+                              sizes: [
+                                AdSize.mediumRectangle,
+                                AdSize(width: 336, height: 280),
+                              ],
+                            );
+                          default:
+                            return const SizedBox(height: 24);
+                        }
+                      },
+                      itemCount: storyList.length),
+                );
         }),
         Obx(() {
           final pageStatus = controller.rxPageStatus.value;

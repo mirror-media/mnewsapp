@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:tv/core/enum/page_status.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -34,15 +35,26 @@ class VideoTabController extends GetxController {
 
   void loadMorePost() async {
     if (rxPageStatus.value == PageStatus.loadingEnd) return;
-    rxPageStatus.value=PageStatus.loading;
+    rxPageStatus.value = PageStatus.loading;
     page++;
     final List<StoryListItem> newPostList = await _articlesApiProvider
         .getVideoPostsList(slug: rxSlug.value, skip: page * 20);
     if (newPostList.isEmpty || newPostList.length < 20) {
       rxPageStatus.value = PageStatus.loadingEnd;
+      displayToast('已經載入所有文章');
     }
-    print(newPostList.length);
     rxStoryList.addAll(newPostList);
-    rxPageStatus.value=PageStatus.normal;
+    rxPageStatus.value = PageStatus.normal;
+  }
+
+  void displayToast(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.CENTER,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 }
