@@ -12,7 +12,7 @@ import 'package:tv/models/category.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
 import 'package:tv/pages/section/video/videoTabContent.dart';
-
+///棄用 待刪除
 class VideoCategoryTab extends StatefulWidget {
   @override
   _VideoCategoryTabState createState() => _VideoCategoryTabState();

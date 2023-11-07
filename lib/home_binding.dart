@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get/get_instance/src/bindings_interface.dart';
-import 'package:tv/provider/airticles_api_provider.dart';
+import 'package:tv/provider/articles_api_provider.dart';
 
 class HomeBinding extends Bindings {
   @override

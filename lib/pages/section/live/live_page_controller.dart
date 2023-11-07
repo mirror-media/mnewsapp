@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../../../provider/airticles_api_provider.dart';
+import '../../../provider/articles_api_provider.dart';
 
 class LivePageController extends GetxController {
   ArticlesApiProvider articlesApiProvider = Get.find();
