@@ -15,4 +15,31 @@ class QueryCommand {
     }
   }
   ''';
+
+  static String getVideoPostList = '''
+  query {
+    allPosts(
+      where:{
+        state:published,
+        style_not_in:[wide,projects,script,campaign,readr],
+        categories_some:{
+            slug:"%s"
+        }
+
+    },
+      skip:%d, 
+      first: %d, 
+      sortBy: [ publishTime_DESC ],
+    ) {
+      id
+      slug
+      name
+      heroImage {
+        urlMobileSized
+      }
+    }
+ 
+  }
+ 
+  ''';
 }
