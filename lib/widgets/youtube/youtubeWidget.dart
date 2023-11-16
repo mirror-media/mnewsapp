@@ -27,7 +27,7 @@ class _YoutubeWidgetState extends State<YoutubeWidget> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        YoutubeStreamWidget(youtubeId: widget.youtubeId),
+        YoutubeStreamWidget(youtubeId: widget.youtubeId.replaceAll('/', '')),
         if (widget.description != null && widget.description != '')
           Padding(
             padding: const EdgeInsets.only(top: 8.0),

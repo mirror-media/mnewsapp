@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
@@ -14,7 +14,7 @@ import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
 import 'package:tv/services/youtubePlaylistService.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
-import 'package:tv/widgets/youtube/youtubePlayer.dart';
+import 'package:tv/widgets/youtube/youtubeWidget.dart';
 
 class ShowStoryPage extends StatefulWidget {
   final String youtubePlayListId;
@@ -49,7 +49,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
       body: ListView(
         controller: _listviewController,
         children: [
-          YoutubePlayer(widget.youtubePlaylistItem.youtubeVideoId),
+          YoutubeWidget(youtubeId: widget.youtubePlaylistItem.youtubeVideoId),
           SizedBox(height: 12),
           Padding(
             padding: const EdgeInsets.only(left: 24.0, right: 24.0),
