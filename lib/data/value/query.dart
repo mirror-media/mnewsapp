@@ -40,6 +40,22 @@ class QueryCommand {
     }
  
   }
- 
   ''';
+
+  static String getShowsById ='''
+  query {
+      Show(
+        where: {id:%s},
+      ) {
+        name
+        introduction
+        picture {
+          urlMobileSized
+        }
+        playList01
+        playList02
+      }
+    }
+  ''';
+
 }

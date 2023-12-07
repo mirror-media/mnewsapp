@@ -10,7 +10,10 @@ import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/category.dart';
+import 'package:tv/models/podcast_info/podcast_info.dart';
+import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/storyListItem.dart';
+import 'package:tv/models/youtube_list_info.dart';
 
 import '../helpers/dataConstants.dart';
 
@@ -65,7 +68,6 @@ class ArticlesApiProvider extends GetConnect {
 
   Future<List<StoryListItem>> getVideoPostsList(
       {required String slug, int? skip = 0, int? take = 20}) async {
-
     ///熱門頁面 透過Json file更新 並且沒有第二頁的機制因此回傳空陣列
     if (slug == 'popular') {
       if (skip != 0) return [];
@@ -112,5 +114,41 @@ class ArticlesApiProvider extends GetConnect {
     fixedCategoryList.addAll(categoryList);
     fixedCategoryList.removeWhere((element) => element.name == "精選");
     return fixedCategoryList;
+  }
+
+  Future<ShowIntro?> getShowIntro() async {
+    String queryString = QueryCommand.getShowsById.format([17]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result?.data == null) return null;
+    final resultData = result?.data as Map<String, dynamic>;
+    if (!resultData.containsKey('Show')) return null;
+
+    final showIntro = ShowIntro.fromJson(resultData['Show']);
+    return showIntro;
+  }
+
+  Future<YoutubeListInfo> getYoutubePlayList(
+      {required String playListId,
+      int? maxResult = 5,
+      String? nextPageToken}) async {
+    final url = nextPageToken != null
+        ? '${Environment().config.youtubeApi}/playlistItems?part=snippet&playlistId=$playListId&pageToken=$nextPageToken&maxResults=$maxResult'
+        : '${Environment().config.youtubeApi}/playlistItems?part=snippet&playlistId=$playListId&maxResults=$maxResult';
+
+    final jsonResponse = await _helper.getByUrl(url);
+
+    return YoutubeListInfo.fromJson(jsonResponse);
+  }
+
+  Future<List<PodcastInfo>> getPodcastInfoList() async {
+    final response = await _helper
+        .getByUrl(Environment().config.podcastAPIUrl,needErrorHandler: false) ;
+
+    String utf8Json = utf8.decode(response.bodyBytes);
+    final responseJson = json.decode(utf8Json) as List<dynamic>;
+
+    if (responseJson.isEmpty) return [];
+    return responseJson.map((e) => PodcastInfo.fromJson(e)).toList();
   }
 }
