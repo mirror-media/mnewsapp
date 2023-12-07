@@ -95,18 +95,29 @@ class PodcastStickyPanelController extends GetxController {
   }
 
   void playbackRateButtonClick() {
+    final preStatus = audioPlayer?.state;
     switch (rxPlaybackRate.value) {
       case PlaybackStatus.doubleRate:
         rxPlaybackRate.value = PlaybackStatus.normalRate;
         audioPlayer?.setPlaybackRate(1.0);
+        if (preStatus == PlayerState.paused) {
+          audioPlayer?.pause();
+        }
+
         break;
       case PlaybackStatus.normalRate:
         rxPlaybackRate.value = PlaybackStatus.onePointFiveRate;
         audioPlayer?.setPlaybackRate(1.5);
+        if (preStatus == PlayerState.paused) {
+          audioPlayer?.pause();
+        }
         break;
       case PlaybackStatus.onePointFiveRate:
         rxPlaybackRate.value = PlaybackStatus.doubleRate;
         audioPlayer?.setPlaybackRate(2.0);
+        if (preStatus == PlayerState.paused) {
+          audioPlayer?.pause();
+        }
         break;
     }
   }

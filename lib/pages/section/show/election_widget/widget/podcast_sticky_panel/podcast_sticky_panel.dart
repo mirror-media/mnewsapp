@@ -100,7 +100,7 @@ class PodcastStickyPanel extends StatelessWidget {
                           thumbShape: SliderComponentShape.noThumb),
                       child: Slider(
                         value: pos.inSeconds.toDouble(),
-                        activeColor: Get.theme.primaryColor,
+                        activeColor: Color(0xFFFFCC01),
                         inactiveColor: Colors.white,
                         onChanged: controller.slideBarValueChangeEvent,
                         max: duration.inSeconds.toDouble(),
