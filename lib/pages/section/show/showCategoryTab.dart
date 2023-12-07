@@ -8,6 +8,7 @@ import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
+import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/election_widget.dart';
 import 'package:tv/pages/section/show/showTabContent.dart';
 
@@ -74,6 +75,15 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
       initialIndex:
           _tabController == null ? _initialTabIndex : _tabController!.index,
     );
+    _tabController?.addListener(() {
+      final tag = categoryList[_tabController!.index].slug!;
+      if (tag.contains('election')) {
+        if (Get.isRegistered<ElectionController>(tag: tag)) {
+          Get.delete<ElectionController>(tag: tag);
+        }
+        Get.put(ElectionController(tag), tag: tag);
+      }
+    });
   }
 
   @override

@@ -15,17 +15,14 @@ import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 import 'widget/podcast_sticky_panel/podcast_sticky_panel.dart';
 
-class ElectionWidget extends GetView<ElectionController> {
+class ElectionWidget extends StatelessWidget {
   const ElectionWidget({required this.tag});
 
   final String tag;
 
   @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<ElectionController>(tag: tag)) {
-      Get.put(ElectionController(tag), tag: tag);
-    }
-
+    final controller = Get.find<ElectionController>(tag: tag);
     double width = Get.width;
     double height = width / 375 * 140;
     return Obx(() {
@@ -106,8 +103,7 @@ class ElectionWidget extends GetView<ElectionController> {
                             SizedBox(
                               width: width,
                               child: Obx(() {
-                                final showIntro =
-                                    controller.rxnShowIntro.value;
+                                final showIntro = controller.rxnShowIntro.value;
                                 return CupertinoSegmentedControl<int>(
                                     padding: const EdgeInsets.all(0),
                                     borderColor: Color(0xff004DBC),
@@ -142,8 +138,8 @@ class ElectionWidget extends GetView<ElectionController> {
                                         ),
                                       ),
                                     },
-                                    onValueChanged: controller
-                                        .segmentedControlValueChange);
+                                    onValueChanged:
+                                        controller.segmentedControlValueChange);
                               }),
                             ),
                             SizedBox(height: 24),
