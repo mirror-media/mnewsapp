@@ -9,7 +9,8 @@ import 'package:tv/pages/section/show/election_show_story_page/election_show_sto
 import 'package:tv/pages/section/show/election_show_story_page/widget/playlist_item.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/youtube/youtubeWidget.dart';
-
+/// 目前只有針對大選的部分重構成新架構
+/// 後續有修改到的Tab也可以直接修改進此架構中
 class ElectionShowStoryPage extends GetView<ElectionShowStoryController> {
   const ElectionShowStoryPage(
       {required this.youtubePlaylistItem, required this.tag});
