@@ -124,15 +124,11 @@ class ElectionController extends GetxController
 
   void podcastItemClickEvent(PodcastInfo podcastInfo) {
     if (rxnSelectPodcastInfo.value == podcastInfo) {
-      rxnSelectPodcastInfo.value = null;
-      animationController.reverse();
       return;
     }
-
     if (rxnSelectPodcastInfo.value == null) {
       animationController.forward();
     }
-
     rxnSelectPodcastInfo.value = podcastInfo;
   }
 }
