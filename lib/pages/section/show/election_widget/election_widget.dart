@@ -9,21 +9,36 @@ import 'package:tv/pages/section/show/election_show_story_page/election_show_sto
 import 'package:tv/pages/section/show/election_show_story_page/election_show_story_page.dart';
 import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/widget/podcast_list_widget.dart';
+import 'package:tv/pages/section/show/election_widget/widget/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 import 'package:tv/pages/section/show/election_widget/widget/youtube_list_item.dart';
 
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 import 'widget/podcast_sticky_panel/podcast_sticky_panel.dart';
 
-class ElectionWidget extends StatelessWidget {
+class ElectionWidget extends StatefulWidget {
   const ElectionWidget({required this.tag});
+
   final String tag;
+
+  @override
+  State<ElectionWidget> createState() => _ElectionWidgetState();
+}
+
+class _ElectionWidgetState extends State<ElectionWidget> {
+  late ElectionController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    if (!Get.isRegistered<ElectionController>(tag: widget.tag)) {
+      Get.put(ElectionController(widget.tag), tag: widget.tag);
+    }
+    controller = Get.find<ElectionController>(tag: widget.tag);
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (!Get.isRegistered<ElectionController>(tag: tag)) {
-      Get.put(ElectionController(tag), tag: tag);
-    }
-    final controller = Get.find<ElectionController>(tag: tag);
     double width = Get.width;
     double height = width / 375 * 140;
     return Obx(() {
@@ -286,5 +301,12 @@ class ElectionWidget extends StatelessWidget {
               ],
             );
     });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.rxnSelectPodcastInfo.value = null;
+    Get.delete<PodcastStickyPanelController>(tag: controller.tag);
   }
 }
