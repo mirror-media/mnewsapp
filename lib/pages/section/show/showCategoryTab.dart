@@ -10,6 +10,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/election_widget.dart';
+import 'package:tv/pages/section/show/election_widget/widget/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 import 'package:tv/pages/section/show/showTabContent.dart';
 
 class ShowCategoryTab extends StatefulWidget {
@@ -82,6 +83,10 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
           Get.delete<ElectionController>(tag: tag);
         }
         Get.put(ElectionController(tag), tag: tag);
+
+        if (Get.isRegistered<PodcastStickyPanelController>(tag: tag)) {
+          Get.put(PodcastStickyPanelController(tag), tag: tag);
+        }
       }
     });
   }
