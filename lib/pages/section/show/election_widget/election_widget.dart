@@ -17,9 +17,7 @@ import 'widget/podcast_sticky_panel/podcast_sticky_panel.dart';
 
 class ElectionWidget extends StatelessWidget {
   const ElectionWidget({required this.tag});
-
   final String tag;
-
   @override
   Widget build(BuildContext context) {
     if (!Get.isRegistered<ElectionController>(tag: tag)) {

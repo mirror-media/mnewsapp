@@ -29,7 +29,7 @@ class PodcastStickyPanel extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      color: Colors.black,
+      color: Color(0xFF003366),
       padding: const EdgeInsets.symmetric(horizontal: 30),
       child: Column(
         children: [

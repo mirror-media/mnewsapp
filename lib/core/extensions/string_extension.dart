@@ -6,13 +6,11 @@ extension StringFormatExtension on String {
 
   String? convertToCustomFormat() {
     try {
-      DateTime dateTime = DateTime.parse(this);
-
-      final customFormat = DateFormat('yyyy/MMM/dd');
-
-      return customFormat.format(dateTime);
+      DateTime dateTime = DateFormat("MM/dd/yyyy, HH:mm:ss").parse(this);
+      return DateFormat("yyyy/MM/dd").format(dateTime);
     } catch (e) {
-      return null;
+      print("Error parsing or formatting date: $e");
+      return this;
     }
   }
 

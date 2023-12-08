@@ -23,7 +23,7 @@ class PodcastListWidget extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 36),
             child: Text(
-              'podcast',
+              'podcasts',
               style: TextStyle(
                   fontWeight: FontWeight.w500,
                   fontSize: 24,
