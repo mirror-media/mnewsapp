@@ -29,7 +29,7 @@ class PodcastInfo {
       this.title,
       this.duration});
 
-  String? get timeFormat => published ?? ''.convertToCustomFormat();
+  String? get timeFormat => (published ?? '').convertToCustomFormat();
 
   factory PodcastInfo.fromJson(Map<String, dynamic> json) =>
       _$PodcastInfoFromJson(json);
