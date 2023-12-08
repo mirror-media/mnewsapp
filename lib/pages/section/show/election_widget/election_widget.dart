@@ -22,6 +22,9 @@ class ElectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!Get.isRegistered<ElectionController>(tag: tag)) {
+      Get.put(ElectionController(tag), tag: tag);
+    }
     final controller = Get.find<ElectionController>(tag: tag);
     double width = Get.width;
     double height = width / 375 * 140;

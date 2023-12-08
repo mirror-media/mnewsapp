@@ -42,11 +42,12 @@ class QueryCommand {
   }
   ''';
 
-  static String getShowsById ='''
+  static String getShowBySlug ='''
   query {
-      Show(
-        where: {id:%s},
+      allShows(
+        where: {slug:"%s"},
       ) {
+        slug
         name
         introduction
         picture {

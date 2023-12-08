@@ -36,7 +36,8 @@ class ElectionController extends GetxController
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 200));
     animation = Tween(begin: -130.0, end: 0.0).animate(animationController);
-    rxnShowIntro.value = await articlesApiProvider.getShowIntro();
+    rxnShowIntro.value =
+        await articlesApiProvider.getShowIntro(slug: tag ?? '');
     fetchYoutubePlayList();
     fetchYoutubeShortPlayList();
     fetchPodcastList();

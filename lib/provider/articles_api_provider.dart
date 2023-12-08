@@ -21,7 +21,6 @@ class ArticlesApiProvider extends GetConnect {
   ArticlesApiProvider._();
 
   static final ArticlesApiProvider _instance = ArticlesApiProvider._();
-
   static ArticlesApiProvider get instance => _instance;
   ValueNotifier<GraphQLClient>? client;
 
@@ -116,15 +115,15 @@ class ArticlesApiProvider extends GetConnect {
     return fixedCategoryList;
   }
 
-  Future<ShowIntro?> getShowIntro() async {
-    String queryString = QueryCommand.getShowsById.format([17]);
+  Future<ShowIntro?> getShowIntro({required String slug}) async {
+    String queryString = QueryCommand.getShowBySlug.format([slug]);
     final result =
         await client?.value.query(QueryOptions(document: gql(queryString)));
     if (result?.data == null) return null;
     final resultData = result?.data as Map<String, dynamic>;
-    if (!resultData.containsKey('Show')) return null;
+    if (!resultData.containsKey('allShows')) return null;
 
-    final showIntro = ShowIntro.fromJson(resultData['Show']);
+    final showIntro = ShowIntro.fromJson(resultData['allShows'][0]);
     return showIntro;
   }
 
