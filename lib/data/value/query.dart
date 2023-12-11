@@ -40,6 +40,23 @@ class QueryCommand {
     }
  
   }
- 
   ''';
+
+  static String getShowBySlug ='''
+  query {
+      allShows(
+        where: {slug:"%s"},
+      ) {
+        slug
+        name
+        introduction
+        picture {
+          urlMobileSized
+        }
+        playList01
+        playList02
+      }
+    }
+  ''';
+
 }
