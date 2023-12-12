@@ -54,12 +54,10 @@ class ElectionController extends GetxController
     }
     final newInfo = await articlesApiProvider.getYoutubePlayList(
         playListId: playListId,
-        maxResult: playListPage * defaultPlayListOnePageCount,
+        maxResult: defaultPlayListOnePageCount,
         nextPageToken: rxPlayListInfo.value?.nextPageToken);
 
-    if (newInfo.playList?.length == rxYoutubePlayRenderList.length) {
-      return;
-    }
+
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubePlayRenderList);
     resultList.addAll(newInfo.playList ?? []);
     resultList.removeWhere((element) => element.name == 'Private video');
@@ -74,12 +72,10 @@ class ElectionController extends GetxController
     }
     final newInfo = await articlesApiProvider.getYoutubePlayList(
         playListId: playListId,
-        maxResult: playListShortPage * defaultPlayListOnePageCount,
+        maxResult: defaultPlayListOnePageCount,
         nextPageToken: rxShortPlayListInfo.value?.nextPageToken);
 
-    if (newInfo.playList?.length == rxYoutubeShortRenderList.length) {
-      return;
-    }
+
 
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubeShortRenderList);
     resultList.addAll(newInfo.playList ?? []);
@@ -88,6 +84,7 @@ class ElectionController extends GetxController
 
     rxYoutubeShortRenderList.value = resultList.toSet().toList();
     rxShortPlayListInfo.value = newInfo;
+
   }
 
   void fetchPodcastList() async {

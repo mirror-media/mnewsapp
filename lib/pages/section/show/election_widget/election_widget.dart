@@ -226,13 +226,24 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                               itemCount: renderList.length),
                         );
                       }),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 44),
-                        child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                                border: Border.all(color: Color(0xFF014DB8))),
-                            child: TextButton(
+                      Obx(() {
+                        final invisible =
+                            controller.rxSegmentedControlValue.value == 0
+                                ? controller
+                                        .rxPlayListInfo.value?.nextPageToken ==
+                                    null
+                                : controller.rxShortPlayListInfo.value
+                                        ?.nextPageToken ==
+                                    null;
+                        return Visibility(
+                          visible: !invisible,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 44),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF014DB8))),
+                              child: TextButton(
                                 onPressed: () {
                                   controller.getMorePlayList();
                                 },
@@ -240,8 +251,12 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                                   '看更多',
                                   style: TextStyle(
                                       fontSize: 20, color: Color(0xFF014DB8)),
-                                ))),
-                      ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
                       const SizedBox(height: 24),
                       Obx(() {
                         final podcastList = controller.rxPodcastInfoList;
@@ -259,28 +274,37 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                               )
                             : SizedBox.shrink();
                       }),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 44),
-                        child: Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                              border: Border.all(color: Color(0xFF014DB8))),
-                          child: TextButton(
-                            onPressed: () {
-                              controller.getMorePodcast();
-                            },
-                            child: Text(
-                              '看更多',
-                              style: TextStyle(
-                                  fontSize: 20, color: Color(0xFF014DB8)),
+                      Obx(() {
+                        final invisible =
+                            controller.rxPodcastDisplayCount.value ==
+                                controller.rxPodcastInfoList.length;
+                        return Visibility(
+                          visible: !invisible,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 44),
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  border: Border.all(color: Color(0xFF014DB8))),
+                              child: TextButton(
+                                onPressed: () {
+                                  controller.getMorePodcast();
+                                },
+                                child: Text(
+                                  '看更多',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Color(0xFF014DB8)),
+                                ),
+                              ),
                             ),
                           ),
-                        ),
-                      ),
+                        );
+                      }),
                       const SizedBox(height: 150),
                     ],
                   ),
                 ),
+
                 AnimatedBuilder(
                     animation: controller.animation,
                     builder: (BuildContext context, Widget? child) {
