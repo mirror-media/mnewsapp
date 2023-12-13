@@ -83,6 +83,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
           Get.delete<ElectionController>(tag: tag);
         }
         Get.put(ElectionController(tag), tag: tag);
+
         if (Get.isRegistered<PodcastStickyPanelController>(tag: tag)) {
           Get.put(PodcastStickyPanelController(tag), tag: tag);
         }
