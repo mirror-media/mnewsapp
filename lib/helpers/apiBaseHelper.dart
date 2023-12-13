@@ -10,9 +10,10 @@ import 'package:tv/helpers/mNewsCacheManager.dart';
 class ApiBaseHelper {
   Future<dynamic> getByUrl(String url,
       {Map<String, String> headers = const {'Cache-control': 'no-cache'},
-      bool skipCheck = false}) async {
+      bool skipCheck = false,bool needErrorHandler=true}) async {
     Uri uri = Uri.parse(url);
     final response = await http.get(uri, headers: headers);
+    if(!needErrorHandler) return response;
     var responseJson = returnResponse(response, skipCheck: skipCheck);
     print('Api get done.');
     return responseJson;
