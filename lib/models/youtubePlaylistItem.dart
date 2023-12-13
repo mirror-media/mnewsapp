@@ -46,12 +46,4 @@ class YoutubePlaylistItem {
       publishedAt: null,
     );
   }
-
-  @override
-  bool operator ==(Object other) =>
-      identical(this, other) ||
-      other is YoutubePlaylistItem && other.name == name;
-
-  @override
-  int get hashCode => name.hashCode;
 }
