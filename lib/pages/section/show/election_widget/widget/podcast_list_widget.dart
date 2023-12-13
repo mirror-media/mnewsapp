@@ -32,10 +32,10 @@ class PodcastListWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 24),
-        Container(
-          height: 120 * displayCount.toDouble(),
-          padding: const EdgeInsets.symmetric(horizontal: 36),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 36),
           child: ListView.separated(
+              shrinkWrap: true,
               physics: NeverScrollableScrollPhysics(),
               itemBuilder: (context, index) {
                 return InkWell(

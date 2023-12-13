@@ -17,7 +17,6 @@ class ElectionShowStoryController extends GetxController {
   final ArticlesApiProvider articlesApiProvider = Get.find();
   final Rxn<YoutubeListInfo> rxPlayListInfo = Rxn();
   ScrollController scrollController = ScrollController(keepScrollOffset: true);
-  int playListPage = 1;
   int defaultPlayListOnePageCount = 5;
   bool isShort = false;
 
@@ -45,8 +44,8 @@ class ElectionShowStoryController extends GetxController {
     }
     final newInfo = await articlesApiProvider.getYoutubePlayList(
         playListId: playListId,
-        maxResult: playListPage * defaultPlayListOnePageCount,
-        nextPageToken: electionController!.rxPlayListInfo.value?.nextPageToken);
+        maxResult: defaultPlayListOnePageCount,
+        nextPageToken: rxPlayListInfo.value?.nextPageToken);
 
     if (newInfo.playList?.length == rxRenderYoutubeList.length) {
       return;
@@ -62,8 +61,8 @@ class ElectionShowStoryController extends GetxController {
   void scrollEvent() {
     if (scrollController.position.pixels ==
             scrollController.position.maxScrollExtent &&
-        electionController != null) {
-      playListPage++;
+        electionController != null &&
+        rxPlayListInfo.value?.nextPageToken != null) {
       fetchMorePlayList();
     }
   }
