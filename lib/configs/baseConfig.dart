@@ -16,6 +16,7 @@ abstract class BaseConfig {
   String get programListUrl;
   String get mNewsWebsiteLink;
   String get mNewsLivePostId;
+  String get podcastAPIUrl;
   // in data constants
   List get mNewsSectionList;
 }
