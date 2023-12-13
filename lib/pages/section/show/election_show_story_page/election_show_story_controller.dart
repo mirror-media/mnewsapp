@@ -45,7 +45,7 @@ class ElectionShowStoryController extends GetxController {
     }
     final newInfo = await articlesApiProvider.getYoutubePlayList(
         playListId: playListId,
-        maxResult: playListPage * defaultPlayListOnePageCount,
+        maxResult: defaultPlayListOnePageCount,
         nextPageToken: electionController!.rxPlayListInfo.value?.nextPageToken);
 
     if (newInfo.playList?.length == rxRenderYoutubeList.length) {

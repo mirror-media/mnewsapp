@@ -57,7 +57,6 @@ class ElectionController extends GetxController
         maxResult: defaultPlayListOnePageCount,
         nextPageToken: rxPlayListInfo.value?.nextPageToken);
 
-
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubePlayRenderList);
     resultList.addAll(newInfo.playList ?? []);
     resultList.removeWhere((element) => element.name == 'Private video');
