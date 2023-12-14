@@ -9,9 +9,7 @@ import 'package:tv/pages/section/show/election_show_story_page/election_show_sto
 import 'package:tv/pages/section/show/election_show_story_page/election_show_story_page.dart';
 import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/widget/podcast_list_widget.dart';
-import 'package:tv/pages/section/show/election_widget/widget/youtube_list_item.dart';
-import 'package:tv/widgets/inlineBannerAdWidget.dart';
-import 'package:tv/widgets/podcast_sticky_panel/podcast_sticky_panel.dart';
+import 'package:tv/pages/section/show/election_widget/widget/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 
 class ElectionWidget extends StatefulWidget {
   const ElectionWidget({required this.tag});
@@ -36,6 +34,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
 
   @override
   Widget build(BuildContext context) {
+
     double width = Get.width;
     double height = width / 375 * 140;
     return Obx(() {
@@ -331,4 +330,5 @@ class _ElectionWidgetState extends State<ElectionWidget> {
     super.dispose();
     controller.dispose();
   }
+
 }
