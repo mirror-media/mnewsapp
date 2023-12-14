@@ -9,12 +9,9 @@ import 'package:tv/pages/section/show/election_show_story_page/election_show_sto
 import 'package:tv/pages/section/show/election_show_story_page/election_show_story_page.dart';
 import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/widget/podcast_list_widget.dart';
-import 'package:tv/pages/section/show/election_widget/widget/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 import 'package:tv/pages/section/show/election_widget/widget/youtube_list_item.dart';
-
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
-
-import 'widget/podcast_sticky_panel/podcast_sticky_panel.dart';
+import 'package:tv/widgets/podcast_sticky_panel/podcast_sticky_panel.dart';
 
 class ElectionWidget extends StatefulWidget {
   const ElectionWidget({required this.tag});
@@ -177,6 +174,9 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                                 return YoutubeListItem(
                                   item: renderList[index],
                                   itemClickEvent: () {
+                                    controller.podcastStickyPanelController
+                                        .audioPlayer
+                                        ?.pause();
                                     Get.to(
                                         () => ElectionShowStoryPage(
                                               tag: controller.tag ?? '',
@@ -304,7 +304,6 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                     ],
                   ),
                 ),
-
                 AnimatedBuilder(
                     animation: controller.animation,
                     builder: (BuildContext context, Widget? child) {
@@ -330,7 +329,6 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   @override
   void dispose() {
     super.dispose();
-    controller.rxnSelectPodcastInfo.value = null;
-    Get.delete<PodcastStickyPanelController>(tag: controller.tag);
+    controller.dispose();
   }
 }
