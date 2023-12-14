@@ -1,11 +1,18 @@
+import 'package:audio_session/audio_session.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:get/get.dart';
 import 'package:tv/core/enum/playback_status.dart';
 import 'package:tv/core/enum/podcast_panel_status.dart';
 import 'package:tv/models/podcast_info/podcast_info.dart';
-import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 
 class PodcastStickyPanelController extends GetxController {
+  PodcastStickyPanelController._();
+
+  static final PodcastStickyPanelController _instance =
+      PodcastStickyPanelController._();
+
+  static PodcastStickyPanelController get instance => _instance;
+
   final RxDouble rxSlideBarValue = 0.0.obs;
   final Rxn<PodcastInfo> rxnPodcastInfo = Rxn();
   final Rx<PodcastPanelStatus> rxPodcastPanelStatus =
@@ -20,24 +27,19 @@ class PodcastStickyPanelController extends GetxController {
   final RxBool rxIsMute = false.obs;
   final Rx<PlaybackStatus> rxPlaybackRate =
       Rx<PlaybackStatus>(PlaybackStatus.normalRate);
-  late String? tag;
-
-  PodcastStickyPanelController(String? _tag) {
-    tag = _tag;
-  }
 
   @override
   void onReady() {
-    ElectionController electionController = Get.find(tag: tag);
-    currentPodcastInfoWorker = ever<PodcastInfo?>(
-        electionController.rxnSelectPodcastInfo, (podcastInfo) {
-      rxnPodcastInfo.value = podcastInfo;
-      if (rxnPodcastInfo.value != null) {
-        playAudio(rxnPodcastInfo.value?.enclosures![0].url);
-      } else {
-        audioPlayer?.stop();
-      }
-    });
+    // ElectionController electionController = Get.find(tag: tag);
+    // currentPodcastInfoWorker = ever<PodcastInfo?>(
+    //     electionController.rxnSelectPodcastInfo, (podcastInfo) {
+    //   rxnPodcastInfo.value = podcastInfo;
+    //   if (rxnPodcastInfo.value != null) {
+    //     playAudio(rxnPodcastInfo.value?.enclosures![0].url);
+    //   } else {
+    //     audioPlayer?.stop();
+    //   }
+    // });
   }
 
   @override
@@ -71,10 +73,13 @@ class PodcastStickyPanelController extends GetxController {
   void playAudio(String? source) async {
     if (source == null) {
       rxPodcastPanelStatus.value = PodcastPanelStatus.error;
+      await audioPlayer?.stop();
       return;
     }
-
-    await audioPlayer?.play(UrlSource(source));
+    AudioSession.instance.then((audioSession) async {
+      await audioSession.configure(AudioSessionConfiguration.music());
+      await audioPlayer?.play(UrlSource(source));
+    });
   }
 
   void playButtonClick() {

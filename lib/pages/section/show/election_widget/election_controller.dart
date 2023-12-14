@@ -7,6 +7,7 @@ import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/models/youtube_list_info.dart';
 import 'package:tv/provider/articles_api_provider.dart';
+import 'package:tv/widgets/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 
 class ElectionController extends GetxController
     with GetTickerProviderStateMixin {
@@ -25,6 +26,7 @@ class ElectionController extends GetxController
   final RxList<PodcastInfo> rxPodcastInfoList = RxList();
   final Rxn<PodcastInfo> rxnSelectPodcastInfo = Rxn();
   final RxInt rxPodcastDisplayCount = 5.obs;
+  final PodcastStickyPanelController podcastStickyPanelController = Get.find();
 
   late AnimationController animationController;
   late Animation<double> animation;
@@ -74,16 +76,12 @@ class ElectionController extends GetxController
         maxResult: defaultPlayListOnePageCount,
         nextPageToken: rxShortPlayListInfo.value?.nextPageToken);
 
-
-
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubeShortRenderList);
     resultList.addAll(newInfo.playList ?? []);
-
     resultList.removeWhere((element) => element.name == 'Private video');
 
     rxYoutubeShortRenderList.value = resultList.toSet().toList();
     rxShortPlayListInfo.value = newInfo;
-
   }
 
   void fetchPodcastList() async {
@@ -127,5 +125,15 @@ class ElectionController extends GetxController
       animationController.forward();
     }
     rxnSelectPodcastInfo.value = podcastInfo;
+    podcastStickyPanelController
+        .playAudio(rxnSelectPodcastInfo.value?.enclosures?[0].url);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    animationController.reverse();
+    rxnSelectPodcastInfo.value = null;
+    podcastStickyPanelController.playAudio(null);
   }
 }

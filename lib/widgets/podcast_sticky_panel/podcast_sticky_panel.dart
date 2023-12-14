@@ -5,7 +5,7 @@ import 'package:tv/core/enum/podcast_panel_status.dart';
 import 'package:tv/core/extensions/duration_extension.dart';
 import 'package:tv/data/value/string_default.dart';
 import 'package:tv/models/podcast_info/podcast_info.dart';
-import 'package:tv/pages/section/show/election_widget/widget/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
+import 'package:tv/widgets/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 
 class PodcastStickyPanel extends StatelessWidget {
   const PodcastStickyPanel(
@@ -22,9 +22,7 @@ class PodcastStickyPanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.isRegistered<PodcastStickyPanelController>(tag: tag)
-        ? Get.find<PodcastStickyPanelController>(tag: tag)
-        : Get.put(PodcastStickyPanelController(tag), tag: tag);
+    final PodcastStickyPanelController controller = Get.find();
 
     return Container(
       width: width,
