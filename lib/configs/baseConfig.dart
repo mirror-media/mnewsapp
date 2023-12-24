@@ -19,4 +19,6 @@ abstract class BaseConfig {
   String get podcastAPIUrl;
   // in data constants
   List get mNewsSectionList;
+  String get electionPath;
+  String get electionGetMoreWebpage;
 }
