@@ -123,6 +123,9 @@ dependencies:
   equatable: ^2.0.5
   # for election
   percent_indicator: ^4.2.2
+  real_time_invoice_widget:
+    git:
+      url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
 
 flutter_icons:
   android: "launcher_icon"
@@ -154,6 +157,12 @@ flutter:
     - assets/image/ombuds/
     - assets/image/search/
     - assets/image/election/
+    - assets/image/election/dpp_logo.png
+    - assets/image/election/tpp_logo.png
+    - assets/image/election/kmt_logo.png
+    - assets/image/election/number1_icon.png
+    - assets/image/election/number2_icon.png
+    - assets/image/election/number3_icon.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
