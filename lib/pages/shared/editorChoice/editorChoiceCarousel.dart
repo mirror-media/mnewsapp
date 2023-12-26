@@ -1,7 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:tv/blocs/editorChoice/bloc.dart';
 import 'package:tv/blocs/editorChoice/states.dart';
 import 'package:tv/helpers/environment.dart';
@@ -10,6 +11,7 @@ import 'package:tv/pages/section/news/news_page_controller.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
   @override
@@ -57,6 +59,30 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
         return Column(
           children: [
             Obx(() {
+              final isElectionShow = controller.rxIsElectionShow.value;
+              return isElectionShow
+                  ? Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 27),
+                          child: RealTimeInvoiceWidget(
+                              isPackage: true,
+                              getMoreButtonClick: () async {
+                                if (!await launchUrl(Uri.parse(Environment()
+                                    .config
+                                    .electionGetMoreWebpage))) {
+                                  throw Exception('Could not launch');
+                                }
+                              }),
+                        ),
+                        const SizedBox(
+                          height: 16.0,
+                        ),
+                      ],
+                    )
+                  : const SizedBox.shrink();
+            }),
+            Obx(() {
               final mnewLiveUrl = controller.rxnNewLiveUrl.value;
               return mnewLiveUrl != null
                   ? Column(
@@ -102,6 +128,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
 class EditorChoiceCarousel extends StatefulWidget {
   final List<StoryListItem> editorChoiceList;
   final double aspectRatio;
+
   EditorChoiceCarousel({
     required this.editorChoiceList,
     this.aspectRatio = 16 / 9,
