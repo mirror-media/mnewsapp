@@ -115,7 +115,7 @@ dependencies:
   # app tracking
   app_tracking_transparency: ^2.0.2+4
   # fix error of chinese and english mix text
-  extended_text: ^10.0.1
+  extended_text: ^9.1.0
   audio_session: ^0.1.18
   # package info
   package_info_plus: ^3.0.1
