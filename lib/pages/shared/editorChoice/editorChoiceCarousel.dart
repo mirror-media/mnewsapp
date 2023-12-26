@@ -66,12 +66,14 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
                         Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 27),
                           child: RealTimeInvoiceWidget(
+                              isPackage: true,
                               getMoreButtonClick: () async {
-                            if (!await launchUrl(Uri.parse(
-                                Environment().config.electionGetMoreWebpage))) {
-                              throw Exception('Could not launch');
-                            }
-                          }),
+                                if (!await launchUrl(Uri.parse(Environment()
+                                    .config
+                                    .electionGetMoreWebpage))) {
+                                  throw Exception('Could not launch');
+                                }
+                              }),
                         ),
                         const SizedBox(
                           height: 16.0,
