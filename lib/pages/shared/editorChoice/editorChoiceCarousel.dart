@@ -73,7 +73,7 @@ class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
                                     .electionGetMoreWebpage))) {
                                   throw Exception('Could not launch');
                                 }
-                              }),
+                              }, width: Get.width-54,),
                         ),
                         const SizedBox(
                           height: 16.0,
