@@ -23,11 +23,6 @@ class LatestTabContent extends GetView<NewsPageController> {
       controller: controller.scrollController,
       child: Column(
         children: [
-          ElevatedButton(
-              onPressed: () {
-                controller.test();
-              },
-              child: Text('test')),
           Obx(() {
             final isElectionShow = controller.rxIsElectionShow.value;
             return isElectionShow
