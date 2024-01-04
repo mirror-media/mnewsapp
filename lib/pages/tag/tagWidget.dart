@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:tv/blocs/tag/bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/tag.dart';
@@ -141,7 +142,7 @@ class _TagWidgetState extends State<TagWidget> {
           Expanded(
             child: Obx(
               () => Text(
-                story.name,
+                story.name ?? StringDefault.nullString,
                 style: TextStyle(fontSize: 20),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -153,8 +154,9 @@ class _TagWidgetState extends State<TagWidget> {
         ],
       ),
       onTap: () {
+        if (story.slug == null) return;
         Get.to(() => StoryPage(
-              slug: story.slug,
+              slug: story.slug!,
             ));
       },
     );

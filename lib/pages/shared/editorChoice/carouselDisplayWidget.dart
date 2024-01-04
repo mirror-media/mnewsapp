@@ -3,6 +3,7 @@ import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -13,6 +14,7 @@ class CarouselDisplayWidget extends StatelessWidget {
   final double width;
   final bool isHomePage;
   final bool showTag;
+
   CarouselDisplayWidget({
     required this.storyListItem,
     required this.width,
@@ -44,12 +46,13 @@ class CarouselDisplayWidget extends StatelessWidget {
       onTap: () {
         if (isHomePage) {
           AnalyticsHelper.logClick(
-              slug: storyListItem.slug,
-              title: storyListItem.name,
+              slug: storyListItem.slug ?? StringDefault.nullString,
+              title: storyListItem.name ?? StringDefault.nullString,
               location: 'HomePage_編輯精選');
         }
+        if (storyListItem.slug == null) return;
         Get.to(() => StoryPage(
-              slug: storyListItem.slug,
+              slug: storyListItem.slug!,
             ));
       },
     );
@@ -100,7 +103,7 @@ class CarouselDisplayWidget extends StatelessWidget {
           padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
           child: Obx(
             () => ExtendedText(
-              storyListItem.name,
+              storyListItem.name ?? StringDefault.nullString,
               joinZeroWidthSpace: true,
               overflow: TextOverflow.ellipsis,
               maxLines: 2,

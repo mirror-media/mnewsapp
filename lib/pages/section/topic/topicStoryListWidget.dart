@@ -1,17 +1,18 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/blocs/topicStoryList/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/models/topicStoryList.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -180,8 +181,9 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             child: _buildTopicStoryListItem(storyListItemList[index]),
           ),
           onTap: () {
+            if (storyListItemList[index].slug == null) return;
             Get.to(() => StoryPage(
-                  slug: storyListItemList[index].slug,
+                  slug: storyListItemList[index].slug!,
                 ));
           },
         );
@@ -404,7 +406,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             children: [
               Obx(
                 () => Text(
-                  storyListItem.name,
+                  storyListItem.name ?? StringDefault.nullString,
                   softWrap: true,
                   maxLines: 2,
                   style: const TextStyle(

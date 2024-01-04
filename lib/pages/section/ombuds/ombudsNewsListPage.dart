@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/ombuds/ombudsNewsController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -123,7 +124,7 @@ class OmbudsNewsListPage extends StatelessWidget {
           Expanded(
             child: Obx(
               () => Text(
-                story.name,
+                story.name ?? StringDefault.nullString,
                 style: TextStyle(fontSize: 20),
                 textScaleFactor:
                     textScaleFactorController.textScaleFactor.value,
@@ -133,8 +134,9 @@ class OmbudsNewsListPage extends StatelessWidget {
         ],
       ),
       onTap: () {
+        if (story.slug == null) return;
         Get.to(() => StoryPage(
-              slug: story.slug,
+              slug: story.slug!,
             ));
       },
     );
