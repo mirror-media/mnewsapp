@@ -9,6 +9,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/controller/storyPageController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -811,7 +812,7 @@ class StoryPage extends StatelessWidget {
           Expanded(
             child: Obx(
               () => ExtendedText(
-                story.name,
+                story.name ?? StringDefault.nullString,
                 joinZeroWidthSpace: true,
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
@@ -825,11 +826,14 @@ class StoryPage extends StatelessWidget {
       ),
       onTap: () {
         AnalyticsHelper.logClick(
-            slug: story.slug, title: story.name, location: 'Article_相關文章');
+            slug: story.slug ?? StringDefault.nullString,
+            title: story.name ?? StringDefault.nullString,
+            location: 'Article_相關文章');
         if (showAds) {
           interstitialAdController.openStory();
         }
-        Get.find<StoryPageController>(tag: slug).loadStory(story.slug);
+        Get.find<StoryPageController>(tag: slug)
+            .loadStory(story.slug ?? StringDefault.nullString);
       },
     );
   }

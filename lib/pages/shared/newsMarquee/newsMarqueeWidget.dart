@@ -7,6 +7,7 @@ import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/blocs/newsMarquee/events.dart';
 import 'package:tv/blocs/newsMarquee/states.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -137,7 +138,7 @@ class _NewsMarqueeState extends State<NewsMarquee> {
             width: width,
             child: MarqueeWidget(
               child: Obx(() => AutoSizeText(
-                    newsList[i].name,
+                    newsList[i].name ?? StringDefault.nullString,
                     style:
                         TextStyle(fontSize: 17, color: newsMarqueeContentColor),
                     textScaleFactor:
@@ -149,11 +150,12 @@ class _NewsMarqueeState extends State<NewsMarquee> {
         ),
         onTap: () {
           AnalyticsHelper.logClick(
-              slug: newsList[i].slug,
-              title: newsList[i].name,
+              slug: newsList[i].slug ?? StringDefault.nullString,
+              title: newsList[i].name ?? StringDefault.nullString,
               location: 'HomePage_快訊跑馬燈');
+          if (newsList[i].slug == null) return;
           Get.to(() => StoryPage(
-                slug: newsList[i].slug,
+                slug: newsList[i].slug!,
               ));
         },
       ));
