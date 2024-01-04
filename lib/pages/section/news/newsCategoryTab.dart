@@ -9,9 +9,10 @@ import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/services/newsMarqueeService.dart';
-import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
+import 'package:tv/pages/section/news/latestTabContent/latest_tab_content.dart';
 import 'package:tv/pages/section/news/newsTabContent.dart';
+import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
+import 'package:tv/services/newsMarqueeService.dart';
 
 class NewsCategoryTab extends StatefulWidget {
   @override
@@ -59,11 +60,13 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
       );
 
       _tabWidgets.add(
-        NewsTabContent(
-          categorySlug: category.slug!,
-          needCarousel: categoryList[i].isLatestCategory(),
-          showElectionBlock: i == 0,
-        ),
+        category.slug == 'latest'
+            ? LatestTabContent()
+            : NewsTabContent(
+                categorySlug: category.slug!,
+                needCarousel: categoryList[i].isLatestCategory(),
+                showElectionBlock: i == 0,
+              ),
       );
     }
 
