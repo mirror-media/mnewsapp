@@ -10,6 +10,7 @@ import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/helpers/cacheDurationCache.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/category.dart';
+import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/podcast_info/podcast_info.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -21,6 +22,7 @@ class ArticlesApiProvider extends GetConnect {
   ArticlesApiProvider._();
 
   static final ArticlesApiProvider _instance = ArticlesApiProvider._();
+
   static ArticlesApiProvider get instance => _instance;
   ValueNotifier<GraphQLClient>? client;
 
@@ -141,13 +143,94 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<List<PodcastInfo>> getPodcastInfoList() async {
-    final response = await _helper
-        .getByUrl(Environment().config.podcastAPIUrl,needErrorHandler: false) ;
+    final response = await _helper.getByUrl(Environment().config.podcastAPIUrl,
+        needErrorHandler: false);
 
     String utf8Json = utf8.decode(response.bodyBytes);
     final responseJson = json.decode(utf8Json) as List<dynamic>;
 
     if (responseJson.isEmpty) return [];
     return responseJson.map((e) => PodcastInfo.fromJson(e)).toList();
+  }
+
+  Future<List<StoryListItem>> fetchEditorChoiceList() async {
+    final key = 'fetchEditorChoiceList';
+
+    String query = """
+    query(
+      \$where: EditorChoiceWhereInput, 
+      \$first: Int){
+      allEditorChoices(
+        where: \$where, 
+        first: \$first, 
+        sortBy: [sortOrder_ASC, createdAt_DESC]
+      ) {
+        choice {
+          id
+          name
+          slug
+          style
+          heroImage {
+            urlMobileSized
+          }
+          heroVideo {
+            coverPhoto {
+              urlMobileSized
+            }
+          }
+        }
+      }
+    }
+    """;
+
+    Map<String, dynamic> variables = {
+      "where": {
+        "state": "published",
+        "choice": {"state": "published"}
+      },
+      "first": 10
+    };
+
+    GraphqlBody graphqlBody = GraphqlBody(
+      operationName: null,
+      query: query,
+      variables: variables,
+    );
+
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+        maxAge: editorChoiceCacheDuration,
+        headers: {"Content-Type": "application/json"});
+
+    List<dynamic> parsedJson = List.empty(growable: true);
+    for (int i = 0; i < jsonResponse['data']['allEditorChoices'].length; i++) {
+      parsedJson.add(jsonResponse['data']['allEditorChoices'][i]['choice']);
+    }
+    List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
+        parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)));
+    return editorChoiceList;
+  }
+
+  Future<List<StoryListItem>> getLatestArticles(
+      {int? skip = 0, int? first = 20}) async {
+    String queryString = QueryCommand.getLatestArticles.format([skip, first]);
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('allPosts')) return [];
+    final allPostsList = result.data!['allPosts'] as List<dynamic>;
+    return allPostsList.map((e) => StoryListItem.fromJson(e)).toList();
+  }
+
+  Future<List<StoryListItem>> getSalesArticles() async {
+    String queryString = QueryCommand.getSalesArticles;
+    final result =
+        await client?.value.query(QueryOptions(document: gql(queryString)));
+    if (result == null ||
+        result.data == null ||
+        !result.data!.containsKey('allSales')) return [];
+    final allPostsList = result.data!['allSales'] as List<dynamic>;
+    return allPostsList.map((e) => StoryListItem.fromJsonSales(e)).toList();
   }
 }

@@ -68,7 +68,7 @@ class TabStoryListServices implements TabStoryListRepos {
     List<String> filterSlugList = [];
     filterSlugList.addAll(filteredSlug);
     editorChoiceList.forEach((element) {
-      filterSlugList.add(element.slug);
+      if (element.slug != null) filterSlugList.add(element.slug!);
     });
 
     Map<String, dynamic> variables = {

@@ -59,4 +59,56 @@ class QueryCommand {
     }
   ''';
 
+  static String getLatestArticles ='''
+    query {
+      allPosts(
+        where:{
+           state:published,
+           style_not_in:[wide,projects,script,campaign,readr],
+           categories_every: {slug_not_in: "ombuds"},
+        },
+        skip:%d, 
+        first:%d, 
+        sortBy: [ publishTime_DESC ],
+      ) {
+        id
+        slug
+        name
+        style
+        categories{
+            name
+            id
+            slug
+        }
+        heroImage {
+          urlMobileSized
+        }
+      }
+ 
+    }
+  ''';
+
+  static String getSalesArticles = '''
+  query{
+    allSales(
+      sortBy:[sortOrder_ASC]
+    ){
+      adPost{
+         id
+        slug
+        name
+        style
+        categories{
+            name
+            id
+            slug
+        }
+        heroImage {
+          urlMobileSized
+        }
+      }
+    }
+  }
+  ''';
+
 }

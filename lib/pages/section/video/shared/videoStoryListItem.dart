@@ -3,11 +3,13 @@ import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/data/value/string_default.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/storyPage.dart';
 
 class VideoStoryListItem extends StatelessWidget {
   final StoryListItem storyListItem;
+
   VideoStoryListItem({
     required this.storyListItem,
   });
@@ -28,7 +30,7 @@ class VideoStoryListItem extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 0.0),
               child: Obx(
                 () => ExtendedText(
-                  storyListItem.name,
+                  storyListItem.name ?? StringDefault.nullString,
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 22.0,
@@ -45,8 +47,9 @@ class VideoStoryListItem extends StatelessWidget {
           ],
         ),
         onTap: () {
+          if (storyListItem.slug == null) return;
           Get.to(() => StoryPage(
-                slug: storyListItem.slug,
+                slug: storyListItem.slug!,
               ));
         });
   }
