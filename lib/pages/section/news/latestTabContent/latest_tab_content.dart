@@ -96,11 +96,13 @@ class LatestTabContent extends GetView<NewsPageController> {
           Obx(() {
             final articleList = controller.rxRenderStoryList;
             return ListView.separated(
-                padding: EdgeInsets.symmetric(horizontal: 24),
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
-                  return ListStoryItem(item: articleList[index]);
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: ListStoryItem(item: articleList[index]),
+                  );
                 },
                 separatorBuilder: (context, index) {
                   if (index == 6) {
