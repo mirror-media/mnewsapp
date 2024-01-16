@@ -65,7 +65,6 @@ class QueryCommand {
         where:{
            state:published,
            style_not_in:[wide,projects,script,campaign,readr],
-           categories_every: {slug_not_in: "ombuds"},
         },
         skip:%d, 
         first:%d, 
