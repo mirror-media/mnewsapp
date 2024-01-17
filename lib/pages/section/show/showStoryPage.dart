@@ -135,6 +135,7 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
       create: (context) =>
           YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
       child: ShowPlaylistTabContent(
+        firstYoutubePlaylistItem: widget.youtubePlaylistItem,
         youtubePlaylistInfo: YoutubePlaylistInfo(
           name: title,
           youtubePlayListId: youtubePlayListId,

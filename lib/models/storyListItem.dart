@@ -10,16 +10,17 @@ class StoryListItem {
   String photoUrl;
   List<Category>? categoryList;
   bool? isSales = false;
+  String? displayCategory;
 
-  StoryListItem({
-    this.id,
-    this.name,
-    this.slug,
-    this.style,
-    required this.photoUrl,
-    this.categoryList,
-    this.isSales,
-  });
+  StoryListItem(
+      {this.id,
+      this.name,
+      this.slug,
+      this.style,
+      required this.photoUrl,
+      this.categoryList,
+      this.isSales,
+      this.displayCategory});
 
   factory StoryListItem.fromJsonSales(Map<String, dynamic> json) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
@@ -27,11 +28,19 @@ class StoryListItem {
         json, ['adPost', 'heroImage', 'urlMobileSized'])) {
       photoUrl = json['adPost']['heroImage']['urlMobileSized'];
     }
-
+    String? displayCategory;
     List<Category>? allPostsCategory;
     if (json['adPost']['categories'] != null) {
       allPostsCategory = List<Category>.from(json['adPost']['categories']
           .map((category) => Category.fromJson(category)));
+      if (allPostsCategory.isNotEmpty)
+        displayCategory = allPostsCategory[0].name;
+      for (var postsCategory in allPostsCategory) {
+        if (postsCategory.slug == 'ombuds') {
+          displayCategory = "公評人";
+          break;
+        }
+      }
     }
 
     return StoryListItem(
@@ -41,7 +50,8 @@ class StoryListItem {
         style: json['adPost']['style'],
         photoUrl: photoUrl,
         isSales: true,
-        categoryList: allPostsCategory);
+        categoryList: allPostsCategory,
+        displayCategory: displayCategory);
   }
 
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
@@ -56,11 +66,19 @@ class StoryListItem {
         json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
-
+    String? displayCategory;
     List<Category>? allPostsCategory;
     if (json['categories'] != null) {
       allPostsCategory = List<Category>.from(
           json['categories'].map((category) => Category.fromJson(category)));
+      if (allPostsCategory.isNotEmpty)
+        displayCategory = allPostsCategory[0].name;
+      for (var postsCategory in allPostsCategory) {
+        if (postsCategory.slug == 'ombuds') {
+          displayCategory = "公評人";
+          break;
+        }
+      }
     }
 
     String? style;
@@ -75,7 +93,8 @@ class StoryListItem {
         style: style,
         photoUrl: photoUrl,
         isSales: false,
-        categoryList: allPostsCategory);
+        categoryList: allPostsCategory,
+        displayCategory: displayCategory);
   }
 
   Map<String, dynamic> toJson() => {
