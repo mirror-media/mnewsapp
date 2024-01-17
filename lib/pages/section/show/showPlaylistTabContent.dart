@@ -20,11 +20,14 @@ class ShowPlaylistTabContent extends StatefulWidget {
   final YoutubePlaylistInfo youtubePlaylistInfo;
   final ScrollController listviewController;
   final bool isMoreShow;
+  final YoutubePlaylistItem? firstYoutubePlaylistItem;
+
   ShowPlaylistTabContent({
     Key? key,
     required this.youtubePlaylistInfo,
     required this.listviewController,
     this.isMoreShow = false,
+    this.firstYoutubePlaylistItem,
   }) : super(key: key);
 
   @override
@@ -88,7 +91,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         _isLoading = true;
         List<YoutubePlaylistItem> youtubePlaylistItemList =
             state.youtubePlaylistItemList;
-        return _buildYoutubePlaylistItemList(
+        return buildYoutubePlayListItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
             youtubePlaylistItemList,
             isLoading: true);
@@ -98,7 +101,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             state.youtubePlaylistItemList;
         _isLoading = false;
 
-        return _buildYoutubePlaylistItemList(
+        return buildYoutubePlayListItemList(
             widget.youtubePlaylistInfo.youtubePlayListId,
             youtubePlaylistItemList,
             isLoading: true);
@@ -108,7 +111,7 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
             state.youtubePlaylistItemList;
         _isLoading = false;
 
-        return _buildYoutubePlaylistItemList(
+        return buildYoutubePlayListItemList(
           widget.youtubePlaylistInfo.youtubePlayListId,
           youtubePlaylistItemList,
         );
@@ -119,21 +122,11 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     });
   }
 
-  Widget _buildYoutubePlaylistItemList(String youtubePlayListId,
+  Widget buildYoutubePlayListItemList(String youtubePlayListId,
       List<YoutubePlaylistItem> youtubePlaylistItemList,
       {bool isLoading = false}) {
-    List<YoutubePlaylistItem> firstToFive = [];
-    List<YoutubePlaylistItem> sixToTen = [];
-    List<YoutubePlaylistItem> others = [];
-    for (int i = 0; i < youtubePlaylistItemList.length; i++) {
-      if (i < 5) {
-        firstToFive.add(youtubePlaylistItemList[i]);
-      } else if (i < 10) {
-        sixToTen.add(youtubePlaylistItemList[i]);
-      } else {
-        others.add(youtubePlaylistItemList[i]);
-      }
-    }
+    youtubePlaylistItemList.removeWhere(
+        (element) => element.name == widget.firstYoutubePlaylistItem?.name);
 
     return ListView(
       shrinkWrap: true,
@@ -143,55 +136,39 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         ListView.separated(
           shrinkWrap: true,
           physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 16.0),
-          itemCount: firstToFive.length,
+          separatorBuilder: (BuildContext context, int index) {
+            if (index == 4)
+              return Align(
+                alignment: Alignment.center,
+                child: InlineBannerAdWidget(
+                  adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT2'),
+                  sizes: [
+                    AdSize.mediumRectangle,
+                    AdSize(width: 336, height: 280),
+                    AdSize(width: 320, height: 480),
+                  ],
+                  addHorizontalMargin: false,
+                ),
+              );
+            if (index == 9)
+              return Align(
+                alignment: Alignment.center,
+                child: InlineBannerAdWidget(
+                  adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT3'),
+                  sizes: [
+                    AdSize.mediumRectangle,
+                    AdSize(width: 336, height: 280),
+                  ],
+                  addHorizontalMargin: false,
+                ),
+              );
+
+            return SizedBox(height: 16.0);
+          },
+          itemCount: youtubePlaylistItemList.length,
           itemBuilder: (context, index) {
             return _buildListItem(
-                context, youtubePlayListId, firstToFive[index]);
-          },
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: InlineBannerAdWidget(
-            adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT2'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-              AdSize(width: 320, height: 480),
-            ],
-            addHorizontalMargin: false,
-          ),
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 16.0),
-          itemCount: sixToTen.length,
-          itemBuilder: (context, index) {
-            return _buildListItem(context, youtubePlayListId, sixToTen[index]);
-          },
-        ),
-        Align(
-          alignment: Alignment.center,
-          child: InlineBannerAdWidget(
-            adUnitId: AdUnitIdHelper.getBannerAdUnitId('ShowAT3'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-            ],
-            addHorizontalMargin: false,
-          ),
-        ),
-        ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 16.0),
-          itemCount: others.length,
-          itemBuilder: (context, index) {
-            return _buildListItem(context, youtubePlayListId, others[index]);
+                context, youtubePlayListId, youtubePlaylistItemList[index]);
           },
         ),
         if (isLoading) _loadMoreWidget(),

@@ -28,7 +28,7 @@ class ListStoryItem extends StatelessWidget {
         ),
       );
     } else {
-      if (item.categoryList!.isNotEmpty) {
+      if (item.displayCategory != null) {
         return Container(
           width: 46,
           height: 28,
@@ -38,7 +38,7 @@ class ListStoryItem extends StatelessWidget {
           ),
           child: Center(
               child: Text(
-            item.categoryList![0].name,
+            item.displayCategory!,
             style: TextStyle(
                 color: Colors.white,
                 fontSize: 15,
