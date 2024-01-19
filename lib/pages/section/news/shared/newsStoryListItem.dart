@@ -62,8 +62,8 @@ class NewsStoryListItem extends StatelessWidget {
                       fontSize: 20.0,
                       height: 1.5,
                     ),
-                    textScaleFactor:
-                        textScaleFactorController.textScaleFactor.value,
+                    textScaler: TextScaler.linear(
+                        textScaleFactorController.textScaleFactor.value),
                   ),
                 ),
               ),

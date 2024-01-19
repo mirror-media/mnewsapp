@@ -229,8 +229,8 @@ class StoryPage extends StatelessWidget {
               () => Text(
                 story.heroCaption!,
                 style: TextStyle(fontSize: 15, color: Color(0xff757575)),
-                textScaleFactor:
-                    textScaleFactorController.textScaleFactor.value,
+                textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),
@@ -270,8 +270,8 @@ class StoryPage extends StatelessWidget {
                   color: storyWidgetColor,
                   fontWeight: FontWeight.w500,
                 ),
-                textScaleFactor:
-                    textScaleFactorController.textScaleFactor.value,
+                textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value),
               ),
             Text(
               dateTimeFormat.changeStringToDisplayString(story.publishTime!,
@@ -280,7 +280,8 @@ class StoryPage extends StatelessWidget {
                 fontSize: 14,
                 color: Color(0xff757575),
               ),
-              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -301,7 +302,8 @@ class StoryPage extends StatelessWidget {
             fontSize: 26,
             fontWeight: FontWeight.w500,
           ),
-          textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          textScaler: TextScaler.linear(
+              textScaleFactorController.textScaleFactor.value),
         ),
       ),
     );
@@ -328,7 +330,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "記者",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -351,7 +354,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "攝影",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -374,7 +378,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "影音",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -397,7 +402,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "設計",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -420,7 +426,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "工程",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -443,7 +450,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "主播",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -465,7 +473,8 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "作者",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
@@ -477,7 +486,8 @@ class StoryPage extends StatelessWidget {
           style: TextStyle(
             fontSize: 15,
           ),
-          textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          textScaler: TextScaler.linear(
+              textScaleFactorController.textScaleFactor.value),
         ),
       ));
       authorItems.add(Row(
@@ -507,7 +517,8 @@ class StoryPage extends StatelessWidget {
             style: TextStyle(
               fontSize: 15,
             ),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ),
       ));
@@ -679,7 +690,8 @@ class StoryPage extends StatelessWidget {
           fontSize: 15,
           color: Color(0xff757575),
         ),
-        textScaleFactor: textScaleFactorController.textScaleFactor.value,
+        textScaler:
+            TextScaler.linear(textScaleFactorController.textScaleFactor.value),
         textAlign: TextAlign.center,
       ),
     );
@@ -715,8 +727,8 @@ class StoryPage extends StatelessWidget {
                     style: TextStyle(color: storyWidgetColor),
                     strutStyle: StrutStyle(
                         forceStrutHeight: true, fontSize: 18, height: 1),
-                    textScaleFactor:
-                        textScaleFactorController.textScaleFactor.value,
+                    textScaler: TextScaler.linear(
+                        textScaleFactorController.textScaleFactor.value),
                   ),
                 ),
               ),
@@ -817,8 +829,8 @@ class StoryPage extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 20),
-                textScaleFactor:
-                    textScaleFactorController.textScaleFactor.value,
+                textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),

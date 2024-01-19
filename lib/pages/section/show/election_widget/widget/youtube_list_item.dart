@@ -56,8 +56,8 @@ class YoutubeListItem extends StatelessWidget {
                     ),
                     overflow: TextOverflow.ellipsis,
                     maxLines: 2,
-                    textScaleFactor:
-                        textScaleFactorController.textScaleFactor.value,
+                    textScaler: TextScaler.linear(
+                        textScaleFactorController.textScaleFactor.value),
                   ),
                 ),
                 if (item.publishedAt != null) ...[
