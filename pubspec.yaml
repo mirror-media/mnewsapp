@@ -16,10 +16,10 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.4.0+63
+version: 1.5.0+64
 
 environment:
-  sdk: '>=2.12.0 <3.0.0'
+  sdk: '>=2.12.0 <=3.16.7'
 
 dependencies:
   flutter:
@@ -33,7 +33,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
   # The most important library is intl. 
-  intl: ^0.17.0
+  intl: ^0.18.1
   # The Font Awesome Icon pack available as set of Flutter Icons.
   font_awesome_flutter: ^10.1.0
   # Launching a URL in the mobile platform.
@@ -67,7 +67,7 @@ dependencies:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.3.0
+      version: ^0.5.0
   # Toast Library for Flutter
   fluttertoast: ^8.0.7
   # firebase
@@ -77,10 +77,7 @@ dependencies:
   # svg file loader
   flutter_svg: ^1.0.0
   # ios look date picker
-  flutter_datetime_picker:
-    git:
-      url: https://github.com/Realank/flutter_datetime_picker.git
-      ref: master
+  flutter_datetime_picker_plus: ^2.1.0
 
   # google mobile ad
   google_mobile_ads: ^2.0.1
@@ -115,7 +112,7 @@ dependencies:
   # app tracking
   app_tracking_transparency: ^2.0.2+4
   # fix error of chinese and english mix text
-  extended_text: ^9.1.0
+  extended_text: ^12.0.1
   audio_session: ^0.1.18
   # package info
   package_info_plus: ^3.0.1
