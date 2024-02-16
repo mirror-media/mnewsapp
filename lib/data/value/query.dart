@@ -21,6 +21,7 @@ class QueryCommand {
     allPosts(
       where:{
         state:published,
+        style_in:[videoNews],
         style_not_in:[wide,projects,script,campaign,readr],
         categories_some:{
             slug:"%s"
