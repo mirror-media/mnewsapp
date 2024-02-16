@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
+
 import 'package:get/get.dart';
 import 'package:tv/blocs/programList/program_list_cubit.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
@@ -103,8 +104,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
                     color: _isDefault ? Color(0x3f000000) : Colors.black,
                     fontSize: 17,
                   ),
-                  textScaleFactor:
-                      textScaleFactorController.textScaleFactor.value,
+                  textScaler: TextScaler.linear(
+                      textScaleFactorController.textScaleFactor.value),
                 ),
               ),
               FittedBox(
@@ -125,7 +126,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
           Text(
             '時間',
             style: TextStyle(fontSize: 15),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
           const Spacer(),
           SizedBox(
@@ -134,13 +136,15 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
           Text(
             '節目名稱',
             style: TextStyle(fontSize: 15),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
           const Spacer(),
           Text(
             '分級',
             style: TextStyle(fontSize: 15),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            textScaler: TextScaler.linear(
+                textScaleFactorController.textScaleFactor.value),
           ),
         ],
       ),
@@ -227,8 +231,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
                 now.programme,
                 style: TextStyle(fontSize: 15),
                 textAlign: TextAlign.center,
-                textScaleFactor:
-                    textScaleFactorController.textScaleFactor.value,
+                textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),
@@ -252,7 +256,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
             Text(
               time,
               style: TextStyle(fontSize: 15),
-              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value),
             ),
             // SizedBox(
             //   width: 21,
@@ -264,7 +269,8 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
             Text(
               now.showClass,
               style: TextStyle(fontSize: 15, color: Color(0xE5979797)),
-              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value),
             )
           ],
         );

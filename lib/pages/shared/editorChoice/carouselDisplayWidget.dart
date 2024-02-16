@@ -111,7 +111,8 @@ class CarouselDisplayWidget extends StatelessWidget {
                 color: Colors.white,
                 fontSize: 22.0,
               ),
-              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value),
             ),
           ),
         ),

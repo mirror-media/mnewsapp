@@ -32,6 +32,7 @@ class VideoPage extends GetView<VideoPageController> {
             return isLoadingFinish
                 ? Center(
                     child: TabBar(
+                      tabAlignment: TabAlignment.start,
                       isScrollable: true,
                       indicatorColor: tabBarSelectedColor,
                       unselectedLabelColor: tabBarUnselectedColor,

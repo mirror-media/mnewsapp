@@ -30,18 +30,17 @@ class VideoStoryListItem extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(24.0, 12.0, 24.0, 0.0),
               child: Obx(
                 () => ExtendedText(
-                  storyListItem.name ?? StringDefault.nullString,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 22.0,
-                    height: 1.5,
-                    fontWeight: FontWeight.w500,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 2,
-                  textScaleFactor:
-                      textScaleFactorController.textScaleFactor.value,
-                ),
+                    storyListItem.name ?? StringDefault.nullString,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 22.0,
+                      height: 1.5,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+                    textScaler: TextScaler.linear(
+                        textScaleFactorController.textScaleFactor.value)),
               ),
             ),
           ],

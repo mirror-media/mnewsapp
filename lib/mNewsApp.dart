@@ -40,8 +40,15 @@ class MNewsApp extends StatelessWidget {
         primarySwatch: Colors.blue,
         visualDensity: VisualDensity.adaptivePlatformDensity,
         appBarTheme: AppBarTheme(
-          systemOverlayStyle: SystemUiOverlayStyle.light,
-        ),
+            systemOverlayStyle: SystemUiOverlayStyle.light,
+            iconTheme: IconThemeData(color: Colors.white),
+            actionsIconTheme: IconThemeData(color: Colors.white),
+            titleTextStyle: TextStyle(
+                fontFamily: 'PingFang TC',
+                fontSize: 20,
+                color: Colors.white,
+                fontWeight: FontWeight.w500)),
+        useMaterial3: true,
       ),
       localizationsDelegates: [
         GlobalMaterialLocalizations.delegate,
