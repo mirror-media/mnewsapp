@@ -133,6 +133,7 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
           child: Material(
             color: tabBarColor,
             child: TabBar(
+              tabAlignment: TabAlignment.start,
               isScrollable: true,
               indicatorColor: tabBarSelectedColor,
               unselectedLabelColor: tabBarUnselectedColor,

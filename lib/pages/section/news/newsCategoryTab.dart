@@ -125,6 +125,7 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
           child: Material(
             color: tabBarColor,
             child: TabBar(
+              tabAlignment: TabAlignment.start,
               isScrollable: true,
               indicatorColor: tabBarSelectedColor,
               unselectedLabelColor: tabBarUnselectedColor,

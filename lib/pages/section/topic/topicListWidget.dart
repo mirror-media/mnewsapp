@@ -24,6 +24,7 @@ class _TopicListWidgetState extends State<TopicListWidget> {
   List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
   final TextScaleFactorController textScaleFactorController = Get.find();
+
   @override
   void initState() {
     _fetchTopicList();
@@ -177,7 +178,8 @@ class _TopicListWidgetState extends State<TopicListWidget> {
               ),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value),
             ),
           ),
         ],
