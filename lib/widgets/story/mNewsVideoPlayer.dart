@@ -70,7 +70,6 @@ class _MNewsVideoPlayerState extends State<MNewsVideoPlayer>
           looping: widget.looping,
           autoDetectFullscreenAspectRatio: true,
           autoDetectFullscreenDeviceOrientation: true,
-          fit: BoxFit.contain,
           showPlaceholderUntilPlay: true,
           placeholder: Center(
             child: CircularProgressIndicator.adaptive(),

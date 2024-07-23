@@ -25,6 +25,7 @@ class MNewsApp extends StatelessWidget {
     );
     return GetMaterialApp(
       title: 'mnews',
+      debugShowCheckedModeBanner: false,
       builder: (context, widget) {
         if (widget == null) {
           return Container();
