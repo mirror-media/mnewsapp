@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 71;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,6 +16,14 @@
 		7791F700F9634EA932442955 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6149481DB7C179B2A4CDE6CD /* Pods_Runner.framework */; };
 		7A9E664FBB6D954C9D0CE401 /* Pods_ImageNotification.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EAAC7FE5C4CD9C98C90ADFE /* Pods_ImageNotification.framework */; };
 		82ADD1082CCF8381001827CA /* mnews Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 82ADD1072CCF8381001827CA /* mnews Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		82ADD1482CD0B37E001827CA /* devConfig.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 82ADD1392CD0B37E001827CA /* devConfig.xcconfig */; };
+		82ADD1492CD0B37E001827CA /* prodConfig.xcconfig in Resources */ = {isa = PBXBuildFile; fileRef = 82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */; };
+		82ADD14A2CD0B37E001827CA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82ADD1402CD0B37E001827CA /* Preview Assets.xcassets */; };
+		82ADD14B2CD0B37E001827CA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 82ADD1442CD0B37E001827CA /* Assets.xcassets */; };
+		82ADD14C2CD0B37E001827CA /* FormatDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD13C2CD0B37E001827CA /* FormatDate.swift */; };
+		82ADD14D2CD0B37E001827CA /* RSSItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD13E2CD0B37E001827CA /* RSSItem.swift */; };
+		82ADD14E2CD0B37E001827CA /* MainTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1422CD0B37E001827CA /* MainTabView.swift */; };
+		82ADD1502CD0B37E001827CA /* mnewsApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1462CD0B37E001827CA /* mnewsApp.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -97,6 +105,14 @@
 		82133B3027FA0FE96C163529 /* Pods-ImageNotification.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ImageNotification.debug-prod.xcconfig"; path = "Target Support Files/Pods-ImageNotification/Pods-ImageNotification.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		82ADD1022CCF8381001827CA /* mnews.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = mnews.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		82ADD1072CCF8381001827CA /* mnews Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "mnews Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		82ADD1392CD0B37E001827CA /* devConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = devConfig.xcconfig; sourceTree = "<group>"; };
+		82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = prodConfig.xcconfig; sourceTree = "<group>"; };
+		82ADD13C2CD0B37E001827CA /* FormatDate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FormatDate.swift; sourceTree = "<group>"; };
+		82ADD13E2CD0B37E001827CA /* RSSItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RSSItem.swift; sourceTree = "<group>"; };
+		82ADD1402CD0B37E001827CA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		82ADD1422CD0B37E001827CA /* MainTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabView.swift; sourceTree = "<group>"; };
+		82ADD1442CD0B37E001827CA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		82ADD1462CD0B37E001827CA /* mnewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mnewsApp.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -110,10 +126,6 @@
 		CED00A9E6F381E5E6ED032B6 /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
 		E133628DF42B2A0ECE89B385 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
-
-/* Begin PBXFileSystemSynchronizedRootGroup section */
-		82ADD10B2CCF8381001827CA /* mnews Watch App */ = {isa = PBXFileSystemSynchronizedRootGroup; explicitFileTypes = {}; explicitFolders = (); path = "mnews Watch App"; sourceTree = "<group>"; };
-/* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		0439621B2803E0C4002FFFFE /* Frameworks */ = {
@@ -161,6 +173,61 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		82ADD13B2CD0B37E001827CA /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD1392CD0B37E001827CA /* devConfig.xcconfig */,
+				82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */,
+			);
+			path = Config;
+			sourceTree = "<group>";
+		};
+		82ADD13D2CD0B37E001827CA /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD13C2CD0B37E001827CA /* FormatDate.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
+		82ADD13F2CD0B37E001827CA /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD13E2CD0B37E001827CA /* RSSItem.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		82ADD1412CD0B37E001827CA /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD1402CD0B37E001827CA /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		82ADD1432CD0B37E001827CA /* View */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD1422CD0B37E001827CA /* MainTabView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		82ADD1472CD0B37E001827CA /* mnews Watch App */ = {
+			isa = PBXGroup;
+			children = (
+				82ADD1462CD0B37E001827CA /* mnewsApp.swift */,
+				82ADD13B2CD0B37E001827CA /* Config */,
+				82ADD1432CD0B37E001827CA /* View */,
+				82ADD13F2CD0B37E001827CA /* Model */,
+				82ADD13D2CD0B37E001827CA /* Extension */,
+				82ADD1412CD0B37E001827CA /* Preview Content */,
+				82ADD1442CD0B37E001827CA /* Assets.xcassets */,
+			);
+			path = "mnews Watch App";
+			sourceTree = "<group>";
+		};
 		9740EEB11CF90186004384FC /* Flutter */ = {
 			isa = PBXGroup;
 			children = (
@@ -179,7 +246,7 @@
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
 				0439621F2803E0C4002FFFFE /* ImageNotification */,
-				82ADD10B2CCF8381001827CA /* mnews Watch App */,
+				82ADD1472CD0B37E001827CA /* mnews Watch App */,
 				97C146EF1CF9000F007C117D /* Products */,
 				F6D05BD06D121FECEC135635 /* Pods */,
 				45FD686B32934493BFE6984A /* Frameworks */,
@@ -284,9 +351,6 @@
 			);
 			dependencies = (
 			);
-			fileSystemSynchronizedGroups = (
-				82ADD10B2CCF8381001827CA /* mnews Watch App */,
-			);
 			name = "mnews Watch App";
 			packageProductDependencies = (
 			);
@@ -385,6 +449,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82ADD1482CD0B37E001827CA /* devConfig.xcconfig in Resources */,
+				82ADD1492CD0B37E001827CA /* prodConfig.xcconfig in Resources */,
+				82ADD14A2CD0B37E001827CA /* Preview Assets.xcassets in Resources */,
+				82ADD14B2CD0B37E001827CA /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -545,6 +613,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82ADD14C2CD0B37E001827CA /* FormatDate.swift in Sources */,
+				82ADD14D2CD0B37E001827CA /* RSSItem.swift in Sources */,
+				82ADD14E2CD0B37E001827CA /* MainTabView.swift in Sources */,
+				82ADD1502CD0B37E001827CA /* mnewsApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1788,8 +1860,7 @@
 		};
 		82ADD11C2CCF8382001827CA /* Debug-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
+			baseConfigurationReference = 82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1876,8 +1947,7 @@
 		};
 		82ADD11D2CCF8382001827CA /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
+			baseConfigurationReference = 82ADD1392CD0B37E001827CA /* devConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1964,8 +2034,7 @@
 		};
 		82ADD11E2CCF8382001827CA /* Release-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
+			baseConfigurationReference = 82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2046,8 +2115,7 @@
 		};
 		82ADD11F2CCF8382001827CA /* Release-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
+			baseConfigurationReference = 82ADD1392CD0B37E001827CA /* devConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2128,8 +2196,7 @@
 		};
 		82ADD1202CCF8382001827CA /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
+			baseConfigurationReference = 82ADD13A2CD0B37E001827CA /* prodConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2210,8 +2277,7 @@
 		};
 		82ADD1212CCF8382001827CA /* Profile-dev */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
-			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
+			baseConfigurationReference = 82ADD1392CD0B37E001827CA /* devConfig.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
