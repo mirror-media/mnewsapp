@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 71;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1525,7 +1525,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
@@ -1651,7 +1651,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1777,7 +1777,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -1788,6 +1788,8 @@
 		};
 		82ADD11C2CCF8382001827CA /* Debug-prod */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1846,6 +1848,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -1873,6 +1876,8 @@
 		};
 		82ADD11D2CCF8382001827CA /* Debug-dev */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1931,6 +1936,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -1943,7 +1949,7 @@
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -1958,6 +1964,8 @@
 		};
 		82ADD11E2CCF8382001827CA /* Release-prod */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2010,6 +2018,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -2037,6 +2046,8 @@
 		};
 		82ADD11F2CCF8382001827CA /* Release-dev */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2089,6 +2100,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -2100,7 +2112,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
@@ -2116,6 +2128,8 @@
 		};
 		82ADD1202CCF8382001827CA /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/prodConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2168,6 +2182,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -2195,6 +2210,8 @@
 		};
 		82ADD1212CCF8382001827CA /* Profile-dev */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReferenceAnchor = 82ADD10B2CCF8381001827CA /* mnews Watch App */;
+			baseConfigurationReferenceRelativePath = Config/devConfig.xcconfig;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2247,6 +2264,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "mnews-Watch-App-Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = mnews;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
 				INFOPLIST_KEY_WKWatchOnly = YES;
@@ -2258,7 +2276,7 @@
 				MARKETING_VERSION = 1.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
-				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.mirrortv.mnews.watchkitapp.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = watchos;
 				SKIP_INSTALL = YES;
