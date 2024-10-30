@@ -41,7 +41,7 @@ struct HomePageView: View {
                     .lineLimit(2)
                 if let date = stories.first?.date {
                     Text(date)
-                        .foregroundStyle(Color.mnewsBlue)
+                        .foregroundStyle(Color.mnewsYellow)
                 }
                 NavigationLink {
                     ListView(category: category, stories: stories)
@@ -61,7 +61,7 @@ struct HomePageView: View {
 
 #Preview {
     TabView {
-        HomePageView(category: "政治", stories: [mockRSS])
+        HomePageView(category: "測試", stories: [mockRSS])
     }
     .navigationTitle("鏡新聞")
 }

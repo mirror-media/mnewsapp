@@ -40,7 +40,7 @@ struct DigestView: View {
                         .font(.headline)
                     if let date = story.date {
                         Text(date)
-                            .foregroundStyle(Color.mnewsBlue)
+                            .foregroundStyle(Color.mnewsYellow)
                     }
                     Text(story.digest ?? "")
                 }

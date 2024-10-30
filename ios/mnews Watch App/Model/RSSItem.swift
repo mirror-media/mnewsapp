@@ -37,7 +37,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     var items: [RSSItem] = []
     var currentItem: RSSItem?
     var currentElement: String?
-    var currentContent: String = ""  // 用於累積內容
+    var currentContent: String = ""
 
     func parse(from url: URL, completion: @escaping ([RSSItem]) -> Void) {
         URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -61,12 +61,12 @@ class RSSParser: NSObject, XMLParserDelegate {
         if (elementName == "media:content" || elementName == "enclosure"), let url = attributeDict["url"] {
             currentItem?.imageUrl = url
         }
-        currentContent = ""  // 重置內容累積
+        currentContent = ""
     }
 
     func parser(_ parser: XMLParser, foundCharacters string: String) {
         if ["title", "description", "category", "pubDate"].contains(currentElement) {
-            currentContent += string  // 累積文本內容
+            currentContent += string
         }
     }
 
@@ -77,7 +77,6 @@ class RSSParser: NSObject, XMLParserDelegate {
             self.currentItem = nil
         }
 
-        // 當結束標籤時，將累積的內容放入對應屬性
         switch elementName {
             case "title":
                 currentItem?.title = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -91,6 +90,6 @@ class RSSParser: NSObject, XMLParserDelegate {
                 break
         }
 
-        currentContent = ""  // 清除已處理內容
+        currentContent = ""
     }
 }
