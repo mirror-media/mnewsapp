@@ -8,17 +8,12 @@ struct MainTabView: View {
     var body: some View {
         TabView {
             ForEach(categoryOrder, id: \.self) { category in
-                if let item = firstArticle(for: category) {
-                    VStack {
-                        Text(item.title ?? "No Title")
-                            .font(.headline)
-                            .padding()
-
-                        Text(item.category ?? "No Category")
-                            .font(.subheadline)
-                            .foregroundColor(.gray)
-                    }
-                    .tag(category)
+                if let stories = stories(for: category) {
+                    HomePageView(category: category, stories: stories)
+                        .tabItem {
+                            Text(category)
+                        }
+                        .tag(category)
                 }
             }
         }
@@ -36,8 +31,9 @@ struct MainTabView: View {
         }
     }
 
-    func firstArticle(for category: String) -> RSSItem? {
-        return rssItems.first { $0.category == category }
+    func stories(for category: String) -> [RSSItem]? {
+        let filteredStories = rssItems.filter { $0.category == category }
+        return filteredStories.isEmpty ? nil : filteredStories
     }
 }
 #Preview {
