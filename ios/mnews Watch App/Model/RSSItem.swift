@@ -17,13 +17,16 @@ struct RSSItem: Decodable, Identifiable {
     }
 
     var digest: String? {
-        let pattern = "<[^>]+>(.*?)</[^>]+>"
-        let regex = try! NSRegularExpression(pattern: pattern)
-        let range = NSRange(location: 0, length: description!.utf16.count)
-        let descriptionWithoutPTags = regex.stringByReplacingMatches(in: description!, options: [], range: range, withTemplate: "$1")
-        if !descriptionWithoutPTags.isEmpty {
-            return descriptionWithoutPTags
-        } else {
+        guard let description = description else { return nil }
+
+        do {
+            let regex = try NSRegularExpression(pattern: "<[^>]+>", options: .caseInsensitive)
+            let range = NSRange(location: 0, length: description.utf16.count)
+            let cleanedDescription = regex.stringByReplacingMatches(in: description, options: [], range: range, withTemplate: "")
+
+            return cleanedDescription.isEmpty ? nil : cleanedDescription
+        } catch {
+            print("Error parsing description: \(error)")
             return nil
         }
     }
@@ -34,6 +37,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     var items: [RSSItem] = []
     var currentItem: RSSItem?
     var currentElement: String?
+    var currentContent: String = ""  // 用於累積內容
 
     func parse(from url: URL, completion: @escaping ([RSSItem]) -> Void) {
         URLSession.shared.dataTask(with: url) { (data, response, error) in
@@ -51,43 +55,18 @@ class RSSParser: NSObject, XMLParserDelegate {
 
     func parser(_ parser: XMLParser, didStartElement elementName: String, namespaceURI: String?, qualifiedName qName: String?, attributes attributeDict: [String : String] = [:]) {
         currentElement = elementName
-
         if currentElement == "item" {
             currentItem = RSSItem()
         }
-
-        if elementName == "media:content", let url = attributeDict["url"] {
+        if (elementName == "media:content" || elementName == "enclosure"), let url = attributeDict["url"] {
             currentItem?.imageUrl = url
         }
+        currentContent = ""  // 重置內容累積
     }
 
     func parser(_ parser: XMLParser, foundCharacters string: String) {
-        switch currentElement {
-            case "title":
-                guard currentItem?.title != nil else {
-                    currentItem?.title = string
-                    return
-                }
-
-            case "description":
-                guard currentItem?.description != nil else {
-                    currentItem?.description = string
-                    return
-                }
-
-            case "category":
-                guard currentItem?.category != nil else {
-                    currentItem?.category = string
-                    return
-                }
-
-            case "pubDate":
-                guard currentItem?.pubDate != nil else {
-                    currentItem?.pubDate = string
-                    return
-                }
-
-            default: break
+        if ["title", "description", "category", "pubDate"].contains(currentElement) {
+            currentContent += string  // 累積文本內容
         }
     }
 
@@ -97,5 +76,21 @@ class RSSParser: NSObject, XMLParserDelegate {
             self.items.append(RSSItem(id: uuid, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
             self.currentItem = nil
         }
+
+        // 當結束標籤時，將累積的內容放入對應屬性
+        switch elementName {
+            case "title":
+                currentItem?.title = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "description":
+                currentItem?.description = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "category":
+                currentItem?.category = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
+            case "pubDate":
+                currentItem?.pubDate = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
+            default:
+                break
+        }
+
+        currentContent = ""  // 清除已處理內容
     }
 }
