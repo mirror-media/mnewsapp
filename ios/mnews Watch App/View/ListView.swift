@@ -11,7 +11,7 @@ struct ListView: View {
                 .font(.headline)
                 .padding(.vertical, 2)
                 .padding(.horizontal, 4)
-                .background(tintColor)
+                .background(Color.mnewsBlue)
                 .clipShape(RoundedRectangle(cornerRadius: 6))) {
                 ForEach(stories) { story in
                     NavigationLink(destination: DigestView(category: category, story: story)) {

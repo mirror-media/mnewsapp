@@ -27,7 +27,6 @@
 		82ADD1532CD0C695001827CA /* HomePageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1522CD0C695001827CA /* HomePageView.swift */; };
 		82ADD1552CD0C712001827CA /* CachedImage in Frameworks */ = {isa = PBXBuildFile; productRef = 82ADD1542CD0C712001827CA /* CachedImage */; };
 		82ADD1572CD0C766001827CA /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1562CD0C766001827CA /* PreviewData.swift */; };
-		82ADD1592CD202EF001827CA /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1582CD202EF001827CA /* Color.swift */; };
 		82ADD15B2CD203FF001827CA /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15A2CD203FF001827CA /* ListView.swift */; };
 		82ADD15D2CD204A8001827CA /* ListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15C2CD204A8001827CA /* ListCellView.swift */; };
 		82ADD15F2CD2064B001827CA /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15E2CD2064B001827CA /* DigestView.swift */; };
@@ -122,7 +121,6 @@
 		82ADD1462CD0B37E001827CA /* mnewsApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = mnewsApp.swift; sourceTree = "<group>"; };
 		82ADD1522CD0C695001827CA /* HomePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageView.swift; sourceTree = "<group>"; };
 		82ADD1562CD0C766001827CA /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
-		82ADD1582CD202EF001827CA /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
 		82ADD15A2CD203FF001827CA /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
 		82ADD15C2CD204A8001827CA /* ListCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellView.swift; sourceTree = "<group>"; };
 		82ADD15E2CD2064B001827CA /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
@@ -201,7 +199,6 @@
 			children = (
 				82ADD13C2CD0B37E001827CA /* FormatDate.swift */,
 				82ADD1562CD0C766001827CA /* PreviewData.swift */,
-				82ADD1582CD202EF001827CA /* Color.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -641,7 +638,6 @@
 				82ADD15B2CD203FF001827CA /* ListView.swift in Sources */,
 				82ADD14C2CD0B37E001827CA /* FormatDate.swift in Sources */,
 				82ADD14D2CD0B37E001827CA /* RSSItem.swift in Sources */,
-				82ADD1592CD202EF001827CA /* Color.swift in Sources */,
 				82ADD1572CD0C766001827CA /* PreviewData.swift in Sources */,
 				82ADD14E2CD0B37E001827CA /* MainTabView.swift in Sources */,
 				82ADD1502CD0B37E001827CA /* mnewsApp.swift in Sources */,
@@ -1972,7 +1968,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Debug-prod";
 		};
@@ -2060,7 +2056,7 @@
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Debug-dev";
 		};
@@ -2142,7 +2138,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Release-prod";
 		};
@@ -2224,7 +2220,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Release-dev";
 		};
@@ -2306,7 +2302,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Profile-prod";
 		};
@@ -2388,7 +2384,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 4;
 				VALIDATE_PRODUCT = YES;
-				WATCHOS_DEPLOYMENT_TARGET = 11.0;
+				WATCHOS_DEPLOYMENT_TARGET = 10.0;
 			};
 			name = "Profile-dev";
 		};

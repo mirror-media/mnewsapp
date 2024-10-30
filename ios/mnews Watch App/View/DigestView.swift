@@ -34,13 +34,13 @@ struct DigestView: View {
                         .font(.headline)
                         .padding(.vertical, 2)
                         .padding(.horizontal, 4)
-                        .background(tintColor)
+                        .background(Color.mnewsBlue)
                         .clipShape(RoundedRectangle(cornerRadius: 6))
                     Text(story.title ?? "")
                         .font(.headline)
                     if let date = story.date {
                         Text(date)
-                            .foregroundStyle(tintColor)
+                            .foregroundStyle(Color.mnewsBlue)
                     }
                     Text(story.digest ?? "")
                 }

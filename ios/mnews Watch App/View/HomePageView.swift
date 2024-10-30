@@ -33,7 +33,7 @@ struct HomePageView: View {
                     .font(.headline)
                     .padding(.vertical, 2)
                     .padding(.horizontal, 4)
-                    .background(tintColor)
+                    .background(Color.mnewsBlue)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
                 Text(stories.first?.title ?? "")
                     .font(.headline)
@@ -41,7 +41,7 @@ struct HomePageView: View {
                     .lineLimit(2)
                 if let date = stories.first?.date {
                     Text(date)
-                        .foregroundStyle(tintColor)
+                        .foregroundStyle(Color.mnewsBlue)
                 }
                 NavigationLink {
                     ListView(category: category, stories: stories)
@@ -52,7 +52,7 @@ struct HomePageView: View {
                 .controlSize(.small)
                 .buttonStyle(BorderedProminentButtonStyle())
                 .buttonBorderShape(.roundedRectangle(radius: 13.0))
-                .tint(tintColor)
+                .tint(Color.mnewsBlue)
             }
             .padding(4)
         }
