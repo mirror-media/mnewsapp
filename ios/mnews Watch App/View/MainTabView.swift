@@ -11,10 +11,6 @@ struct MainTabView: View {
                 ForEach(categoryOrder, id: \.self) { category in
                     if let stories = stories(for: category) {
                         HomePageView(category: category, stories: stories)
-                            .tabItem {
-                                Text(category)
-                            }
-                            .tag(category)
                     }
                 }
             }

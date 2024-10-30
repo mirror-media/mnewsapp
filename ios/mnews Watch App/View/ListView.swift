@@ -13,13 +13,12 @@ struct ListView: View {
                 .padding(.horizontal, 4)
                 .background(tintColor)
                 .clipShape(RoundedRectangle(cornerRadius: 6))) {
-
-                    ForEach(stories) { story in
-//                        NavigationLink(destination: DigestView(category: category, story: story)) {
-                            ListCellView(story: story)
-//                        }
+                ForEach(stories) { story in
+                    NavigationLink(destination: DigestView(category: category, story: story)) {
+                        ListCellView(story: story)
                     }
                 }
+            }
         }
     }
 }
