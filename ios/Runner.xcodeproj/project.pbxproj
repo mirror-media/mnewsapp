@@ -28,6 +28,9 @@
 		82ADD1552CD0C712001827CA /* CachedImage in Frameworks */ = {isa = PBXBuildFile; productRef = 82ADD1542CD0C712001827CA /* CachedImage */; };
 		82ADD1572CD0C766001827CA /* PreviewData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1562CD0C766001827CA /* PreviewData.swift */; };
 		82ADD1592CD202EF001827CA /* Color.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD1582CD202EF001827CA /* Color.swift */; };
+		82ADD15B2CD203FF001827CA /* ListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15A2CD203FF001827CA /* ListView.swift */; };
+		82ADD15D2CD204A8001827CA /* ListCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15C2CD204A8001827CA /* ListCellView.swift */; };
+		82ADD15F2CD2064B001827CA /* DigestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82ADD15E2CD2064B001827CA /* DigestView.swift */; };
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
@@ -120,6 +123,9 @@
 		82ADD1522CD0C695001827CA /* HomePageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomePageView.swift; sourceTree = "<group>"; };
 		82ADD1562CD0C766001827CA /* PreviewData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewData.swift; sourceTree = "<group>"; };
 		82ADD1582CD202EF001827CA /* Color.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Color.swift; sourceTree = "<group>"; };
+		82ADD15A2CD203FF001827CA /* ListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListView.swift; sourceTree = "<group>"; };
+		82ADD15C2CD204A8001827CA /* ListCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ListCellView.swift; sourceTree = "<group>"; };
+		82ADD15E2CD2064B001827CA /* DigestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DigestView.swift; sourceTree = "<group>"; };
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		97C146EE1CF9000F007C117D /* Runner.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Runner.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -221,6 +227,9 @@
 			children = (
 				82ADD1422CD0B37E001827CA /* MainTabView.swift */,
 				82ADD1522CD0C695001827CA /* HomePageView.swift */,
+				82ADD15A2CD203FF001827CA /* ListView.swift */,
+				82ADD15C2CD204A8001827CA /* ListCellView.swift */,
+				82ADD15E2CD2064B001827CA /* DigestView.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -628,6 +637,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				82ADD15F2CD2064B001827CA /* DigestView.swift in Sources */,
+				82ADD15B2CD203FF001827CA /* ListView.swift in Sources */,
 				82ADD14C2CD0B37E001827CA /* FormatDate.swift in Sources */,
 				82ADD14D2CD0B37E001827CA /* RSSItem.swift in Sources */,
 				82ADD1592CD202EF001827CA /* Color.swift in Sources */,
@@ -635,6 +646,7 @@
 				82ADD14E2CD0B37E001827CA /* MainTabView.swift in Sources */,
 				82ADD1502CD0B37E001827CA /* mnewsApp.swift in Sources */,
 				82ADD1532CD0C695001827CA /* HomePageView.swift in Sources */,
+				82ADD15D2CD204A8001827CA /* ListCellView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

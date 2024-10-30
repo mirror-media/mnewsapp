@@ -6,8 +6,6 @@ struct HomePageView: View {
     let stories: [RSSItem]
     @State private var backgroundImage: Image? = nil
 
-    private let tintColor = Color(hex: 0x1C2F45)
-
     var body: some View {
         ZStack {
             CachedImage(
@@ -46,8 +44,8 @@ struct HomePageView: View {
                         .foregroundStyle(tintColor)
                 }
                 NavigationLink {
-//                    ListView(category: category, stories: stories)
-//                        .navigationTitle(category)
+                    ListView(category: category, stories: stories)
+                        .navigationTitle(category)
                 } label: {
                     Text("更多" + category)
                 }
@@ -65,5 +63,5 @@ struct HomePageView: View {
     TabView {
         HomePageView(category: "政治", stories: [mockRSS])
     }
-    .navigationTitle("鏡週刊")
+    .navigationTitle("鏡新聞")
 }

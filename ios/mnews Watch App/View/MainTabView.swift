@@ -6,18 +6,21 @@ struct MainTabView: View {
     let categoryOrder = ["影音", "政治", "國際", "財經", "社會", "生活", "內幕", "娛樂", "體育", "地方"]
 
     var body: some View {
-        TabView {
-            ForEach(categoryOrder, id: \.self) { category in
-                if let stories = stories(for: category) {
-                    HomePageView(category: category, stories: stories)
-                        .tabItem {
-                            Text(category)
-                        }
-                        .tag(category)
+        NavigationStack {
+            TabView {
+                ForEach(categoryOrder, id: \.self) { category in
+                    if let stories = stories(for: category) {
+                        HomePageView(category: category, stories: stories)
+                            .tabItem {
+                                Text(category)
+                            }
+                            .tag(category)
+                    }
                 }
             }
+            .navigationTitle("鏡新聞")
+            .onAppear(perform: loadRSS)
         }
-        .onAppear(perform: loadRSS)
     }
 
     func loadRSS() {

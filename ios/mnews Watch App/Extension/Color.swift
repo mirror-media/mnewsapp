@@ -11,3 +11,5 @@ extension Color {
         )
     }
 }
+
+public let tintColor = Color(hex: 0x1C2F45)
