@@ -4,7 +4,7 @@ struct RSSItem: Decodable, Identifiable {
     var id: String?
     var title: String?
     var description: String?
-    var category: String?
+    var categories: [String] = []
     var pubDate: String?
     var imageUrl: String?
 
@@ -58,9 +58,11 @@ class RSSParser: NSObject, XMLParserDelegate {
         if currentElement == "item" {
             currentItem = RSSItem()
         }
+
         if (elementName == "media:content" || elementName == "enclosure"), let url = attributeDict["url"] {
             currentItem?.imageUrl = url
         }
+
         currentContent = ""
     }
 
@@ -73,7 +75,7 @@ class RSSParser: NSObject, XMLParserDelegate {
     func parser(_ parser: XMLParser, didEndElement elementName: String, namespaceURI: String?, qualifiedName qName: String?) {
         if elementName == "item", let currentItem = currentItem {
             let uuid = UUID().uuidString
-            self.items.append(RSSItem(id: uuid, title: currentItem.title, description: currentItem.description, category: currentItem.category, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
+            self.items.append(RSSItem(id: uuid, title: currentItem.title, description: currentItem.description, categories: currentItem.categories, pubDate: currentItem.pubDate, imageUrl: currentItem.imageUrl))
             self.currentItem = nil
         }
 
@@ -83,7 +85,7 @@ class RSSParser: NSObject, XMLParserDelegate {
             case "description":
                 currentItem?.description = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
             case "category":
-                currentItem?.category = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
+                currentItem?.categories.append(currentContent.trimmingCharacters(in: .whitespacesAndNewlines))
             case "pubDate":
                 currentItem?.pubDate = currentContent.trimmingCharacters(in: .whitespacesAndNewlines)
             default:

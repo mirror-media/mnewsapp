@@ -37,10 +37,11 @@ struct MainTabView: View {
     }
 
     func stories(for category: String) -> [RSSItem]? {
-        let filteredStories = rssItems.filter { $0.category == category }
+        let filteredStories = rssItems.filter { $0.categories.contains(category) }
         return filteredStories.isEmpty ? nil : filteredStories
     }
 }
+
 #Preview {
     MainTabView()
 }

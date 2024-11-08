@@ -19,9 +19,11 @@ struct ListCellView: View {
 
 #Preview {
     List {
-        ForEach([mockRSS]) { story in
-            NavigationLink(destination: DigestView(category: "測試", story: story)) {
-                ListCellView(story: story)
+        ForEach(mockRSS.categories, id: \.self) { category in
+            Section(header: Text(category)) {
+                NavigationLink(destination: DigestView(category: category, story: mockRSS)) {
+                    ListCellView(story: mockRSS)
+                }
             }
         }
     }
