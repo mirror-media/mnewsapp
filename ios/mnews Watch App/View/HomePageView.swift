@@ -4,12 +4,12 @@ import CachedImage
 struct HomePageView: View {
     let category: String
     let stories: [RSSItem]
-    @State private var backgroundImage: Image? = nil
+    let highlightedStory: RSSItem
 
     var body: some View {
         ZStack {
             CachedImage(
-                url: URL(string: stories.first?.imageUrl ?? ""),
+                url: URL(string: highlightedStory.imageUrl ?? ""),
                 content: { image in
                     image
                         .resizable()
@@ -35,11 +35,11 @@ struct HomePageView: View {
                     .padding(.horizontal, 4)
                     .background(Color.mnewsBlue)
                     .clipShape(RoundedRectangle(cornerRadius: 6))
-                Text(stories.first?.title ?? "")
+                Text(highlightedStory.title ?? "")
                     .font(.headline)
                     .fixedSize(horizontal: false, vertical: true)
                     .lineLimit(2)
-                if let date = stories.first?.date {
+                if let date = highlightedStory.date {
                     Text(date)
                         .foregroundStyle(Color.mnewsYellow)
                 }
@@ -61,7 +61,7 @@ struct HomePageView: View {
 
 #Preview {
     TabView {
-        HomePageView(category: "測試", stories: [mockRSS])
+        HomePageView(category: "測試", stories: [mockRSS], highlightedStory: mockRSS)
     }
     .navigationTitle("鏡新聞")
 }
