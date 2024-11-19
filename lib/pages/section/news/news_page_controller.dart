@@ -13,7 +13,7 @@ class NewsPageController extends GetxController {
   final RxList rxLiveCamList = RxList();
   final RxBool rxIsElectionShow = false.obs;
   final RxBool rxIsESGForumShow = false.obs;
-  final Rxn<Map<String, dynamic>> rxEsgForum = Rxn<Map<String, dynamic>>();
+  final RxMap<String, dynamic> rxEsgForum = <String, dynamic>{}.obs;
   final RxList<StoryListItem> rxEditorChoiceList = RxList();
   final RxList<StoryListItem> rxRenderStoryList = RxList();
   final List<int> articleInsertIndexArray = [4, 6, 9, 11];
@@ -31,13 +31,13 @@ class NewsPageController extends GetxController {
     var esgForumJsonString = firebaseRemoteConfig.getString('esgForum');
     if (esgForumJsonString.isNotEmpty) {
       try {
-        rxEsgForum.value = jsonDecode(esgForumJsonString);
+        rxEsgForum.assignAll(jsonDecode(esgForumJsonString));
       } catch (e) {
         print('Error decoding esgForum JSON: $e');
-        rxEsgForum.value = {};
+        rxEsgForum.clear();
       }
     } else {
-      rxEsgForum.value = {};
+      rxEsgForum.clear();
     }
     rxnNewLiveUrl.value = await articlesApiProvider.getNewsLiveUrl();
     rxLiveCamList.value = await articlesApiProvider.getLiveCamUrlList();

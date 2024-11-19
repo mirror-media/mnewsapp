@@ -87,9 +87,8 @@ class LatestTabContent extends GetView<NewsPageController> {
                 : const SizedBox.shrink();
           }),
           Obx(() {
-            final esgForum = controller.rxEsgForum.value;
-            final url = esgForum?['url'] ?? '';
-            final imageUrl = esgForum?['imageUrl'] ?? '';
+            final url = controller.rxEsgForum['url'] ?? '';
+            final imageUrl = controller.rxEsgForum['imageUrl'] ?? '';
 
             return url.isNotEmpty && imageUrl.isNotEmpty
                 ? GestureDetector(
