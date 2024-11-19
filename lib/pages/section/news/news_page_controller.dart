@@ -28,7 +28,7 @@ class NewsPageController extends GetxController {
     await firebaseRemoteConfig.fetchAndActivate();
     rxIsElectionShow.value = firebaseRemoteConfig.getBool('isElectionShow');
     rxIsESGForumShow.value = firebaseRemoteConfig.getBool('isESGForumShow');
-    var esgForumJsonString = firebaseRemoteConfig.getString('esgForum');
+    String? esgForumJsonString = firebaseRemoteConfig.getString('esgForum');
     if (esgForumJsonString.isNotEmpty) {
       try {
         rxEsgForum.assignAll(jsonDecode(esgForumJsonString));
