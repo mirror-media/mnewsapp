@@ -86,6 +86,30 @@ class LatestTabContent extends GetView<NewsPageController> {
                   )
                 : const SizedBox.shrink();
           }),
+          Obx(() {
+            final esgForum = controller.rxEsgForum.value;
+            final url = esgForum?['url'] ?? '';
+            final imageUrl = esgForum?['imageUrl'] ?? '';
+
+            return url.isNotEmpty && imageUrl.isNotEmpty
+                ? GestureDetector(
+                    onTap: () async {
+                      if (!await launchUrl(Uri.parse(url),
+                          mode: LaunchMode.externalApplication)) {
+                        throw Exception('Could not launch $url');
+                      }
+                    },
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.zero,
+                      child: Image.network(
+                        imageUrl,
+                        width: MediaQuery.of(context).size.width,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  )
+                : const SizedBox.shrink();
+          }),
           InlineBannerAdWidget(
             adUnitId: AdUnitIdHelper.getBannerAdUnitId('NewsAT1'),
             sizes: [
