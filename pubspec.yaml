@@ -16,7 +16,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
 
-version: 1.5.1+65
+version: 1.5.2+66
 
 environment:
   sdk: '>=2.12.0 <=3.2.4'
@@ -110,7 +110,7 @@ dependencies:
   # pdf viewer
   pdf_render: ^1.0.23
   # app tracking
-  app_tracking_transparency: ^2.0.2+4
+  app_tracking_transparency: ^2.0.6
   # fix error of chinese and english mix text
   extended_text: ^12.0.1
   audio_session: ^0.1.18
