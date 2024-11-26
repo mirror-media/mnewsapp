@@ -12,6 +12,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Environment().initConfig(BuildFlavor.development);
   if (Platform.isIOS) {
+    await Future.delayed(const Duration(milliseconds: 1000));
     await AppTrackingTransparency.requestTrackingAuthorization();
   }
   MobileAds.instance.initialize();
