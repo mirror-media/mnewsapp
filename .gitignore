@@ -47,6 +47,8 @@ lib/helpers/prodApiConstants.dart
 # for internal config
 lib/configs/devConfig.dart
 lib/configs/prodConfig.dart
+ios/mnews Watch App/Config/devConfig.xcconfig
+ios/mnews Watch App/Config/prodConfig.xcconfig
 
 # android key
 android/prod/prod.properties
