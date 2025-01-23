@@ -9,6 +9,7 @@ class ListStoryItem extends StatelessWidget {
 
   final StoryListItem item;
 
+  /// 移除Category 先用註解的 避免後續要再加回來
   Widget categoryRender() {
     if (item.isSales!) {
       return Container(
@@ -73,7 +74,6 @@ class ListStoryItem extends StatelessWidget {
                   fit: BoxFit.fitHeight,
                 ),
               ),
-              categoryRender(),
               if (item.style == 'videoNews')
                 Positioned(
                   right: 0,
