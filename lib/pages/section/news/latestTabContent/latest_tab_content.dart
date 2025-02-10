@@ -87,11 +87,10 @@ class LatestTabContent extends GetView<NewsPageController> {
                 : const SizedBox.shrink();
           }),
           Obx(() {
-            final url = controller.rxEsgForum['url'] ?? '';
-            final imageUrl = controller.rxEsgForum['imageUrl'] ?? '';
-            final isESGForumShow = controller.rxIsESGForumShow.value;
-
-            return (isESGForumShow && url.isNotEmpty && imageUrl.isNotEmpty)
+            final url = controller.rxBannerData['url'] ?? '';
+            final imageUrl = controller.rxBannerData['imageUrl'] ?? '';
+            final isBannerShow = controller.rxIsBannerShow.value;
+            return (isBannerShow && url.isNotEmpty && imageUrl.isNotEmpty)
                 ? GestureDetector(
                     onTap: () async {
                       if (!await launchUrl(Uri.parse(url),
