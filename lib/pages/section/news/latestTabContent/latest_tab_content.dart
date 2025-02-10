@@ -89,8 +89,9 @@ class LatestTabContent extends GetView<NewsPageController> {
           Obx(() {
             final url = controller.rxEsgForum['url'] ?? '';
             final imageUrl = controller.rxEsgForum['imageUrl'] ?? '';
+            final isESGForumShow = controller.rxIsESGForumShow.value;
 
-            return url.isNotEmpty && imageUrl.isNotEmpty
+            return (isESGForumShow && url.isNotEmpty && imageUrl.isNotEmpty)
                 ? GestureDetector(
                     onTap: () async {
                       if (!await launchUrl(Uri.parse(url),
