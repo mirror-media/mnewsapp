@@ -87,13 +87,15 @@ class LatestTabContent extends GetView<NewsPageController> {
                 : const SizedBox.shrink();
           }),
           Obx(() {
-            final url = controller.rxBannerData['url'] ?? '';
-            final imageUrl = controller.rxBannerData['imageUrl'] ?? '';
+            final String? url = controller.rxBannerData['url'];
+            final String? imageUrl = controller.rxBannerData['imageUrl'];
             final isBannerShow = controller.rxIsBannerShow.value;
-            return (isBannerShow && url.isNotEmpty && imageUrl.isNotEmpty)
+            return (isBannerShow &&
+                    url?.isNotEmpty == true &&
+                    imageUrl?.isNotEmpty == true)
                 ? GestureDetector(
                     onTap: () async {
-                      if (!await launchUrl(Uri.parse(url),
+                      if (!await launchUrl(Uri.parse(url!),
                           mode: LaunchMode.externalApplication)) {
                         throw Exception('Could not launch $url');
                       }
@@ -101,7 +103,7 @@ class LatestTabContent extends GetView<NewsPageController> {
                     child: ClipRRect(
                       borderRadius: BorderRadius.zero,
                       child: Image.network(
-                        imageUrl,
+                        imageUrl!,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
                       ),
