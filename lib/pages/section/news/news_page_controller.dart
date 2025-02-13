@@ -12,8 +12,8 @@ class NewsPageController extends GetxController {
   final RxnString rxnNewLiveUrl = RxnString();
   final RxList rxLiveCamList = RxList();
   final RxBool rxIsElectionShow = false.obs;
-  final RxBool rxIsESGForumShow = false.obs;
-  final RxMap<String, dynamic> rxEsgForum = <String, dynamic>{}.obs;
+  final RxBool rxIsBannerShow = false.obs;
+  final RxMap<String, dynamic> rxBannerData = <String, dynamic>{}.obs;
   final RxList<StoryListItem> rxEditorChoiceList = RxList();
   final RxList<StoryListItem> rxRenderStoryList = RxList();
   final List<int> articleInsertIndexArray = [4, 6, 9, 11];
@@ -27,17 +27,16 @@ class NewsPageController extends GetxController {
     super.onInit();
     await firebaseRemoteConfig.fetchAndActivate();
     rxIsElectionShow.value = firebaseRemoteConfig.getBool('isElectionShow');
-    rxIsESGForumShow.value = firebaseRemoteConfig.getBool('isESGForumShow');
-    String? esgForumJsonString = firebaseRemoteConfig.getString('esgForum');
-    if (esgForumJsonString.isNotEmpty) {
+    rxIsBannerShow.value = firebaseRemoteConfig.getBool('isBannerShow');
+    String? bannerJsonString = firebaseRemoteConfig.getString('BannerURL');
+    if (bannerJsonString.isNotEmpty) {
       try {
-        rxEsgForum.assignAll(jsonDecode(esgForumJsonString));
+        rxBannerData.assignAll(jsonDecode(bannerJsonString));
       } catch (e) {
-        print('Error decoding esgForum JSON: $e');
-        rxEsgForum.clear();
+        rxBannerData.clear();
       }
     } else {
-      rxEsgForum.clear();
+      rxBannerData.clear();
     }
     rxnNewLiveUrl.value = await articlesApiProvider.getNewsLiveUrl();
     rxLiveCamList.value = await articlesApiProvider.getLiveCamUrlList();
