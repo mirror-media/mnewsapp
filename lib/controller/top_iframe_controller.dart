@@ -45,7 +45,13 @@ class TopIframeController extends GetxController {
 
   Future<void> _initializeRemoteConfig() async {
     try {
-      await _remoteConfig.fetchAndActivate();
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ));
+
+      await _remoteConfig.fetch();
+      await _remoteConfig.activate();
       checkVisibility();
     } catch (e) {
       // Silently handle errors
@@ -58,22 +64,40 @@ class TopIframeController extends GetxController {
     String titleText = _remoteConfig.getString('iframeTitle');
     String moreUrl = _remoteConfig.getString('iframeShowMoreUrl');
 
-    isVisible.value = isShow && url.isNotEmpty;
+    bool shouldBeVisible = isShow && url.isNotEmpty;
 
     title.value = titleText.isEmpty ? null : titleText;
     showMoreUrl.value = moreUrl.isEmpty ? null : moreUrl;
 
-    if (isVisible.value) {
+    if (shouldBeVisible) {
       if (currentUrl.value != url) {
         currentUrl.value = url;
+        isVisible.value = true;
         resetWebViewState();
+      } else if (!isVisible.value) {
+        isVisible.value = true;
+        resetWebViewState();
+      }
+    } else {
+      if (isVisible.value) {
+        isVisible.value = false;
+        currentUrl.value = null;
+        TopIframeHelper.safeDisposeWebView(webViewController);
+        webViewController = null;
+        _cancelLoadingTimeout();
       }
     }
   }
 
   Future<void> refreshRemoteConfig() async {
     try {
-      await _remoteConfig.fetchAndActivate();
+      await _remoteConfig.setConfigSettings(RemoteConfigSettings(
+        fetchTimeout: const Duration(seconds: 10),
+        minimumFetchInterval: Duration.zero,
+      ));
+
+      await _remoteConfig.fetch();
+      await _remoteConfig.activate();
       checkVisibility();
     } catch (e) {
       // Silently handle errors
@@ -176,9 +200,13 @@ class TopIframeController extends GetxController {
   }
 
   void manualRefresh() {
-    if (webViewController != null && currentUrl.value != null) {
+    // 重新載入當前的 iframe 內容
+    if (isVisible.value && currentUrl.value != null) {
+      // 重新載入 WebView
       resetWebViewState();
     }
+    // 同時重新抓取 Remote Config，以防設定有更新
+    refreshRemoteConfig();
   }
 
   @override

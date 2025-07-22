@@ -6,8 +6,46 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/top_iframe_helper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class TopIframeWidget extends StatelessWidget {
+class TopIframeWidget extends StatefulWidget {
   const TopIframeWidget({Key? key}) : super(key: key);
+
+  @override
+  State<TopIframeWidget> createState() => _TopIframeWidgetState();
+}
+
+class _TopIframeWidgetState extends State<TopIframeWidget>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _refreshAnimationController;
+  late Animation<double> _refreshAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+    _refreshAnimationController = AnimationController(
+      duration: const Duration(milliseconds: 1000),
+      vsync: this,
+    );
+    _refreshAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _refreshAnimationController,
+      curve: Curves.easeInOut,
+    ));
+  }
+
+  @override
+  void dispose() {
+    _refreshAnimationController.dispose();
+    super.dispose();
+  }
+
+  void _onRefreshTap(TopIframeController controller) {
+    _refreshAnimationController.forward().then((_) {
+      _refreshAnimationController.reset();
+    });
+    controller.manualRefresh();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,29 +91,16 @@ class TopIframeWidget extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    Container(
+                    AnimatedContainer(
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeInOut,
                       height: controller.currentHeight.value,
                       width: double.infinity,
                       margin: const EdgeInsets.all(20),
                       child: Stack(
                         children: [
                           if (controller.isLoading.value) ...[
-                            Container(
-                              height: controller.currentHeight.value,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(8),
-                              ),
-                              child: const Center(
-                                child: SizedBox(
-                                  width: 40,
-                                  height: 40,
-                                  child:
-                                      CircularProgressIndicator(strokeWidth: 3),
-                                ),
-                              ),
-                            ),
+                            _buildSkeletonLoading(),
                           ],
 
                           // Error State
@@ -137,6 +162,7 @@ class TopIframeWidget extends StatelessWidget {
                                   onLoadStop: (webController, url) async {
                                     await controller.onLoadStop();
 
+                                    // 互動修正
                                     webController.evaluateJavascript(source: '''
                                       document.body.style.pointerEvents = 'auto';
                                       document.body.style.touchAction = 'auto';
@@ -194,7 +220,7 @@ class TopIframeWidget extends StatelessWidget {
                 right: 24,
                 child: GestureDetector(
                   onTap: () {
-                    controller.manualRefresh();
+                    _onRefreshTap(controller);
                   },
                   child: Container(
                     width: 36,
@@ -211,10 +237,13 @@ class TopIframeWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Icon(
-                      Icons.refresh_rounded,
-                      color: themeColor,
-                      size: 20,
+                    child: RotationTransition(
+                      turns: _refreshAnimation,
+                      child: Icon(
+                        Icons.refresh_rounded,
+                        color: themeColor,
+                        size: 20,
+                      ),
                     ),
                   ),
                 ),
@@ -224,6 +253,107 @@ class TopIframeWidget extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Widget _buildSkeletonLoading() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            height: 20,
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+          const SizedBox(height: 12),
+          Flexible(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Flexible(
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Container(
+                    height: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 12),
+          Container(
+            height: 14,
+            width: double.infinity * 0.6,
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(4),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   void _launchUrl(String url) async {
