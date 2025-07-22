@@ -37,7 +37,7 @@ dependencies:
   # The Font Awesome Icon pack available as set of Flutter Icons.
   font_awesome_flutter: ^10.1.0
   # Launching a URL in the mobile platform.
-  url_launcher: ^6.0.4
+  url_launcher: ^6.3.0
   # Blocs and cubits.
   flutter_bloc: ^8.0.1
   # The dart library for making HTTP requests.
