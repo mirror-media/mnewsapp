@@ -1,186 +1,87 @@
 name: tv
 description: A new Flutter project.
-
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-
+publish_to: 'none'
 version: 1.5.5+69
 
 environment:
-  sdk: '>=2.12.0 <=3.2.4'
+  sdk: ">=3.7.0 <4.0.0"
+  flutter: ">=3.29.0"
 
 dependencies:
   flutter:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
+
   sprintf: ^7.0.0
   graphql_flutter: ^5.1.2
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.3
-  # The most important library is intl. 
-  intl: ^0.18.1
-  # The Font Awesome Icon pack available as set of Flutter Icons.
+  intl: ^0.19.0
   font_awesome_flutter: ^10.1.0
-  # Launching a URL in the mobile platform.
-  url_launcher: ^6.3.0
-  # Blocs and cubits.
-  flutter_bloc: ^8.0.1
-  # The dart library for making HTTP requests.
-  http: ^0.13.3
-  # local storage
+  http: ^1.2.2
   localstorage: ^4.0.0+1
-  # share url
-  share_plus: 6.2.0
-  # Carousel slider in flutter.
-  carousel_slider: ^4.0.0-nullsafety.0
-  # Cached network image.
+  share_plus: ^11.1.0
+  carousel_slider: ^5.0.0
   cached_network_image: ^3.2.1
-  # flutter cache manager
   flutter_cache_manager: ^3.1.2
-  # package for working with MIME type definitions
-  mime: ^1.0.0
-  # video player
-  video_player: 2.4.4
-  # audio service
-  audioplayers: ^1.0.1
-  # a friendly Material or Cupertino UI for video
+  mime: ^2.0.0
+  video_player: ^2.9.1
+  audioplayers: ^6.0.0
   chewie: ^1.2.2
-  # Widget from html
-  flutter_widget_from_html: ^0.8.4
-  # mirrormedia embedded code
-  flutter_embedded_webview: 
+  flutter_widget_from_html: ^0.16.1
+  fluttertoast: ^8.0.7
+  firebase_core: ^4.0.0
+  firebase_messaging: ^16.0.0
+  firebase_remote_config: ^6.0.0
+  firebase_analytics: ^12.0.0
+
+  flutter_svg: ^2.0.0
+  flutter_datetime_picker_plus: ^2.2.0
+  webview_flutter: ^4.7.0
+#  flutter_inappwebview: 6.1.0+1
+  youtube_player_flutter: ^9.1.2
+
+  visibility_detector: ^0.4.0+2
+  auto_size_text: ^3.0.0
+  photo_view: ^0.15.0
+  get: ^4.6.6
+  pdf_render: ^1.4.12
+  app_tracking_transparency: ^2.0.6
+  extended_text: ^15.0.2
+  audio_session: ^0.2.2
+  package_info_plus: ^8.3.1
+  equatable: ^2.0.5
+  youtube_explode_dart: ^2.0.2
+  percent_indicator: ^4.2.3
+
+
+  flutter_embedded_webview:
     git:
       url: https://github.com/mirror-media/flutter_embedded_webview.git
       ref: master
-      version: ^0.5.0
-  # Toast Library for Flutter
-  fluttertoast: ^8.0.7
-  # firebase
-  firebase_core: ^2.1.1
-  # firebase cloud messaging
-  firebase_messaging: ^14.0.4
-  # svg file loader
-  flutter_svg: ^1.0.0
-  # ios look date picker
-  flutter_datetime_picker_plus: ^2.1.0
 
-  # google mobile ad
-  google_mobile_ads: ^2.0.1
-  # shared_preferences
-  shared_preferences: ^2.0.7
-  # version update
-  upgrader: ^5.0.0-alpha.1
-  # firebase remote config
-  firebase_remote_config: ^3.0.4
-  # get youtube metadata
-  youtube_explode_dart: ^1.10.9+1
-  # webview
-  webview_flutter: ^3.0.4
-  # flutter inappwebview for iframe
-  flutter_inappwebview: ^5.8.0
-  youtube_player_flutter: ^8.1.2
-  # better video player use for yt live only
-  better_player: 
-    git:
-      url: https://github.com/AhmedOsman14/betterplayer.git
-      ref: issue_android
-  # firebase analytics
-  firebase_analytics: ^10.0.4
-  # visibility detector
-  visibility_detector: ^0.3.3
-  # auto size text
-  auto_size_text: ^3.0.0
-  # zoomable widget
-  photo_view: ^0.14.0
-  # getx
-  get: ^4.6.3
-  # pdf viewer
-  pdf_render: ^1.0.23
-  # app tracking
-  app_tracking_transparency: ^2.0.6
-  # fix error of chinese and english mix text
-  extended_text: ^12.0.1
-  audio_session: ^0.1.18
-  # package info
-  package_info_plus: ^3.0.1
-  # compare objects
-  equatable: ^2.0.5
-  # for election
-  percent_indicator: ^4.2.2
   real_time_invoice_widget:
     git:
       url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
       ref: main
-      version: ^1.0.8+8
 
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  image_path: "assets/image/appIcon/mNewsIcon.jpg"
+  google_mobile_ads: ^6.0.0
+  shared_preferences: ^2.3.2
+  upgrader: ^11.5.0
+  url_launcher: ^6.3.0
+  flutter_bloc: ^9.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_native_splash: any
-  # generate app icons
-  flutter_launcher_icons: ^0.10.0
+  flutter_launcher_icons: ^0.14.4
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
   assets:
     - assets/json/
     - assets/image/
     - assets/image/ombuds/
     - assets/image/search/
     - assets/image/election/
-
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages

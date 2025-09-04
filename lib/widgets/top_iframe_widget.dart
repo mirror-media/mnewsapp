@@ -148,11 +148,9 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
                                 child: InAppWebView(
                                   key: ValueKey(controller.webViewKey.value),
                                   initialUrlRequest: URLRequest(
-                                    url:
-                                        Uri.parse(controller.currentUrl.value!),
+                                    url: WebUri(controller.currentUrl.value!),
                                   ),
-                                  initialOptions:
-                                      TopIframeHelper.createWebViewSettings(),
+                                  initialOptions: TopIframeHelper.createWebViewSettings(),
                                   onWebViewCreated: (webController) {
                                     controller.onWebViewCreated(webController);
                                   },
@@ -176,12 +174,10 @@ class _TopIframeWidgetState extends State<TopIframeWidget>
                                       });
                                     ''');
                                   },
-                                  onLoadError:
-                                      (webController, url, code, message) {
+                                  onLoadError: (webController, url, code, message) {
                                     controller.onLoadError(message);
                                   },
-                                  shouldOverrideUrlLoading:
-                                      (webController, navigationAction) async {
+                                  shouldOverrideUrlLoading: (webController, navigationAction) async {
                                     return NavigationActionPolicy.ALLOW;
                                   },
                                 ),

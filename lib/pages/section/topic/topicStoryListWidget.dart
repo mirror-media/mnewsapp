@@ -1,5 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -24,34 +24,40 @@ import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class TopicStoryListWidget extends StatefulWidget {
   final String slug;
-  TopicStoryListWidget(this.slug);
+
+  const TopicStoryListWidget(this.slug, {super.key});
+
   @override
-  _TopicStoryListWidgetState createState() => _TopicStoryListWidgetState();
+  State<TopicStoryListWidget> createState() => _TopicStoryListWidgetState();
 }
 
 class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   late TopicStoryList _topicStoryList;
-  late final _storySlug;
+  late final String _storySlug;
+  late final carousel.CarouselSliderController carouselController;
+
   bool _isAllLoaded = false;
-  List<StoryListItem> _storyListItemList = [];
-  CarouselController carouselController = CarouselController();
   bool _isLoading = false;
+
+  List<StoryListItem> _storyListItemList = [];
+
   final interstitialAdController = Get.find<InterstitialAdController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
+    super.initState();
     _storySlug = widget.slug;
+    carouselController = carousel.CarouselSliderController();
     _fetchTopicStoryList();
     interstitialAdController.ramdomShowInterstitialAd();
-    super.initState();
   }
 
-  _fetchTopicStoryList() {
+  void _fetchTopicStoryList() {
     context.read<TopicStoryListBloc>().add(FetchTopicStoryList(_storySlug));
   }
 
-  _fetchTopicStoryListMore() {
+  void _fetchTopicStoryListMore() {
     if (!_isAllLoaded) {
       context.read<TopicStoryListBloc>().add(FetchTopicStoryListMore());
     }
@@ -60,14 +66,13 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<TopicStoryListBloc, TopicStoryListState>(
-      builder: (BuildContext context, TopicStoryListState state) {
+      builder: (context, state) {
         if (state.status == TopicStoryListStatus.error) {
           final error = state.error;
           print('TopicStoryListError: ${error.message}');
           if (error is NoInternetException) {
             return error.renderWidget(onPressed: () => _fetchTopicStoryList());
           }
-
           return error.renderWidget();
         }
 
@@ -78,16 +83,16 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
 
         if (state.status == TopicStoryListStatus.loaded) {
           if (state.topicStoryList == null) {
-            return TabContentNoResultWidget();
+            return  TabContentNoResultWidget();
           }
-          _topicStoryList = state.topicStoryList!;
 
+          _topicStoryList = state.topicStoryList!;
           if (_topicStoryList.storyListItemList != null) {
             _storyListItemList = _topicStoryList.storyListItemList!;
           }
 
           if (_storyListItemList.isEmpty) {
-            return TabContentNoResultWidget();
+            return  TabContentNoResultWidget();
           }
 
           if (_storyListItemList.length == _topicStoryList.allStoryCount) {
@@ -95,46 +100,31 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           }
 
           _isLoading = false;
-
           return _buildBody();
         }
 
-        return Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
+        return const Center(child: CircularProgressIndicator.adaptive());
       },
     );
   }
 
   Widget _buildBody() {
-    double width = MediaQuery.of(context).size.width;
-    double height = width / 16 * 9;
-    List<StoryListItem> firstFour = [];
-    List<StoryListItem> fiveToEight = [];
-    List<StoryListItem> others = [];
-    for (int i = 0; i < _storyListItemList.length; i++) {
-      if (i < 4) {
-        firstFour.add(_storyListItemList[i]);
-      } else if (i < 8) {
-        fiveToEight.add(_storyListItemList[i]);
-      } else {
-        others.add(_storyListItemList[i]);
-      }
-    }
+    final width = MediaQuery.of(context).size.width;
+    final height = width / 16 * 9;
+
+    final firstFour = _storyListItemList.take(4).toList();
+    final fiveToEight = _storyListItemList.skip(4).take(4).toList();
+    final others = _storyListItemList.skip(8).toList();
+
     return ListView(
       children: [
         InlineBannerAdWidget(
           adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicHD'),
-          sizes: [
-            AdSize.mediumRectangle,
-            AdSize(width: 336, height: 280),
-          ],
+          sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280)],
           wantKeepAlive: true,
         ),
         _buildLeading(width, height),
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
         _buildTopicStoryList(firstFour),
         InlineBannerAdWidget(
           adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT1'),
@@ -148,10 +138,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
         _buildTopicStoryList(fiveToEight),
         InlineBannerAdWidget(
           adUnitId: AdUnitIdHelper.getBannerAdUnitId('TopicAT2'),
-          sizes: [
-            AdSize.mediumRectangle,
-            AdSize(width: 336, height: 280),
-          ],
+          sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280)],
           wantKeepAlive: true,
         ),
         _buildTopicStoryList(others),
@@ -160,193 +147,122 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
     );
   }
 
-  Widget _buildTopicStoryList(List<StoryListItem> storyListItemList) {
-    return ListView.separated(
-      itemCount: storyListItemList.length,
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      separatorBuilder: (context, index) {
-        return const Divider(
-          height: 16,
-          thickness: 1,
-          color: Color.fromRGBO(244, 245, 246, 1),
-          indent: 24,
-          endIndent: 27,
-        );
-      },
-      itemBuilder: (context, index) {
-        return InkWell(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 24),
-            child: _buildTopicStoryListItem(storyListItemList[index]),
-          ),
-          onTap: () {
-            if (storyListItemList[index].slug == null) return;
-            Get.to(() => StoryPage(
-                  slug: storyListItemList[index].slug!,
-                ));
-          },
-        );
-      },
-    );
-  }
-
   Widget _buildLeading(double width, double height) {
     if (_topicStoryList.leading == 'slideshow' &&
         _topicStoryList.headerArticles != null &&
         _topicStoryList.headerArticles!.isNotEmpty) {
-      List<Widget> items = [];
-      var width = MediaQuery.of(context).size.width;
-      var height = width / (16 / 9);
-      if (height > 700) {
-        height = 700;
-      } else if (height > 500) {
-        height = (height ~/ 100) * 100;
-      }
-      height = height + 120;
-      for (var item in _topicStoryList.headerArticles!) {
-        items.add(CarouselDisplayWidget(
+      final items = _topicStoryList.headerArticles!.map((item) {
+        return CarouselDisplayWidget(
           storyListItem: item,
           width: width,
           isHomePage: false,
           showTag: false,
-        ));
+        );
+      }).toList();
+
+      double finalHeight = width / (16 / 9);
+      if (finalHeight > 700) {
+        finalHeight = 700;
+      } else if (finalHeight > 500) {
+        finalHeight = (finalHeight ~/ 100) * 100;
       }
-      return CarouselSlider(
+      finalHeight += 120;
+
+      return carousel.CarouselSlider(
         items: items,
-        options: CarouselOptions(
+        options: carousel.CarouselOptions(
           autoPlay: true,
           aspectRatio: 2.0,
           viewportFraction: 1.0,
-          height: height,
+          height: finalHeight,
         ),
       );
-    } else if (_topicStoryList.leading == 'video' &&
-        _topicStoryList.headerVideo != null) {
-      if (_topicStoryList.headerVideo!.url.contains('youtube')) {
-        String? videoId =
-            VideoId.parseVideoId(_topicStoryList.headerVideo!.url);
-        if (videoId == null) {
-          return Container();
-        } else {
-          return YoutubePlayer(
-            videoId,
-            mute: true,
-            autoPlay: true,
-          );
-        }
+    }
+
+    if (_topicStoryList.leading == 'video' && _topicStoryList.headerVideo != null) {
+      final videoUrl = _topicStoryList.headerVideo!.url;
+      if (videoUrl.contains('youtube')) {
+        final videoId = VideoId.parseVideoId(videoUrl);
+        return videoId == null
+            ? const SizedBox()
+            : YoutubePlayer(videoId, mute: true, autoPlay: true);
       } else {
         return MNewsVideoPlayer(
-          videourl: _topicStoryList.headerVideo!.url,
+          videourl: videoUrl,
           aspectRatio: 16 / 9,
           autoPlay: true,
           muted: true,
         );
       }
-    } else if (_topicStoryList.leading == 'multivideo' &&
+    }
+
+    if (_topicStoryList.leading == 'multivideo' &&
         _topicStoryList.headerVideoList != null &&
         _topicStoryList.headerVideoList!.isNotEmpty) {
-      List<Widget> items = [];
-      for (var item in _topicStoryList.headerVideoList!) {
-        String? videoId = VideoId.parseVideoId(item.url);
-        if (videoId != null) {
-          items.add(YoutubePlayer(
-            videoId,
-            autoPlay: true,
-            mute: true,
-          ));
-        }
-      }
-      if (items.isEmpty) {
-        return Container();
-      }
+      final items = _topicStoryList.headerVideoList!.map((item) {
+        final videoId = VideoId.parseVideoId(item.url);
+        return videoId != null
+            ? YoutubePlayer(videoId, autoPlay: true, mute: true)
+            : const SizedBox.shrink();
+      }).toList();
+
       return Column(
         children: [
-          CarouselSlider(
+          carousel.CarouselSlider(
             items: items,
             carouselController: carouselController,
-            options: CarouselOptions(
+            options: carousel.CarouselOptions(
               autoPlay: false,
               aspectRatio: 2.0,
               viewportFraction: 1.0,
-              height: MediaQuery.of(context).size.width / (16 / 9),
+              height: width / (16 / 9),
             ),
           ),
-          const SizedBox(
-            height: 8,
-          ),
+          const SizedBox(height: 8),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-                onTap: () {
-                  carouselController.previousPage();
-                },
+                onTap: () => carouselController.previousPage(),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    Icon(
-                      Icons.arrow_back_ios,
-                      color: themeColor,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 13,
-                    ),
-                    Obx(
-                      () => Text(
-                        '上一則影片',
-                        style: TextStyle(color: themeColor, fontSize: 14),
-                        textScaleFactor:
-                            textScaleFactorController.textScaleFactor.value,
-                      ),
-                    ),
+                    const SizedBox(width: 8),
+                    const Icon(Icons.arrow_back_ios, color: themeColor, size: 18),
+                    const SizedBox(width: 13),
+                    Obx(() => Text(
+                      '上一則影片',
+                      style: const TextStyle(color: themeColor, fontSize: 14),
+                      textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
+                    )),
                   ],
                 ),
               ),
               InkWell(
-                onTap: () {
-                  carouselController.nextPage();
-                },
+                onTap: () => carouselController.nextPage(),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Obx(
-                      () => Text(
-                        '下一則影片',
-                        style: TextStyle(color: themeColor, fontSize: 14),
-                        textScaleFactor:
-                            textScaleFactorController.textScaleFactor.value,
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 13,
-                    ),
-                    Icon(
-                      Icons.arrow_forward_ios,
-                      color: themeColor,
-                      size: 18,
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
+                    Obx(() => Text(
+                      '下一則影片',
+                      style: const TextStyle(color: themeColor, fontSize: 14),
+                      textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
+                    )),
+                    const SizedBox(width: 13),
+                    const Icon(Icons.arrow_forward_ios, color: themeColor, size: 18),
+                    const SizedBox(width: 8),
                   ],
                 ),
               ),
             ],
           ),
-          const SizedBox(
-            height: 4,
-          ),
+          const SizedBox(height: 4),
         ],
       );
     }
 
     return Padding(
-      padding: EdgeInsets.only(bottom: 29),
+      padding: const EdgeInsets.only(bottom: 29),
       child: CachedNetworkImage(
         width: width,
         imageUrl: _topicStoryList.photoUrl,
@@ -359,14 +275,40 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
           height: height,
           width: width,
           color: Colors.grey,
-          child: Icon(Icons.error),
+          child: const Icon(Icons.error),
         ),
         fit: BoxFit.cover,
       ),
     );
   }
 
-  Widget _buildTopicStoryListItem(StoryListItem storyListItem) {
+  Widget _buildTopicStoryList(List<StoryListItem> list) {
+    return ListView.separated(
+      itemCount: list.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      separatorBuilder: (context, index) => const Divider(
+        height: 16,
+        thickness: 1,
+        color: Color.fromRGBO(244, 245, 246, 1),
+        indent: 24,
+        endIndent: 27,
+      ),
+      itemBuilder: (context, index) => InkWell(
+        onTap: () {
+          final slug = list[index].slug;
+          if (slug == null) return;
+          Get.to(() => StoryPage(slug: slug));
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24),
+          child: _buildTopicStoryListItem(list[index]),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTopicStoryListItem(StoryListItem item) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -376,9 +318,7 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             width: 90,
             height: 90,
             child: CachedNetworkImage(
-              width: 90,
-              height: 90,
-              imageUrl: storyListItem.photoUrl,
+              imageUrl: item.photoUrl,
               placeholder: (context, url) => Container(
                 height: 90,
                 width: 90,
@@ -388,15 +328,13 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
                 height: 90,
                 width: 90,
                 color: Colors.grey,
-                child: Icon(Icons.error),
+                child: const Icon(Icons.error),
               ),
               fit: BoxFit.cover,
             ),
           ),
         ),
-        const SizedBox(
-          width: 12,
-        ),
+        const SizedBox(width: 12),
         SizedBox(
           height: 90,
           width: MediaQuery.of(context).size.width - 90 - 12 - 48,
@@ -404,44 +342,38 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Obx(
-                () => Text(
-                  storyListItem.name ?? StringDefault.nullString,
-                  softWrap: true,
-                  maxLines: 2,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 17,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                  textScaleFactor:
-                      textScaleFactorController.textScaleFactor.value,
+              Obx(() => Text(
+                item.name ?? StringDefault.nullString,
+                softWrap: true,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                textScaleFactor:
+                textScaleFactorController.textScaleFactor.value,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400,
+                  fontSize: 17,
                 ),
-              ),
-              if (storyListItem.categoryList != null &&
-                  storyListItem.categoryList!.isNotEmpty)
+              )),
+              if (item.categoryList != null && item.categoryList!.isNotEmpty)
                 Container(
                   color: const Color.fromRGBO(151, 151, 151, 1),
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
+                  const EdgeInsets.symmetric(horizontal: 6, vertical: 3),
                   width: 50,
                   alignment: Alignment.center,
-                  child: Obx(
-                    () => Text(
-                      storyListItem.categoryList![0].name,
-                      softWrap: true,
-                      maxLines: 1,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 13,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                      textScaleFactor:
-                          textScaleFactorController.textScaleFactor.value,
+                  child: Obx(() => Text(
+                    item.categoryList![0].name,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w400,
+                      fontSize: 13,
                     ),
-                  ),
+                  )),
                 ),
             ],
           ),
@@ -451,22 +383,18 @@ class _TopicStoryListWidgetState extends State<TopicStoryListWidget> {
   }
 
   Widget _loadMoreWidget() {
-    if (_isAllLoaded) {
-      return SizedBox(
-        height: 28,
-      );
-    }
+    if (_isAllLoaded) return const SizedBox(height: 28);
 
     return VisibilityDetector(
-      key: Key('TopicStoryListLoadingMore'),
-      onVisibilityChanged: (visibilityInfo) {
-        var visiblePercentage = visibilityInfo.visibleFraction * 100;
-        if (visiblePercentage > 30 && !_isLoading) {
+      key: const Key('TopicStoryListLoadingMore'),
+      onVisibilityChanged: (info) {
+        final percent = info.visibleFraction * 100;
+        if (percent > 30 && !_isLoading) {
           _fetchTopicStoryListMore();
           _isLoading = true;
         }
       },
-      child: Center(child: CircularProgressIndicator.adaptive()),
+      child: const Center(child: CircularProgressIndicator.adaptive()),
     );
   }
 }

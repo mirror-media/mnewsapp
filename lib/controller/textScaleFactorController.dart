@@ -10,7 +10,7 @@ class TextScaleFactorController extends GetxController {
     init();
     debounce<double>(
       textScaleFactor,
-      (_) async => await _prefs.setDouble('textScaleFactor', _),
+          (value) async => await _prefs.setDouble('textScaleFactor', value),
       time: 1.seconds,
     );
     super.onInit();

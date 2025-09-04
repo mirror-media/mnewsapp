@@ -5,7 +5,10 @@ class AnalyticsHelper {
   static final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
   static sendScreenView({required String screenName}) async {
-    await analytics.setCurrentScreen(screenName: screenName);
+    await analytics.logScreenView(
+      screenName: screenName,
+      screenClass: screenName, // 可自訂或與 screenName 相同
+    );
   }
 
   static logAppOpen() async {

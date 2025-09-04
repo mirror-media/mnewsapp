@@ -35,32 +35,29 @@ class _InitialAppState extends State<InitialApp> {
   Widget build(BuildContext context) {
     return BlocBuilder<ConfigBloc, ConfigState>(
         builder: (BuildContext context, ConfigState state) {
-      if (state is ConfigError) {
-        final error = state.error;
-        print('ConfigError: ${error.message}');
-        return _errorMessage();
-      }
-      if (state is ConfigLoaded) {
-        return UpgradeAlert(
-          upgrader: Upgrader(
-            minAppVersion: state.minAppVersion,
-            messages: UpdateMessages(),
-            dialogStyle: Platform.isAndroid
-                ? UpgradeDialogStyle.material
-                : UpgradeDialogStyle.cupertino,
-          ),
-          child: BlocProvider(
-            create: (_) => SectionCubit(),
-            child: HomePage(
-              appVersion: state.appVersion,
-            ),
-          ),
-        );
-      }
+          if (state is ConfigError) {
+            final error = state.error;
+            print('ConfigError: ${error.message}');
+            return _errorMessage();
+          }
+          if (state is ConfigLoaded) {
+            return UpgradeAlert(
+              upgrader: Upgrader(
+                minAppVersion: state.minAppVersion,
+                messages: UpdateMessages(),
+              ),
+              child: BlocProvider(
+                create: (_) => SectionCubit(),
+                child: HomePage(
+                  appVersion: state.appVersion,
+                ),
+              ),
+            );
+          }
 
-      // state is Init, loading, or other
-      return ConfigPage();
-    });
+          // state is Init, loading, or other
+          return ConfigPage();
+        });
   }
 
   Widget _errorMessage() {

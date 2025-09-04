@@ -27,8 +27,7 @@ class Paragraph {
     );
   }
 
-  static List<Paragraph> parseResponseBody(String body,
-      {bool isNotApiData: false}) {
+  static List<Paragraph> parseResponseBody(String body, {bool isNotApiData = false}) {
     try {
       final jsonData = json.decode(body);
       if (isNotApiData) {
