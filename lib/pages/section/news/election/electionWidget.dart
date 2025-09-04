@@ -1,21 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:intl/intl.dart';
 import 'package:tv/blocs/election/election_cubit.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/models/election/municipality.dart';
 import 'package:tv/pages/section/news/election/municipalityItem.dart';
-
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 
 class ElectionWidget extends StatefulWidget {
-  ElectionWidget({Key? key}) : super(key: key);
+  const ElectionWidget({super.key});
 
   @override
   State<ElectionWidget> createState() => _ElectionWidgetState();
@@ -23,35 +22,43 @@ class ElectionWidget extends StatefulWidget {
 
 class _ElectionWidgetState extends State<ElectionWidget> {
   List<Municipality> municipalityList = [];
-  late DateTime lastUpdateTime;
-  final CarouselController carouselController = CarouselController();
+  DateTime? lastUpdateTime;
+  final carousel.CarouselSliderController carouselController = carousel.CarouselSliderController();
   final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-  late final Timer? autoUpdateTimer;
+
+  Timer? autoUpdateTimer;
   int currentIndex = 0;
-  late final String api;
-  late final String readmoreUrl;
-  late final DateTime startShowTime;
-  late final DateTime endShowTime;
+  String api = '';
+  String readmoreUrl = '';
+  DateTime? startShowTime;
+  DateTime? endShowTime;
 
   @override
   void initState() {
-    var electionJsonString = remoteConfig.getString('election');
+    super.initState();
+
+    final electionJsonString = remoteConfig.getString('election');
     try {
-      var electionJson = jsonDecode(electionJsonString);
-      api = electionJson['api'];
-      readmoreUrl = electionJson['readMoreUrl'];
-      startShowTime = DateTime.parse(electionJson['startTime']);
-      endShowTime = DateTime.parse(electionJson['endTime']);
-      fetchMunicipalityData();
-      autoUpdateTimer = Timer.periodic(
-          const Duration(minutes: 1), (timer) => fetchMunicipalityData());
+      final electionJson = jsonDecode(electionJsonString);
+      api = electionJson['api'] ?? '';
+      readmoreUrl = electionJson['readMoreUrl'] ?? '';
+      startShowTime = DateTime.tryParse(electionJson['startTime'] ?? '');
+      endShowTime = DateTime.tryParse(electionJson['endTime'] ?? '');
+
+      if (startShowTime != null && endShowTime != null) {
+        fetchMunicipalityData();
+        autoUpdateTimer = Timer.periodic(
+          const Duration(minutes: 1),
+              (_) => fetchMunicipalityData(),
+        );
+      } else {
+        throw Exception('Invalid show time');
+      }
     } catch (e) {
       print('Init election widget error: $e');
       autoUpdateTimer = null;
       context.read<ElectionCubit>().hideWidget();
     }
-
-    super.initState();
   }
 
   @override
@@ -61,11 +68,11 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   }
 
   void fetchMunicipalityData() {
-    var now = DateTime.now();
-    if (now.isAfter(endShowTime)) {
+    final now = DateTime.now();
+    if (endShowTime != null && now.isAfter(endShowTime!)) {
       context.read<ElectionCubit>().hideWidget();
       autoUpdateTimer?.cancel();
-    } else if (now.isBefore(startShowTime)) {
+    } else if (startShowTime != null && now.isBefore(startShowTime!)) {
       context.read<ElectionCubit>().hideWidget();
     } else {
       context.read<ElectionCubit>().fetchMunicipalityData(api);
@@ -76,23 +83,16 @@ class _ElectionWidgetState extends State<ElectionWidget> {
   Widget build(BuildContext context) {
     return BlocBuilder<ElectionCubit, ElectionState>(
       builder: (context, state) {
-        if (state is HideWidget) {
-          return const SizedBox();
-        }
+        if (state is HideWidget) return const SizedBox();
 
         if (state is ElectionDataLoaded) {
           municipalityList = state.municipalityList;
           lastUpdateTime = state.lastUpdateTime;
         }
 
-        if (municipalityList.isEmpty) {
-          return const SizedBox();
-        }
+        if (municipalityList.isEmpty) return const SizedBox();
 
-        List<Widget> items = [];
-        for (var item in municipalityList) {
-          items.add(MunicipalityItem(item));
-        }
+        final items = municipalityList.map((item) => MunicipalityItem(item)).toList();
 
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -121,11 +121,10 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                       children: [
                         GestureDetector(
                           onTap: () {
-                            AnalyticsHelper.logElectionEvent(
-                                eventName: 'country_button');
+                            AnalyticsHelper.logElectionEvent(eventName: 'country_button');
                             carouselController.previousPage();
                           },
-                          child: Icon(
+                          child: const Icon(
                             CupertinoIcons.arrowtriangle_left_fill,
                             size: 20,
                             color: Colors.black,
@@ -143,11 +142,10 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         const Spacer(),
                         GestureDetector(
                           onTap: () {
-                            AnalyticsHelper.logElectionEvent(
-                                eventName: 'country_button');
+                            AnalyticsHelper.logElectionEvent(eventName: 'country_button');
                             carouselController.nextPage();
                           },
-                          child: Icon(
+                          child: const Icon(
                             CupertinoIcons.arrowtriangle_right_fill,
                             size: 20,
                             color: Colors.black,
@@ -159,23 +157,21 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                       padding: const EdgeInsets.only(top: 12, bottom: 20),
                       child: Text(
                         '資料來源：${municipalityList[currentIndex].dataSource}',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.w400,
                           color: Color.fromRGBO(155, 155, 155, 1),
                         ),
                       ),
                     ),
-                    CarouselSlider(
-                      options: CarouselOptions(
+                    carousel.CarouselSlider(
+                      options: carousel.CarouselOptions(
                         autoPlay: true,
                         viewportFraction: 1,
                         autoPlayInterval: const Duration(seconds: 3),
                         height: 175,
-                        onPageChanged: (index, reason) {
-                          setState(() {
-                            currentIndex = index;
-                          });
+                        onPageChanged: (index, _) {
+                          setState(() => currentIndex = index);
                         },
                       ),
                       items: items,
@@ -185,8 +181,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                       alignment: Alignment.center,
                       child: GestureDetector(
                         onTap: () {
-                          AnalyticsHelper.logElectionEvent(
-                              eventName: 'to_2022Election');
+                          AnalyticsHelper.logElectionEvent(eventName: 'to_2022Election');
                           launchUrlString(readmoreUrl);
                         },
                         child: const Text(
@@ -200,17 +195,16 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         ),
                       ),
                     ),
-                    const SizedBox(
-                      height: 8,
-                    ),
-                    Text(
-                      '最後更新時間 ${DateFormat('yyyy/MM/dd HH:mm').format(lastUpdateTime)}',
-                      style: const TextStyle(
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                        color: Color.fromRGBO(155, 155, 155, 1),
+                    const SizedBox(height: 8),
+                    if (lastUpdateTime != null)
+                      Text(
+                        '最後更新時間 ${DateFormat('yyyy/MM/dd HH:mm').format(lastUpdateTime!)}',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w400,
+                          color: Color.fromRGBO(155, 155, 155, 1),
+                        ),
                       ),
-                    ),
                   ],
                 ),
               ),

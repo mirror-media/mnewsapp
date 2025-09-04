@@ -7,7 +7,7 @@ import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/pages/section/news/election/electionWidget.dart';
 import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
 import 'package:tv/pages/section/news/newsTabStoryList.dart';
-import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
+import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart' as cs;
 import 'package:tv/services/editorChoiceService.dart';
 import 'package:tv/services/tabStoryListService.dart';
 
@@ -42,7 +42,7 @@ class NewsTabContent extends StatelessWidget {
                 editorChoiceRepos: EditorChoiceServices(),
                 tabStoryListBloc: tabStoryListBloc,
               ),
-              child: BuildEditorChoiceCarousel(),
+              child: cs.BuildEditorChoiceCarousel(),
             ),
           BlocProvider(
             create: (context) => tabStoryListBloc,

@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -12,116 +11,106 @@ import 'package:tv/pages/shared/editorChoice/carouselDisplayWidget.dart';
 import 'package:tv/widgets/liveWidget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 
 class BuildEditorChoiceCarousel extends StatefulWidget {
+  const BuildEditorChoiceCarousel({super.key});
+
   @override
-  _BuildEditorChoiceCarouselState createState() =>
-      _BuildEditorChoiceCarouselState();
+  _BuildEditorChoiceCarouselState createState() => _BuildEditorChoiceCarouselState();
 }
 
 class _BuildEditorChoiceCarouselState extends State<BuildEditorChoiceCarousel> {
   final NewsPageController controller = Get.find();
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditorChoiceBloc, EditorChoiceState>(
-        builder: (BuildContext context, EditorChoiceState state) {
-      if (state is EditorChoiceError) {
-        final error = state.error;
-        print('EditorChoiceError: ${error.message}');
-        return Container();
-      }
-      if (state is EditorChoiceLoadedAfterTabstory) {
-        List<StoryListItem> editorChoiceList = state.editorChoiceList;
-        List<StoryListItem> storyListItemList = state.storyListItemList;
-
-        if (editorChoiceList.length == 0) {
-          if (storyListItemList.length != 0) {
-            return Column(
-              children: [
-                LiveWidget(
-                  needBuildLiveTitle: false,
-                  livePostId: Environment().config.mNewsLivePostId,
-                ),
-                SizedBox(
-                  height: 12,
-                ),
-              ],
-            );
-          }
-          return Container();
+      builder: (BuildContext context, EditorChoiceState state) {
+        if (state is EditorChoiceError) {
+          final error = state.error;
+          print('EditorChoiceError: ${error.message}');
+          return const SizedBox();
         }
-        return Column(
-          children: [
-            Obx(() {
-              final isElectionShow = controller.rxIsElectionShow.value;
-              return isElectionShow
-                  ? Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 27),
-                          child: RealTimeInvoiceWidget(
-                              isPackage: true,
-                              getMoreButtonClick: () async {
-                                if (!await launchUrl(Uri.parse(Environment()
-                                    .config
-                                    .electionGetMoreWebpage))) {
-                                  throw Exception('Could not launch');
-                                }
-                              }, width: Get.width-54,),
-                        ),
-                        const SizedBox(
-                          height: 16.0,
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink();
-            }),
-            Obx(() {
-              final mnewLiveUrl = controller.rxnNewLiveUrl.value;
-              return mnewLiveUrl != null
-                  ? Column(
-                      children: [
-                        YoutubeStreamWidget(youtubeUrl: mnewLiveUrl),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink();
-            }),
-            Obx(() {
-              final liveCameList = controller.rxLiveCamList;
-              return liveCameList.isNotEmpty
-                  ? Column(
-                      children: [
-                        YoutubeStreamWidget(youtubeUrl: liveCameList[0]),
-                        const SizedBox(
-                          height: 12,
-                        ),
-                      ],
-                    )
-                  : SizedBox.shrink();
-            }),
-            SizedBox(
-              height: 12,
-            ),
-            EditorChoiceCarousel(
-              editorChoiceList: editorChoiceList,
-              aspectRatio: 4 / 3.2,
-            ),
-          ],
-        );
-      }
 
-      // state is Init, loading, or other
-      return Container();
-    });
+        if (state is EditorChoiceLoadedAfterTabstory) {
+          final editorChoiceList = state.editorChoiceList;
+          final storyListItemList = state.storyListItemList;
+
+          if (editorChoiceList.isEmpty) {
+            if (storyListItemList.isNotEmpty) {
+              return Column(
+                children: [
+                  LiveWidget(
+                    needBuildLiveTitle: false,
+                    livePostId: Environment().config.mNewsLivePostId,
+                  ),
+                  const SizedBox(height: 12),
+                ],
+              );
+            }
+            return const SizedBox();
+          }
+
+          return Column(
+            children: [
+              Obx(() {
+                final isElectionShow = controller.rxIsElectionShow.value;
+                return isElectionShow
+                    ? Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 27),
+                      child: RealTimeInvoiceWidget(
+                        isPackage: true,
+                        getMoreButtonClick: () async {
+                          if (!await launchUrl(Uri.parse(
+                              Environment().config.electionGetMoreWebpage))) {
+                            throw Exception('Could not launch');
+                          }
+                        },
+                        width: Get.width - 54,
+                      ),
+                    ),
+                    const SizedBox(height: 16.0),
+                  ],
+                )
+                    : const SizedBox.shrink();
+              }),
+              Obx(() {
+                final mnewLiveUrl = controller.rxnNewLiveUrl.value;
+                return mnewLiveUrl != null
+                    ? Column(
+                  children: [
+                    YoutubeStreamWidget(youtubeUrl: mnewLiveUrl),
+                    const SizedBox(height: 12),
+                  ],
+                )
+                    : const SizedBox.shrink();
+              }),
+              Obx(() {
+                final liveCameList = controller.rxLiveCamList;
+                return liveCameList.isNotEmpty
+                    ? Column(
+                  children: [
+                    YoutubeStreamWidget(youtubeUrl: liveCameList[0]),
+                    const SizedBox(height: 12),
+                  ],
+                )
+                    : const SizedBox.shrink();
+              }),
+              const SizedBox(height: 12),
+              EditorChoiceCarousel(
+                editorChoiceList: editorChoiceList,
+                aspectRatio: 4 / 3.2,
+              ),
+            ],
+          );
+        }
+
+        return const SizedBox();
+      },
+    );
   }
 }
 
@@ -129,7 +118,8 @@ class EditorChoiceCarousel extends StatefulWidget {
   final List<StoryListItem> editorChoiceList;
   final double aspectRatio;
 
-  EditorChoiceCarousel({
+  const EditorChoiceCarousel({
+    super.key,
     required this.editorChoiceList,
     this.aspectRatio = 16 / 9,
   });
@@ -139,94 +129,80 @@ class EditorChoiceCarousel extends StatefulWidget {
 }
 
 class _EditorChoiceCarouselState extends State<EditorChoiceCarousel> {
-  CarouselController _carouselController = CarouselController();
-  late CarouselOptions _options;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
+  final carousel.CarouselSliderController _carouselController = carousel.CarouselSliderController();
+  late carousel.CarouselOptions _options;
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    var height = width / widget.aspectRatio;
+    final width = MediaQuery.of(context).size.width;
+    double height = width / widget.aspectRatio;
+
     if (height > 700) {
       height = 700;
     } else if (height > 500) {
       height = (height ~/ 100) * 100;
     }
-    _options = CarouselOptions(
+
+    _options = carousel.CarouselOptions(
       viewportFraction: 1.0,
       aspectRatio: widget.aspectRatio,
       autoPlay: true,
-      autoPlayInterval: Duration(seconds: 8),
+      autoPlayInterval: const Duration(seconds: 8),
       enlargeCenterPage: true,
       onPageChanged: (index, reason) {},
       height: height + 20,
     );
-    return widget.editorChoiceList.length == 0
-        ? Container()
+
+    return widget.editorChoiceList.isEmpty
+        ? const SizedBox()
         : Stack(
-            children: [
-              CarouselSlider(
-                items: _imageSliders(width, widget.editorChoiceList),
-                carouselController: _carouselController,
-                options: _options,
+      children: [
+        carousel.CarouselSlider(
+          items: _imageSliders(width, widget.editorChoiceList),
+          carouselController: _carouselController,
+          options: _options,
+        ),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: InkWell(
+            onTap: () {
+              _carouselController.previousPage();
+            },
+            child: SizedBox(
+              width: width * 0.1,
+              height: height,
+              child: const Padding(
+                padding: EdgeInsets.only(left: 4.0),
+                child: Icon(Icons.arrow_back_ios, color: Colors.white),
               ),
-              Align(
-                alignment: Alignment.centerLeft,
-                child: InkWell(
-                  child: SizedBox(
-                    width: width * 0.1,
-                    height: height,
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 4.0),
-                      child: Icon(
-                        Icons.arrow_back_ios,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                  onTap: () {
-                    _carouselController.previousPage();
-                  },
-                ),
-              ),
-              Align(
-                alignment: Alignment.centerRight,
-                child: InkWell(
-                  child: SizedBox(
-                    width: width * 0.1,
-                    height: height,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      color: Colors.white,
-                    ),
-                  ),
-                  onTap: () {
-                    _carouselController.nextPage();
-                  },
-                ),
-              ),
-            ],
-          );
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: InkWell(
+            onTap: () {
+              _carouselController.nextPage();
+            },
+            child: SizedBox(
+              width: width * 0.1,
+              height: height,
+              child: const Icon(Icons.arrow_forward_ios, color: Colors.white),
+            ),
+          ),
+        ),
+      ],
+    );
   }
 
-  List<Widget> _imageSliders(
-      double width, List<StoryListItem> editorChoiceList) {
+  List<Widget> _imageSliders(double width, List<StoryListItem> editorChoiceList) {
     return editorChoiceList
         .map(
           (item) => CarouselDisplayWidget(
-            storyListItem: item,
-            width: width,
-          ),
-        )
+        storyListItem: item,
+        width: width,
+      ),
+    )
         .toList();
   }
 }
