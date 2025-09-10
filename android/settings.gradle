@@ -1,11 +1,30 @@
-include ':app'
+// android/settings.gradle —— Flutter 3.27+ / Gradle 8+
 
-def localPropertiesFile = new File(rootProject.projectDir, "local.properties")
-def properties = new Properties()
+pluginManagement {
+    // 讀取 Flutter SDK 路徑
+    def props = new Properties()
+    def f = new File(rootDir, "local.properties")
+    if (f.exists()) {
+        f.withReader("UTF-8") { r -> props.load(r) }
+    }
+    def flutterSdkPath = props.getProperty("flutter.sdk")
+    if (flutterSdkPath == null) {
+        throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+    }
 
-assert localPropertiesFile.exists()
-localPropertiesFile.withReader("UTF-8") { reader -> properties.load(reader) }
+    // 取代舊的 app_plugin_loader：用 includeBuild 讓 Gradle 找到 Flutter 的 plugins
+    includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
 
-def flutterSdkPath = properties.getProperty("flutter.sdk")
-assert flutterSdkPath != null, "flutter.sdk not set in local.properties"
-apply from: "$flutterSdkPath/packages/flutter_tools/gradle/app_plugin_loader.gradle"
+    repositories {
+        gradlePluginPortal()
+        google()
+        mavenCentral()
+    }
+}
+
+// 宣告 Flutter 的 plugin loader（版本由上面的 includeBuild 提供）
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+}
+
+include(":app")
