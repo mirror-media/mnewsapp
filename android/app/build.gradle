@@ -1,110 +1,123 @@
+// android/app/build.gradle
+
 plugins {
-    id "com.android.application"
-    id "org.jetbrains.kotlin.android"
-    id "dev.flutter.flutter-gradle-plugin"
-    // 若你有用 Crashlytics，這裡也可以加：
-    // id "com.google.firebase.crashlytics"
+    id 'com.android.application'
+    id 'org.jetbrains.kotlin.android'
+    id 'com.google.gms.google-services'     // 用 plugins DSL 啟用 google-services
+    id 'com.google.firebase.crashlytics'    // 若未用 Crashlytics 可移除
+    id 'dev.flutter.flutter-gradle-plugin'  // Flutter 3.27+ 新寫法
 }
 
+// --- 讀取 local.properties 版本號 ---
 def localProperties = new java.util.Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { r -> localProperties.load(r) }
 }
+def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName    = localProperties.getProperty('flutter.versionName') ?: '1.0'
-
-def devKeystoreProperties  = new java.util.Properties()
-def devFile = rootProject.file('dev/dev.properties')
-if (devFile.exists()) {
-    devKeystoreProperties.load(new java.io.FileInputStream(devFile))
+// --- 讀取 keystore 設定（本地/CI） ---
+// 如果你的檔案在 repo 根目錄叫 dev.properties / prod.properties，就把下面路徑換掉
+def devKeystoreProps  = new java.util.Properties()
+def devPropsFile  = rootProject.file('dev/dev.properties')   // ← 若你是 dev.properties 改成 rootProject.file('dev.properties')
+if (devPropsFile.exists()) {
+    devKeystoreProps.load(new java.io.FileInputStream(devPropsFile))
 }
-def prodKeystoreProperties = new java.util.Properties()
-def prodFile = rootProject.file('prod/prod.properties')
-if (prodFile.exists()) {
-    prodKeystoreProperties.load(new java.io.FileInputStream(prodFile))
+def prodKeystoreProps = new java.util.Properties()
+def prodPropsFile = rootProject.file('prod/prod.properties') // ← 若你是 prod.properties 改成 rootProject.file('prod.properties')
+if (prodPropsFile.exists()) {
+    prodKeystoreProps.load(new java.io.FileInputStream(prodPropsFile))
 }
 
 android {
     namespace "com.mirrortv.mnews"
-    compileSdkVersion 34
+    compileSdk 35
 
-    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
+    defaultConfig {
+        applicationId "com.mirrortv.mnews"
+        minSdkVersion 23
+        targetSdkVersion 35
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+        ndkVersion "25.1.8937393"
+        ndk { debugSymbolLevel 'FULL' }
+    }
 
-    // AGP 8 需 Java/Kotlin 17
+    // AGP 8.x 需要 Java/Kotlin 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = '17' }
 
+    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
+
     lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
     }
 
-    defaultConfig {
-        applicationId "com.mirrortv.mnews"
-        minSdkVersion 23
-        targetSdkVersion 34
-        multiDexEnabled true
-        versionCode flutterVersionCodeStr.toInteger()
-        versionName flutterVersionName
-        ndkVersion "25.1.8937393"
-        ndk { debugSymbolLevel 'FULL' }
-    }
-
     signingConfigs {
         dev {
-            if (System.getenv()["CI"]) {
-                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
+            if (System.getenv()["CI"]) {    // Codemagic 會設 CI=true
+                storeFile     file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+                keyAlias      System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword   System.getenv()["FCI_KEY_PASSWORD"]
             } else {
-                keyAlias devKeystoreProperties['keyAlias']
-                keyPassword devKeystoreProperties['keyPassword']
-                storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
-                storePassword devKeystoreProperties['storePassword']
+                keyAlias      devKeystoreProps['keyAlias']
+                keyPassword   devKeystoreProps['keyPassword']
+                storeFile     (devKeystoreProps['storeFile'] ? file(devKeystoreProps['storeFile']) : null)
+                storePassword devKeystoreProps['storePassword']
             }
         }
         prod {
             if (System.getenv()["CI"]) {
-                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storeFile     file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
+                keyAlias      System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword   System.getenv()["FCI_KEY_PASSWORD"]
             } else {
-                keyAlias prodKeystoreProperties['keyAlias']
-                keyPassword prodKeystoreProperties['keyPassword']
-                storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
-                storePassword prodKeystoreProperties['storePassword']
+                keyAlias      prodKeystoreProps['keyAlias']
+                keyPassword   prodKeystoreProps['keyPassword']
+                storeFile     (prodKeystoreProps['storeFile'] ? file(prodKeystoreProps['storeFile']) : null)
+                storePassword prodKeystoreProps['storePassword']
             }
         }
     }
 
-    flavorDimensions 'flavors'
+    flavorDimensions += "flavors"
     productFlavors {
-        dev  { dimension "flavors"; applicationIdSuffix ".dev";  signingConfig signingConfigs.dev }
-        prod { dimension "flavors";                              signingConfig signingConfigs.prod }
+        dev {
+            dimension "flavors"
+            applicationIdSuffix ".dev"
+            signingConfig signingConfigs.dev     // ← 直接在 flavor 綁定簽章（比在 buildTypes 下綁更穩）
+        }
+        prod {
+            dimension "flavors"
+            signingConfig signingConfigs.prod
+        }
     }
 
     buildTypes {
         release {
-            shrinkResources true
-            minifyEnabled true
+            // 先照你提供的關閉壓縮；要上架再開也可以
+            shrinkResources false
+            minifyEnabled   false
         }
     }
 }
 
-flutter { source '../..' }
+flutter { source = '../..' }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "androidx.multidex:multidex:2.0.1"
-}
 
-// Firebase（google-services）仍使用舊式 apply
-apply plugin: 'com.google.gms.google-services'
-// 若上方有啟用 Crashlytics plugin，通常不需要額外 apply，保持 plugins DSL 即可
+    // 這兩個通常不需要手動加，Flutter/FlutterFire 會自己帶版本；
+    // 如果你確定要手動指定，再保留（注意與 FlutterFire 版本相容性）
+    // implementation 'com.google.firebase:firebase-messaging:20.2.4'    // 很舊，建議交給 FlutterFire
+    implementation 'com.android.billingclient:billing:7.0.0'
+}
