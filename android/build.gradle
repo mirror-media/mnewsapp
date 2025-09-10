@@ -25,5 +25,13 @@ allprojects {
 rootProject.buildDir = '../build'
 subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
 // ⛔ 仍然不要加這行（容易踩雷）：subprojects { project.evaluationDependsOn(':app') }
+// 確保 Flutter 的 Android 套件子模組有套到 com.android.library
+subprojects { p ->
+    if (p.name == "webview_flutter_android") {
+        // 在子專案的 build.gradle 評估前就施加
+        p.plugins.apply("com.android.library")
+        p.plugins.apply("org.jetbrains.kotlin.android")
+    }
+}
 
 tasks.register("clean", Delete) { delete rootProject.buildDir }
