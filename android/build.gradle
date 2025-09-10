@@ -24,7 +24,6 @@ allprojects {
 
 rootProject.buildDir = '../build'
 subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
-subprojects { project.evaluationDependsOn(':app') }
 
 // 舊版的 task clean 也可用；保留即可
 task clean(type: Delete) { delete rootProject.buildDir }
