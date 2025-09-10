@@ -1,17 +1,15 @@
 // ── plugins 一定要是第一個區塊 ──────────────────────────────
 plugins {
     id "com.android.application"
-    id "kotlin-android"
-    id "dev.flutter.flutter-gradle-plugin"   // Flutter 3.27+ 新寫法
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
-// ── 下面才開始一般變數與邏輯（改成用完整類名避免 import） ──
+// ── 下面才開始一般變數與邏輯（避免 import 用 FQCN） ──
 def localProperties = new java.util.Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
 def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
@@ -30,12 +28,18 @@ if (prodKeystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace "com.mirrortv.mnews"   // AGP 8+ 必填
-    compileSdkVersion 33
+    namespace "com.mirrortv.mnews"
+    compileSdkVersion 34
 
     sourceSets { main.java.srcDirs += 'src/main/kotlin' }
 
-    // lintOptions -> 新 DSL
+    // AGP 8 建議指定 Java/Kotlin 17
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = '17' }
+
     lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
@@ -54,7 +58,7 @@ android {
 
     signingConfigs {
         dev {
-            if (System.getenv()["CI"]) { // Codemagic
+            if (System.getenv()["CI"]) {
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
@@ -83,14 +87,19 @@ android {
 
     flavorDimensions 'flavors'
     productFlavors {
-        dev  { dimension "flavors"; applicationIdSuffix ".dev" }
-        prod { dimension "flavors" }
+        dev {
+            dimension "flavors"
+            applicationIdSuffix ".dev"
+            signingConfig signingConfigs.dev     // ← 放在 flavor 內
+        }
+        prod {
+            dimension "flavors"
+            signingConfig signingConfigs.prod    // ← 放在 flavor 內
+        }
     }
 
     buildTypes {
         release {
-            productFlavors.dev.signingConfig  signingConfigs.dev
-            productFlavors.prod.signingConfig signingConfigs.prod
             shrinkResources true
             minifyEnabled true
         }
@@ -104,5 +113,5 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
 }
 
-// Firebase（google-services）仍使用舊式 apply
+// Firebase（google-services）目前仍用舊式 apply
 apply plugin: 'com.google.gms.google-services'
