@@ -26,6 +26,7 @@ plugins {
     // 版本釘在這裡，模組層用 plugins DSL 就會吃到
     id "com.android.application" version "8.2.1" apply false
     id "org.jetbrains.kotlin.android" version "1.9.22" apply false
+    id "com.android.library"     version "8.2.1" apply false
 }
 
 include(":app")

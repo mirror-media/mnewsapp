@@ -1,13 +1,17 @@
-// android/build.gradle — 專案層只保留需要的外掛 classpath，避免和 settings 的版本互踩
+// android/build.gradle — 讓 legacy 子模組能用到 AGP / Kotlin 插件
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // 不再放 com.android.tools.build:gradle / kotlin-gradle-plugin
+        // ✅ 加回這兩個，版本與 settings.gradle 釘的一致
+        classpath 'com.android.tools.build:gradle:8.2.1'
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
+
+        // 你有用到的外掛也放這裡
         classpath 'com.google.gms:google-services:4.4.2'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9' // 若未用 Crashlytics 可移除
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
     }
 }
 
@@ -20,6 +24,6 @@ allprojects {
 
 rootProject.buildDir = '../build'
 subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
-// ⛔ 別再有：subprojects { project.evaluationDependsOn(':app') }
+// ⛔ 仍然不要加這行（容易踩雷）：subprojects { project.evaluationDependsOn(':app') }
 
 tasks.register("clean", Delete) { delete rootProject.buildDir }
