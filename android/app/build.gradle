@@ -1,4 +1,12 @@
-def localProperties = new Properties()
+// ── plugins 一定要是第一個區塊 ──────────────────────────────
+plugins {
+    id "com.android.application"
+    id "kotlin-android"
+    id "dev.flutter.flutter-gradle-plugin"   // Flutter 3.27+ 新寫法
+}
+
+// ── 下面才開始一般變數與邏輯（改成用完整類名避免 import） ──
+def localProperties = new java.util.Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader ->
@@ -6,71 +14,52 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
+def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName   = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
-def devKeystoreProperties = new Properties()
+def devKeystoreProperties  = new java.util.Properties()
 def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
 if (devKeystorePropertiesFile.exists()) {
-    devKeystoreProperties.load(new FileInputStream(devKeystorePropertiesFile))
+    devKeystoreProperties.load(new java.io.FileInputStream(devKeystorePropertiesFile))
 }
 
-def prodKeystoreProperties = new Properties()
+def prodKeystoreProperties = new java.util.Properties()
 def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
 if (prodKeystorePropertiesFile.exists()) {
-    prodKeystoreProperties.load(new FileInputStream(prodKeystorePropertiesFile))
+    prodKeystoreProperties.load(new java.io.FileInputStream(prodKeystorePropertiesFile))
 }
 
 android {
+    namespace "com.mirrortv.mnews"   // AGP 8+ 必填
     compileSdkVersion 33
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
-    }
+    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
 
-    lintOptions {
+    // lintOptions -> 新 DSL
+    lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.mirrortv.mnews"
         minSdkVersion 23
         targetSdkVersion 34
         multiDexEnabled true
-        versionCode flutterVersionCode.toInteger()
+        versionCode flutterVersionCodeStr.toInteger()
         versionName flutterVersionName
         ndkVersion "25.1.8937393"
-        ndk {
-            debugSymbolLevel 'FULL'
-        }
+        ndk { debugSymbolLevel 'FULL' }
     }
-    
+
     signingConfigs {
         dev {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+            if (System.getenv()["CI"]) { // Codemagic
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
                 keyPassword System.getenv()["FCI_KEY_PASSWORD"]
-            }else{
+            } else {
                 keyAlias devKeystoreProperties['keyAlias']
                 keyPassword devKeystoreProperties['keyPassword']
                 storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
@@ -78,12 +67,12 @@ android {
             }
         }
         prod {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+            if (System.getenv()["CI"]) {
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
                 keyPassword System.getenv()["FCI_KEY_PASSWORD"]
-            }else{
+            } else {
                 keyAlias prodKeystoreProperties['keyAlias']
                 keyPassword prodKeystoreProperties['keyPassword']
                 storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
@@ -94,20 +83,13 @@ android {
 
     flavorDimensions 'flavors'
     productFlavors {
-        dev {
-            dimension "flavors"
-            applicationIdSuffix ".dev"
-        }
-        prod {
-            dimension "flavors"
-        }
+        dev  { dimension "flavors"; applicationIdSuffix ".dev" }
+        prod { dimension "flavors" }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            productFlavors.dev.signingConfig signingConfigs.dev
+            productFlavors.dev.signingConfig  signingConfigs.dev
             productFlavors.prod.signingConfig signingConfigs.prod
             shrinkResources true
             minifyEnabled true
@@ -115,13 +97,12 @@ android {
     }
 }
 
-flutter {
-    source '../..'
-}
+flutter { source '../..' }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.multidex:multidex:2.0.1"
 }
 
+// Firebase（google-services）仍使用舊式 apply
 apply plugin: 'com.google.gms.google-services'
