@@ -1,36 +1,31 @@
-// android/settings.gradle —— Flutter 3.27+ / Gradle 8+
-
+// android/settings.gradle — 對齊可過專案的寫法（釘 plugin 版本）
 pluginManagement {
     // 讀取 Flutter SDK 路徑
-    def props = new Properties()
+    def properties = new Properties()
     def f = new File(rootDir, "local.properties")
     if (f.exists()) {
-        f.withReader("UTF-8") { r -> props.load(r) }
+        f.withReader("UTF-8") { r -> properties.load(r) }
     }
-    def flutterSdkPath = props.getProperty("flutter.sdk")
+    def flutterSdkPath = properties.getProperty("flutter.sdk")
     if (flutterSdkPath == null) {
-        throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+        throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in local.properties.")
     }
 
-    // 取代舊的 app_plugin_loader：用 includeBuild 讓 Gradle 找到 Flutter 的 plugins
+    // 讓 Gradle 找到 Flutter 的 Gradle plugins（取代舊 apply from）
     includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
 
     repositories {
-        gradlePluginPortal()
         google()
         mavenCentral()
-    }
-
-    // ✅ 關鍵：釘住模組層 plugins DSL 要用的版本（避免吃到舊 7.1.2 / Kotlin 1.7.20）
-    plugins {
-        id "com.android.application" version "8.1.0"
-        id "org.jetbrains.kotlin.android" version "1.9.22"
+        gradlePluginPortal()
     }
 }
 
-// Flutter 的 plugin loader（由上面的 includeBuild 提供實作）
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    // 版本釘在這裡，模組層用 plugins DSL 就會吃到
+    id "com.android.application" version "8.2.1" apply false
+    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
 }
 
 include(":app")

@@ -1,30 +1,29 @@
-// ── plugins 一定要是第一個區塊 ──────────────────────────────
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
+    // 若你有用 Crashlytics，這裡也可以加：
+    // id "com.google.firebase.crashlytics"
 }
 
-// ── 下面才開始一般變數與邏輯（避免 import 用 FQCN） ──
 def localProperties = new java.util.Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
+    localPropertiesFile.withReader('UTF-8') { r -> localProperties.load(r) }
 }
 
 def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName   = localProperties.getProperty('flutter.versionName') ?: '1.0'
+def flutterVersionName    = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
 def devKeystoreProperties  = new java.util.Properties()
-def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
-if (devKeystorePropertiesFile.exists()) {
-    devKeystoreProperties.load(new java.io.FileInputStream(devKeystorePropertiesFile))
+def devFile = rootProject.file('dev/dev.properties')
+if (devFile.exists()) {
+    devKeystoreProperties.load(new java.io.FileInputStream(devFile))
 }
-
 def prodKeystoreProperties = new java.util.Properties()
-def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
-if (prodKeystorePropertiesFile.exists()) {
-    prodKeystoreProperties.load(new java.io.FileInputStream(prodKeystorePropertiesFile))
+def prodFile = rootProject.file('prod/prod.properties')
+if (prodFile.exists()) {
+    prodKeystoreProperties.load(new java.io.FileInputStream(prodFile))
 }
 
 android {
@@ -33,7 +32,7 @@ android {
 
     sourceSets { main.java.srcDirs += 'src/main/kotlin' }
 
-    // AGP 8 建議指定 Java/Kotlin 17
+    // AGP 8 需 Java/Kotlin 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
@@ -87,15 +86,8 @@ android {
 
     flavorDimensions 'flavors'
     productFlavors {
-        dev {
-            dimension "flavors"
-            applicationIdSuffix ".dev"
-            signingConfig signingConfigs.dev     // ← 放在 flavor 內
-        }
-        prod {
-            dimension "flavors"
-            signingConfig signingConfigs.prod    // ← 放在 flavor 內
-        }
+        dev  { dimension "flavors"; applicationIdSuffix ".dev";  signingConfig signingConfigs.dev }
+        prod { dimension "flavors";                              signingConfig signingConfigs.prod }
     }
 
     buildTypes {
@@ -113,5 +105,6 @@ dependencies {
     implementation "androidx.multidex:multidex:2.0.1"
 }
 
-// Firebase（google-services）目前仍用舊式 apply
+// Firebase（google-services）仍使用舊式 apply
 apply plugin: 'com.google.gms.google-services'
+// 若上方有啟用 Crashlytics plugin，通常不需要額外 apply，保持 plugins DSL 即可
