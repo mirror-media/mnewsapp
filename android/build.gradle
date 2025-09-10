@@ -1,32 +1,30 @@
+// android/build.gradle  —— 升級到 AGP 8.1 / Kotlin 1.9
+
 buildscript {
-    ext.kotlin_version = '1.7.20'
     repositories {
         google()
-        jcenter()
+        mavenCentral()   // ← 改掉 jcenter
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.1.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.3'
+        // Android Gradle Plugin（AGP）
+        classpath 'com.android.tools.build:gradle:8.1.0'
+        // Kotlin Gradle Plugin
+        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
+        // Firebase Google Services（若有用到）
+        classpath 'com.google.gms:google-services:4.4.2'
     }
 }
 
 allprojects {
     repositories {
         google()
-        jcenter()
+        mavenCentral()   // ← 改掉 jcenter
     }
 }
 
 rootProject.buildDir = '../build'
-subprojects {
-    project.buildDir = "${rootProject.buildDir}/${project.name}"
-}
-subprojects {
-    project.evaluationDependsOn(':app')
-}
+subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
+subprojects { project.evaluationDependsOn(':app') }
 
-task clean(type: Delete) {
-    delete rootProject.buildDir
-}
+// 舊版的 task clean 也可用；保留即可
+task clean(type: Delete) { delete rootProject.buildDir }
