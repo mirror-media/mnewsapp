@@ -1,17 +1,13 @@
-// android/build.gradle — 讓 legacy 子模組能用到 AGP / Kotlin 插件
 buildscript {
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        // ✅ 加回這兩個，版本與 settings.gradle 釘的一致
-        classpath 'com.android.tools.build:gradle:8.2.1'
-        classpath 'org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.22'
-
-        // 你有用到的外掛也放這裡
-        classpath 'com.google.gms:google-services:4.4.2'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.9'
+        classpath "com.android.tools.build:gradle:8.7.2"
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0"
+        classpath "com.google.gms:google-services:4.4.2"
+        classpath "com.google.firebase:firebase-crashlytics-gradle:2.9.9"
     }
 }
 
@@ -24,14 +20,7 @@ allprojects {
 
 rootProject.buildDir = '../build'
 subprojects { project.buildDir = "${rootProject.buildDir}/${project.name}" }
-// ⛔ 仍然不要加這行（容易踩雷）：subprojects { project.evaluationDependsOn(':app') }
-// 確保 Flutter 的 Android 套件子模組有套到 com.android.library
-subprojects { p ->
-    if (p.name == "webview_flutter_android") {
-        // 在子專案的 build.gradle 評估前就施加
-        p.plugins.apply("com.android.library")
-        p.plugins.apply("org.jetbrains.kotlin.android")
-    }
-}
 
-tasks.register("clean", Delete) { delete rootProject.buildDir }
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}

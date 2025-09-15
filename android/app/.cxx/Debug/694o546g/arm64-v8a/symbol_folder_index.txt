@@ -1,0 +1,1 @@
+/Users/luigi/Desktop/Develop/flutter/mnewsapp/build/app/intermediates/cxx/Debug/694o546g/obj/arm64-v8a

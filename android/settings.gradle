@@ -1,18 +1,12 @@
-// android/settings.gradle — 對齊可過專案的寫法（釘 plugin 版本）
 pluginManagement {
-    // 讀取 Flutter SDK 路徑
-    def properties = new Properties()
-    def f = new File(rootDir, "local.properties")
-    if (f.exists()) {
-        f.withReader("UTF-8") { r -> properties.load(r) }
-    }
-    def flutterSdkPath = properties.getProperty("flutter.sdk")
-    if (flutterSdkPath == null) {
-        throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in local.properties.")
-    }
-
-    // 讓 Gradle 找到 Flutter 的 Gradle plugins（取代舊 apply from）
-    includeBuild("${flutterSdkPath}/packages/flutter_tools/gradle")
+    def flutterSdkPath = {
+        def p = new Properties()
+        file("local.properties").withInputStream { p.load(it) }
+        def sdk = p.getProperty("flutter.sdk")
+        assert sdk != null : "flutter.sdk not set in local.properties"
+        return sdk
+    }()
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
 
     repositories {
         google()
@@ -23,10 +17,11 @@ pluginManagement {
 
 plugins {
     id "dev.flutter.flutter-plugin-loader" version "1.0.0"
-    // 版本釘在這裡，模組層用 plugins DSL 就會吃到
-    id "com.android.application" version "8.2.1" apply false
-    id "org.jetbrains.kotlin.android" version "1.9.22" apply false
-    id "com.android.library"     version "8.2.1" apply false
+    id "com.android.application"           version "8.7.2" apply false
+    id "com.android.library"               version "8.7.2" apply false
+    id "org.jetbrains.kotlin.android"      version "2.1.0" apply false
+    id "com.google.gms.google-services"    version "4.4.2"  apply false
+    id "com.google.firebase.crashlytics"   version "2.9.9"  apply false
 }
 
-include(":app")
+include ":app"
