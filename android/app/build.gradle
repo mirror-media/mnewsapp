@@ -31,7 +31,16 @@ android {
     namespace "com.mirrortv.mnews"
     compileSdkVersion 34
 
-    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
+    defaultConfig {
+        applicationId "com.mirrortv.mnews"
+        minSdk 23
+        targetSdk 35
+        versionCode flutterVersionCode.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+        ndkVersion "28.0.12433566"
+        ndk { debugSymbolLevel 'FULL' }
+    }
 
     // AGP 8 建議指定 Java/Kotlin 17
     compileOptions {
@@ -102,6 +111,15 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
+        }
+    }
+    ndk {
+        abiFilters 'arm64-v8a', 'armeabi-v7a'
+    }
+    // 支援 16KB 記憶體分頁大小的配置
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 }

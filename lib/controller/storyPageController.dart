@@ -1,12 +1,12 @@
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
-import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/errorHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
+import '../services/comscoreService.dart'; // ✅ 引入 Comscore
 
 class StoryPageController extends GetxController {
   final StoryRepos repository;
@@ -35,11 +35,16 @@ class StoryPageController extends GetxController {
         ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
       }
       isError = false;
-      AnalyticsHelper.logStory(
-        slug: slug,
+
+      // ✅ 把第一個分類名稱送給 Comscore
+      ComscoreService.trackArticleView(
+        articleId: slug,
         title: story.name ?? '無標題',
-        category: story.categoryList,
+        category: (story.categoryList != null && story.categoryList!.isNotEmpty)
+            ? story.categoryList!.first.name
+            : "unknown",
       );
+
     } catch (e) {
       isError = true;
       error = determineException(e);
