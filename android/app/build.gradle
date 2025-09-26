@@ -1,45 +1,47 @@
-// ── plugins 一定要是第一個區塊 ──────────────────────────────
+// ── plugins 一定要在最上面 ───────────────────────────────
 plugins {
     id "com.android.application"
     id "org.jetbrains.kotlin.android"
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-// ── 下面才開始一般變數與邏輯（避免 import 用 FQCN） ──
-def localProperties = new java.util.Properties()
+// ── 讀取 local.properties ───────────────────────────────
+def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
     localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
+// flutter versionCode / versionName，支援 fallback
 def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName   = localProperties.getProperty('flutter.versionName') ?: '1.0'
+def flutterVersionName    = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-def devKeystoreProperties  = new java.util.Properties()
-def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
-if (devKeystorePropertiesFile.exists()) {
-    devKeystoreProperties.load(new java.io.FileInputStream(devKeystorePropertiesFile))
+// ── dev 簽章設定 ───────────────────────────────
+def devKeystoreProperties = new Properties()
+def devKeystoreFile = rootProject.file('dev/dev.properties')
+if (devKeystoreFile.exists()) {
+    devKeystoreProperties.load(new FileInputStream(devKeystoreFile))
 }
 
-def prodKeystoreProperties = new java.util.Properties()
-def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
-if (prodKeystorePropertiesFile.exists()) {
-    prodKeystoreProperties.load(new java.io.FileInputStream(prodKeystorePropertiesFile))
+// ── prod 簽章設定 ───────────────────────────────
+def prodKeystoreProperties = new Properties()
+def prodKeystoreFile = rootProject.file('prod/prod.properties')
+if (prodKeystoreFile.exists()) {
+    prodKeystoreProperties.load(new FileInputStream(prodKeystoreFile))
 }
 
 android {
     namespace "com.mirrortv.mnews"
-    compileSdkVersion 34
+    compileSdkVersion 35
 
     defaultConfig {
         applicationId "com.mirrortv.mnews"
-        minSdk 23
+        minSdk 24
         targetSdk 35
-        versionCode flutterVersionCode.toInteger()
+        versionCode flutterVersionCodeStr.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
         ndkVersion "28.0.12433566"
-        ndk { debugSymbolLevel 'FULL' }
     }
 
     // AGP 8 建議指定 Java/Kotlin 17
@@ -47,22 +49,11 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = '17' }
+    kotlinOptions { jvmTarget = "17" }
 
     lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
-    }
-
-    defaultConfig {
-        applicationId "com.mirrortv.mnews"
-        minSdkVersion 23
-        targetSdkVersion 34
-        multiDexEnabled true
-        versionCode flutterVersionCodeStr.toInteger()
-        versionName flutterVersionName
-        ndkVersion "25.1.8937393"
-        ndk { debugSymbolLevel 'FULL' }
     }
 
     signingConfigs {
@@ -94,16 +85,17 @@ android {
         }
     }
 
-    flavorDimensions 'flavors'
+    // Flavors
+    flavorDimensions "flavors"
     productFlavors {
         dev {
             dimension "flavors"
             applicationIdSuffix ".dev"
-            signingConfig signingConfigs.dev     // ← 放在 flavor 內
+            signingConfig signingConfigs.dev
         }
         prod {
             dimension "flavors"
-            signingConfig signingConfigs.prod    // ← 放在 flavor 內
+            signingConfig signingConfigs.prod
         }
     }
 
@@ -111,12 +103,21 @@ android {
         release {
             shrinkResources true
             minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
         }
     }
-    ndk {
-        abiFilters 'arm64-v8a', 'armeabi-v7a'
+
+    // ✅ 正確的 abi 設定（替代 ndk { abiFilters }）
+    splits {
+        abi {
+            enable true
+            reset()
+            include "armeabi-v7a", "arm64-v8a"
+            universalApk false
+        }
     }
-    // 支援 16KB 記憶體分頁大小的配置
+
+    // ✅ 支援 Android 16KB page size
     packagingOptions {
         jniLibs {
             useLegacyPackaging = false
@@ -124,12 +125,15 @@ android {
     }
 }
 
-flutter { source '../..' }
+// Flutter Gradle Plugin
+flutter {
+    source "../.."
+}
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "androidx.multidex:multidex:2.0.1"
 }
 
-// Firebase（google-services）目前仍用舊式 apply
-apply plugin: 'com.google.gms.google-services'
+// Firebase（google-services）
+apply plugin: "com.google.gms.google-services"
