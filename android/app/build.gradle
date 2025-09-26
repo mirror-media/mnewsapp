@@ -1,37 +1,35 @@
-// android/app/build.gradle
-
+// ── plugins 一定要是第一個區塊 ──────────────────────────────
 plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-    id 'com.google.gms.google-services'
-    id 'com.google.firebase.crashlytics'
-    id 'dev.flutter.flutter-gradle-plugin'
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
 }
 
-// --- 讀取 local.properties ---
+// ── 下面才開始一般變數與邏輯（避免 import 用 FQCN） ──
 def localProperties = new java.util.Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { r -> localProperties.load(r) }
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode') ?: '1'
-def flutterVersionName = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-// --- 讀取 keystore ---
-def devKeystoreProps  = new java.util.Properties()
-def devPropsFile  = rootProject.file('dev/dev.properties') // 改成你的實際路徑
-if (devPropsFile.exists()) {
-    devKeystoreProps.load(new java.io.FileInputStream(devPropsFile))
+def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName   = localProperties.getProperty('flutter.versionName') ?: '1.0'
+
+def devKeystoreProperties  = new java.util.Properties()
+def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
+if (devKeystorePropertiesFile.exists()) {
+    devKeystoreProperties.load(new java.io.FileInputStream(devKeystorePropertiesFile))
 }
-def prodKeystoreProps = new java.util.Properties()
-def prodPropsFile = rootProject.file('prod/prod.properties') // 改成你的實際路徑
-if (prodPropsFile.exists()) {
-    prodKeystoreProps.load(new java.io.FileInputStream(prodPropsFile))
+
+def prodKeystoreProperties = new java.util.Properties()
+def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
+if (prodKeystorePropertiesFile.exists()) {
+    prodKeystoreProperties.load(new java.io.FileInputStream(prodKeystorePropertiesFile))
 }
 
 android {
     namespace "com.mirrortv.mnews"
-    compileSdk 35
+    compileSdkVersion 34
 
     defaultConfig {
         applicationId "com.mirrortv.mnews"
@@ -40,78 +38,98 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        ndkVersion "27.0.12077973"
+        ndkVersion "28.0.12433566"
         ndk { debugSymbolLevel 'FULL' }
     }
 
-    // Java 17
+    // AGP 8 建議指定 Java/Kotlin 17
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = '17' }
 
-    sourceSets { main.java.srcDirs += 'src/main/kotlin' }
-
     lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
     }
 
+    defaultConfig {
+        applicationId "com.mirrortv.mnews"
+        minSdkVersion 23
+        targetSdkVersion 34
+        multiDexEnabled true
+        versionCode flutterVersionCodeStr.toInteger()
+        versionName flutterVersionName
+        ndkVersion "25.1.8937393"
+        ndk { debugSymbolLevel 'FULL' }
+    }
+
     signingConfigs {
         dev {
             if (System.getenv()["CI"]) {
-                storeFile     file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias      System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword   System.getenv()["FCI_KEY_PASSWORD"]
+                keyAlias System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
             } else {
-                keyAlias      devKeystoreProps['keyAlias']
-                keyPassword   devKeystoreProps['keyPassword']
-                storeFile     (devKeystoreProps['storeFile'] ? file(devKeystoreProps['storeFile']) : null)
-                storePassword devKeystoreProps['storePassword']
+                keyAlias devKeystoreProperties['keyAlias']
+                keyPassword devKeystoreProperties['keyPassword']
+                storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
+                storePassword devKeystoreProperties['storePassword']
             }
         }
         prod {
             if (System.getenv()["CI"]) {
-                storeFile     file(System.getenv()["FCI_KEYSTORE_PATH"])
+                storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
-                keyAlias      System.getenv()["FCI_KEY_ALIAS"]
-                keyPassword   System.getenv()["FCI_KEY_PASSWORD"]
+                keyAlias System.getenv()["FCI_KEY_ALIAS"]
+                keyPassword System.getenv()["FCI_KEY_PASSWORD"]
             } else {
-                keyAlias      prodKeystoreProps['keyAlias']
-                keyPassword   prodKeystoreProps['keyPassword']
-                storeFile     (prodKeystoreProps['storeFile'] ? file(prodKeystoreProps['storeFile']) : null)
-                storePassword prodKeystoreProps['storePassword']
+                keyAlias prodKeystoreProperties['keyAlias']
+                keyPassword prodKeystoreProperties['keyPassword']
+                storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
+                storePassword prodKeystoreProperties['storePassword']
             }
         }
     }
 
-    flavorDimensions += "flavors"
+    flavorDimensions 'flavors'
     productFlavors {
         dev {
             dimension "flavors"
             applicationIdSuffix ".dev"
-            signingConfig signingConfigs.dev
+            signingConfig signingConfigs.dev     // ← 放在 flavor 內
         }
         prod {
             dimension "flavors"
-            signingConfig signingConfigs.prod
+            signingConfig signingConfigs.prod    // ← 放在 flavor 內
         }
     }
 
     buildTypes {
         release {
-            shrinkResources false
-            minifyEnabled   false
+            shrinkResources true
+            minifyEnabled true
+        }
+    }
+    ndk {
+        abiFilters 'arm64-v8a', 'armeabi-v7a'
+    }
+    // 支援 16KB 記憶體分頁大小的配置
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 }
 
-flutter { source = '../..' }
+flutter { source '../..' }
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "androidx.multidex:multidex:2.0.1"
-    implementation 'com.android.billingclient:billing:7.0.0'
 }
+
+// Firebase（google-services）目前仍用舊式 apply
+apply plugin: 'com.google.gms.google-services'

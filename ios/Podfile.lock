@@ -6,6 +6,10 @@ PODS:
   - audioplayers_darwin (0.0.1):
     - Flutter
     - FlutterMacOS
+  - ComScore (6.14.0)
+  - comscore_analytics_flutter (0.0.1):
+    - ComScore (= 6.14)
+    - Flutter
   - connectivity_plus (0.0.1):
     - Flutter
   - device_info_plus (0.0.1):
@@ -209,6 +213,7 @@ DEPENDENCIES:
   - app_tracking_transparency (from `.symlinks/plugins/app_tracking_transparency/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - audioplayers_darwin (from `.symlinks/plugins/audioplayers_darwin/darwin`)
+  - comscore_analytics_flutter (from `.symlinks/plugins/comscore_analytics_flutter/ios`)
   - connectivity_plus (from `.symlinks/plugins/connectivity_plus/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - Firebase/Messaging
@@ -235,6 +240,7 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - ComScore
     - Firebase
     - FirebaseABTesting
     - FirebaseAnalytics
@@ -262,6 +268,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audio_session/ios"
   audioplayers_darwin:
     :path: ".symlinks/plugins/audioplayers_darwin/darwin"
+  comscore_analytics_flutter:
+    :path: ".symlinks/plugins/comscore_analytics_flutter/ios"
   connectivity_plus:
     :path: ".symlinks/plugins/connectivity_plus/ios"
   device_info_plus:
@@ -309,6 +317,8 @@ SPEC CHECKSUMS:
   app_tracking_transparency: e169b653478da7bb15a6c61209015378ca73e375
   audio_session: 19e9480dbdd4e5f6c4543826b2e8b0e4ab6145fe
   audioplayers_darwin: 4027b33a8f471d996c13f71cb77f0b1583b5d923
+  ComScore: f3811fb4c4a744ab453bea08d3b05f1e3f7af4b4
+  comscore_analytics_flutter: 5f4f0f70205d671f013449c9373c5b9247198de2
   connectivity_plus: 2a701ffec2c0ae28a48cf7540e279787e77c447d
   device_info_plus: bf2e3232933866d73fe290f2942f2156cdd10342
   Firebase: 26f6f8d460603af3df970ad505b16b15f5e2e9a1
