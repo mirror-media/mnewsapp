@@ -115,16 +115,23 @@ class TabStoryListServices implements TabStoryListRepos {
 
     return newsList;
   }
-
   @override
   Future<List<StoryListItem>> fetchStoryListByCategorySlug(String slug,
       {int skip = 0, int first = 20, bool withCount = true}) async {
+
+    // ✅ Step 1. 自動對應舊分類名稱
+    if (slug == 'mirrordaily') {
+      print('🔁 Slug "mirrordaily" converted to "external"');
+      slug = 'external';
+    }
+
     String key =
         'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
     if (postStyle != null) {
       key = key + '&postStyle=$postStyle';
     }
 
+    // ✅ Step 2. 組 GraphQL 查詢條件
     Map<String, dynamic> variables = {
       "where": {
         "state": "published",
@@ -146,35 +153,42 @@ class TabStoryListServices implements TabStoryListRepos {
       variables: variables,
     );
 
+    // ✅ Step 3. 送出 GraphQL 請求
     late final jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
           Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
           headers: {"Content-Type": "application/json"});
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+          key,
+          Environment().config.graphqlApi,
+          jsonEncode(graphqlBody.toJson()),
           maxAge: newsTabStoryList,
           headers: {"Content-Type": "application/json"});
     }
 
+    print('✅ Api post done for slug: $slug');
+
+    // ✅ Step 4. 取得 GraphQL 回傳的文章列表
+    List<StoryListItem> newsList = List<StoryListItem>.from(
+        jsonResponse['data']['allPosts']
+            .map((post) => StoryListItem.fromJson(post)));
+
+    if (withCount && jsonResponse['data']['_allPostsMeta'] != null) {
+      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+    }
+
+    // ✅ Step 5. 從 GCP featured JSON 抓取推薦文章資料（防呆版本）
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
         Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
         headers: {"Accept": "application/json"});
 
-    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
-            ['allPosts']
-        .map((post) => StoryListItem.fromJson(post)));
-
-    if (withCount) {
-      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
-    }
-
-    /// Get featured posts from json
     List<StoryListItem> newsListFromGCP = List<StoryListItem>.from(
         jsonResponseFromGCP['allPosts']
             .map((post) => StoryListItem.fromJson(post)));
+
     final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
         Environment().config.categoriesUrl,
         maxAge: categoryCacheDuration,
@@ -183,33 +197,45 @@ class TabStoryListServices implements TabStoryListRepos {
     List<Category> _categoryList = List<Category>.from(
         jsonResponseGCP['allCategories']
             .map((category) => Category.fromJson(category)));
-    String? _categoryId =
-        _categoryList.firstWhere((element) => element.slug == slug).id;
 
-    // Find the featured post which category id is equal to the current id
+    // ✅ Step 6. 安全查找分類 ID
+    final matchedCategory = _categoryList.firstWhere(
+          (element) => element.slug == slug,
+      orElse: () => Category(id: '', slug: '', name: ''),
+    );
+
+    String? _categoryId =
+    (matchedCategory.id != null && matchedCategory.id!.isNotEmpty)
+        ? matchedCategory.id
+        : null;
+
+
+    print('📘 Available categories: ${_categoryList.map((e) => e.slug).toList()}');
+    print('📗 Current slug: $slug, found categoryId: $_categoryId');
+
+    // ✅ Step 7. 找出符合分類的 featured 文章
     StoryListItem? _featuredStory;
-    for (int i = 0; i < newsListFromGCP.length; i++) {
-      if (newsListFromGCP[i].categoryList != null) {
-        for (int j = 0; j < newsListFromGCP[i].categoryList!.length; j++) {
-          if (newsListFromGCP[i].categoryList![j].id == _categoryId) {
-            _featuredStory = newsListFromGCP[i];
-            break;
-          }
+    if (_categoryId != null) {
+      for (final story in newsListFromGCP) {
+        if (story.categoryList != null &&
+            story.categoryList!
+                .any((category) => category.id == _categoryId)) {
+          _featuredStory = story;
+          break;
         }
       }
-      if (_featuredStory != null) break;
     }
 
+    // ✅ Step 8. 若有 featured 文章，放在第一筆
     if (_featuredStory != null) {
-      // Remove featured post from the list which get from CMS
-      newsList.removeWhere(
-          (storyListItem) => storyListItem.id == _featuredStory!.id);
-      // Put featured post at the top of the list
+      newsList.removeWhere((item) => item.id == _featuredStory!.id);
       if (skip == 0) newsList.insert(0, _featuredStory);
+      print('🌟 Featured story added to top: ${_featuredStory.name}');
     }
 
     return newsList;
   }
+
 
   @override
   Future<List<StoryListItem>> fetchPopularStoryList() async {

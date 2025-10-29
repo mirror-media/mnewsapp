@@ -1,0 +1,23 @@
+<network-security-config>
+    <!-- 允許 HTTP/HTTPS 對 Comscore 網域 -->
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">scorecardresearch.com</domain>
+    </domain-config>
+
+    <!-- Debug 模式信任 Charles 憑證（方便攔截封包） -->
+    <debug-overrides>
+        <trust-anchors>
+            <certificates src="system" />
+            <certificates src="user" />
+            <certificates src="@raw/charles_ssl"/>
+        </trust-anchors>
+    </debug-overrides>
+
+    <!-- 全域預設允許 HTTPS，並信任系統與使用者憑證 -->
+    <base-config cleartextTrafficPermitted="true">
+        <trust-anchors>
+            <certificates src="user" />
+            <certificates src="system" />
+        </trust-anchors>
+    </base-config>
+</network-security-config>
