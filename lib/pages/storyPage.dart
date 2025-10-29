@@ -4,7 +4,6 @@ import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:pdf_render/pdf_render_widgets.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/controller/storyPageController.dart';
@@ -39,10 +38,7 @@ class StoryPage extends StatelessWidget {
   final String slug;
   final bool showAds;
 
-  StoryPage({
-    required this.slug,
-    this.showAds = true,
-  });
+  StoryPage({required this.slug, this.showAds = true});
 
   final interstitialAdController = Get.find<InterstitialAdController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
@@ -57,53 +53,38 @@ class StoryPage extends StatelessWidget {
       init: StoryPageController(StoryServices(), slug),
       tag: slug,
       builder: (controller) {
-        Widget body = Center(
-          child: CircularProgressIndicator.adaptive(),
-        );
+        Widget body = Center(child: CircularProgressIndicator.adaptive());
 
         if (controller.isError) {
           if (controller.error is NoInternetException) {
-            body = controller.error
-                .renderWidget(onPressed: () => controller.loadStory(slug));
+            body = controller.error.renderWidget(onPressed: () => controller.loadStory(slug));
           }
 
           body = controller.error.renderWidget();
         } else if (!controller.isLoading) {
           body = Column(
             children: [
-              Expanded(
-                child: _storyContent(controller.story),
-              ),
-              Obx(
-                () {
-                  if (interstitialAdController.storyCounter.isEven &&
-                      interstitialAdController.storyCounter.value != 0 &&
-                      showAds) {
-                    return AnchoredBannerAdWidget(
-                      adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryFooter'),
-                    );
-                  }
-                  return Container();
-                },
-              ),
+              Expanded(child: _storyContent(controller.story)),
+              Obx(() {
+                if (interstitialAdController.storyCounter.isEven &&
+                    interstitialAdController.storyCounter.value != 0 &&
+                    showAds) {
+                  return AnchoredBannerAdWidget(adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryFooter'));
+                }
+                return Container();
+              }),
             ],
           );
         }
 
-        return Scaffold(
-          appBar: _buildBar(),
-          body: body,
-        );
+        return Scaffold(appBar: _buildBar(), body: body);
       },
     );
   }
 
   PreferredSizeWidget _buildBar() {
     return AppBar(
-      leading: IconButton(
-        icon: Icon(Icons.arrow_back_ios),
-        onPressed: () => Get.back(),
-      ),
+      leading: IconButton(icon: Icon(Icons.arrow_back_ios), onPressed: () => Get.back()),
       backgroundColor: appBarColor,
       actions: <Widget>[
         IconButton(
@@ -115,16 +96,13 @@ class StoryPage extends StatelessWidget {
           icon: Icon(Icons.share),
           tooltip: 'Share',
           onPressed: () {
-            AnalyticsHelper.logShare(
-                name: Get.find<StoryPageController>(tag: slug).currentSlug,
-                type: 'story');
-            String url = Environment().config.mNewsWebsiteLink +
+            AnalyticsHelper.logShare(name: Get.find<StoryPageController>(tag: slug).currentSlug, type: 'story');
+            String url =
+                Environment().config.mNewsWebsiteLink +
                 '/story/' +
                 Get.find<StoryPageController>(tag: slug).currentSlug;
 
-            Share.share(url,
-                sharePositionOrigin:
-                    Rect.fromLTWH(Get.width - 100, 0, 100, 100));
+            Share.share(url, sharePositionOrigin: Rect.fromLTWH(Get.width - 100, 0, 100, 100));
           },
         ),
       ],
@@ -138,10 +116,7 @@ class StoryPage extends StatelessWidget {
         if (showAds)
           InlineBannerAdWidget(
             adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryHD'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-            ],
+            sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280)],
             wantKeepAlive: true,
           ),
         _buildHeroWidget(story),
@@ -154,34 +129,18 @@ class StoryPage extends StatelessWidget {
         SizedBox(height: 32),
         _buildBrief(story.brief ?? []),
         _buildContent(story.contentApiData ?? []),
-        if (story.downloadFileList != null &&
-            story.downloadFileList!.isNotEmpty)
-          FileDownloadWidget(
-            story.downloadFileList!,
-            textSize: 17 * textScaleFactorController.textScaleFactor.value,
-          ),
+        if (story.downloadFileList != null && story.downloadFileList!.isNotEmpty)
+          FileDownloadWidget(story.downloadFileList!, textSize: 17 * textScaleFactorController.textScaleFactor.value),
         if (showAds)
           InlineBannerAdWidget(
             adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT2'),
-            sizes: [
-              AdSize.mediumRectangle,
-              AdSize(width: 336, height: 280),
-            ],
+            sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280)],
             wantKeepAlive: true,
           ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24),
-          child: _buildUpdatedTime(story.updatedAt!),
-        ),
+        Padding(padding: const EdgeInsets.symmetric(horizontal: 24), child: _buildUpdatedTime(story.updatedAt!)),
         SizedBox(height: 32),
-        if (story.tags != null && story.tags!.length > 0) ...[
-          _buildTags(story.tags),
-          SizedBox(height: 16),
-        ],
-        if (story.relatedStories!.length > 0) ...[
-          _buildRelatedWidget(story.relatedStories!),
-          SizedBox(height: 16),
-        ],
+        if (story.tags != null && story.tags!.length > 0) ...[_buildTags(story.tags), SizedBox(height: 16)],
+        if (story.relatedStories!.length > 0) ...[_buildRelatedWidget(story.relatedStories!), SizedBox(height: 16)],
       ],
     );
   }
@@ -200,25 +159,15 @@ class StoryPage extends StatelessWidget {
               if (index == -1) {
                 index = 0;
               }
-              Get.to(ImageViewerWidget(
-                story.imageUrlList ?? [story.heroImage!],
-                openIndex: index,
-              ));
+              Get.to(ImageViewerWidget(story.imageUrlList ?? [story.heroImage!], openIndex: index));
             },
             child: CachedNetworkImage(
               width: Get.width,
               imageUrl: story.heroImage!,
-              placeholder: (context, url) => Container(
-                height: height,
-                width: Get.width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: height,
-                width: Get.width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
+              placeholder: (context, url) => Container(height: height, width: Get.width, color: Colors.grey),
+              errorWidget:
+                  (context, url, error) =>
+                      Container(height: height, width: Get.width, color: Colors.grey, child: Icon(Icons.error)),
               fit: BoxFit.cover,
             ),
           ),
@@ -229,8 +178,7 @@ class StoryPage extends StatelessWidget {
               () => Text(
                 story.heroCaption!,
                 style: TextStyle(fontSize: 15, color: Color(0xff757575)),
-                textScaler: TextScaler.linear(
-                    textScaleFactorController.textScaleFactor.value),
+                textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),
@@ -241,15 +189,10 @@ class StoryPage extends StatelessWidget {
   _buildVideoWidget(String videoUrl) {
     String youtubeString = 'youtube';
     if (videoUrl.contains(youtubeString)) {
-      return YoutubeStreamWidget(
-        youtubeUrl: videoUrl,
-      );
+      return YoutubeStreamWidget(youtubeUrl: videoUrl);
     }
 
-    return MNewsVideoPlayer(
-      videourl: videoUrl,
-      aspectRatio: 16 / 9,
-    );
+    return MNewsVideoPlayer(videourl: videoUrl, aspectRatio: 16 / 9);
   }
 
   Widget _buildCategoryAndPublishedDate(Story story) {
@@ -265,23 +208,17 @@ class StoryPage extends StatelessWidget {
             if (story.categoryList!.length > 0)
               Text(
                 story.categoryList![0].name,
-                style: TextStyle(
-                  fontSize: 15,
-                  color: storyWidgetColor,
-                  fontWeight: FontWeight.w500,
-                ),
-                textScaler: TextScaler.linear(
-                    textScaleFactorController.textScaleFactor.value),
+                style: TextStyle(fontSize: 15, color: storyWidgetColor, fontWeight: FontWeight.w500),
+                textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
               ),
             Text(
-              dateTimeFormat.changeStringToDisplayString(story.publishTime!,
-                  'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
-              style: TextStyle(
-                fontSize: 14,
-                color: Color(0xff757575),
+              dateTimeFormat.changeStringToDisplayString(
+                story.publishTime!,
+                'yyyy-MM-ddTHH:mm:ssZ',
+                'yyyy.MM.dd HH:mm 臺北時間',
               ),
-              textScaler: TextScaler.linear(
-                  textScaleFactorController.textScaleFactor.value),
+              style: TextStyle(fontSize: 14, color: Color(0xff757575)),
+              textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
             ),
@@ -297,13 +234,8 @@ class StoryPage extends StatelessWidget {
       child: Obx(
         () => Text(
           title,
-          style: TextStyle(
-            fontFamily: 'PingFang TC',
-            fontSize: 26,
-            fontWeight: FontWeight.w500,
-          ),
-          textScaler: TextScaler.linear(
-              textScaleFactorController.textScaleFactor.value),
+          style: TextStyle(fontFamily: 'PingFang TC', fontSize: 26, fontWeight: FontWeight.w500),
+          textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
         ),
       ),
     );
@@ -316,11 +248,7 @@ class StoryPage extends StatelessWidget {
     // VerticalDivider is broken? so use Container
     var myVerticalDivider = Padding(
       padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-      child: Container(
-        color: Color(0xff757575),
-        width: 1,
-        height: 15,
-      ),
+      child: Container(color: Color(0xff757575), width: 1, height: 15),
     );
 
     if (story.writers!.length > 0) {
@@ -330,21 +258,15 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "記者",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
 
       items.addAll(_addAuthorItems(story.writers!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (story.photographers!.length > 0) {
@@ -354,21 +276,15 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "攝影",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
 
       items.addAll(_addAuthorItems(story.photographers!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (story.cameraOperators!.length > 0) {
@@ -378,21 +294,15 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "影音",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
 
       items.addAll(_addAuthorItems(story.cameraOperators!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (story.designers!.length > 0) {
@@ -402,21 +312,15 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "設計",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
 
       items.addAll(_addAuthorItems(story.designers!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (story.engineers!.length > 0) {
@@ -426,21 +330,15 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "工程",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
 
       items.addAll(_addAuthorItems(story.engineers!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (story.vocals!.length > 0) {
@@ -450,20 +348,14 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "主播",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
       items.addAll(_addAuthorItems(story.engineers!));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
-      authorItems.add(SizedBox(
-        width: 12.0,
-      ));
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
+      authorItems.add(SizedBox(width: 12.0));
     }
 
     if (!_isNullOrEmpty(story.otherbyline)) {
@@ -473,35 +365,27 @@ class StoryPage extends StatelessWidget {
           () => Text(
             "作者",
             style: TextStyle(fontSize: 15, color: authorColor),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
         ),
       );
       items.add(myVerticalDivider);
-      items.add(Obx(
-        () => ExtendedText(
-          story.otherbyline!,
-          joinZeroWidthSpace: true,
-          style: TextStyle(
-            fontSize: 15,
+      items.add(
+        Obx(
+          () => ExtendedText(
+            story.otherbyline!,
+            joinZeroWidthSpace: true,
+            style: TextStyle(fontSize: 15),
+            textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
           ),
-          textScaler: TextScaler.linear(
-              textScaleFactorController.textScaleFactor.value),
         ),
-      ));
-      authorItems.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: items,
-      ));
+      );
+      authorItems.add(Row(mainAxisSize: MainAxisSize.min, children: items));
     }
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-      child: Wrap(
-        crossAxisAlignment: WrapCrossAlignment.center,
-        children: authorItems,
-      ),
+      child: Wrap(crossAxisAlignment: WrapCrossAlignment.center, children: authorItems),
     );
   }
 
@@ -509,19 +393,18 @@ class StoryPage extends StatelessWidget {
     List<Widget> authorItems = List.empty(growable: true);
 
     for (People author in peopleList) {
-      authorItems.add(Padding(
-        padding: const EdgeInsets.only(right: 4.0),
-        child: Obx(
-          () => Text(
-            author.name,
-            style: TextStyle(
-              fontSize: 15,
+      authorItems.add(
+        Padding(
+          padding: const EdgeInsets.only(right: 4.0),
+          child: Obx(
+            () => Text(
+              author.name,
+              style: TextStyle(fontSize: 15),
+              textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
             ),
-            textScaler: TextScaler.linear(
-                textScaleFactorController.textScaleFactor.value),
           ),
         ),
-      ));
+      );
     }
     return authorItems;
   }
@@ -533,24 +416,20 @@ class StoryPage extends StatelessWidget {
 
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
-          if (articles[i].contents!.length > 0 &&
-              !_isNullOrEmpty(articles[i].contents![0].data)) {
+          if (articles[i].contents!.length > 0 && !_isNullOrEmpty(articles[i].contents![0].data)) {
             articleWidgets.add(
               Obx(
                 () => ParseTheTextToHtmlWidget(
                   html: articles[i].contents![0].data,
                   color: storyBriefTextColor,
-                  fontSize:
-                      17 * textScaleFactorController.textScaleFactor.value,
+                  fontSize: 17 * textScaleFactorController.textScaleFactor.value,
                 ),
               ),
             );
           }
 
           if (i != articles.length - 1) {
-            articleWidgets.add(
-              SizedBox(height: 16),
-            );
+            articleWidgets.add(SizedBox(height: 16));
           }
         }
       }
@@ -564,28 +443,15 @@ class StoryPage extends StatelessWidget {
           children: [
             ClipPath(
               clipper: StoryBriefTopFrameClipper(),
-              child: Container(
-                height: 16,
-                decoration: BoxDecoration(
-                  color: storyBriefFrameColor,
-                ),
-              ),
+              child: Container(height: 16, decoration: BoxDecoration(color: storyBriefFrameColor)),
             ),
             Padding(
               padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 0.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: articleWidgets,
-              ),
+              child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: articleWidgets),
             ),
             ClipPath(
               clipper: StoryBriefBottomFrameClipper(),
-              child: Container(
-                height: 16,
-                decoration: BoxDecoration(
-                  color: storyBriefFrameColor,
-                ),
-              ),
+              child: Container(height: 16, decoration: BoxDecoration(color: storyBriefFrameColor)),
             ),
           ],
         ),
@@ -596,34 +462,30 @@ class StoryPage extends StatelessWidget {
   }
 
   Widget _buildContent(List<Paragraph> storyContents) {
-    if (Get.find<StoryPageController>(tag: slug).currentSlug == 'law') {
-      return PdfDocumentLoader.openFile(
-        Get.find<StoryPageController>(tag: slug).ombudsLawFile.path,
-        documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
-          builder: (context, constraints) => ListView.builder(
-            itemCount: pageCount,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            itemBuilder: (context, index) => Container(
-              color: Colors.black12,
-              child: PdfPageView(
-                pdfDocument: pdfDocument,
-                pageNumber: index + 1,
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    // if (Get.find<StoryPageController>(tag: slug).currentSlug == 'law') {
+    //   return PdfDocumentLoader.openFile(
+    //     Get.find<StoryPageController>(tag: slug).ombudsLawFile.path,
+    //     documentBuilder: (context, pdfDocument, pageCount) => LayoutBuilder(
+    //       builder: (context, constraints) => ListView.builder(
+    //         itemCount: pageCount,
+    //         physics: const NeverScrollableScrollPhysics(),
+    //         shrinkWrap: true,
+    //         itemBuilder: (context, index) => Container(
+    //           color: Colors.black12,
+    //           child: PdfPageView(
+    //             pdfDocument: pdfDocument,
+    //             pageNumber: index + 1,
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //   );
+    // }
     if (storyContents.isEmpty) {
       if (showAds) {
         return InlineBannerAdWidget(
           adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
-          sizes: [
-            AdSize.mediumRectangle,
-            AdSize(width: 336, height: 280),
-            AdSize(width: 320, height: 480),
-          ],
+          sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280), AdSize(width: 320, height: 480)],
           wantKeepAlive: true,
         );
       } else {
@@ -640,11 +502,7 @@ class StoryPage extends StatelessWidget {
           if (showAds) {
             return InlineBannerAdWidget(
               adUnitId: AdUnitIdHelper.getBannerAdUnitId('StoryAT1'),
-              sizes: [
-                AdSize.mediumRectangle,
-                AdSize(width: 336, height: 280),
-                AdSize(width: 320, height: 480),
-              ],
+              sizes: [AdSize.mediumRectangle, AdSize(width: 336, height: 280), AdSize(width: 320, height: 480)],
               wantKeepAlive: true,
             );
           } else {
@@ -666,8 +524,7 @@ class StoryPage extends StatelessWidget {
                 paragraph,
                 context,
                 17 * textScaleFactorController.textScaleFactor.value,
-                imageUrlList:
-                    Get.find<StoryPageController>(tag: slug).story.imageUrlList,
+                imageUrlList: Get.find<StoryPageController>(tag: slug).story.imageUrlList,
               ),
             ),
           );
@@ -684,14 +541,9 @@ class StoryPage extends StatelessWidget {
     return Obx(
       () => Text(
         '更新時間：' +
-            dateTimeFormat.changeStringToDisplayString(
-                updateTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
-        style: TextStyle(
-          fontSize: 15,
-          color: Color(0xff757575),
-        ),
-        textScaler:
-            TextScaler.linear(textScaleFactorController.textScaleFactor.value),
+            dateTimeFormat.changeStringToDisplayString(updateTime, 'yyyy-MM-ddTHH:mm:ssZ', 'yyyy.MM.dd HH:mm 臺北時間'),
+        style: TextStyle(fontSize: 15, color: Color(0xff757575)),
+        textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
         textAlign: TextAlign.center,
       ),
     );
@@ -708,11 +560,8 @@ class StoryPage extends StatelessWidget {
             padding: const EdgeInsets.all(4.0),
             child: GestureDetector(
               onTap: () {
-                AnalyticsHelper.logClick(
-                    slug: '', title: tags[i].name, location: 'Article_關鍵字');
-                Get.to(() => TagPage(
-                      tag: tags[i],
-                    ));
+                AnalyticsHelper.logClick(slug: '', title: tags[i].name, location: 'Article_關鍵字');
+                Get.to(() => TagPage(tag: tags[i]));
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -725,10 +574,8 @@ class StoryPage extends StatelessWidget {
                     '#' + tags[i].name,
                     textAlign: TextAlign.center,
                     style: TextStyle(color: storyWidgetColor),
-                    strutStyle: StrutStyle(
-                        forceStrutHeight: true, fontSize: 18, height: 1),
-                    textScaler: TextScaler.linear(
-                        textScaleFactorController.textScaleFactor.value),
+                    strutStyle: StrutStyle(forceStrutHeight: true, fontSize: 18, height: 1),
+                    textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
                   ),
                 ),
               ),
@@ -736,17 +583,10 @@ class StoryPage extends StatelessWidget {
           ),
         );
         if (i != tags.length - 1) {
-          tagWidgets.add(SizedBox(
-            width: 4,
-          ));
+          tagWidgets.add(SizedBox(width: 4));
         }
       }
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-        child: Wrap(
-          children: tagWidgets,
-        ),
-      );
+      return Padding(padding: const EdgeInsets.fromLTRB(24, 0, 24, 0), child: Wrap(children: tagWidgets));
     }
   }
 
@@ -754,42 +594,37 @@ class StoryPage extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
       child: ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
-          separatorBuilder: (BuildContext context, int index) =>
-              SizedBox(height: 16.0),
-          itemCount: relatedStories.length,
-          itemBuilder: (context, index) {
-            if (index == 0) {
-              return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    CustomPaint(
-                      painter: RelatedStoryPainter(),
-                      child: Container(
-                        padding:
-                            const EdgeInsets.fromLTRB(14.0, 4.5, 14.0, 4.5),
-                        child: Obx(
-                          () => AutoSizeText(
-                            '相關文章',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                              color: storyWidgetColor,
-                            ),
-                            maxLines: 1,
-                            textScaleFactor:
-                                textScaleFactorController.textScaleFactor.value,
-                          ),
-                        ),
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        separatorBuilder: (BuildContext context, int index) => SizedBox(height: 16.0),
+        itemCount: relatedStories.length,
+        itemBuilder: (context, index) {
+          if (index == 0) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CustomPaint(
+                  painter: RelatedStoryPainter(),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(14.0, 4.5, 14.0, 4.5),
+                    child: Obx(
+                      () => AutoSizeText(
+                        '相關文章',
+                        style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500, color: storyWidgetColor),
+                        maxLines: 1,
+                        textScaleFactor: textScaleFactorController.textScaleFactor.value,
                       ),
                     ),
-                    SizedBox(height: 16),
-                    _buildRelatedItem(relatedStories[index]),
-                  ]);
-            }
-            return _buildRelatedItem(relatedStories[index]);
-          }),
+                  ),
+                ),
+                SizedBox(height: 16),
+                _buildRelatedItem(relatedStories[index]),
+              ],
+            );
+          }
+          return _buildRelatedItem(relatedStories[index]);
+        },
+      ),
     );
   }
 
@@ -805,22 +640,13 @@ class StoryPage extends StatelessWidget {
             height: imageHeight,
             width: imageWidth,
             imageUrl: story.photoUrl,
-            placeholder: (context, url) => Container(
-              height: imageHeight,
-              width: imageWidth,
-              color: Colors.grey,
-            ),
-            errorWidget: (context, url, error) => Container(
-              height: imageHeight,
-              width: imageWidth,
-              color: Colors.grey,
-              child: Icon(Icons.error),
-            ),
+            placeholder: (context, url) => Container(height: imageHeight, width: imageWidth, color: Colors.grey),
+            errorWidget:
+                (context, url, error) =>
+                    Container(height: imageHeight, width: imageWidth, color: Colors.grey, child: Icon(Icons.error)),
             fit: BoxFit.cover,
           ),
-          SizedBox(
-            width: 16,
-          ),
+          SizedBox(width: 16),
           Expanded(
             child: Obx(
               () => ExtendedText(
@@ -829,8 +655,7 @@ class StoryPage extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(fontSize: 20),
-                textScaler: TextScaler.linear(
-                    textScaleFactorController.textScaleFactor.value),
+                textScaler: TextScaler.linear(textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),
@@ -838,14 +663,14 @@ class StoryPage extends StatelessWidget {
       ),
       onTap: () {
         AnalyticsHelper.logClick(
-            slug: story.slug ?? StringDefault.nullString,
-            title: story.name ?? StringDefault.nullString,
-            location: 'Article_相關文章');
+          slug: story.slug ?? StringDefault.nullString,
+          title: story.name ?? StringDefault.nullString,
+          location: 'Article_相關文章',
+        );
         if (showAds) {
           interstitialAdController.openStory();
         }
-        Get.find<StoryPageController>(tag: slug)
-            .loadStory(story.slug ?? StringDefault.nullString);
+        Get.find<StoryPageController>(tag: slug).loadStory(story.slug ?? StringDefault.nullString);
       },
     );
   }

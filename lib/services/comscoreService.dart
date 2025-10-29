@@ -31,7 +31,6 @@ class ComscoreService {
   }) {
     Analytics.notifyViewEvent(
       labels: {
-        "ns_category": "article",
         "ns_subcategory": category,
         "article_id": articleId,
         "article_title": title,

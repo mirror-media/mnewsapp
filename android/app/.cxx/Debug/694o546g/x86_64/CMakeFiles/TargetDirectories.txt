@@ -1,0 +1,2 @@
+/Users/luigi/Desktop/Develop/flutter/mnewsapp/android/app/.cxx/Debug/694o546g/x86_64/CMakeFiles/edit_cache.dir
+/Users/luigi/Desktop/Develop/flutter/mnewsapp/android/app/.cxx/Debug/694o546g/x86_64/CMakeFiles/rebuild_cache.dir
