@@ -53,3 +53,6 @@ android/prod/prod.properties
 android/prod/MirrorNews.jks
 android/dev/dev.properties
 android/dev/MirrorNewsDev.jks
+# Xcode build cache
+**/XCBuildData/
+**/PIFCache/
