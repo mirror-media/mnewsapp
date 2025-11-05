@@ -1,76 +1,69 @@
+// ── plugins 一定要在最上面 ───────────────────────────────
+plugins {
+    id "com.android.application"
+    id "org.jetbrains.kotlin.android"
+    id "dev.flutter.flutter-gradle-plugin"
+}
+
+// ── 讀取 local.properties ───────────────────────────────
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader('UTF-8') { reader ->
-        localProperties.load(reader)
-    }
+    localPropertiesFile.withReader('UTF-8') { reader -> localProperties.load(reader) }
 }
 
-def flutterRoot = localProperties.getProperty('flutter.sdk')
-if (flutterRoot == null) {
-    throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
-}
+// flutter versionCode / versionName，支援 fallback
+def flutterVersionCodeStr = localProperties.getProperty('flutter.versionCode') ?: '1'
+def flutterVersionName    = localProperties.getProperty('flutter.versionName') ?: '1.0'
 
-def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
-if (flutterVersionCode == null) {
-    flutterVersionCode = '1'
-}
-
-def flutterVersionName = localProperties.getProperty('flutter.versionName')
-if (flutterVersionName == null) {
-    flutterVersionName = '1.0'
-}
-
-apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android'
-apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
-
+// ── dev 簽章設定 ───────────────────────────────
 def devKeystoreProperties = new Properties()
-def devKeystorePropertiesFile = rootProject.file('dev/dev.properties')
-if (devKeystorePropertiesFile.exists()) {
-    devKeystoreProperties.load(new FileInputStream(devKeystorePropertiesFile))
+def devKeystoreFile = rootProject.file('dev/dev.properties')
+if (devKeystoreFile.exists()) {
+    devKeystoreProperties.load(new FileInputStream(devKeystoreFile))
 }
 
+// ── prod 簽章設定 ───────────────────────────────
 def prodKeystoreProperties = new Properties()
-def prodKeystorePropertiesFile = rootProject.file('prod/prod.properties')
-if (prodKeystorePropertiesFile.exists()) {
-    prodKeystoreProperties.load(new FileInputStream(prodKeystorePropertiesFile))
+def prodKeystoreFile = rootProject.file('prod/prod.properties')
+if (prodKeystoreFile.exists()) {
+    prodKeystoreProperties.load(new FileInputStream(prodKeystoreFile))
 }
 
 android {
-    compileSdkVersion 33
+    namespace "com.mirrortv.mnews"
+    compileSdkVersion 35
 
-    sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+    defaultConfig {
+        applicationId "com.mirrortv.mnews"
+        minSdk 24
+        targetSdk 35
+        versionCode flutterVersionCodeStr.toInteger()
+        versionName flutterVersionName
+        multiDexEnabled true
+        ndkVersion "28.0.12433566"
     }
 
-    lintOptions {
+    // AGP 8 建議指定 Java/Kotlin 17
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+    kotlinOptions { jvmTarget = "17" }
+
+    lint {
         disable 'InvalidPackage'
         checkReleaseBuilds false
     }
 
-    defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.mirrortv.mnews"
-        minSdkVersion 23
-        targetSdkVersion 34
-        multiDexEnabled true
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-        ndkVersion "25.1.8937393"
-        ndk {
-            debugSymbolLevel 'FULL'
-        }
-    }
-    
     signingConfigs {
         dev {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+            if (System.getenv()["CI"]) {
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
                 keyPassword System.getenv()["FCI_KEY_PASSWORD"]
-            }else{
+            } else {
                 keyAlias devKeystoreProperties['keyAlias']
                 keyPassword devKeystoreProperties['keyPassword']
                 storeFile devKeystoreProperties['storeFile'] ? file(devKeystoreProperties['storeFile']) : null
@@ -78,12 +71,12 @@ android {
             }
         }
         prod {
-            if (System.getenv()["CI"]) { // CI=true is exported by Codemagic
+            if (System.getenv()["CI"]) {
                 storeFile file(System.getenv()["FCI_KEYSTORE_PATH"])
                 storePassword System.getenv()["FCI_KEYSTORE_PASSWORD"]
                 keyAlias System.getenv()["FCI_KEY_ALIAS"]
                 keyPassword System.getenv()["FCI_KEY_PASSWORD"]
-            }else{
+            } else {
                 keyAlias prodKeystoreProperties['keyAlias']
                 keyPassword prodKeystoreProperties['keyPassword']
                 storeFile prodKeystoreProperties['storeFile'] ? file(prodKeystoreProperties['storeFile']) : null
@@ -92,36 +85,94 @@ android {
         }
     }
 
-    flavorDimensions 'flavors'
+    // Flavors
+    flavorDimensions "flavors"
     productFlavors {
         dev {
             dimension "flavors"
             applicationIdSuffix ".dev"
+            signingConfig signingConfigs.dev
         }
         prod {
             dimension "flavors"
+            signingConfig signingConfigs.prod
         }
     }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            productFlavors.dev.signingConfig signingConfigs.dev
-            productFlavors.prod.signingConfig signingConfigs.prod
             shrinkResources true
             minifyEnabled true
+            proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+        }
+    }
+
+    // ✅ 正確的 abi 設定（替代 ndk { abiFilters }）
+    splits {
+        abi {
+            enable true
+            reset()
+            include "armeabi-v7a", "arm64-v8a"
+            universalApk false
+        }
+    }
+
+    // ✅ 支援 Android 16KB page size
+    packagingOptions {
+        jniLibs {
+            useLegacyPackaging = false
         }
     }
 }
 
+// Flutter Gradle Plugin
 flutter {
-    source '../..'
+    source "../.."
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
     implementation "androidx.multidex:multidex:2.0.1"
 }
 
-apply plugin: 'com.google.gms.google-services'
+// Firebase（google-services）
+apply plugin: "com.google.gms.google-services"
+// --- Flutter build path fix for AGP 8.x ---
+// 讓 Flutter 正確找到 APK 並顯示成功訊息
+afterEvaluate {
+    tasks.matching { it.name.startsWith("assemble") && it.name.endsWith("Debug") }.configureEach { task ->
+        doLast {
+            def outputDir = new File("$buildDir/outputs/flutter-apk/")
+            if (!outputDir.exists()) outputDir.mkdirs()
+
+            fileTree("$buildDir/outputs/apk/").matching { include "**/*.apk" }.files.each { apkFile ->
+                def flavor = "unknown"
+                if (apkFile.path.contains("/dev/")) flavor = "dev"
+                else if (apkFile.path.contains("/prod/")) flavor = "prod"
+
+                def isArm64 = apkFile.name.contains("arm64")
+                def isArmeabi = apkFile.name.contains("armeabi")
+
+                def targetName = apkFile.name
+                if (isArm64) targetName = "app-arm64-v8a-${flavor}-debug.apk"
+                if (isArmeabi) targetName = "app-armeabi-v7a-${flavor}-debug.apk"
+
+                println "Copying ${apkFile.name} → ${targetName}"
+                copy {
+                    from apkFile
+                    into outputDir
+                    rename { targetName }
+                }
+
+                // ✅ 額外製作一份「主要 APK」供 Flutter CLI 偵測
+                if (isArm64) {
+                    copy {
+                        from apkFile
+                        into outputDir
+                        rename { "app-${flavor}-debug.apk" }
+                    }
+                }
+            }
+        }
+    }
+}

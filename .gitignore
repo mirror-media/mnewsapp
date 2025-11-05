@@ -31,6 +31,8 @@
 .pub/
 /build/
 /ios/build/
+/android/build/
+/android/app/.cxx/
 
 # Web related
 lib/generated_plugin_registrant.dart
@@ -53,3 +55,8 @@ android/prod/prod.properties
 android/prod/MirrorNews.jks
 android/dev/dev.properties
 android/dev/MirrorNewsDev.jks
+
+# Xcode build cache
+**/XCBuildData/
+**/PIFCache/
+**/DerivedData/

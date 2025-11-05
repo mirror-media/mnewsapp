@@ -8,9 +8,10 @@ import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/pages/section/news/latestTabContent/widgets/list_story_item.dart';
 import 'package:tv/pages/section/news/news_page_controller.dart';
-import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart';
+import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart' as cs;
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
+import 'package:tv/widgets/top_iframe_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LatestTabContent extends GetView<NewsPageController> {
@@ -48,6 +49,8 @@ class LatestTabContent extends GetView<NewsPageController> {
                   )
                 : const SizedBox.shrink();
           }),
+          // Top Iframe Widget
+          const TopIframeWidget(),
           Obx(() {
             final mnewLiveUrl = controller.rxnNewLiveUrl.value;
             return mnewLiveUrl != null
@@ -80,7 +83,7 @@ class LatestTabContent extends GetView<NewsPageController> {
           Obx(() {
             final editorChoiceList = controller.rxEditorChoiceList;
             return editorChoiceList.isNotEmpty
-                ? EditorChoiceCarousel(
+                ? cs.EditorChoiceCarousel(
                     editorChoiceList: editorChoiceList,
                     aspectRatio: 4 / 3.2,
                   )

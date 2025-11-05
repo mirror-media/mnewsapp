@@ -60,6 +60,9 @@ class PodcastStickyPanelController extends GetxController {
         case PlayerState.completed:
           rxPodcastPanelStatus.value = PodcastPanelStatus.stop;
           break;
+        case PlayerState.disposed:
+          rxPodcastPanelStatus.value = PodcastPanelStatus.stop;
+          break;
       }
     });
     audioPlayer?.onPositionChanged.listen((pos) {

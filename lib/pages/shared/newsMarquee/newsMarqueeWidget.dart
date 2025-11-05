@@ -1,5 +1,5 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
@@ -15,44 +15,45 @@ import 'package:tv/pages/shared/newsMarquee/marqueeWidget.dart';
 import 'package:tv/pages/storyPage.dart';
 
 class BuildNewsMarquee extends StatefulWidget {
+  const BuildNewsMarquee({super.key});
+
   @override
-  _BuildNewsMarqueeState createState() => _BuildNewsMarqueeState();
+  State<BuildNewsMarquee> createState() => _BuildNewsMarqueeState();
 }
 
 class _BuildNewsMarqueeState extends State<BuildNewsMarquee> {
   @override
   void initState() {
-    _loadNewsList();
     super.initState();
+    _loadNewsList();
   }
 
-  _loadNewsList() async {
+  void _loadNewsList() {
     context.read<NewsMarqueeBloc>().add(NewsMarqueeEvents.fetchNewsList);
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<NewsMarqueeBloc, NewsMarqueeState>(
-        builder: (BuildContext context, NewsMarqueeState state) {
-      if (state is NewsMarqueeError) {
-        final error = state.error;
-        print('NewsMarqueeError: ${error.message}');
-        return Container();
-      }
-      if (state is NewsMarqueeLoaded) {
-        List<StoryListItem> newsList = state.newsList;
-
-        if (newsList.length == 0) {
-          return Container();
+      builder: (context, state) {
+        if (state is NewsMarqueeError) {
+          final error = state.error;
+          print('NewsMarqueeError: ${error.message}');
+          return const SizedBox();
         }
-        return NewsMarquee(
-          newsList: newsList,
-        );
-      }
 
-      // state is Init, loading, or other
-      return Container();
-    });
+        if (state is NewsMarqueeLoaded) {
+          final newsList = state.newsList;
+          if (newsList.isEmpty) {
+            return const SizedBox();
+          }
+          return NewsMarquee(newsList: newsList);
+        }
+
+        // Init or Loading state
+        return const SizedBox();
+      },
+    );
   }
 }
 
@@ -60,65 +61,64 @@ class NewsMarquee extends StatefulWidget {
   final List<StoryListItem> newsList;
   final Axis direction;
   final double height;
-  final Duration animationDuration, backDuration, pauseDuration;
+  final Duration animationDuration;
+  final Duration backDuration;
+  final Duration pauseDuration;
 
-  NewsMarquee({
+  const NewsMarquee({
+    super.key,
     required this.newsList,
-    this.direction: Axis.horizontal,
-    this.height: 48.0,
-    this.animationDuration: const Duration(milliseconds: 3000),
-    this.backDuration: const Duration(milliseconds: 800),
-    this.pauseDuration: const Duration(milliseconds: 800),
+    this.direction = Axis.horizontal,
+    this.height = 48.0,
+    this.animationDuration = const Duration(milliseconds: 3000),
+    this.backDuration = const Duration(milliseconds: 800),
+    this.pauseDuration = const Duration(milliseconds: 800),
   });
 
   @override
-  _NewsMarqueeState createState() => _NewsMarqueeState();
+  State<NewsMarquee> createState() => _NewsMarqueeState();
 }
 
 class _NewsMarqueeState extends State<NewsMarquee> {
-  CarouselController? _carouselController;
-  late CarouselOptions _options;
+  late final carousel.CarouselSliderController _carouselController;
+  late carousel.CarouselOptions _options;
   final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
-    _carouselController = CarouselController();
-    _options = CarouselOptions(
-      scrollPhysics: NeverScrollableScrollPhysics(),
+    super.initState();
+    _carouselController = carousel.CarouselSliderController();
+    _options = carousel.CarouselOptions(
+      scrollPhysics: const NeverScrollableScrollPhysics(),
       height: widget.height,
       viewportFraction: 1,
       scrollDirection: Axis.vertical,
       initialPage: 0,
       autoPlay: true,
-      autoPlayInterval: Duration(milliseconds: 6000),
+      autoPlayInterval: const Duration(milliseconds: 6000),
       enableInfiniteScroll: false,
       enlargeCenterPage: false,
       onPageChanged: (index, reason) {},
     );
-    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
 
     return Row(
       children: [
         Container(
           color: newsMarqueeLeadingColor,
-          child: Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Obx(() => Text(
-                  '最新',
-                  style:
-                      TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-                  textScaleFactor:
-                      textScaleFactorController.textScaleFactor.value,
-                )),
-          ),
+          padding: const EdgeInsets.all(12.0),
+          child: Obx(() => Text(
+            '最新',
+            style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          )),
         ),
         Expanded(
-          child: CarouselSlider(
+          child: carousel.CarouselSlider(
             items: _buildList(width, widget.newsList),
             carouselController: _carouselController,
             options: _options,
@@ -129,38 +129,33 @@ class _NewsMarqueeState extends State<NewsMarquee> {
   }
 
   List<Widget> _buildList(double width, List<StoryListItem> newsList) {
-    List<Widget> resultList = List.empty(growable: true);
-    for (int i = 0; i < newsList.length; i++) {
-      resultList.add(InkWell(
+    return List.generate(newsList.length, (i) {
+      final story = newsList[i];
+      return InkWell(
+        onTap: () {
+          AnalyticsHelper.logClick(
+            slug: story.slug ?? StringDefault.nullString,
+            title: story.name ?? StringDefault.nullString,
+            location: 'HomePage_快訊跑馬燈',
+          );
+          if (story.slug == null) return;
+          Get.to(() => StoryPage(slug: story.slug!));
+        },
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12),
           child: SizedBox(
             width: width,
             child: MarqueeWidget(
+              animationDuration: const Duration(milliseconds: 4000),
               child: Obx(() => AutoSizeText(
-                    newsList[i].name ?? StringDefault.nullString,
-                    style:
-                        TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-                    textScaleFactor:
-                        textScaleFactorController.textScaleFactor.value,
-                  )),
-              animationDuration: Duration(milliseconds: 4000),
+                story.name ?? StringDefault.nullString,
+                style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
+                textScaleFactor: textScaleFactorController.textScaleFactor.value,
+              )),
             ),
           ),
         ),
-        onTap: () {
-          AnalyticsHelper.logClick(
-              slug: newsList[i].slug ?? StringDefault.nullString,
-              title: newsList[i].name ?? StringDefault.nullString,
-              location: 'HomePage_快訊跑馬燈');
-          if (newsList[i].slug == null) return;
-          Get.to(() => StoryPage(
-                slug: newsList[i].slug!,
-              ));
-        },
-      ));
-    }
-
-    return resultList;
+      );
+    });
   }
 }

@@ -1,119 +1,115 @@
 import 'dart:convert';
-
 import 'package:flutter/services.dart';
-import 'package:localstorage/localstorage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/notificationSetting.dart';
 
 abstract class NotificationSettingRepos {
   Future<List<NotificationSetting>> getNotificationSettingList();
   List<NotificationSetting> onExpansionChanged(
-      List<NotificationSetting> notificationSettingList, int index, bool value);
+      List<NotificationSetting> notificationSettingList,
+      int index,
+      bool value,
+      );
   List<NotificationSetting> onCheckBoxChanged(
-    List<NotificationSetting> notificationSettingList,
-    List<NotificationSetting> checkboxList,
-    int index,
-    bool isRepeatable,
-  );
+      List<NotificationSetting> notificationSettingList,
+      List<NotificationSetting> checkboxList,
+      int index,
+      bool isRepeatable,
+      );
 }
 
 class NotificationSettingServices implements NotificationSettingRepos {
-  final LocalStorage _storage = LocalStorage('setting');
+  static const _kKey = 'notification';
+
+  Future<SharedPreferences> get _prefs async =>
+      await SharedPreferences.getInstance();
 
   @override
   Future<List<NotificationSetting>> getNotificationSettingList() async {
-    List<NotificationSetting> notificationSettingList = [];
-    List<NotificationSetting>? storageNotification;
-    if (await _storage.ready) {
-      var notificationMapList = await _storage.getItem("notification");
-      if (notificationMapList != null) {
-        storageNotification = List<NotificationSetting>.from(
-            notificationMapList.map((notificationSetting) =>
-                NotificationSetting.fromJson(notificationSetting)));
-      }
+    final prefs = await _prefs;
+    final stored = prefs.getString(_kKey);
+
+    // 1) 沒有舊資料 → 讀取預設檔
+    if (stored == null) {
+      final defaults = await _fetchDefaultNotificationList();
+      await _save(defaults);
+      return defaults;
     }
 
-    if (storageNotification == null) {
-      notificationSettingList = await _fetchDefaultNotificationList();
-    } else {
-      notificationSettingList = List<NotificationSetting>.from(_storage
-          .getItem("notification")
-          .map((notificationSetting) =>
-              NotificationSetting.fromJson(notificationSetting)));
-      List<NotificationSetting> notificationSettingListFromAsset =
-          await _fetchDefaultNotificationList();
-      checkAndSyncNotificationSettingList(
-          notificationSettingListFromAsset, notificationSettingList);
-      notificationSettingList = notificationSettingListFromAsset;
+    // 2) 有舊資料 → 解析 JSON → 合併預設（以預設的結構為準，保留使用者勾選值）
+    List<dynamic> decoded;
+    try {
+      decoded = json.decode(stored) as List<dynamic>;
+    } catch (_) {
+      // 若資料壞掉就回到預設
+      final defaults = await _fetchDefaultNotificationList();
+      await _save(defaults);
+      return defaults;
     }
 
-    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
-        .map((notificationSetting) => notificationSetting.toJson()));
-    _storage.setItem("notification", json.encode(notificationSettingMaps));
+    final userList = List<NotificationSetting>.from(
+      decoded.map((e) => NotificationSetting.fromJson(e as Map<String, dynamic>)),
+    );
 
-    return notificationSettingList;
+    final assetList = await _fetchDefaultNotificationList();
+    await checkAndSyncNotificationSettingList(assetList, userList);
+    await _save(assetList);
+    return assetList;
+  }
+
+  Future<void> _save(List<NotificationSetting> list) async {
+    final prefs = await _prefs;
+    final maps = list.map((e) => e.toJson()).toList();
+    await prefs.setString(_kKey, json.encode(maps));
   }
 
   Future<List<NotificationSetting>> _fetchDefaultNotificationList() async {
-    var jsonSetting = await rootBundle.loadString(defaultNotificationListJson);
-    var jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'];
-
-    List<NotificationSetting> notificationSettingList =
-        List<NotificationSetting>.from(jsonSettingList.map(
-            (notificationSetting) =>
-                NotificationSetting.fromJson(notificationSetting)));
-
-    return notificationSettingList;
+    final jsonSetting = await rootBundle.loadString(defaultNotificationListJson);
+    final jsonSettingList = json.decode(jsonSetting)['defaultNotificationList'] as List<dynamic>;
+    return List<NotificationSetting>.from(
+      jsonSettingList.map((e) => NotificationSetting.fromJson(e as Map<String, dynamic>)),
+    );
   }
 
-  /// assetList is from defaultNotificationList.json
-  /// userList is from storage notification
-  /// change the title and topic from assetList
-  /// keep the subscription value from userList
-  checkAndSyncNotificationSettingList(List<NotificationSetting>? assetList,
-      List<NotificationSetting>? userList) async {
-    if (assetList != null) {
-      assetList.forEach((asset) {
-        NotificationSetting? user =
-            userList?.firstWhere((element) => element.id == asset.id);
-        if (user != null && user.id == asset.id) {
-          // if(user.topic != asset.topic && user.value) {
-          //   _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
-          //   _firebaseMessangingHelper.subscribeToTopic(asset.topic);
-          // }
-          asset.value = user.value;
+  /// assetList 來自 assets 的 defaultNotificationList.json
+  /// userList 來自本地儲存
+  /// 規則：以 asset 的結構（title/topic/id）為準，保留 user 的勾選 value
+  Future<void> checkAndSyncNotificationSettingList(
+      List<NotificationSetting>? assetList,
+      List<NotificationSetting>? userList,
+      ) async {
+    if (assetList == null) return;
 
-          if (asset.notificationSettingList != null ||
-              user.notificationSettingList != null) {
-            checkAndSyncNotificationSettingList(
-                asset.notificationSettingList, user.notificationSettingList);
-          }
+    for (final asset in assetList) {
+      final user = userList?.firstWhere(
+            (u) => u.id == asset.id,
+        orElse: () => null as NotificationSetting, // 只為了讓編譯器過；下一行會檢查 null
+      );
+      if (user != null && user.id == asset.id) {
+        asset.value = user.value;
+
+        if (asset.notificationSettingList != null ||
+            user.notificationSettingList != null) {
+          await checkAndSyncNotificationSettingList(
+            asset.notificationSettingList,
+            user.notificationSettingList,
+          );
         }
-      });
+      }
     }
-
-    // if(userList != null) {
-    //   userList.forEach(
-    //     (user) {
-    //       NotificationSetting asset = assetList?.getById(user.id);
-    //       if(asset == null && user.topic != null && user.value) {
-    //         _firebaseMessangingHelper.unsubscribeFromTopic(user.topic);
-    //       }
-    //     }
-    //   );
-    // }
   }
 
   @override
   List<NotificationSetting> onExpansionChanged(
       List<NotificationSetting> notificationSettingList,
       int index,
-      bool value) {
+      bool value,
+      ) {
     notificationSettingList[index].value = value;
-    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
-        .map((notificationSetting) => notificationSetting.toJson()));
-    _storage.setItem("notification", json.encode(notificationSettingMaps));
-    //_firebaseMessangingHelper.subscribeTheNotification(notificationSettingList[index]);
+
+    // 非同步保存（不影響回傳型別）
+    _save(notificationSettingList);
     return notificationSettingList;
   }
 
@@ -122,19 +118,19 @@ class NotificationSettingServices implements NotificationSettingRepos {
       List<NotificationSetting> notificationSettingList,
       List<NotificationSetting> checkboxList,
       int index,
-      bool isRepeatable) {
+      bool isRepeatable,
+      ) {
     if (isRepeatable) {
       checkboxList[index].value = !checkboxList[index].value;
     } else {
-      checkboxList.forEach((element) {
-        element.value = false;
-      });
+      for (final e in checkboxList) {
+        e.value = false;
+      }
       checkboxList[index].value = true;
     }
-    List<Map> notificationSettingMaps = List<Map>.from(notificationSettingList
-        .map((notificationSetting) => notificationSetting.toJson()));
-    _storage.setItem("notification", json.encode(notificationSettingMaps));
-    //_firebaseMessangingHelper.subscribeTheNotification(notificationSetting);
+
+    // 非同步保存（不影響回傳型別）
+    _save(notificationSettingList);
     return notificationSettingList;
   }
 }
