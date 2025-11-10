@@ -56,52 +56,6 @@ class TabStoryListServices implements TabStoryListRepos {
     this.postStyle = postStyle;
   }
 
-  //  新增：抓外部合作媒體（例如鏡報）的資料
-  Future<List<StoryListItem>> fetchExternalListByPartnerId(String partnerId, {int first = 20}) async {
-    final String query = """
-    query GetAllExternalFields(\$first: Int!, \$partnerId: ID!) {
-      allExternals(
-        where: { state: published, partner: { id: \$partnerId } },
-        first: \$first,
-        sortBy: updatedAt_DESC
-      ) {
-        id
-        slug
-        name
-        thumbnail
-        partner {
-          id
-          name
-          slug
-        }
-      }
-    }
-    """;
-
-    final variables = {
-      "first": first,
-      "partnerId": partnerId,
-    };
-
-    final jsonResponse = await _helper.postByUrl(
-      Environment().config.graphqlApi,
-      jsonEncode({"query": query, "variables": variables}),
-      headers: {"Content-Type": "application/json"},
-    );
-
-    if (jsonResponse['data'] == null || jsonResponse['data']['allExternals'] == null) {
-      print('️ No externals data returned.');
-      return [];
-    }
-
-    List<StoryListItem> newsList = List<StoryListItem>.from(
-        jsonResponse['data']['allExternals'].map((post) => StoryListItem.fromJson(post))
-    );
-
-    print('External partner data fetched: ${newsList.length} items.');
-    return newsList;
-  }
-
   @override
   Future<List<StoryListItem>> fetchStoryList(
       {int skip = 0, int first = 20, bool withCount = true}) async {
@@ -162,16 +116,25 @@ class TabStoryListServices implements TabStoryListRepos {
     return newsList;
   }
 
+  //整合新邏輯：同時支援一般分類與鏡報 external
   @override
-  Future<List<StoryListItem>> fetchStoryListByCategorySlug(String slug,
-      {int skip = 0, int first = 20, bool withCount = true}) async {
-
-    //特殊處理：鏡報改打 allExternals
+  Future<List<StoryListItem>> fetchStoryListByCategorySlug(
+      String slug, {
+        int skip = 0,
+        int first = 20,
+        bool withCount = true,
+      }) async {
+    // Step 0. 特殊處理鏡報（mirrordaily）
     if (slug == 'mirrordaily') {
-      print('📰 Fetching external data for Mirror Daily...');
-      return await fetchExternalListByPartnerId('2', first: first);
+      print(' Slug = mirrordaily → 改走 allExternals partnerId = 2');
+      return await fetchExternalListByPartnerId(
+        partnerId: "2",
+        first: first,
+        skip: skip,
+      );
     }
 
+    // Step 1. 一般分類查詢（維持原本邏輯）
     String key =
         'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
     if (postStyle != null) {
@@ -202,26 +165,127 @@ class TabStoryListServices implements TabStoryListRepos {
     late final jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          headers: {"Content-Type": "application/json"});
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          maxAge: newsTabStoryList,
-          headers: {"Content-Type": "application/json"});
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {"Content-Type": "application/json"},
+      );
     }
 
-    print('✅ Api post done for slug: $slug');
-
     List<StoryListItem> newsList = List<StoryListItem>.from(
-        jsonResponse['data']['allPosts']
-            .map((post) => StoryListItem.fromJson(post)));
+      jsonResponse['data']['allPosts']
+          .map((post) => StoryListItem.fromJson(post)),
+    );
 
     if (withCount && jsonResponse['data']['_allPostsMeta'] != null) {
       allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
     }
 
+    // Step 2. 以下保留 GCP featured JSON 流程
+    final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
+      Environment().config.categoriesUrl,
+      maxAge: categoryCacheDuration,
+      headers: {"Accept": "application/json"},
+    );
+
+    List<StoryListItem> newsListFromGCP = List<StoryListItem>.from(
+      jsonResponseFromGCP['allPosts']
+          .map((post) => StoryListItem.fromJson(post)),
+    );
+
+    final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
+      Environment().config.categoriesUrl,
+      maxAge: categoryCacheDuration,
+      headers: {"Accept": "application/json"},
+    );
+
+    List<Category> _categoryList = List<Category>.from(
+      jsonResponseGCP['allCategories']
+          .map((category) => Category.fromJson(category)),
+    );
+
+    final matchedCategory = _categoryList.firstWhere(
+          (element) => element.slug == slug,
+      orElse: () => Category(id: '', slug: '', name: ''),
+    );
+
+    String? _categoryId =
+    (matchedCategory.id != null && matchedCategory.id!.isNotEmpty)
+        ? matchedCategory.id
+        : null;
+
+    print(' Available categories: ${_categoryList.map((e) => e.slug).toList()}');
+    print(' Current slug: $slug, found categoryId: $_categoryId');
+
+    StoryListItem? _featuredStory;
+    if (_categoryId != null) {
+      for (final story in newsListFromGCP) {
+        if (story.categoryList != null &&
+            story.categoryList!
+                .any((category) => category.id == _categoryId)) {
+          _featuredStory = story;
+          break;
+        }
+      }
+    }
+
+    if (_featuredStory != null) {
+      newsList.removeWhere((item) => item.id == _featuredStory!.id);
+      if (skip == 0) newsList.insert(0, _featuredStory);
+      print(' Featured story added to top: ${_featuredStory.name}');
+    }
+
     return newsList;
+  }
+
+  //  鏡報 external 專用查詢
+  Future<List<StoryListItem>> fetchExternalListByPartnerId({
+    required String partnerId,
+    int skip = 0,
+    int first = 20,
+  }) async {
+    const String externalQuery = """
+      query GetAllExternalFields(\$first: Int!, \$partnerId: ID!) {
+        allExternals(
+          where: { state: published, partner: { id: \$partnerId } }
+          first: \$first
+          sortBy: updatedAt_DESC
+        ) {
+          id
+          slug
+          name
+          source
+          thumbnail
+          heroCaption
+          publishTime
+          partner { id name slug }
+        }
+      }
+    """;
+
+    final GraphqlBody graphqlBody = GraphqlBody(
+      operationName: 'GetAllExternalFields',
+      query: externalQuery,
+      variables: {"first": first, "partnerId": partnerId},
+    );
+
+    final jsonResponse = await _helper.postByUrl(
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    return List<StoryListItem>.from(
+      jsonResponse['data']['allExternals']
+          .map((post) => StoryListItem.fromJson(post)),
+    );
   }
 
   @override
