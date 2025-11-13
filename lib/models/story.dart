@@ -152,7 +152,7 @@ class Story {
       externalContentHtml: externalContentHtml,
     );
   }
-  // ✅ 提供一個空的 Story，避免 late 初始化錯誤
+  // 提供一個空的 Story，避免 late 初始化錯誤
   factory Story.empty() {
     return Story(
       style: '',

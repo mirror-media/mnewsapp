@@ -308,7 +308,6 @@ class TabStoryListServices implements TabStoryListRepos {
       jsonEncode(graphqlBody.toJson()),
       headers: {"Content-Type": "application/json"},
     );
-    print('🧩 External API Response = ${jsonEncode(jsonResponse['data']['allExternals'][0])}');
     return List<StoryListItem>.from(
       jsonResponse['data']['allExternals']
           .map((post) => StoryListItem.fromJson(post)),
