@@ -33,6 +33,8 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
+import '../helpers/story_html_helper.dart';
+
 
 class StoryPage extends StatelessWidget {
   final String slug;
@@ -208,7 +210,7 @@ class StoryPage extends StatelessWidget {
               fit: BoxFit.cover,
             ),
           ),
-        if (!_isNullOrEmpty(story.heroCaption))
+        if (!StoryHtmlHelper.isNullOrEmpty(story.heroCaption))
           Padding(
             padding: const EdgeInsets.fromLTRB(24.0, 8.0, 24.0, 0.0),
             child: Obx(
@@ -381,7 +383,7 @@ class StoryPage extends StatelessWidget {
       authorItems.add(const SizedBox(width: 12.0));
     }
 
-    if (!_isNullOrEmpty(story.otherbyline)) {
+    if (!StoryHtmlHelper.isNullOrEmpty(story.otherbyline)) {
       final items = <Widget>[
         Obx(() => Text(
           "作者",
@@ -435,7 +437,7 @@ class StoryPage extends StatelessWidget {
       for (int i = 0; i < articles.length; i++) {
         if (articles[i].type == 'unstyled') {
           if ((articles[i].contents?.length ?? 0) > 0 &&
-              !_isNullOrEmpty(articles[i].contents![0].data)) {
+              !StoryHtmlHelper.isNullOrEmpty(articles[i].contents![0].data)) {
             articleWidgets.add(
               Obx(
                     () => ParseTheTextToHtmlWidget(
@@ -485,7 +487,7 @@ class StoryPage extends StatelessWidget {
     }
 
     // Fallback：external 摘要 HTML
-    final safeHtml = _sanitizeExternalHtml(externalBriefHtml);
+    final safeHtml = StoryHtmlHelper.sanitizeExternalHtml(externalBriefHtml);
     if (safeHtml != null) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 32.0),
@@ -510,7 +512,7 @@ class StoryPage extends StatelessWidget {
       ) {
     // 完全沒有段落 → 先試 external HTML → 再顯示廣告
     if (storyContents.isEmpty) {
-      final safeHtml = _sanitizeExternalHtml(externalContentHtml);
+      final safeHtml = StoryHtmlHelper.sanitizeExternalHtml(externalContentHtml);
       if (storyStyle == 'external' && safeHtml != null && safeHtml.isNotEmpty) {
         return Padding(
           padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
@@ -563,15 +565,14 @@ class StoryPage extends StatelessWidget {
             ? paragraph.contents![0].data
             : null;
 
-        // external 文章的 unstyled 很可能就是一段 HTML
         final bool maybeExternalHtml = storyStyle == 'external' &&
             paragraph.type == 'unstyled' &&
             data != null &&
             data.trim().isNotEmpty &&
-            _looksLikeHtml(data);
+            StoryHtmlHelper.looksLikeHtml(data);
 
         if (maybeExternalHtml) {
-          final html = _sanitizeExternalHtml(data);
+          final html = StoryHtmlHelper.sanitizeExternalHtml(data);
           if (html != null && html.isNotEmpty) {
             return Padding(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 16),
@@ -765,34 +766,4 @@ class StoryPage extends StatelessWidget {
     );
   }
 
-  // ========= Helpers =========
-
-  bool _isNullOrEmpty(String? input) => input == null || input.isEmpty;
-
-  // 判斷字串是否包含 HTML tag（很寬鬆但實用）
-  bool _looksLikeHtml(String s) {
-    return RegExp(r'<[^>]+>').hasMatch(s);
-  }
-
-  /// 對 external HTML 做最低限度清洗：反跳脫 + figure → div
-  String? _sanitizeExternalHtml(String? html) {
-    if (html == null) return null;
-    var s = html.trim();
-    if (s.isEmpty) return null;
-
-    s = s
-        .replaceAll(r'\"', '"')
-        .replaceAll(r"\'", "'")
-        .replaceAll(r'\/', '/')
-        .replaceAll(r'\n', '\n')
-        .replaceAll(r'\t', '\t');
-
-    s = s
-    // <figure ...> -> <div ...>
-        .replaceAll(RegExp(r'<\s*figure\b', caseSensitive: false), '<div')
-    // </figure> -> </div>
-        .replaceAll(RegExp(r'</\s*figure\s*>', caseSensitive: false), '</div>');
-
-    return s;
-  }
 }

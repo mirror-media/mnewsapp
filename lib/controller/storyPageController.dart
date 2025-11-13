@@ -20,37 +20,23 @@ class StoryPageController extends GetxController {
   bool isLoading = true;
   bool isError = false;
 
-  void _log(String msg) => debugPrint('[StoryPageController][$currentSlug] $msg');
-
   @override
   void onInit() {
     super.onInit();
-    _log('onInit, slug=$currentSlug');
     loadStory(currentSlug);
   }
 
   Future<void> loadStory(String slug) async {
-    _log('loadStory START slug=$slug (before: isLoading=$isLoading, isError=$isError)');
     isLoading = true;
     isError = false;
     currentSlug = slug;
     update();
 
     try {
-      _log('calling repository.fetchPublishedStoryBySlug("$slug") ...');
       story = await repository.fetchPublishedStoryBySlug(slug);
-
-      _log('repository returned → '
-          'name="${story.name}", slug="}", '
-          'publishTime=${story.publishTime}, '
-          'brief.len=${story.brief?.length ?? 0}, content.len=${story.contentApiData?.length ?? 0}, '
-          'heroImage=${story.heroImage}, heroVideo=${story.heroVideo}, '
-          'tags.len=${story.tags?.length ?? 0}, '
-          'category=${(story.categoryList != null && story.categoryList!.isNotEmpty) ? story.categoryList!.first.name : 'none'}');
 
       if (slug == 'law') {
         ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
-        _log('ombudsLaw file cached at: ${ombudsLawFile.path}');
       }
 
       final categoryName =
@@ -63,18 +49,13 @@ class StoryPageController extends GetxController {
         title: story.name ?? '無標題',
         category: categoryName,
       );
-      _log('Comscore trackArticleView sent (category=$categoryName)');
 
       isError = false;
-    } catch (e, st) {
-      _log('LOAD FAILED: ${e.runtimeType} → $e');
+    } catch (e) {
       error = determineException(e);
-      _log('mapped error = ${error.runtimeType} / message="${error.message}"');
       isError = true;
-      // _log('stack:\n$st'); // 若要看 stack 再打開
     } finally {
       isLoading = false;
-      _log('loadStory END → isLoading=$isLoading, isError=$isError');
       update();
     }
   }
