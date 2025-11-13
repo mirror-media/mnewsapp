@@ -33,6 +33,8 @@ class Story {
   final List<StoryListItem>? relatedStories;
   final List<String>? imageUrlList;
   final List<DownloadFile>? downloadFileList;
+  final String? externalBriefHtml;
+  final String? externalContentHtml;
 
   Story({
     this.style,
@@ -56,6 +58,8 @@ class Story {
     this.relatedStories,
     this.imageUrlList,
     this.downloadFileList,
+    this.externalBriefHtml,
+    this.externalContentHtml,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) {
@@ -110,6 +114,11 @@ class Story {
           json['download'].map((download) => DownloadFile.fromJson(download)));
     }
 
+    final String? externalBriefHtml =
+    BaseModel.hasKey(json, 'externalBriefHtml') ? json['externalBriefHtml'] as String? : null;
+    final String? externalContentHtml =
+    BaseModel.hasKey(json, 'externalContentHtml') ? json['externalContentHtml'] as String? : null;
+
     return Story(
       style: json['style'],
       name: json[BaseModel.nameKey],
@@ -139,6 +148,36 @@ class Story {
           json['relatedPosts'].map((post) => StoryListItem.fromJson(post))),
       imageUrlList: imageUrlList,
       downloadFileList: downloadFileList,
+      externalBriefHtml: externalBriefHtml,
+      externalContentHtml: externalContentHtml,
+    );
+  }
+  // ✅ 提供一個空的 Story，避免 late 初始化錯誤
+  factory Story.empty() {
+    return Story(
+      style: '',
+      name: '',
+      brief: const [],
+      contentApiData: const [],
+      publishTime: '',
+      updatedAt: '',
+      heroImage: '',
+      heroVideo: '',
+      heroCaption: '',
+      categoryList: const [],
+      writers: const [],
+      photographers: const [],
+      cameraOperators: const [],
+      designers: const [],
+      engineers: const [],
+      vocals: const [],
+      otherbyline: '',
+      tags: const [],
+      relatedStories: const [],
+      imageUrlList: const [],
+      downloadFileList: const [],
+      externalBriefHtml: '',
+      externalContentHtml: '',
     );
   }
 }
