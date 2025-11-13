@@ -12,7 +12,7 @@ class StoryListItem {
   bool? isSales = false;
   String? displayCategory;
 
-  // ✅ 新增欄位：鏡報（External）專用
+  // 新增欄位：鏡報（External）專用
   String? source;
   String? subtitle;
   String? heroCaption;
@@ -45,7 +45,7 @@ class StoryListItem {
     this.partnerName,
   });
 
-  /// ✅ 原本 Sales 類型
+  /// 原本 Sales 類型
   factory StoryListItem.fromJsonSales(Map<String, dynamic> json) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(
@@ -81,7 +81,7 @@ class StoryListItem {
     );
   }
 
-  /// ✅ 通用解析器 — 自動辨識 allPosts / allExternals
+  /// 通用解析器 — 自動辨識 allPosts / allExternals
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
     // GraphQL _source 包裝處理
     if (BaseModel.hasKey(json, '_source')) {
