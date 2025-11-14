@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
@@ -6,7 +7,7 @@ import 'package:tv/helpers/errorHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/story.dart';
 import 'package:tv/services/storyService.dart';
-import '../services/comscoreService.dart'; // ✅ 引入 Comscore
+import '../services/comscoreService.dart';
 
 class StoryPageController extends GetxController {
   final StoryRepos repository;
@@ -25,32 +26,37 @@ class StoryPageController extends GetxController {
     loadStory(currentSlug);
   }
 
-  void loadStory(String slug) async {
+  Future<void> loadStory(String slug) async {
     isLoading = true;
+    isError = false;
     currentSlug = slug;
     update();
+
     try {
       story = await repository.fetchPublishedStoryBySlug(slug);
+
       if (slug == 'law') {
         ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
       }
-      isError = false;
 
-      // ✅ 把第一個分類名稱送給 Comscore
+      final categoryName =
+      (story.categoryList != null && story.categoryList!.isNotEmpty)
+          ? story.categoryList!.first.name
+          : 'unknown';
+
       ComscoreService.trackArticleView(
         articleId: slug,
         title: story.name ?? '無標題',
-        category: (story.categoryList != null && story.categoryList!.isNotEmpty)
-            ? story.categoryList!.first.name
-            : "unknown",
+        category: categoryName,
       );
 
+      isError = false;
     } catch (e) {
-      isError = true;
       error = determineException(e);
-      print('StoryPageError: ${error.message}');
+      isError = true;
+    } finally {
+      isLoading = false;
+      update();
     }
-    isLoading = false;
-    update();
   }
 }
