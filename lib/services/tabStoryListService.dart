@@ -252,23 +252,50 @@ class TabStoryListServices implements TabStoryListRepos {
     int first = 20,
   }) async {
     const String externalQuery = """
-      query GetAllExternalFields(\$first: Int!, \$partnerId: ID!) {
-        allExternals(
-          where: { state: published, partner: { id: \$partnerId } }
-          first: \$first
-          sortBy: updatedAt_DESC
-        ) {
-          id
-          slug
-          name
-          source
-          thumbnail
-          heroCaption
-          publishTime
-          partner { id name slug }
-        }
+  query GetAllExternalFields(\$first: Int!, \$partnerId: ID!) {
+    allExternals(
+      where: { 
+        state: published, 
+        partner: { id: \$partnerId }
       }
-    """;
+      first: \$first
+      sortBy: updatedAt_DESC
+    ) {
+      _label_
+      id
+      slug
+      name
+      subtitle
+      state
+      partner {
+        id
+        name
+        slug
+      }
+      publishTime
+      byline
+      thumbnail
+      heroCaption
+      brief_original
+      content_original
+      brief
+      content
+      tags {
+        id
+        name
+        slug
+      }
+      categories {
+        id
+        name
+        slug
+      }
+      source
+      updatedAt
+      createdAt
+    }
+  }
+""";
 
     final GraphqlBody graphqlBody = GraphqlBody(
       operationName: 'GetAllExternalFields',
@@ -281,7 +308,6 @@ class TabStoryListServices implements TabStoryListRepos {
       jsonEncode(graphqlBody.toJson()),
       headers: {"Content-Type": "application/json"},
     );
-
     return List<StoryListItem>.from(
       jsonResponse['data']['allExternals']
           .map((post) => StoryListItem.fromJson(post)),
@@ -304,3 +330,4 @@ class TabStoryListServices implements TabStoryListRepos {
     return storyListItemList;
   }
 }
+
