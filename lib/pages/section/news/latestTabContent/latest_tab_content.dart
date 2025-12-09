@@ -5,6 +5,7 @@ import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_wid
 import 'package:tv/core/enum/page_status.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
+import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/pages/section/news/latestTabContent/widgets/list_story_item.dart';
 import 'package:tv/pages/section/news/news_page_controller.dart';
@@ -28,25 +29,25 @@ class LatestTabContent extends GetView<NewsPageController> {
             final isElectionShow = controller.rxIsElectionShow.value;
             return isElectionShow
                 ? Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 27),
-                        child: RealTimeInvoiceWidget(
-                          isPackage: true,
-                          getMoreButtonClick: () async {
-                            if (!await launchUrl(Uri.parse(
-                                Environment().config.electionGetMoreWebpage))) {
-                              throw Exception('Could not launch');
-                            }
-                          },
-                          width: Get.width - 54,
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 16.0,
-                      ),
-                    ],
-                  )
+              children: [
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 27),
+                  child: RealTimeInvoiceWidget(
+                    isPackage: true,
+                    getMoreButtonClick: () async {
+                      if (!await launchUrl(Uri.parse(
+                          Environment().config.electionGetMoreWebpage))) {
+                        throw Exception('Could not launch');
+                      }
+                    },
+                    width: Get.width - 54,
+                  ),
+                ),
+                const SizedBox(
+                  height: 16.0,
+                ),
+              ],
+            )
                 : const SizedBox.shrink();
           }),
           // Top Iframe Widget
@@ -55,38 +56,51 @@ class LatestTabContent extends GetView<NewsPageController> {
             final mnewLiveUrl = controller.rxnNewLiveUrl.value;
             return mnewLiveUrl != null
                 ? Column(
-                    children: [
-                      YoutubeStreamWidget(youtubeUrl: mnewLiveUrl),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                    ],
-                  )
+              children: [
+                YoutubeStreamWidget(youtubeUrl: mnewLiveUrl),
+                const SizedBox(
+                  height: 12,
+                ),
+              ],
+            )
                 : SizedBox.shrink();
           }),
           Obx(() {
             final liveCameList = controller.rxLiveCamList;
             return liveCameList.isNotEmpty
                 ? Column(
-                    children: [
-                      YoutubeStreamWidget(youtubeUrl: liveCameList[0]),
-                      const SizedBox(
-                        height: 12,
-                      ),
-                    ],
-                  )
+              children: [
+                YoutubeStreamWidget(youtubeUrl: liveCameList[0]),
+                const SizedBox(
+                  height: 12,
+                ),
+              ],
+            )
                 : SizedBox.shrink();
           }),
-          SizedBox(
-            height: 12,
+          GestureDetector(
+            onTap: () async {
+              final url = Uri.parse("https://mnews.oen.tw/");
+              if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+                throw Exception("Could not launch");
+              }
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Image.asset(
+                mnewsAdEntry,
+                fit: BoxFit.fitWidth,
+                width: double.infinity,
+              ),
+            ),
           ),
           Obx(() {
             final editorChoiceList = controller.rxEditorChoiceList;
             return editorChoiceList.isNotEmpty
                 ? cs.EditorChoiceCarousel(
-                    editorChoiceList: editorChoiceList,
-                    aspectRatio: 4 / 3.2,
-                  )
+              editorChoiceList: editorChoiceList,
+              aspectRatio: 4 / 3.2,
+            )
                 : const SizedBox.shrink();
           }),
           Obx(() {
@@ -94,24 +108,24 @@ class LatestTabContent extends GetView<NewsPageController> {
             final String? imageUrl = controller.rxBannerData['imageUrl'];
             final isBannerShow = controller.rxIsBannerShow.value;
             return (isBannerShow &&
-                    url?.isNotEmpty == true &&
-                    imageUrl?.isNotEmpty == true)
+                url?.isNotEmpty == true &&
+                imageUrl?.isNotEmpty == true)
                 ? GestureDetector(
-                    onTap: () async {
-                      if (!await launchUrl(Uri.parse(url!),
-                          mode: LaunchMode.externalApplication)) {
-                        throw Exception('Could not launch $url');
-                      }
-                    },
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.zero,
-                      child: Image.network(
-                        imageUrl!,
-                        width: MediaQuery.of(context).size.width,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  )
+              onTap: () async {
+                if (!await launchUrl(Uri.parse(url!),
+                    mode: LaunchMode.externalApplication)) {
+                  throw Exception('Could not launch $url');
+                }
+              },
+              child: ClipRRect(
+                borderRadius: BorderRadius.zero,
+                child: Image.network(
+                  imageUrl!,
+                  width: MediaQuery.of(context).size.width,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            )
                 : const SizedBox.shrink();
           }),
           InlineBannerAdWidget(

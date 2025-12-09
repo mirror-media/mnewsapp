@@ -29,6 +29,7 @@ const String adUnitIdJson = 'assets/json/adUnitId.json';
 const String reportSvg = 'assets/image/ombuds/report.svg';
 const String downloadSvg = 'assets/image/download.svg';
 const String speakerSvg = 'assets/image/ombuds/speaker.svg';
+const String mnewsAdEntry = 'assets/image/mnews_ad_entry.gif';
 
 /// color
 const Color themeColor = Color(0xff003366);

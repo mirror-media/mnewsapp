@@ -33,6 +33,7 @@ import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/relatedStoryPainter.dart';
 import 'package:tv/widgets/story/storyBriefFrameClipper.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../helpers/story_html_helper.dart';
 
 
@@ -171,7 +172,22 @@ class StoryPage extends StatelessWidget {
         if (story.tags != null && story.tags!.isNotEmpty) ...[
           _buildTags(story.tags),
           const SizedBox(height: 16),
-        ],
+        ],GestureDetector(
+          onTap: () async {
+            final url = Uri.parse("https://mnews.oen.tw/");
+            if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
+              throw Exception("Could not launch");
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.fromLTRB(24, 16, 24, 16),
+            child: Image.asset(
+              mnewsAdEntry,
+              fit: BoxFit.fitWidth,
+              width: double.infinity,
+            ),
+          ),
+        ),
         if (story.relatedStories != null && story.relatedStories!.isNotEmpty) ...[
           _buildRelatedWidget(story.relatedStories!),
           const SizedBox(height: 16),
