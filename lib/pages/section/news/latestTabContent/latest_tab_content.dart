@@ -78,6 +78,15 @@ class LatestTabContent extends GetView<NewsPageController> {
             )
                 : SizedBox.shrink();
           }),
+          Obx(() {
+            final editorChoiceList = controller.rxEditorChoiceList;
+            return editorChoiceList.isNotEmpty
+                ? cs.EditorChoiceCarousel(
+              editorChoiceList: editorChoiceList,
+              aspectRatio: 4 / 3.2,
+            )
+                : const SizedBox.shrink();
+          }),
           GestureDetector(
             onTap: () async {
               final url = Uri.parse("https://mnews.oen.tw/");
@@ -94,15 +103,6 @@ class LatestTabContent extends GetView<NewsPageController> {
               ),
             ),
           ),
-          Obx(() {
-            final editorChoiceList = controller.rxEditorChoiceList;
-            return editorChoiceList.isNotEmpty
-                ? cs.EditorChoiceCarousel(
-              editorChoiceList: editorChoiceList,
-              aspectRatio: 4 / 3.2,
-            )
-                : const SizedBox.shrink();
-          }),
           Obx(() {
             final String? url = controller.rxBannerData['url'];
             final String? imageUrl = controller.rxBannerData['imageUrl'];
