@@ -11,6 +11,7 @@ import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/search/searchNoResultWidget.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/webStoryPage.dart';
 
 class SearchWidget extends StatefulWidget {
   @override
@@ -18,15 +19,17 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
-  TextEditingController _textController = TextEditingController();
-  ScrollController _listviewController = ScrollController();
+  final TextEditingController _textController = TextEditingController();
+  final ScrollController _listviewController = ScrollController();
   late bool _isLoading;
   late bool _isLoadingMax;
 
   @override
   void initState() {
+    super.initState();
     _isLoading = true;
     _isLoadingMax = false;
+
     _listviewController.addListener(() {
       if (!_isLoadingMax &&
           _listviewController.position.pixels ==
@@ -35,18 +38,17 @@ class _SearchWidgetState extends State<SearchWidget> {
         _searchNextPageByKeyword(_textController.text);
       }
     });
-    super.initState();
   }
 
-  _searchNewsStoryByKeyword(String keyword) async {
+  void _searchNewsStoryByKeyword(String keyword) {
     context.read<SearchBloc>().add(SearchNewsStoryByKeyword(keyword));
   }
 
-  _searchNextPageByKeyword(String keyword) async {
+  void _searchNextPageByKeyword(String keyword) {
     context.read<SearchBloc>().add(SearchNextPageByKeyword(keyword));
   }
 
-  _clearKeyword() {
+  void _clearKeyword() {
     _textController.clear();
     context.read<SearchBloc>().add(ClearKeyword());
   }
@@ -60,7 +62,8 @@ class _SearchWidgetState extends State<SearchWidget> {
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         Padding(
@@ -68,195 +71,207 @@ class _SearchWidgetState extends State<SearchWidget> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // 24 is padding 12*2, 12 is gap, 52 is IconButton size
               _keywordTextField(width - 24),
             ],
           ),
         ),
         BlocBuilder<SearchBloc, SearchState>(
-            builder: (BuildContext context, SearchState state) {
-          if (state is SearchError) {
-            final error = state.error;
-            print('SearchError: ${error.message}');
-            if (error is NoInternetException) {
-              return Expanded(
+          builder: (BuildContext context, SearchState state) {
+            if (state is SearchError) {
+              final error = state.error;
+              print('SearchError: ${error.message}');
+              if (error is NoInternetException) {
+                return Expanded(
                   child: error.renderWidget(
-                      onPressed: () =>
-                          _searchNewsStoryByKeyword(_textController.text)));
+                    onPressed: () =>
+                        _searchNewsStoryByKeyword(_textController.text),
+                  ),
+                );
+              }
+              return Expanded(child: error.renderWidget());
             }
 
-            return Expanded(child: error.renderWidget());
-          }
+            if (state is SearchInitState) {
+              return Container();
+            }
 
-          if (state is SearchInitState) {
-            return Container();
-          }
+            if (state is SearchLoaded) {
+              _isLoading = false;
+              final storyListItemList = state.storyListItemList;
+              _isLoadingMax = storyListItemList.length == state.allStoryCount;
 
-          if (state is SearchLoaded) {
-            _isLoading = false;
-            List<StoryListItem> storyListItemList = state.storyListItemList;
-            _isLoadingMax = storyListItemList.length == state.allStoryCount;
+              return Expanded(
+                child: _buildSearchList(
+                  context,
+                  storyListItemList,
+                  _textController.text,
+                ),
+              );
+            }
+            if (state is SearchLoadingMore) {
+              _isLoading = true;
+              final storyListItemList = state.storyListItemList;
 
-            return Expanded(
-              child: _buildSearchList(
-                  context, storyListItemList, _textController.text),
-            );
-          }
-
-          if (state is SearchLoadingMore) {
-            _isLoading = true;
-            List<StoryListItem> storyListItemList = state.storyListItemList;
-
-            return Expanded(
-              child: _buildSearchList(
-                  context, storyListItemList, _textController.text,
-                  isLoadingMore: true),
-            );
-          }
-          // state is loading, or other
-          return _loadingWidget();
-        }),
+              return Expanded(
+                child: _buildSearchList(
+                  context,
+                  storyListItemList,
+                  _textController.text,
+                  isLoadingMore: true,
+                ),
+              );
+            }
+            return _loadingWidget();
+          },
+        ),
       ],
     );
   }
 
   Widget _keywordTextField(double width) {
-    return Container(
+    return SizedBox(
       width: width,
       child: Theme(
-        data: Theme.of(context).copyWith(
-          primaryColor: Colors.grey,
-        ),
+        data: Theme.of(context).copyWith(primaryColor: Colors.grey),
         child: TextField(
-            controller: _textController,
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 16,
+          controller: _textController,
+          style: const TextStyle(color: Colors.black, fontSize: 16),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+            enabledBorder: const OutlineInputBorder(
+              borderRadius: BorderRadius.all(Radius.circular(3.0)),
+              borderSide: BorderSide(color: Colors.grey, width: 1),
             ),
-            decoration: InputDecoration(
-              contentPadding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-              enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(3.0),
-                ),
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(
-                  color: Colors.grey,
-                  width: 1,
-                ),
-              ),
-              suffixIcon: IconButton(
-                onPressed: () => _clearKeyword(),
-                icon: Icon(Icons.clear),
-              ),
-              hintText: "請輸入關鍵字",
-              hintStyle: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
+            focusedBorder: const OutlineInputBorder(
+              borderSide: BorderSide(color: Colors.grey, width: 1),
             ),
-            onSubmitted: (value) {
-              _searchNewsStoryByKeyword(_textController.text);
-              AnalyticsHelper.logSearch(searchText: _textController.text);
-            }),
+            suffixIcon: IconButton(
+              onPressed: _clearKeyword,
+              icon: const Icon(Icons.clear),
+            ),
+            hintText: "請輸入關鍵字",
+            hintStyle: const TextStyle(color: Colors.grey, fontSize: 16),
+          ),
+          onSubmitted: (_) {
+            _searchNewsStoryByKeyword(_textController.text);
+            AnalyticsHelper.logSearch(searchText: _textController.text);
+          },
+        ),
       ),
     );
   }
 
   Widget _buildSearchList(
-    BuildContext context,
-    List<StoryListItem> storyListItemList,
-    String keyword, {
-    bool isLoadingMore = false,
-  }) {
-    if (storyListItemList.length == 0) {
-      return SearchNoResultWidget(
-        keyword: keyword,
-      );
+      BuildContext context,
+      List<StoryListItem> storyListItemList,
+      String keyword, {
+        bool isLoadingMore = false,
+      }) {
+    if (storyListItemList.isEmpty) {
+      return SearchNoResultWidget(keyword: keyword);
     }
 
     return ListView.separated(
       controller: _listviewController,
-      separatorBuilder: (BuildContext context, int index) =>
-          SizedBox(height: 16.0),
+      separatorBuilder: (_, __) => const SizedBox(height: 16.0),
       itemCount: storyListItemList.length,
       itemBuilder: (context, index) {
         if (index == storyListItemList.length - 1 && isLoadingMore) {
-          return Column(children: [
-            _buildListItem(context, storyListItemList[index]),
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0, bottom: 8.0),
-              child: Center(child: CupertinoActivityIndicator()),
-            ),
-          ]);
+          return Column(
+            children: [
+              _buildListItem(context, storyListItemList[index], index),
+              const Padding(
+                padding: EdgeInsets.only(top: 8.0, bottom: 8.0),
+                child: Center(child: CupertinoActivityIndicator()),
+              ),
+            ],
+          );
         }
-
-        return _buildListItem(context, storyListItemList[index]);
+        return _buildListItem(context, storyListItemList[index], index);
       },
     );
   }
 
-  Widget _buildListItem(BuildContext context, StoryListItem storyListItem) {
-    var width = MediaQuery.of(context).size.width;
-    double imageSize = 33.3 * (width - 32) / 100;
+  Widget _buildListItem(
+      BuildContext context,
+      StoryListItem storyListItem,
+      int index,
+      ) {
+    final width = MediaQuery.of(context).size.width;
+    final imageSize = 33.3 * (width - 32) / 100;
+
+    assert(() {
+      print(
+        'build item[$index] '
+            'name="${storyListItem.name}" | '
+            'slug="${storyListItem.slug}" | '
+            'url="${storyListItem.url}" | '
+            'photoUrl="${storyListItem.photoUrl}"',
+      );
+      return true;
+    }());
 
     return InkWell(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CachedNetworkImage(
+              height: imageSize,
+              width: imageSize,
+              imageUrl: storyListItem.photoUrl,
+              placeholder: (_, __) => Container(
                 height: imageSize,
                 width: imageSize,
-                imageUrl: storyListItem.photoUrl,
-                placeholder: (context, url) => Container(
-                  height: imageSize,
-                  width: imageSize,
-                  color: Colors.grey,
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: imageSize,
-                  width: imageSize,
-                  color: Colors.grey,
-                  child: Icon(Icons.error),
-                ),
-                fit: BoxFit.cover,
+                color: Colors.grey,
               ),
-              SizedBox(
-                width: 16,
+              errorWidget: (_, __, ___) => Container(
+                height: imageSize,
+                width: imageSize,
+                color: Colors.grey,
+                child: const Icon(Icons.error),
               ),
-              Expanded(
-                child: RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 17.0,
-                      height: 1.5,
-                    ),
-                    text: storyListItem.name,
+              fit: BoxFit.cover,
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: RichText(
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                text: TextSpan(
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 17.0,
+                    height: 1.5,
                   ),
+                  text: storyListItem.name ?? '',
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        onTap: () {
-          if (storyListItem.slug == null) return;
-          Get.to(() => StoryPage(
-                slug: storyListItem.slug!,
-              ));
-        });
+      ),
+      onTap: () {
+        final url = storyListItem.url;
+        if (url != null && url.isNotEmpty) {
+          print('tap item[$index] -> WebStoryPage url=$url');
+          Get.to(() => WebStoryPage(url: url));
+          return;
+        }
+
+        final slug = storyListItem.slug;
+        if (slug != null && slug.isNotEmpty) {
+          print('tap item[$index] -> StoryPage slug=$slug');
+          Get.to(() => StoryPage(slug: slug));
+        } else {
+          print('tap item[$index] -> no url & no slug (name=${storyListItem.name})');
+        }
+      },
+    );
   }
 
-  Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+  Widget _loadingWidget() => const Center(
+    child: CircularProgressIndicator.adaptive(),
+  );
 }
