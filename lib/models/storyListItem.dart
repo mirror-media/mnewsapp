@@ -6,13 +6,14 @@ class StoryListItem {
   String? id;
   String? name;
   String? slug;
+  String? url;
   String? style;
   String photoUrl;
   List<Category>? categoryList;
   bool? isSales = false;
   String? displayCategory;
 
-  // 新增欄位：鏡報（External）專用
+
   String? source;
   String? subtitle;
   String? heroCaption;
@@ -28,6 +29,7 @@ class StoryListItem {
     this.id,
     this.name,
     this.slug,
+    this.url,
     this.style,
     required this.photoUrl,
     this.categoryList,
@@ -45,19 +47,18 @@ class StoryListItem {
     this.partnerName,
   });
 
-  /// 原本 Sales 類型
   factory StoryListItem.fromJsonSales(Map<String, dynamic> json) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(
-        json, ['adPost', 'heroImage', 'urlMobileSized'])) {
+    if (BaseModel.checkJsonKeys(json, ['adPost', 'heroImage', 'urlMobileSized'])) {
       photoUrl = json['adPost']['heroImage']['urlMobileSized'];
     }
 
     String? displayCategory;
     List<Category>? allPostsCategory;
     if (json['adPost']['categories'] != null) {
-      allPostsCategory = List<Category>.from(json['adPost']['categories']
-          .map((category) => Category.fromJson(category)));
+      allPostsCategory = List<Category>.from(
+        json['adPost']['categories'].map((category) => Category.fromJson(category)),
+      );
       if (allPostsCategory.isNotEmpty) {
         displayCategory = allPostsCategory.first.name;
       }
@@ -81,8 +82,23 @@ class StoryListItem {
     );
   }
 
-  /// 通用解析器 — 自動辨識 allPosts / allExternals
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
+    if (json.containsKey('product_id') && json.containsKey('url')) {
+      final cover = json['cover_image']?.toString();
+      return StoryListItem(
+        id: json['product_id']?.toString(),
+        name: json['title']?.toString(),
+        url: json['url']?.toString(),
+        slug: null, // Miso 沒 slug時，避免誤走 StoryPage
+        photoUrl: (cover != null && cover.isNotEmpty)
+            ? cover
+            : Environment().config.mirrorNewsDefaultImageUrl,
+        displayCategory: json['custom_attributes'] is Map
+            ? (json['custom_attributes']['article:section']?.toString() ?? '')
+            : '',
+      );
+    }
+
     // GraphQL _source 包裝處理
     if (BaseModel.hasKey(json, '_source')) {
       json = json['_source'];
@@ -97,8 +113,10 @@ class StoryListItem {
         name: json[BaseModel.nameKey],
         slug: json[BaseModel.slugKey],
         subtitle: json['subtitle'],
-        photoUrl: json['thumbnail'] ??
-            Environment().config.mirrorNewsDefaultImageUrl,
+        url: json['url']?.toString(),
+        photoUrl: (json['thumbnail']?.toString().isNotEmpty ?? false)
+            ? json['thumbnail'].toString()
+            : Environment().config.mirrorNewsDefaultImageUrl,
         heroCaption: json['heroCaption'],
         brief: json['brief'],
         content: json['content'],
@@ -109,11 +127,9 @@ class StoryListItem {
         source: json['source'],
         partnerName: json['partner']?['name'],
         categoryList: json['categories'] != null
-            ? List<Category>.from(
-            json['categories'].map((c) => Category.fromJson(c)))
+            ? List<Category>.from(json['categories'].map((c) => Category.fromJson(c)))
             : [],
-        displayCategory: (json['categories'] != null &&
-            (json['categories'] as List).isNotEmpty)
+        displayCategory: (json['categories'] != null && (json['categories'] as List).isNotEmpty)
             ? json['categories'][0]['name']
             : "鏡報",
       );
@@ -125,8 +141,7 @@ class StoryListItem {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
-    } else if (BaseModel.checkJsonKeys(
-        json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
+    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
       photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
     }
 
@@ -134,7 +149,8 @@ class StoryListItem {
     List<Category>? allPostsCategory;
     if (json['categories'] != null) {
       allPostsCategory = List<Category>.from(
-          json['categories'].map((category) => Category.fromJson(category)));
+        json['categories'].map((category) => Category.fromJson(category)),
+      );
       if (allPostsCategory.isNotEmpty) {
         displayCategory = allPostsCategory.first.name;
       }
@@ -155,6 +171,7 @@ class StoryListItem {
       id: json[BaseModel.idKey],
       name: json[BaseModel.nameKey],
       slug: json[BaseModel.slugKey],
+      url: json['url']?.toString(),
       style: style,
       photoUrl: photoUrl,
       isSales: false,
@@ -167,6 +184,7 @@ class StoryListItem {
     BaseModel.idKey: id,
     BaseModel.nameKey: name,
     BaseModel.slugKey: slug,
+    'url': url,
     'style': style,
     'photoUrl': photoUrl,
     'source': source,
@@ -175,8 +193,9 @@ class StoryListItem {
   };
 
   @override
-  int get hashCode => slug.hashCode;
+  int get hashCode => (slug ?? url ?? id ?? '').hashCode;
 
   @override
-  bool operator ==(covariant StoryListItem other) => slug == other.slug;
+  bool operator ==(covariant StoryListItem other) =>
+      (slug ?? url ?? id) == (other.slug ?? other.url ?? other.id);
 }
