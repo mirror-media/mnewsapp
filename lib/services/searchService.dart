@@ -1,49 +1,82 @@
-import 'dart:convert';
-
-import 'package:tv/helpers/environment.dart';
-import 'package:tv/helpers/apiBaseHelper.dart';
 import 'package:tv/models/storyListItem.dart';
+import 'package:tv/services/misoSearchService.dart';
+import 'package:tv/services/misoApiClient.dart';
 
 abstract class SearchRepos {
-  Future<List<StoryListItem>> searchNewsStoryByKeyword(String keyword,
-      {int from = 0, int size = 20});
-  Future<List<StoryListItem>> searchNextPageByKeyword(String keyword,
-      {int loadingMorePage = 20});
+  Future<List<StoryListItem>> searchNewsStoryByKeyword(
+      String keyword, {
+        int from = 0,
+        int size = 20,
+      });
+
+  Future<List<StoryListItem>> searchNextPageByKeyword(
+      String keyword, {
+        int loadingMorePage = 20,
+      });
+
   int allStoryCount = 0;
 }
 
 class SearchServices implements SearchRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
-  int from = 0, size = 20;
+  static const String _apiKey = 'IHtn9b9tfPsO1EQpGV74OMf2syhELb6XVZe8u9FT';
+  static const String _anonymousId = 'tv_app';
+
+  late final MisoSearchService _miso;
+
+  int from = 0;
+  int size = 20;
+
   @override
   int allStoryCount = 0;
 
-  @override
-  Future<List<StoryListItem>> searchNewsStoryByKeyword(String keyword,
-      {int from = 0, int size = 20}) async {
-    this.from = from;
-    this.size = size;
-
-    var query = {"query": keyword, "from": from, "size": size};
-
-    final jsonResponse = await _helper.postByUrl(
-        Environment().config.searchApi, jsonEncode(query),
-        headers: {"Content-Type": "application/json"});
-
-    List<StoryListItem> storyListItemList = List<StoryListItem>.from(
-        jsonResponse["body"]["hits"]["hits"]
-            .map((post) => StoryListItem.fromJson(post)));
-
-    allStoryCount = jsonResponse["body"]["hits"]["total"]["value"];
-
-    return storyListItemList;
+  SearchServices() {
+    final client = MisoApiClient(apiKey: _apiKey);
+    _miso = MisoSearchService(
+      client: client,
+      anonymousId: _anonymousId,
+      userId: null,
+    );
   }
 
   @override
-  Future<List<StoryListItem>> searchNextPageByKeyword(String keyword,
-      {int loadingMorePage = 20}) async {
-    from = from + size;
+  Future<List<StoryListItem>> searchNewsStoryByKeyword(
+      String keyword, {
+        int from = 0,
+        int size = 20,
+      }) async {
+    this.from = from;
+    this.size = size;
+
+
+    final res = await _miso.search(
+      keyword,
+      start: from,
+      rows: size,
+    );
+
+    allStoryCount = res.data.total ?? 0;
+
+    final list = res.data.products.map((p) {
+      return StoryListItem.fromJson({
+        'product_id': p.productId,
+        'title': p.title,
+        'url': p.url,
+        'cover_image': p.coverImage,
+        'custom_attributes': p.customAttributes,
+        'published_at': p.publishedAt,
+      });
+    }).toList();
+
+    return list;
+  }
+
+  @override
+  Future<List<StoryListItem>> searchNextPageByKeyword(
+      String keyword, {
+        int loadingMorePage = 20,
+      }) async {
+    from += size;
     size = loadingMorePage;
-    return await searchNewsStoryByKeyword(keyword, from: from, size: size);
+    return searchNewsStoryByKeyword(keyword, from: from, size: size);
   }
 }
