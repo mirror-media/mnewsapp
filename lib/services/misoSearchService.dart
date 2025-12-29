@@ -12,10 +12,13 @@ class MisoSearchService {
     this.userId,
   }) : _client = client;
 
+  /// ✅ 支援分頁：start/rows
+  /// ✅ 支援排序：orderBy（relevance / published_at / -published_at）
   Future<MisoHybridSearchResponse> search(
       String q, {
         int start = 0,
         int rows = 20,
+        String orderBy = 'relevance',
       }) {
     final request = MisoHybridSearchRequest(
       anonymousId: anonymousId,
@@ -46,7 +49,9 @@ class MisoSearchService {
       start: start,
       rows: rows,
 
-      orderBy: 'relevance',
+      /// ✅ 可切換排序
+      orderBy: orderBy,
+
       answer: true,
       sourceFl: const [
         'cover_image',
@@ -69,6 +74,7 @@ class MisoSearchService {
     return _client.hybridSearch(request);
   }
 
+  /// AI Answer（可選）
   Future<MisoAnswerResponse?> getAiAnswer(String questionId) {
     return _client.getAnswerWithProgress(questionId);
   }
