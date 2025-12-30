@@ -14,18 +14,27 @@ class SearchBloc extends Bloc<SearchEvents, SearchState> {
       print(event.toString());
       try {
         emit(SearchLoading());
+
         if (event is SearchNewsStoryByKeyword) {
-          storyListItemList =
-              await searchRepos.searchNewsStoryByKeyword(event.keyword);
+          storyListItemList = await searchRepos.searchNewsStoryByKeyword(
+            event.keyword,
+            orderBy: event.orderBy, // ✅ 把排序往下傳
+          );
+
           emit(SearchLoaded(
             storyListItemList: storyListItemList,
             allStoryCount: searchRepos.allStoryCount,
           ));
         } else if (event is SearchNextPageByKeyword) {
           emit(SearchLoadingMore(storyListItemList: storyListItemList));
-          List<StoryListItem> newStoryListItemList =
-              await searchRepos.searchNextPageByKeyword(event.keyword);
+
+          final newStoryListItemList = await searchRepos.searchNextPageByKeyword(
+            event.keyword,
+            orderBy: event.orderBy, // ✅ 可能為 null（不傳就沿用）
+          );
+
           storyListItemList.addAll(newStoryListItemList);
+
           emit(SearchLoaded(
             storyListItemList: storyListItemList,
             allStoryCount: searchRepos.allStoryCount,
