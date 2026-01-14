@@ -30,8 +30,10 @@ class StoryServices implements StoryRepos {
       print('[StoryService] internal fetch error: $e → try external');
     }
 
-    // 2) external（鏡報等）
+    // 2) external
+    print('[StoryService] >>> try external: $slug');
     final Story external = await _fetchExternalAndNormalize(slug);
+    print('[StoryService] >>> external success: $slug (style=${external.style})');
     return external;
   }
 
@@ -107,6 +109,9 @@ class StoryServices implements StoryRepos {
   }
 
   Future<Story> _fetchExternalAndNormalize(String slug) async {
+    // ✅ debug：你要確認是不是 GraphQL 有回資料、是不是 published、partner 是誰
+    print('[ExternalTest] query slug=$slug');
+
     const String externalQuery = """
     query GetExternalBySlug(\$slug: String!) {
       allExternals(
@@ -148,7 +153,10 @@ class StoryServices implements StoryRepos {
       headers: {"Content-Type": "application/json"},
     );
 
+    final errors = jsonResponse?['errors'];
     final list = jsonResponse?['data']?['allExternals'];
+
+    final len = (list is List) ? list.length : -1;
     if (list is! List || list.isEmpty) {
       throw FormatException('External not found for slug=$slug');
     }
@@ -156,19 +164,18 @@ class StoryServices implements StoryRepos {
     final Map<String, dynamic> ext = Map<String, dynamic>.from(list[0] as Map);
 
     // 先嘗試取 draft.html，缺少時用 *_original
-    final String? briefHtmlRaw   = _extractHtml(ext['brief'])   ?? (ext['brief_original'] as String?);
-    final String? contentHtmlRaw = _extractHtml(ext['content']) ?? (ext['content_original'] as String?);
+    final String? briefHtmlRaw =
+        _extractHtml(ext['brief']) ?? (ext['brief_original'] as String?);
+    final String? contentHtmlRaw =
+        _extractHtml(ext['content']) ?? (ext['content_original'] as String?);
 
-    final String briefHtmlClean   = _sanitizeHtml(briefHtmlRaw ?? '');
+    final String briefHtmlClean = _sanitizeHtml(briefHtmlRaw ?? '');
     final String contentHtmlClean = _sanitizeHtml(contentHtmlRaw ?? '');
 
     // 若 external 自己就有 apiData，沿用；否則給空陣列，讓頁面優先 fallback HTML
-    final List<dynamic> briefApiData   = _buildApiDataFromSection(ext['brief']);
+    final List<dynamic> briefApiData = _buildApiDataFromSection(ext['brief']);
     final List<dynamic> contentApiData = _buildApiDataFromSection(ext['content']);
 
-    print('[StoryService] external hit: $slug '
-        '| briefHtml.len=${briefHtmlClean.length}, contentHtml.len=${contentHtmlClean.length} '
-        '| briefApiData.len=${briefApiData.length}, contentApiData.len=${contentApiData.length}');
 
     String _wrapApiDataString(List<dynamic> l) => jsonEncode({'apiData': l});
 
@@ -208,9 +215,6 @@ class StoryServices implements StoryRepos {
 
     try {
       final story = Story.fromJson(patched);
-      print('[StoryService] Story.fromJson ok: '
-          'brief.paragraphs=${story.brief?.length ?? -1}, '
-          'content.paragraphs=${story.contentApiData?.length ?? -1}');
       return story;
     } catch (e) {
       print('[StoryService] external normalize parse error: $e');
@@ -229,9 +233,6 @@ class StoryServices implements StoryRepos {
     return null;
   }
 
-  /// 把 HTML 做些微清理以提升相容性：
-  /// - 將 <figure> 改為 <div>，避免某些 renderer 對 figure 支援不佳
-  /// - 若仍有跳脫殘留（\\"、\\/），做一次反跳脫
   String _sanitizeHtml(String html) {
     var s = html;
 
@@ -245,15 +246,12 @@ class StoryServices implements StoryRepos {
 
     // figure → div
     s = s
-    // <figure ...> -> <div ...>
         .replaceAll(RegExp(r'<\s*figure\b', caseSensitive: false), '<div')
-    // </figure> -> </div>
         .replaceAll(RegExp(r'</\s*figure\s*>', caseSensitive: false), '</div>');
 
     return s;
   }
 
-  /// 取出 apiData；若沒有就回空陣列，讓頁面改用 fallback HTML。
   List<dynamic> _buildApiDataFromSection(dynamic section) {
     final obj = _coerceObj(section);
     final maybeApi = obj?['apiData'];
@@ -264,7 +262,6 @@ class StoryServices implements StoryRepos {
     return const [];
   }
 
-  /// 字串 → 嘗試 json.decode；維持 Map 型別；否則回 null
   Map<String, dynamic>? _coerceObj(dynamic v) {
     if (v == null) return null;
     if (v is Map<String, dynamic>) return v;
@@ -272,9 +269,7 @@ class StoryServices implements StoryRepos {
       try {
         final decoded = json.decode(v);
         if (decoded is Map<String, dynamic>) return decoded;
-      } catch (_) {
-        // 不是 JSON 字串就略過
-      }
+      } catch (_) {}
     }
     return null;
   }
