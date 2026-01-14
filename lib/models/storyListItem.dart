@@ -2,17 +2,47 @@ import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
 
+enum StoryLinkType { story, external }
+
+class ParsedStoryLink {
+  final StoryLinkType type;
+  final String slug;
+  ParsedStoryLink({required this.type, required this.slug});
+}
+
+ParsedStoryLink? parseStoryLinkFromUrl(String? url) {
+  if (url == null || url.trim().isEmpty) return null;
+
+  final uri = Uri.tryParse(url.trim());
+  if (uri == null) return null;
+
+  final segments = uri.pathSegments.where((s) => s.trim().isNotEmpty).toList();
+  if (segments.length < 2) return null;
+
+  final head = segments[0].trim(); // story / external
+  final last = segments.last.trim(); // slug
+
+  StoryLinkType? type;
+  if (head == 'story') type = StoryLinkType.story;
+  if (head == 'external') type = StoryLinkType.external;
+  if (type == null) return null;
+
+  if (last.isEmpty) return null;
+
+  return ParsedStoryLink(type: type, slug: last);
+}
+
 class StoryListItem {
   String? id;
   String? name;
   String? slug;
   String? url;
   String? style;
+  StoryLinkType? linkType;
   String photoUrl;
   List<Category>? categoryList;
   bool? isSales = false;
   String? displayCategory;
-
 
   String? source;
   String? subtitle;
@@ -31,6 +61,7 @@ class StoryListItem {
     this.slug,
     this.url,
     this.style,
+    this.linkType,
     required this.photoUrl,
     this.categoryList,
     this.isSales,
@@ -85,11 +116,15 @@ class StoryListItem {
   factory StoryListItem.fromJson(Map<String, dynamic> json) {
     if (json.containsKey('product_id') && json.containsKey('url')) {
       final cover = json['cover_image']?.toString();
+      final url = json['url']?.toString();
+      final parsed = parseStoryLinkFromUrl(url);
       return StoryListItem(
         id: json['product_id']?.toString(),
         name: json['title']?.toString(),
-        url: json['url']?.toString(),
-        slug: null, // Miso 沒 slug時，避免誤走 StoryPage
+        url: url,
+        slug: parsed?.slug,
+        linkType: parsed?.type,
+
         photoUrl: (cover != null && cover.isNotEmpty)
             ? cover
             : Environment().config.mirrorNewsDefaultImageUrl,
@@ -136,7 +171,7 @@ class StoryListItem {
     }
 
     // ==========================
-    // 否則走舊 allPosts 流程
+    // 否則走舊 allPosts 流程（保留）
     // ==========================
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
     if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
@@ -190,6 +225,7 @@ class StoryListItem {
     'source': source,
     'briefOriginal': briefOriginal,
     'contentOriginal': contentOriginal,
+    'linkType': linkType?.name,
   };
 
   @override

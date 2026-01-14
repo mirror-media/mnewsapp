@@ -36,15 +36,22 @@ import 'package:tv/widgets/youtube_stream_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../helpers/story_html_helper.dart';
 
-
 class StoryPage extends StatelessWidget {
   final String slug;
   final bool showAds;
 
-  StoryPage({required this.slug, this.showAds = true});
+  final StoryLinkType? linkType;
+
+  StoryPage({
+    required this.slug,
+    this.showAds = true,
+    this.linkType,
+  });
 
   final interstitialAdController = Get.find<InterstitialAdController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
+
+  String get _controllerTag => '${linkType?.name ?? 'story'}::$slug';
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +60,8 @@ class StoryPage extends StatelessWidget {
     }
 
     return GetBuilder<StoryPageController>(
-      init: StoryPageController(StoryServices(), slug),
-      tag: slug,
+      init: StoryPageController(StoryServices(), slug, linkType: linkType),
+      tag: _controllerTag,
       builder: (controller) {
         Widget body;
 
@@ -108,12 +115,16 @@ class StoryPage extends StatelessWidget {
           icon: const Icon(Icons.share),
           tooltip: 'Share',
           onPressed: () {
+            final controller = Get.find<StoryPageController>(tag: _controllerTag);
+
             AnalyticsHelper.logShare(
-              name: Get.find<StoryPageController>(tag: slug).currentSlug,
-              type: 'story',
+              name: controller.currentSlug,
+              type: linkType?.name ?? 'story',
             );
-            final url =
-                '${Environment().config.mNewsWebsiteLink}/story/${Get.find<StoryPageController>(tag: slug).currentSlug}';
+
+            final path = (linkType == StoryLinkType.external) ? 'external' : 'story';
+            final url = '${Environment().config.mNewsWebsiteLink}/$path/${controller.currentSlug}';
+
             Share.share(
               url,
               sharePositionOrigin: Rect.fromLTWH(Get.width - 100, 0, 100, 100),
@@ -172,7 +183,8 @@ class StoryPage extends StatelessWidget {
         if (story.tags != null && story.tags!.isNotEmpty) ...[
           _buildTags(story.tags),
           const SizedBox(height: 16),
-        ],GestureDetector(
+        ],
+        GestureDetector(
           onTap: () async {
             final url = Uri.parse("https://mnews.oen.tw/");
             if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
@@ -613,8 +625,7 @@ class StoryPage extends StatelessWidget {
                 paragraph,
                 context,
                 17 * textScaleFactorController.textScaleFactor.value,
-                imageUrlList:
-                Get.find<StoryPageController>(tag: slug).story.imageUrlList,
+                imageUrlList: Get.find<StoryPageController>(tag: _controllerTag).story.imageUrlList,
               ),
             ),
           );
@@ -776,11 +787,11 @@ class StoryPage extends StatelessWidget {
         if (showAds) {
           interstitialAdController.openStory();
         }
-        Get.find<StoryPageController>(tag: slug)
-            .loadStory(story.slug ?? StringDefault.nullString);
+
+        Get.find<StoryPageController>(tag: _controllerTag).loadStory(
+          story.slug ?? StringDefault.nullString,
+        );
       },
     );
   }
-
 }
-

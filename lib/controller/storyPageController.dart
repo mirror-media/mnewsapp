@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter_cache_manager/file.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:get/get.dart';
@@ -6,17 +5,26 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/errorHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/story.dart';
+import 'package:tv/models/storyListItem.dart'; // StoryLinkType
 import 'package:tv/services/storyService.dart';
 import '../services/comscoreService.dart';
 
 class StoryPageController extends GetxController {
   final StoryRepos repository;
+
   String currentSlug;
-  StoryPageController(this.repository, this.currentSlug);
+  final StoryLinkType? linkType;
+
+  StoryPageController(
+      this.repository,
+      this.currentSlug, {
+        this.linkType,
+      });
 
   late Story story;
   late File ombudsLawFile;
   late MNewException error;
+
   bool isLoading = true;
   bool isError = false;
 
@@ -31,6 +39,8 @@ class StoryPageController extends GetxController {
     isError = false;
     currentSlug = slug;
     update();
+
+    print('[StoryPageController] loadStory start slug=$slug linkType=$linkType');
 
     try {
       story = await repository.fetchPublishedStoryBySlug(slug);
