@@ -309,18 +309,16 @@ class _SearchWidgetState extends State<SearchWidget> {
           ],
         ),
       ),
-      onTap: () {
-        final url = storyListItem.url;
-        if (url != null && url.isNotEmpty) {
-          Get.to(() => WebStoryPage(url: url));
-          return;
+        onTap: () {
+          final slug = storyListItem.slug;
+          final type = storyListItem.linkType;
+          if (slug != null && slug.isNotEmpty) {
+            Get.to(() => StoryPage(slug: slug, linkType: type));
+            return;
+          }
+          // 如果沒有 slug：你可以選擇不做事或顯示提示
+          // Get.snackbar('無法開啟', '此內容沒有 slug');
         }
-
-        final slug = storyListItem.slug;
-        if (slug != null && slug.isNotEmpty) {
-          Get.to(() => StoryPage(slug: slug));
-        }
-      },
     );
   }
 
