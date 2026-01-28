@@ -8,6 +8,8 @@ import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/mNewsApp.dart';
 import 'package:tv/services/comscoreService.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,6 +27,7 @@ void main() async {
   MobileAds.instance.initialize();
   await Firebase.initializeApp();
 
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   // 初始化 Comscore (dev = 測試環境)
   await ComscoreService.init(isProd: true);
 
