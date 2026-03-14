@@ -98,10 +98,12 @@ class ArticlesApiProvider extends GetConnect {
       headers: {"Accept": "application/json"},
     );
 
-    final List<Category> categoryList = List<Category>.from(
-      jsonResponse['allCategories']
-          .map((category) => Category.fromJson(category)),
-    );
+    final List<dynamic> rawCategories =
+        (jsonResponse['categories'] as List?) ?? [];
+
+    final List<Category> categoryList = rawCategories
+        .map((category) => Category.fromJson(category))
+        .toList();
 
     categoryList.removeWhere((category) => category.slug == 'video');
     categoryList.removeWhere((category) => category.slug == 'home');
