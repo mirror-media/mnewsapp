@@ -143,7 +143,7 @@ class TabStoryListServices implements TabStoryListRepos {
         bool withCount = true,
       }) async {
     if (slug == 'mirrordaily') {
-      print(' Slug = mirrordaily → 改走 externals partnerId = 2');
+      print('Slug = mirrordaily → 改走 externals partnerId = 2');
       return await fetchExternalListByPartnerId(
         partnerId: "2",
         first: first,
@@ -186,7 +186,7 @@ class TabStoryListServices implements TabStoryListRepos {
       variables: variables,
     );
 
-    late final jsonResponse;
+    late final dynamic jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
         Environment().config.graphqlApi,
@@ -203,12 +203,18 @@ class TabStoryListServices implements TabStoryListRepos {
       );
     }
 
-    final List<StoryListItem> newsList = List<StoryListItem>.from(
-      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
-    );
+    print('[fetchStoryListByCategorySlug] slug = $slug');
+    print('[fetchStoryListByCategorySlug] graphql raw = $jsonResponse');
+
+    final List<dynamic> postJsonList =
+        (jsonResponse['data']?['posts'] as List?) ?? [];
+
+    final List<StoryListItem> newsList = postJsonList
+        .map((post) => StoryListItem.fromJson(post))
+        .toList();
 
     if (withCount) {
-      allStoryCount = jsonResponse['data']['postsCount'];
+      allStoryCount = jsonResponse['data']?['postsCount'] ?? 0;
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
@@ -217,21 +223,21 @@ class TabStoryListServices implements TabStoryListRepos {
       headers: {"Accept": "application/json"},
     );
 
-    final List<StoryListItem> newsListFromGCP = List<StoryListItem>.from(
-      jsonResponseFromGCP['allPosts']
-          .map((post) => StoryListItem.fromJson(post)),
-    );
+    print('[fetchStoryListByCategorySlug] gcp raw = $jsonResponseFromGCP');
 
-    final jsonResponseGCP = await _helper.getByCacheAndAutoCache(
-      Environment().config.categoriesUrl,
-      maxAge: categoryCacheDuration,
-      headers: {"Accept": "application/json"},
-    );
+    final List<dynamic> allPostsJson =
+        (jsonResponseFromGCP['allPosts'] as List?) ?? [];
 
-    final List<Category> categoryList = List<Category>.from(
-      jsonResponseGCP['allCategories']
-          .map((category) => Category.fromJson(category)),
-    );
+    final List<StoryListItem> newsListFromGCP = allPostsJson
+        .map((post) => StoryListItem.fromJson(post))
+        .toList();
+
+    final List<dynamic> allCategoriesJson =
+        (jsonResponseFromGCP['allCategories'] as List?) ?? [];
+
+    final List<Category> categoryList = allCategoriesJson
+        .map((category) => Category.fromJson(category))
+        .toList();
 
     final matchedCategory = categoryList.firstWhere(
           (element) => element.slug == slug,
@@ -243,8 +249,8 @@ class TabStoryListServices implements TabStoryListRepos {
         ? matchedCategory.id
         : null;
 
-    print(' Available categories: ${categoryList.map((e) => e.slug).toList()}');
-    print(' Current slug: $slug, found categoryId: $categoryId');
+    print('Available categories: ${categoryList.map((e) => e.slug).toList()}');
+    print('Current slug: $slug, found categoryId: $categoryId');
 
     StoryListItem? featuredStory;
     if (categoryId != null) {
@@ -260,7 +266,7 @@ class TabStoryListServices implements TabStoryListRepos {
     if (featuredStory != null) {
       newsList.removeWhere((item) => item.id == featuredStory!.id);
       if (skip == 0) newsList.insert(0, featuredStory);
-      print(' Featured story added to top: ${featuredStory.name}');
+      print('Featured story added to top: ${featuredStory.name}');
     }
 
     return newsList;
