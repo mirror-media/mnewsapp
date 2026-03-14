@@ -24,18 +24,29 @@ class Topic {
   factory Topic.fromJson(Map<String, dynamic> json) {
     List<Paragraph>? brief;
     if (BaseModel.hasKey(json, 'brief') && json["brief"] != 'NaN') {
-      brief = Paragraph.parseResponseBody(json['brief'], isNotApiData: true);
+      try {
+        brief = Paragraph.parseResponseBody(json['brief'], isNotApiData: true);
+      } catch (_) {}
     }
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
+
+    final dynamic imageApiData = json['heroImage']?['imageApiData'];
+
+    if (imageApiData is String && imageApiData.isNotEmpty) {
+      photoUrl = imageApiData;
+    } else if (imageApiData is Map<String, dynamic>) {
+      photoUrl = imageApiData['urlMobileSized']?.toString() ??
+          imageApiData['urlOriginal']?.toString() ??
+          Environment().config.mirrorNewsDefaultImageUrl;
+    } else if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
       photoUrl = json['heroImage']['urlMobileSized'];
     }
 
     return Topic(
-      id: json[BaseModel.idKey],
-      name: json[BaseModel.nameKey],
-      slug: json['slug'],
+      id: json[BaseModel.idKey]?.toString() ?? '',
+      name: json[BaseModel.nameKey]?.toString() ?? '',
+      slug: json['slug']?.toString() ?? '',
       photoUrl: photoUrl,
       brief: brief,
       isFeatured: json['isFeatured'] ?? false,
