@@ -15,36 +15,37 @@ class EditorChoiceServices implements EditorChoiceRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
+  @override
   Future<List<StoryListItem>> fetchEditorChoiceList() async {
     final key = 'fetchEditorChoiceList';
 
     const String query = """
-    query(
-      \$where: EditorChoiceWhereInput,
-      \$take: Int
+  query(
+    \$where: EditorChoiceWhereInput,
+    \$take: Int
+  ) {
+    editorChoices(
+      where: \$where,
+      take: \$take,
+      orderBy: [{ sortOrder: asc }, { createdAt: desc }]
     ) {
-      editorChoices(
-        where: \$where,
-        take: \$take,
-        orderBy: [{ sortOrder: asc }, { createdAt: desc }]
-      ) {
-        choice {
-          id
-          name
-          slug
-          style
-          heroImage {
+      choice {
+        id
+        name
+        slug
+        style
+        heroImage {
+          imageApiData
+        }
+        heroVideo {
+          coverPhoto {
             imageApiData
-          }
-          heroVideo {
-            coverPhoto {
-              imageApiData
-            }
           }
         }
       }
     }
-    """;
+  }
+  """;
 
     final Map<String, dynamic> variables = {
       "where": {
@@ -62,6 +63,12 @@ class EditorChoiceServices implements EditorChoiceRepos {
       variables: variables,
     );
 
+    print('===== fetchEditorChoiceList NEW VERSION =====');
+    print('===== fetchEditorChoiceList graphqlApi =====');
+    print(Environment().config.graphqlApi);
+    print('===== fetchEditorChoiceList request body =====');
+    print(jsonEncode(graphqlBody.toJson()));
+
     final jsonResponse = await _helper.postByCacheAndAutoCache(
       key,
       Environment().config.graphqlApi,
@@ -70,16 +77,20 @@ class EditorChoiceServices implements EditorChoiceRepos {
       headers: {"Content-Type": "application/json"},
     );
 
-    final List<dynamic> parsedJson = [];
-    for (int i = 0; i < jsonResponse['data']['editorChoices'].length; i++) {
-      parsedJson.add(jsonResponse['data']['editorChoices'][i]['choice']);
-    }
+    print('===== fetchEditorChoiceList response =====');
+    print(jsonResponse);
 
-    final List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
-      parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)),
-    );
+    final List<dynamic> editorChoices =
+        (jsonResponse['data']?['editorChoices'] as List?) ?? [];
 
-    return editorChoiceList;
+    final List<dynamic> parsedJson = editorChoices
+        .map((item) => item['choice'])
+        .where((item) => item != null)
+        .toList();
+
+    return parsedJson
+        .map((editorChoice) => StoryListItem.fromJson(editorChoice))
+        .toList();
   }
 
   @override

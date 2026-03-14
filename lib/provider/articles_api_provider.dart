@@ -163,12 +163,12 @@ class ArticlesApiProvider extends GetConnect {
     const String query = """
   query(
     \$where: EditorChoiceWhereInput,
-    \$first: Int
+    \$take: Int
   ) {
-    allEditorChoices(
+    editorChoices(
       where: \$where,
-      first: \$first,
-      sortBy: [sortOrder_ASC, createdAt_DESC]
+      take: \$take,
+      orderBy: [{ sortOrder: asc }, { createdAt: desc }]
     ) {
       choice {
         id
@@ -190,12 +190,12 @@ class ArticlesApiProvider extends GetConnect {
 
     final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
+        "state": {"equals": "published"},
         "choice": {
-          "state": "published"
+          "state": {"equals": "published"}
         }
       },
-      "first": 10
+      "take": 10
     };
 
     final GraphqlBody graphqlBody = GraphqlBody(
@@ -204,7 +204,6 @@ class ArticlesApiProvider extends GetConnect {
       variables: variables,
     );
 
-    /// Debug 用：確認 endpoint 正確
     print('===== fetchEditorChoiceList graphqlApi =====');
     print(Environment().config.graphqlApi);
 
@@ -222,16 +221,11 @@ class ArticlesApiProvider extends GetConnect {
       },
     );
 
-    /// 防止 response 格式錯誤 crash
-    if (jsonResponse == null ||
-        jsonResponse['data'] == null ||
-        jsonResponse['data']['allEditorChoices'] == null) {
-      print('EditorChoice API response invalid: $jsonResponse');
-      return [];
-    }
+    print('===== fetchEditorChoiceList response =====');
+    print(jsonResponse);
 
     final List<dynamic> sourceList =
-    jsonResponse['data']['allEditorChoices'] as List<dynamic>;
+        (jsonResponse['data']?['editorChoices'] as List?) ?? [];
 
     final List<StoryListItem> editorChoiceList = sourceList
         .map((item) => item['choice'])
