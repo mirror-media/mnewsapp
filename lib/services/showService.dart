@@ -23,9 +23,18 @@ class ShowServices implements CategoryRepos, ShowRepos {
       headers: {"Accept": "application/json"},
     );
 
-    final List<Category> categoryList = List<Category>.from(
-      jsonResponse['allShows'].map((category) => Category.fromJson(category)),
-    );
+    print('===== ShowServices.fetchCategoryList raw response =====');
+    print(jsonResponse);
+
+    final List<dynamic> rawList =
+        (jsonResponse['shows'] as List?) ??
+            (jsonResponse['categories'] as List?) ??
+            (jsonResponse['allShows'] as List?) ??
+            [];
+
+    final List<Category> categoryList = rawList
+        .map((category) => Category.fromJson(category))
+        .toList();
 
     return categoryList;
   }
