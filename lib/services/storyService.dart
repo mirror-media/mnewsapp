@@ -17,20 +17,18 @@ class StoryServices implements StoryRepos {
   Future<Story> fetchPublishedStoryBySlug(String slug) async {
     print('[StoryService] fetchPublishedStoryBySlug("$slug")');
 
-    // 1) 先試站內
     try {
       final Story? internal = await _fetchInternal(slug);
       if (internal != null) {
         print('[StoryService] internal hit: $slug');
         return internal;
       } else {
-        print('[StoryService] internal miss: $slug → try external');
+        print('[StoryService] internal miss: $slug -> try external');
       }
     } catch (e) {
-      print('[StoryService] internal fetch error: $e → try external');
+      print('[StoryService] internal fetch error: $e -> try external');
     }
 
-    // 2) external
     print('[StoryService] >>> try external: $slug');
     final Story external = await _fetchExternalAndNormalize(slug);
     print('[StoryService] >>> external success: $slug (style=${external.style})');
@@ -38,27 +36,27 @@ class StoryServices implements StoryRepos {
   }
 
   Future<Story?> _fetchInternal(String slug) async {
-    final String key = 'fetchPublishedStoryBySlug?slug=$slug';
+    final String key = 'fetchPublishedStoryBySlug_internal?slug=$slug';
 
     const String internalQuery = """
     query (\$where: PostWhereInput) {
-      allPosts(where: \$where) {
+      posts(where: \$where) {
         style
         name
         briefApiData
         contentApiData
         publishTime
         updatedAt
-        heroImage { mobile: urlMobileSized, desktop: urlDesktopSized }
+        heroImage {
+          imageApiData
+        }
         heroVideo {
           coverPhoto {
-            tiny: urlTinySized
-            mobile: urlMobileSized
-            tablet: urlTabletSized
-            desktop: urlDesktopSized
-            original: urlOriginal
+            imageApiData
           }
-          file { publicUrl }
+          file {
+            url
+          }
           url
         }
         heroCaption
@@ -71,14 +69,23 @@ class StoryServices implements StoryRepos {
         vocals { name slug }
         otherbyline
         tags { id name slug }
-        relatedPosts { slug name heroImage { urlMobileSized } }
+        relatedPosts {
+          slug
+          name
+          heroImage {
+            imageApiData
+          }
+        }
         download { name url }
       }
     }
     """;
 
     final variables = {
-      "where": {"state": "published", "slug": slug}
+      "where": {
+        "state": {"equals": "published"},
+        "slug": {"equals": slug},
+      }
     };
 
     final GraphqlBody body = GraphqlBody(
@@ -92,32 +99,49 @@ class StoryServices implements StoryRepos {
       Environment().config.graphqlApi,
       jsonEncode(body.toJson()),
       maxAge: newsStoryCacheDuration,
-      headers: {"Content-Type": "application/json"},
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
     );
 
-    final list = jsonResponse?['data']?['allPosts'];
-    if (list is List && list.isNotEmpty) {
-      try {
-        final story = Story.fromJson(list[0]);
-        return story;
-      } catch (e) {
-        print('[StoryService] internal parse error: $e');
-        return null;
-      }
+    final list = _extractDataList(jsonResponse, 'posts');
+    if (list.isEmpty) {
+      print('[StoryService] internal empty posts for slug=$slug');
+      return null;
     }
-    return null;
+
+    try {
+      final raw = Map<String, dynamic>.from(list.first as Map);
+      final normalized = _normalizeInternalStory(raw);
+
+      print('[StoryService] internal normalized json = ${jsonEncode(normalized)}');
+
+      return Story.fromJson(normalized);
+    } catch (e) {
+      try {
+        print('[StoryService] internal parse error: $e');
+        print('[StoryService] internal raw json = ${jsonEncode(list.first)}');
+      } catch (_) {
+        print('[StoryService] internal parse error: $e');
+      }
+      return null;
+    }
   }
 
   Future<Story> _fetchExternalAndNormalize(String slug) async {
-    // ✅ debug：你要確認是不是 GraphQL 有回資料、是不是 published、partner 是誰
+    final String key = 'fetchPublishedStoryBySlug_external?slug=$slug';
+
     print('[ExternalTest] query slug=$slug');
 
     const String externalQuery = """
     query GetExternalBySlug(\$slug: String!) {
-      allExternals(
-        where: { state: published, slug: \$slug }
+      externals(
+        where: {
+          state: { equals: "published" }
+          slug: { equals: \$slug }
+        }
       ) {
-        _label_
         id
         slug
         name
@@ -147,39 +171,37 @@ class StoryServices implements StoryRepos {
       variables: {"slug": slug},
     );
 
-    final jsonResponse = await _helper.postByUrl(
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
       Environment().config.graphqlApi,
       jsonEncode(body.toJson()),
-      headers: {"Content-Type": "application/json"},
+      maxAge: newsStoryCacheDuration,
+      headers: {
+        "Content-Type": "application/json",
+        "Accept": "application/json",
+      },
     );
 
-    final errors = jsonResponse?['errors'];
-    final list = jsonResponse?['data']?['allExternals'];
-
-    final len = (list is List) ? list.length : -1;
-    if (list is! List || list.isEmpty) {
+    final list = _extractDataList(jsonResponse, 'externals');
+    if (list.isEmpty) {
       throw FormatException('External not found for slug=$slug');
     }
 
-    final Map<String, dynamic> ext = Map<String, dynamic>.from(list[0] as Map);
+    final Map<String, dynamic> ext = Map<String, dynamic>.from(list.first as Map);
 
-    // 先嘗試取 draft.html，缺少時用 *_original
     final String? briefHtmlRaw =
-        _extractHtml(ext['brief']) ?? (ext['brief_original'] as String?);
+        _extractHtml(ext['brief']) ?? _asString(ext['brief_original']);
     final String? contentHtmlRaw =
-        _extractHtml(ext['content']) ?? (ext['content_original'] as String?);
+        _extractHtml(ext['content']) ?? _asString(ext['content_original']);
 
     final String briefHtmlClean = _sanitizeHtml(briefHtmlRaw ?? '');
     final String contentHtmlClean = _sanitizeHtml(contentHtmlRaw ?? '');
 
-    // 若 external 自己就有 apiData，沿用；否則給空陣列，讓頁面優先 fallback HTML
-    final List<dynamic> briefApiData = _buildApiDataFromSection(ext['brief']);
-    final List<dynamic> contentApiData = _buildApiDataFromSection(ext['content']);
+    final List<dynamic> briefApiData = _normalizeApiDataBlocks(ext['brief']);
+    final List<dynamic> contentApiData = _normalizeApiDataBlocks(ext['content']);
 
+    String wrapApiDataString(List<dynamic> l) => jsonEncode({'apiData': l});
 
-    String _wrapApiDataString(List<dynamic> l) => jsonEncode({'apiData': l});
-
-    // 組 patched，讓 Story.fromJson 能吃，且攜帶 external*Html 給頁面 fallback 使用
     final Map<String, dynamic> patched = {
       'style': 'external',
       'name': ext['name'],
@@ -188,21 +210,15 @@ class StoryServices implements StoryRepos {
       'heroCaption': ext['heroCaption'],
       'otherbyline': ext['byline'],
       'heroImage': {
-        'mobile': ext['thumbnail'] ?? Environment().config.mirrorNewsDefaultImageUrl,
-        'desktop': ext['thumbnail'] ?? Environment().config.mirrorNewsDefaultImageUrl,
+        'imageApiData':
+        ext['thumbnail'] ?? Environment().config.mirrorNewsDefaultImageUrl,
       },
-      'categories': ext['categories'] ?? const [],
-      'tags': ext['tags'] ?? const [],
-
-      // external 若真的帶了 apiData 就沿用；沒有則給空（由頁面 fallback HTML）
-      'briefApiData': _wrapApiDataString(briefApiData),
-      'contentApiData': _wrapApiDataString(contentApiData),
-
-      // 乾淨 HTML（頁面 _buildBrief/_buildContent 直接 fallback 用）
+      'categories': _ensureList(ext['categories']),
+      'tags': _ensureList(ext['tags']),
+      'briefApiData': wrapApiDataString(briefApiData),
+      'contentApiData': wrapApiDataString(contentApiData),
       'externalBriefHtml': briefHtmlClean,
       'externalContentHtml': contentHtmlClean,
-
-      // 避免 NPE
       'writers': const [],
       'photographers': const [],
       'cameraOperators': const [],
@@ -214,29 +230,170 @@ class StoryServices implements StoryRepos {
     };
 
     try {
-      final story = Story.fromJson(patched);
-      return story;
+      return Story.fromJson(patched);
     } catch (e) {
       print('[StoryService] external normalize parse error: $e');
+      print('[StoryService] external patched json = ${jsonEncode(patched)}');
       throw FormatException('External normalize failed: $e');
     }
   }
 
-  /// 嘗試把 section（可能是 JSON 字串）解成物件後，拿出其中的 html 欄位。
+  List<dynamic> _extractDataList(dynamic jsonResponse, String fieldName) {
+    if (jsonResponse is! Map<String, dynamic>) return const [];
+
+    final data = jsonResponse['data'];
+    if (data is! Map<String, dynamic>) return const [];
+
+    final list = data[fieldName];
+    if (list is List) return list;
+
+    return const [];
+  }
+
+  List<dynamic> _ensureList(dynamic value) {
+    if (value is List) return value;
+    return const [];
+  }
+
+  String? _asString(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value;
+    return value.toString();
+  }
+
+  Map<String, dynamic> _normalizeInternalStory(Map<String, dynamic> raw) {
+    final Map<String, dynamic> patched = Map<String, dynamic>.from(raw);
+
+    patched['briefApiData'] = _wrapApiDataLikeStoryModel(raw['briefApiData']);
+    patched['contentApiData'] =
+        _wrapApiDataLikeStoryModel(raw['contentApiData']);
+
+    final heroImage = _asMap(raw['heroImage']);
+    if (heroImage != null) {
+      patched['heroImage'] = {
+        ...heroImage,
+        'imageApiData':
+        _normalizePossiblyComplexStringField(heroImage['imageApiData']),
+      };
+    } else {
+      patched['heroImage'] = {
+        'imageApiData': Environment().config.mirrorNewsDefaultImageUrl,
+      };
+    }
+
+    final heroVideo = _asMap(raw['heroVideo']);
+    if (heroVideo != null) {
+      final coverPhoto = _asMap(heroVideo['coverPhoto']);
+      patched['heroVideo'] = {
+        ...heroVideo,
+        if (coverPhoto != null)
+          'coverPhoto': {
+            ...coverPhoto,
+            'imageApiData': _normalizePossiblyComplexStringField(
+              coverPhoto['imageApiData'],
+            ),
+          },
+      };
+    }
+
+    if (raw['relatedPosts'] is List) {
+      patched['relatedPosts'] = (raw['relatedPosts'] as List).map((e) {
+        final item = _asMap(e);
+        if (item == null) return e;
+
+        final relatedHeroImage = _asMap(item['heroImage']);
+        return {
+          ...item,
+          if (relatedHeroImage != null)
+            'heroImage': {
+              ...relatedHeroImage,
+              'imageApiData': _normalizePossiblyComplexStringField(
+                relatedHeroImage['imageApiData'],
+              ),
+            },
+        };
+      }).toList();
+    }
+
+    patched['categories'] = _ensureList(raw['categories']);
+    patched['writers'] = _ensureList(raw['writers']);
+    patched['photographers'] = _ensureList(raw['photographers']);
+    patched['cameraOperators'] = _ensureList(raw['cameraOperators']);
+    patched['designers'] = _ensureList(raw['designers']);
+    patched['engineers'] = _ensureList(raw['engineers']);
+    patched['vocals'] = _ensureList(raw['vocals']);
+    patched['tags'] = _ensureList(raw['tags']);
+    patched['relatedPosts'] = _ensureList(patched['relatedPosts']);
+    patched['download'] = _ensureList(raw['download']);
+
+    return patched;
+  }
+
+  String _wrapApiDataLikeStoryModel(dynamic value) {
+    if (value == null) {
+      return jsonEncode({'apiData': []});
+    }
+
+    if (value is String) {
+      try {
+        final decoded = json.decode(value);
+        if (decoded is Map<String, dynamic> && decoded['apiData'] is List) {
+          return value;
+        }
+      } catch (_) {}
+
+      return jsonEncode({
+        'apiData': _normalizeApiDataBlocks(value),
+      });
+    }
+
+    if (value is List) {
+      return jsonEncode({'apiData': _normalizeApiDataBlocks(value)});
+    }
+
+    if (value is Map<String, dynamic>) {
+      if (value.containsKey('apiData')) {
+        return jsonEncode({
+          ...value,
+          'apiData': _normalizeApiDataBlocks(value),
+        });
+      }
+      return jsonEncode({'apiData': []});
+    }
+
+    return jsonEncode({'apiData': []});
+  }
+
+  dynamic _normalizePossiblyComplexStringField(dynamic value) {
+    if (value == null) return null;
+    if (value is String) return value;
+    if (value is List || value is Map) return jsonEncode(value);
+    return value.toString();
+  }
+
+  Map<String, dynamic>? _asMap(dynamic v) {
+    if (v is Map<String, dynamic>) return v;
+    if (v is Map) {
+      return Map<String, dynamic>.from(v);
+    }
+    return null;
+  }
+
   String? _extractHtml(dynamic section) {
     final obj = _coerceObj(section);
     if (obj == null) return null;
+
     final html = obj['html'];
     if (html is String && html.trim().isNotEmpty) {
       return html;
     }
+
     return null;
   }
 
   String _sanitizeHtml(String html) {
     var s = html;
 
-    // 反跳脫（保險）
     s = s
         .replaceAll(r'\"', '"')
         .replaceAll(r"\'", "'")
@@ -244,7 +401,6 @@ class StoryServices implements StoryRepos {
         .replaceAll(r'\n', '\n')
         .replaceAll(r'\t', '\t');
 
-    // figure → div
     s = s
         .replaceAll(RegExp(r'<\s*figure\b', caseSensitive: false), '<div')
         .replaceAll(RegExp(r'</\s*figure\s*>', caseSensitive: false), '</div>');
@@ -252,25 +408,70 @@ class StoryServices implements StoryRepos {
     return s;
   }
 
-  List<dynamic> _buildApiDataFromSection(dynamic section) {
-    final obj = _coerceObj(section);
-    final maybeApi = obj?['apiData'];
-    if (maybeApi is List && maybeApi.isNotEmpty) {
-      final ok = maybeApi.whereType<Map>().every((e) => e.containsKey('type'));
-      if (ok) return maybeApi;
-    }
-    return const [];
-  }
-
   Map<String, dynamic>? _coerceObj(dynamic v) {
     if (v == null) return null;
+
     if (v is Map<String, dynamic>) return v;
+
+    if (v is Map) {
+      return Map<String, dynamic>.from(v);
+    }
+
     if (v is String) {
       try {
         final decoded = json.decode(v);
         if (decoded is Map<String, dynamic>) return decoded;
+        if (decoded is Map) return Map<String, dynamic>.from(decoded);
       } catch (_) {}
     }
+
     return null;
+  }
+
+  List<dynamic> _normalizeApiDataBlocks(dynamic value) {
+    List<dynamic> blocks = [];
+
+    if (value == null) return blocks;
+
+    if (value is List) {
+      blocks = value;
+    } else if (value is Map<String, dynamic>) {
+      final apiData = value['apiData'];
+      if (apiData is List) {
+        blocks = apiData;
+      }
+    } else if (value is Map) {
+      final mapValue = Map<String, dynamic>.from(value);
+      final apiData = mapValue['apiData'];
+      if (apiData is List) {
+        blocks = apiData;
+      }
+    } else if (value is String) {
+      try {
+        final decoded = json.decode(value);
+        if (decoded is Map<String, dynamic> && decoded['apiData'] is List) {
+          blocks = decoded['apiData'] as List<dynamic>;
+        } else if (decoded is List) {
+          blocks = decoded;
+        }
+      } catch (_) {}
+    }
+
+    return blocks.map((block) {
+      if (block is! Map) return block;
+
+      final map = Map<String, dynamic>.from(block);
+      final rawContent = map['content'];
+
+      if (rawContent is List) {
+        map['content'] = rawContent.map((e) => e.toString()).join('\n');
+      } else if (rawContent == null) {
+        map['content'] = '';
+      } else if (rawContent is! String) {
+        map['content'] = rawContent.toString();
+      }
+
+      return map;
+    }).toList();
   }
 }

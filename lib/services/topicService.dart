@@ -8,187 +8,208 @@ import 'package:tv/models/topic.dart';
 import 'package:tv/models/topicStoryList.dart';
 
 class TopicService {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   Future<List<Topic>> fetchFeaturedTopics() async {
-    String key = 'fetchFeaturedTopics';
+    const String key = 'fetchFeaturedTopics';
 
-    Map<String, dynamic> variables = {
-      "where": {"state": "published"},
-      "first": 5
+    final Map<String, dynamic> variables = {
+      "where": {
+        "state": {"equals": "published"}
+      },
+      "take": 5,
     };
 
-    final String query = """
+    const String query = """
     query (
-    \$where: TopicWhereInput,
-    \$first: Int,
+      \$where: TopicWhereInput,
+      \$take: Int
     ) {
-    allTopics(
-      where: \$where, 
-      first: \$first, 
-      sortBy: [ sortOrder_ASC, updatedBy_DESC ]
-    ) {
-      id
-      slug
-      name
-      isFeatured
+      topics(
+        where: \$where,
+        take: \$take,
+        orderBy: [{ sortOrder: asc }, { updatedAt: desc }]
+      ) {
+        id
+        slug
+        name
+        isFeatured
       }
     }
     """;
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
-    late final jsonResponse;
-    jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: featuredTopicCacheDuration,
-        headers: {"Content-Type": "application/json"});
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: featuredTopicCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<Topic> topics = List<Topic>.from(jsonResponse['data']['allTopics']
-        .map((topic) => Topic.fromJson(topic)));
+    final List<Topic> topics = List<Topic>.from(
+      jsonResponse['data']['topics'].map((topic) => Topic.fromJson(topic)),
+    );
 
     return topics;
   }
 
   Future<List<Topic>> fetchTopicList() async {
-    String key = 'fetchTopicList';
+    const String key = 'fetchTopicList';
 
-    Map<String, dynamic> variables = {
-      "where": {"state": "published"}
+    final Map<String, dynamic> variables = {
+      "where": {
+        "state": {"equals": "published"}
+      }
     };
 
-    final String query = """
+    const String query = """
     query (
-    \$where: TopicWhereInput,
-  ) {
-    allTopics(
-      where: \$where,
-      sortBy: [sortOrder_ASC, updatedBy_DESC ]
+      \$where: TopicWhereInput
     ) {
-      id
-      slug
-      name
-      brief
-      isFeatured
-      heroImage{
-        urlMobileSized
+      topics(
+        where: \$where,
+        orderBy: [{ sortOrder: asc }, { updatedAt: desc }]
+      ) {
+        id
+        slug
+        name
+        brief
+        isFeatured
+        heroImage {
+          imageApiData
+        }
       }
     }
-  }
     """;
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
-    late final jsonResponse;
-    jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: topicListCacheDuration,
-        headers: {"Content-Type": "application/json"});
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: topicListCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<Topic> topics = List<Topic>.from(jsonResponse['data']['allTopics']
-        .map((topic) => Topic.fromJson(topic)));
+    final List<Topic> topics = List<Topic>.from(
+      jsonResponse['data']['topics'].map((topic) => Topic.fromJson(topic)),
+    );
+
     return topics;
   }
 
   Future<TopicStoryList> fetchTopicStoryList(
-    String slug, {
-    int skip = 0,
-    int first = 8,
-    bool withCount = true,
-  }) async {
-    String key = 'fetchTopicStoryList&slug=$slug&skip=$skip';
+      String slug, {
+        int skip = 0,
+        int first = 8,
+        bool withCount = true,
+      }) async {
+    final String key = 'fetchTopicStoryList&slug=$slug&skip=$skip';
 
-    Map<String, dynamic> variables = {
-      "where": {"state": "published", "slug": slug},
-      "first": first,
+    final Map<String, dynamic> variables = {
+      "where": {
+        "state": {"equals": "published"},
+        "slug": {"equals": slug}
+      },
+      "take": first,
       "skip": skip,
-      "withCount": withCount
+      "withCount": withCount,
     };
 
-    final String query = """
+    const String query = """
     query (
-    \$where: TopicWhereInput,
-    \$first: Int,
-    \$skip: Int,
-    \$withCount: Boolean!
-  ) {
-    allTopics(
-      where: \$where
+      \$where: TopicWhereInput,
+      \$take: Int,
+      \$skip: Int,
+      \$withCount: Boolean!
     ) {
-      leading
-      heroImage{
-        urlMobileSized
-      }
-      heroVideo{
-				url
-			}
-      multivideo{
-				url
-			}
-			slideshow{
-				id
-				name
-				slug
-				categories{
+      topics(
+        where: \$where
+      ) {
+        leading
+        heroImage {
+          imageApiData
+        }
+        heroVideo {
+          url
+        }
+        multivideo {
+          url
+        }
+        slideshow {
+          id
           name
+          slug
+          categories {
+            name
+          }
+          heroImage {
+            imageApiData
+          }
         }
-        heroImage{
-          urlMobileSized
-        }
-			}
-      post(
-        where: {state: published},
-        sortBy: [updatedAt_DESC],
-        first: \$first,
-        skip: \$skip
-      ){
-        id
-        name
-        slug
-        categories{
+        post(
+          where: {
+            state: { equals: "published" }
+          }
+          orderBy: [{ updatedAt: desc }]
+          take: \$take
+          skip: \$skip
+        ) {
+          id
           name
+          slug
+          categories {
+            name
+          }
+          heroImage {
+            imageApiData
+          }
         }
-        heroImage{
-          urlMobileSized
-        }
-      }
-      _postMeta(
-        where: {state: published}
-       )@include(if: \$withCount){
-        count
+        postCount(
+          where: {
+            state: { equals: "published" }
+          }
+        ) @include(if: \$withCount)
       }
     }
-  }
     """;
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
-    late final jsonResponse;
+    late final dynamic jsonResponse;
     if (skip > 16) {
       jsonResponse = await _helper.postByUrl(
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          headers: {"Content-Type": "application/json"});
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          maxAge: newsTabStoryList,
-          headers: {"Content-Type": "application/json"});
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {"Content-Type": "application/json"},
+      );
     }
 
-    TopicStoryList topicStoryList = TopicStoryList.fromJson(
-      jsonResponse['data']['allTopics'][0],
+    final TopicStoryList topicStoryList = TopicStoryList.fromJson(
+      jsonResponse['data']['topics'][0],
       withCount: withCount,
     );
 

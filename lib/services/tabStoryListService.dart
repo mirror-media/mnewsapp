@@ -18,7 +18,7 @@ abstract class TabStoryListRepos {
 }
 
 class TabStoryListServices implements TabStoryListRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
   String? postStyle;
 
   @override
@@ -28,27 +28,25 @@ class TabStoryListServices implements TabStoryListRepos {
   query (
     \$where: PostWhereInput,
     \$skip: Int,
-    \$first: Int,
-    \$withCount: Boolean!,
+    \$take: Int,
+    \$withCount: Boolean!
   ) {
-    allPosts(
-      where: \$where, 
-      skip: \$skip, 
-      first: \$first, 
-      sortBy: [ publishTime_DESC ]
+    posts(
+      where: \$where,
+      skip: \$skip,
+      take: \$take,
+      orderBy: [{ publishTime: desc }]
     ) {
       id
       slug
       name
       heroImage {
-        urlMobileSized
+        imageApiData
       }
     }
-    _allPostsMeta(
-      where: \$where,
-    ) @include(if: \$withCount) {
-      count
-    }
+    postsCount(
+      where: \$where
+    ) @include(if: \$withCount)
   }
   """;
 
@@ -61,102 +59,49 @@ class TabStoryListServices implements TabStoryListRepos {
       {int skip = 0, int first = 20, bool withCount = true}) async {
     String key = 'fetchStoryList?skip=$skip&first=$first';
     if (postStyle != null) {
-      key = key + '&postStyle=$postStyle';
+      key = '$key&postStyle=$postStyle';
     }
-    List<StoryListItem> editorChoiceList =
+
+    final List<StoryListItem> editorChoiceList =
     await EditorChoiceServices().fetchEditorChoiceList();
-    List<String> filterSlugList = [];
+
+    final List<String> filterSlugList = [];
     filterSlugList.addAll(filteredSlug);
-    editorChoiceList.forEach((element) {
+    for (final element in editorChoiceList) {
       if (element.slug != null) filterSlugList.add(element.slug!);
-    });
+    }
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "slug_not_in": filterSlugList,
-        "categories_every": {"slug_not_in": "ombuds"},
+        "state": {"equals": "published"},
+        "style": {
+          "notIn": ["wide", "projects", "script", "campaign", "readr"]
+        },
+        "slug": {
+          "notIn": filterSlugList
+        },
+        "categories": {
+          "every": {
+            "slug": {
+              "notIn": ["ombuds"]
+            }
+          }
+        },
       },
       "skip": skip,
-      "first": first,
-      'withCount': withCount,
+      "take": first,
+      "withCount": withCount,
     };
 
     if (postStyle != null) {
-      variables["where"].addAll({"style": postStyle});
+      variables["where"].addAll({
+        "style": {
+          "equals": postStyle,
+        }
+      });
     }
 
-    GraphqlBody graphqlBody = GraphqlBody(
-      operationName: null,
-      query: query,
-      variables: variables,
-    );
-
-    late final jsonResponse;
-    if (skip > 40) {
-      jsonResponse = await _helper.postByUrl(
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          headers: {"Content-Type": "application/json"});
-    } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          maxAge: newsTabStoryList,
-          headers: {"Content-Type": "application/json"});
-    }
-
-    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
-    ['allPosts']
-        .map((post) => StoryListItem.fromJson(post)));
-
-    if (withCount) {
-      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
-    }
-
-    return newsList;
-  }
-
-  //整合新邏輯：同時支援一般分類與鏡報 external
-  @override
-  Future<List<StoryListItem>> fetchStoryListByCategorySlug(
-      String slug, {
-        int skip = 0,
-        int first = 20,
-        bool withCount = true,
-      }) async {
-    // Step 0. 特殊處理鏡報（mirrordaily）
-    if (slug == 'mirrordaily') {
-      print(' Slug = mirrordaily → 改走 allExternals partnerId = 2');
-      return await fetchExternalListByPartnerId(
-        partnerId: "2",
-        first: first,
-        skip: skip,
-      );
-    }
-
-    // Step 1. 一般分類查詢（維持原本邏輯）
-    String key =
-        'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
-    if (postStyle != null) {
-      key = key + '&postStyle=$postStyle';
-    }
-
-    Map<String, dynamic> variables = {
-      "where": {
-        "state": "published",
-        "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "categories_some": {"slug": slug},
-      },
-      "skip": skip,
-      "first": first,
-      'withCount': withCount,
-    };
-
-    if (postStyle != null) {
-      variables["where"].addAll({"style": postStyle!});
-    }
-
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
@@ -179,23 +124,100 @@ class TabStoryListServices implements TabStoryListRepos {
       );
     }
 
-    List<StoryListItem> newsList = List<StoryListItem>.from(
-      jsonResponse['data']['allPosts']
-          .map((post) => StoryListItem.fromJson(post)),
+    final List<StoryListItem> newsList = List<StoryListItem>.from(
+      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
     );
 
-    if (withCount && jsonResponse['data']['_allPostsMeta'] != null) {
-      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+    if (withCount) {
+      allStoryCount = jsonResponse['data']['postsCount'];
     }
 
-    // Step 2. 以下保留 GCP featured JSON 流程
+    return newsList;
+  }
+
+  @override
+  Future<List<StoryListItem>> fetchStoryListByCategorySlug(
+      String slug, {
+        int skip = 0,
+        int first = 20,
+        bool withCount = true,
+      }) async {
+    if (slug == 'mirrordaily') {
+      print(' Slug = mirrordaily → 改走 externals partnerId = 2');
+      return await fetchExternalListByPartnerId(
+        partnerId: "2",
+        first: first,
+        skip: skip,
+      );
+    }
+
+    String key =
+        'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
+    if (postStyle != null) {
+      key = '$key&postStyle=$postStyle';
+    }
+
+    final Map<String, dynamic> variables = {
+      "where": {
+        "state": {"equals": "published"},
+        "style": {
+          "notIn": ["wide", "projects", "script", "campaign", "readr"]
+        },
+        "categories": {
+          "some": {
+            "slug": {"equals": slug}
+          }
+        },
+      },
+      "skip": skip,
+      "take": first,
+      "withCount": withCount,
+    };
+
+    if (postStyle != null) {
+      variables["where"].addAll({
+        "style": {"equals": postStyle}
+      });
+    }
+
+    final GraphqlBody graphqlBody = GraphqlBody(
+      operationName: null,
+      query: query,
+      variables: variables,
+    );
+
+    late final jsonResponse;
+    if (skip > 40) {
+      jsonResponse = await _helper.postByUrl(
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
+    } else {
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {"Content-Type": "application/json"},
+      );
+    }
+
+    final List<StoryListItem> newsList = List<StoryListItem>.from(
+      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
+    );
+
+    if (withCount) {
+      allStoryCount = jsonResponse['data']['postsCount'];
+    }
+
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
       Environment().config.categoriesUrl,
       maxAge: categoryCacheDuration,
       headers: {"Accept": "application/json"},
     );
 
-    List<StoryListItem> newsListFromGCP = List<StoryListItem>.from(
+    final List<StoryListItem> newsListFromGCP = List<StoryListItem>.from(
       jsonResponseFromGCP['allPosts']
           .map((post) => StoryListItem.fromJson(post)),
     );
@@ -206,101 +228,98 @@ class TabStoryListServices implements TabStoryListRepos {
       headers: {"Accept": "application/json"},
     );
 
-    List<Category> _categoryList = List<Category>.from(
+    final List<Category> categoryList = List<Category>.from(
       jsonResponseGCP['allCategories']
           .map((category) => Category.fromJson(category)),
     );
 
-    final matchedCategory = _categoryList.firstWhere(
+    final matchedCategory = categoryList.firstWhere(
           (element) => element.slug == slug,
       orElse: () => Category(id: '', slug: '', name: ''),
     );
 
-    String? _categoryId =
+    final String? categoryId =
     (matchedCategory.id != null && matchedCategory.id!.isNotEmpty)
         ? matchedCategory.id
         : null;
 
-    print(' Available categories: ${_categoryList.map((e) => e.slug).toList()}');
-    print(' Current slug: $slug, found categoryId: $_categoryId');
+    print(' Available categories: ${categoryList.map((e) => e.slug).toList()}');
+    print(' Current slug: $slug, found categoryId: $categoryId');
 
-    StoryListItem? _featuredStory;
-    if (_categoryId != null) {
+    StoryListItem? featuredStory;
+    if (categoryId != null) {
       for (final story in newsListFromGCP) {
         if (story.categoryList != null &&
-            story.categoryList!
-                .any((category) => category.id == _categoryId)) {
-          _featuredStory = story;
+            story.categoryList!.any((category) => category.id == categoryId)) {
+          featuredStory = story;
           break;
         }
       }
     }
 
-    if (_featuredStory != null) {
-      newsList.removeWhere((item) => item.id == _featuredStory!.id);
-      if (skip == 0) newsList.insert(0, _featuredStory);
-      print(' Featured story added to top: ${_featuredStory.name}');
+    if (featuredStory != null) {
+      newsList.removeWhere((item) => item.id == featuredStory!.id);
+      if (skip == 0) newsList.insert(0, featuredStory);
+      print(' Featured story added to top: ${featuredStory.name}');
     }
 
     return newsList;
   }
 
-  //  鏡報 external 專用查詢
   Future<List<StoryListItem>> fetchExternalListByPartnerId({
     required String partnerId,
     int skip = 0,
     int first = 20,
   }) async {
     const String externalQuery = """
-  query GetAllExternalFields(\$first: Int!, \$partnerId: ID!) {
-    allExternals(
-      where: { 
-        state: published, 
-        partner: { id: \$partnerId }
-      }
-      first: \$first
-      sortBy: updatedAt_DESC
-    ) {
-      _label_
-      id
-      slug
-      name
-      subtitle
-      state
-      partner {
+    query GetAllExternalFields(\$take: Int!, \$partnerId: ID!) {
+      externals(
+        where: {
+          state: { equals: "published" }
+          partner: { id: { equals: \$partnerId } }
+        }
+        take: \$take
+        orderBy: [{ updatedAt: desc }]
+      ) {
         id
-        name
         slug
-      }
-      publishTime
-      byline
-      thumbnail
-      heroCaption
-      brief_original
-      content_original
-      brief
-      content
-      tags {
-        id
         name
-        slug
+        subtitle
+        state
+        partner {
+          id
+          name
+          slug
+        }
+        publishTime
+        byline
+        thumbnail
+        heroCaption
+        brief_original
+        content_original
+        brief
+        content
+        tags {
+          id
+          name
+          slug
+        }
+        categories {
+          id
+          name
+          slug
+        }
+        source
+        updatedAt
+        createdAt
       }
-      categories {
-        id
-        name
-        slug
-      }
-      source
-      updatedAt
-      createdAt
     }
-  }
-""";
+    """;
 
     final GraphqlBody graphqlBody = GraphqlBody(
       operationName: 'GetAllExternalFields',
       query: externalQuery,
-      variables: {"first": first, "partnerId": partnerId},
+      variables: {"take": first, "partnerId": partnerId},
     );
 
     final jsonResponse = await _helper.postByUrl(
@@ -308,8 +327,9 @@ class TabStoryListServices implements TabStoryListRepos {
       jsonEncode(graphqlBody.toJson()),
       headers: {"Content-Type": "application/json"},
     );
+
     return List<StoryListItem>.from(
-      jsonResponse['data']['allExternals']
+      jsonResponse['data']['externals']
           .map((post) => StoryListItem.fromJson(post)),
     );
   }
@@ -324,10 +344,10 @@ class TabStoryListServices implements TabStoryListRepos {
     }
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);
-    List<StoryListItem> storyListItemList = List<StoryListItem>.from(
-        jsonResponse['report'].map((post) => StoryListItem.fromJson(post)));
+    final List<StoryListItem> storyListItemList = List<StoryListItem>.from(
+      jsonResponse['report'].map((post) => StoryListItem.fromJson(post)),
+    );
 
     return storyListItemList;
   }
 }
-

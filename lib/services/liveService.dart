@@ -12,40 +12,42 @@ abstract class LiveRepos {
 }
 
 class LiveServices implements LiveRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<String> fetchLiveIdByPostId(String id) async {
-    final String query = """
+    const String query = """
     query(
-      \$where: VideoWhereUniqueInput!,
-    ){
-      Video(
+      \$where: VideoWhereUniqueInput!
+    ) {
+      video(
         where: \$where
-      ){
+      ) {
         youtubeUrl
       }
-    }    
+    }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {"id": id}
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByUrl(
-        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        headers: {"Content-Type": "application/json"});
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
 
     String? youtubeId;
     try {
       youtubeId =
-          VideoId.parseVideoId(jsonResponse['data']['Video']['youtubeUrl']);
+          VideoId.parseVideoId(jsonResponse['data']['video']['youtubeUrl']);
     } catch (e) {
       throw FormatException(e.toString());
     }
@@ -53,60 +55,69 @@ class LiveServices implements LiveRepos {
   }
 
   Future<List<LiveCamItem>> fetchLiveIdByPostCategory(String category) async {
-    final String query = """
+    const String query = """
     query(
-      \$where: VideoWhereInput!,
-    ){
-     allVideos(
+      \$where: VideoWhereInput!
+    ) {
+      videos(
         where: \$where
-        sortBy: [ publishTime_DESC ]
-      ){
+        orderBy: [{ publishTime: desc }]
+      ) {
         youtubeUrl
       }
-    }    
+    }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "categories_some": {"slug_in": category}
+        "categories": {
+          "some": {
+            "slug": {"in": [category]}
+          }
+        }
       }
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByUrl(
-        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        headers: {"Content-Type": "application/json"});
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<String> youtubeIdList = [];
-    List<LiveCamItem> liveCamList = [];
+    final List<String> youtubeIdList = [];
+    final List<LiveCamItem> liveCamList = [];
+
     try {
-      if (jsonResponse['data']['allVideos'] != null) {
-        jsonResponse['data']['allVideos'].forEach((video) {
+      if (jsonResponse['data']['videos'] != null) {
+        jsonResponse['data']['videos'].forEach((video) {
           if (video['youtubeUrl'] != null) {
-            String? youtubeId = VideoId.parseVideoId(video['youtubeUrl']);
+            final String? youtubeId = VideoId.parseVideoId(video['youtubeUrl']);
             if (youtubeId != null) youtubeIdList.add(youtubeId);
           }
         });
 
-        YoutubeExplode yt = YoutubeExplode();
-        for (var item in youtubeIdList) {
-          Video video = await yt.videos.get(item);
+        final YoutubeExplode yt = YoutubeExplode();
+        for (final item in youtubeIdList) {
+          final Video video = await yt.videos.get(item);
           String videoUrl;
+
           if (video.isLive) {
-            videoUrl = await yt.videos.streamsClient
-                .getHttpLiveStreamUrl(VideoId(item));
+            videoUrl =
+            await yt.videos.streamsClient.getHttpLiveStreamUrl(VideoId(item));
           } else {
-            var manifest = await yt.videos.streamsClient.getManifest(item);
-            var streamInfo = manifest.muxed.sortByVideoQuality().first;
+            final manifest = await yt.videos.streamsClient.getManifest(item);
+            final streamInfo = manifest.muxed.sortByVideoQuality().first;
             videoUrl = streamInfo.url.toString();
           }
-          final reponse = await http.get(Uri.parse(videoUrl));
-          if (reponse.statusCode == 200) {
+
+          final response = await http.get(Uri.parse(videoUrl));
+          if (response.statusCode == 200) {
             liveCamList.add(LiveCamItem(youtubeId: item, isLive: video.isLive));
           }
         }
@@ -115,6 +126,7 @@ class LiveServices implements LiveRepos {
     } catch (e) {
       throw FormatException(e.toString());
     }
+
     return liveCamList;
   }
 }

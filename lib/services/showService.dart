@@ -13,17 +13,19 @@ abstract class ShowRepos {
 }
 
 class ShowServices implements CategoryRepos, ShowRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<List<Category>> fetchCategoryList() async {
     final jsonResponse = await _helper.getByCacheAndAutoCache(
-        Environment().config.categoriesUrl,
-        maxAge: categoryCacheDuration,
-        headers: {"Accept": "application/json"});
+      Environment().config.categoriesUrl,
+      maxAge: categoryCacheDuration,
+      headers: {"Accept": "application/json"},
+    );
 
-    List<Category> categoryList = List<Category>.from(jsonResponse['allShows']
-        .map((category) => Category.fromJson(category)));
+    final List<Category> categoryList = List<Category>.from(
+      jsonResponse['allShows'].map((category) => Category.fromJson(category)),
+    );
 
     return categoryList;
   }
@@ -32,17 +34,17 @@ class ShowServices implements CategoryRepos, ShowRepos {
   Future<ShowIntro> fetchShowIntroById(String id) async {
     final key = 'fetchShowIntroById?id=$id';
 
-    String query = """
+    const String query = """
     query (
-      \$where: ShowWhereUniqueInput!,
+      \$where: ShowWhereUniqueInput!
     ) {
-      Show(
-        where: \$where,
+      show(
+        where: \$where
       ) {
         name
         introduction
         picture {
-          urlMobileSized
+          imageApiData
         }
         playList01
         playList02
@@ -50,22 +52,25 @@ class ShowServices implements CategoryRepos, ShowRepos {
     }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {"id": id}
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: showIntroCacheDuration,
-        headers: {"Content-Type": "application/json"});
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: showIntroCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    ShowIntro showIntro = ShowIntro.fromJson(jsonResponse['data']['Show']);
+    final ShowIntro showIntro = ShowIntro.fromJson(jsonResponse['data']['show']);
     return showIntro;
   }
 }
