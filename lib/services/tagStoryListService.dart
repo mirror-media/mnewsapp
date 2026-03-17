@@ -13,6 +13,7 @@ abstract class TagStoryListRepos {
         int first = 10,
         bool withCount = true,
       });
+
   int allStoryCount = 0;
 }
 
@@ -38,10 +39,42 @@ class TagStoryListServices implements TagStoryListRepos {
       id
       slug
       name
+      url
+      style
+
       heroImage {
         imageApiData
+        url
+        urlMobileSized
+        mobile
+        w480
+        w800
+        w1200
+        original
+        src
+      }
+
+      heroVideo {
+        coverPhoto {
+          imageApiData
+          url
+          urlMobileSized
+          mobile
+          w480
+          w800
+          w1200
+          original
+          src
+        }
+      }
+
+      categories {
+        id
+        slug
+        name
       }
     }
+
     postsCount(
       where: \$where
     ) @include(if: \$withCount)
@@ -96,11 +129,12 @@ class TagStoryListServices implements TagStoryListRepos {
     }
 
     final List<StoryListItem> newsList = List<StoryListItem>.from(
-      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['data']['posts'] as List<dynamic>)
+          .map((post) => StoryListItem.fromJson(post)),
     );
 
     if (withCount) {
-      allStoryCount = jsonResponse['data']['postsCount'];
+      allStoryCount = jsonResponse['data']['postsCount'] ?? 0;
     }
 
     return newsList;

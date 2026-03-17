@@ -105,7 +105,8 @@ class Story {
     // ---- heroImage ----
     String? heroImage = Environment().config.mirrorNewsDefaultImageUrl;
     final heroImageJson = json['heroImage'];
-    final parsedHeroImage = _extractImageUrlFromNode(heroImageJson);
+    final parsedHeroImage = _extractImageUrlFromNode(heroImageJson) ??
+        _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']);
     if (parsedHeroImage != null && parsedHeroImage.isNotEmpty) {
       heroImage = parsedHeroImage;
       imageUrlList.insert(0, heroImage);
@@ -345,22 +346,43 @@ class Story {
   }
   static String? _extractImageUrlFromNode(dynamic imageNode) {
     if (imageNode == null) return null;
+    if (imageNode is! Map) return null;
 
-    if (imageNode is Map<String, dynamic>) {
-      final imageApiData = imageNode['imageApiData'];
-      final k6Url = _extractUrlFromImageApiData(imageApiData);
-      if (k6Url != null && k6Url.isNotEmpty) {
-        return k6Url;
+    final map = imageNode is Map<String, dynamic>
+        ? imageNode
+        : Map<String, dynamic>.from(imageNode);
+
+    final imageApiData = map['imageApiData'];
+    final k6Url = _extractUrlFromImageApiData(imageApiData);
+    if (k6Url != null && k6Url.isNotEmpty) {
+      return k6Url;
+    }
+
+    const directKeys = [
+      'url',
+      'urlMobileSized',
+      'mobile',
+      'w800',
+      'w480',
+      'w1200',
+      'original',
+      'src',
+    ];
+
+    for (final key in directKeys) {
+      final value = map[key];
+      if (value is String && value.isNotEmpty) {
+        return value;
       }
+      if (value is Map) {
+        final nested = value is Map<String, dynamic>
+            ? value
+            : Map<String, dynamic>.from(value);
 
-      final mobile = imageNode['mobile'];
-      if (mobile is String && mobile.isNotEmpty) {
-        return mobile;
-      }
-
-      final legacyMobile = imageNode['urlMobileSized'];
-      if (legacyMobile is String && legacyMobile.isNotEmpty) {
-        return legacyMobile;
+        final nestedUrl = nested['url'];
+        if (nestedUrl is String && nestedUrl.isNotEmpty) {
+          return nestedUrl;
+        }
       }
     }
 

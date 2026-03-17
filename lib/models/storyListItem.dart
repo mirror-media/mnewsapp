@@ -177,7 +177,12 @@ class StoryListItem {
     photoUrl = _extractImageUrlFromNode(json['heroImage']) ??
         _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']) ??
         Environment().config.mirrorNewsDefaultImageUrl;
-
+    if (photoUrl == Environment().config.mirrorNewsDefaultImageUrl) {
+      print('=== image fallback triggered ===');
+      print('slug = ${json['slug']}');
+      print('heroImage = ${json['heroImage']}');
+      print('heroVideo.coverPhoto = ${json['heroVideo']?['coverPhoto']}');
+    }
     String? displayCategory;
     List<Category>? allPostsCategory;
     if (json['categories'] != null) {
@@ -215,27 +220,44 @@ class StoryListItem {
 
   static String? _extractImageUrlFromNode(dynamic imageNode) {
     if (imageNode == null) return null;
+    if (imageNode is! Map) return null;
 
-    if (imageNode is Map<String, dynamic>) {
-      final imageApiData = imageNode['imageApiData'];
-      final k6Url = _extractUrlFromImageApiData(imageApiData);
-      if (k6Url != null && k6Url.isNotEmpty) {
-        return k6Url;
-      }
+    final map = imageNode is Map<String, dynamic>
+        ? imageNode
+        : Map<String, dynamic>.from(imageNode);
 
-      final legacyUrl = imageNode['urlMobileSized'];
-      if (legacyUrl is String && legacyUrl.isNotEmpty) {
-        return legacyUrl;
-      }
-
-      final mobile = imageNode['mobile'];
-      if (mobile is String && mobile.isNotEmpty) {
-        return mobile;
-      }
+    final imageApiData = map['imageApiData'];
+    final k6Url = _extractUrlFromImageApiData(imageApiData);
+    if (k6Url != null && k6Url.isNotEmpty) {
+      return k6Url;
     }
 
-    if (imageNode is Map) {
-      return _extractImageUrlFromNode(Map<String, dynamic>.from(imageNode));
+    const directKeys = [
+      'url',
+      'urlMobileSized',
+      'mobile',
+      'w800',
+      'w480',
+      'w1200',
+      'original',
+      'src',
+    ];
+
+    for (final key in directKeys) {
+      final value = map[key];
+      if (value is String && value.isNotEmpty) {
+        return value;
+      }
+      if (value is Map) {
+        final nested = value is Map<String, dynamic>
+            ? value
+            : Map<String, dynamic>.from(value);
+
+        final nestedUrl = nested['url'];
+        if (nestedUrl is String && nestedUrl.isNotEmpty) {
+          return nestedUrl;
+        }
+      }
     }
 
     return null;

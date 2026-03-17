@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
@@ -40,10 +41,42 @@ class TabStoryListServices implements TabStoryListRepos {
       id
       slug
       name
+      url
+      style
+
       heroImage {
         imageApiData
+        url
+        urlMobileSized
+        mobile
+        w480
+        w800
+        w1200
+        original
+        src
+      }
+
+      heroVideo {
+        coverPhoto {
+          imageApiData
+          url
+          urlMobileSized
+          mobile
+          w480
+          w800
+          w1200
+          original
+          src
+        }
+      }
+
+      categories {
+        id
+        slug
+        name
       }
     }
+
     postsCount(
       where: \$where
     ) @include(if: \$withCount)
@@ -95,9 +128,7 @@ class TabStoryListServices implements TabStoryListRepos {
 
     if (postStyle != null) {
       variables["where"].addAll({
-        "style": {
-          "equals": postStyle,
-        }
+        "style": {"equals": postStyle}
       });
     }
 
@@ -107,7 +138,7 @@ class TabStoryListServices implements TabStoryListRepos {
       variables: variables,
     );
 
-    late final jsonResponse;
+    late final dynamic jsonResponse;
     if (skip > 40) {
       jsonResponse = await _helper.postByUrl(
         Environment().config.graphqlApi,
@@ -125,11 +156,12 @@ class TabStoryListServices implements TabStoryListRepos {
     }
 
     final List<StoryListItem> newsList = List<StoryListItem>.from(
-      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['data']['posts'] as List<dynamic>)
+          .map((post) => StoryListItem.fromJson(post)),
     );
 
     if (withCount) {
-      allStoryCount = jsonResponse['data']['postsCount'];
+      allStoryCount = jsonResponse['data']['postsCount'] ?? 0;
     }
 
     return newsList;
@@ -278,12 +310,13 @@ class TabStoryListServices implements TabStoryListRepos {
     int first = 20,
   }) async {
     const String externalQuery = """
-    query GetAllExternalFields(\$take: Int!, \$partnerId: ID!) {
+    query GetAllExternalFields(\$take: Int!, \$skip: Int!, \$partnerId: ID!) {
       externals(
         where: {
           state: { equals: "published" }
           partner: { id: { equals: \$partnerId } }
         }
+        skip: \$skip
         take: \$take
         orderBy: [{ updatedAt: desc }]
       ) {
@@ -325,7 +358,11 @@ class TabStoryListServices implements TabStoryListRepos {
     final GraphqlBody graphqlBody = GraphqlBody(
       operationName: 'GetAllExternalFields',
       query: externalQuery,
-      variables: {"take": first, "partnerId": partnerId},
+      variables: {
+        "take": first,
+        "skip": skip,
+        "partnerId": partnerId,
+      },
     );
 
     final jsonResponse = await _helper.postByUrl(
@@ -335,7 +372,7 @@ class TabStoryListServices implements TabStoryListRepos {
     );
 
     return List<StoryListItem>.from(
-      jsonResponse['data']['externals']
+      (jsonResponse['data']['externals'] as List<dynamic>)
           .map((post) => StoryListItem.fromJson(post)),
     );
   }
@@ -351,7 +388,8 @@ class TabStoryListServices implements TabStoryListRepos {
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);
     final List<StoryListItem> storyListItemList = List<StoryListItem>.from(
-      jsonResponse['report'].map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['report'] as List<dynamic>)
+          .map((post) => StoryListItem.fromJson(post)),
     );
 
     return storyListItemList;
