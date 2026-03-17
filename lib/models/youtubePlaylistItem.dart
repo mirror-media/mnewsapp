@@ -16,18 +16,31 @@ class YoutubePlaylistItem {
   });
 
   factory YoutubePlaylistItem.fromJson(Map<String, dynamic> json) {
-    String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(
-        json, ['snippet', 'thumbnails', 'high', 'url'])) {
-      photoUrl = json['snippet']['thumbnails']['high']['url'];
-    }
+    final snippet = json['snippet'] ?? {};
+    final thumbnails = snippet['thumbnails'] ?? {};
+
+    String photoUrl = _extractThumbnail(thumbnails) ??
+        Environment().config.mirrorNewsDefaultImageUrl;
 
     return YoutubePlaylistItem(
-      youtubeVideoId: json['snippet']['resourceId']['videoId'],
-      name: json['snippet']['title'],
+      youtubeVideoId: snippet['resourceId']?['videoId'] ?? '',
+      name: snippet['title'] ?? '',
       photoUrl: photoUrl,
-      publishedAt: json['snippet']['publishedAt'],
+      publishedAt: snippet['publishedAt'],
     );
+  }
+
+  /// 🔥 關鍵：多尺寸 fallback
+  static String? _extractThumbnail(Map<String, dynamic> thumbnails) {
+    const priority = ['maxres', 'standard', 'high', 'medium', 'default'];
+
+    for (final key in priority) {
+      final item = thumbnails[key];
+      if (item != null && item['url'] != null) {
+        return item['url'];
+      }
+    }
+    return null;
   }
 
   factory YoutubePlaylistItem.fromPromotionVideosJson(
@@ -50,7 +63,7 @@ class YoutubePlaylistItem {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is YoutubePlaylistItem && other.name == name;
+          other is YoutubePlaylistItem && other.name == name;
 
   @override
   int get hashCode => name.hashCode;

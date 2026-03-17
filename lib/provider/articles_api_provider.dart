@@ -133,16 +133,21 @@ class ArticlesApiProvider extends GetConnect {
     return showIntro;
   }
 
-  Future<YoutubeListInfo> getYoutubePlayList(
-      {required String playListId,
-        int? maxResult = 5,
-        String? nextPageToken}) async {
+  Future<YoutubeListInfo> getYoutubePlayList({
+    required String playListId,
+    int? maxResult = 5,
+    String? nextPageToken,
+  }) async {
+    print('[getYoutubePlayList] playListId = "$playListId"');
+    print('[getYoutubePlayList] nextPageToken = "$nextPageToken"');
+
     final url = nextPageToken != null
         ? '${Environment().config.youtubeApi}/playlistItems?part=snippet&playlistId=$playListId&pageToken=$nextPageToken&maxResults=$maxResult'
         : '${Environment().config.youtubeApi}/playlistItems?part=snippet&playlistId=$playListId&maxResults=$maxResult';
 
-    final jsonResponse = await _helper.getByUrl(url);
+    print('[getYoutubePlayList] url = $url');
 
+    final jsonResponse = await _helper.getByUrl(url);
     return YoutubeListInfo.fromJson(jsonResponse);
   }
 
