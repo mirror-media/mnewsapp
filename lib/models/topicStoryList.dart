@@ -35,7 +35,7 @@ class TopicStoryList {
       storyListItemList = List<StoryListItem>.from(
           json['post'].map((post) => StoryListItem.fromJson(post)));
       if (withCount) {
-        allStoryCount = json['_postMeta']['count'];
+        allStoryCount = json['postCount'];
       }
     }
 

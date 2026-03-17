@@ -11,50 +11,57 @@ abstract class PromotionVideosRepos {
 }
 
 class PromotionVideosServices implements PromotionVideosRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<List<YoutubePlaylistItem>> fetchAllPromotionVideos() async {
-    final String query = """
+    const String query = """
     query {
-      allPromotionVideos(
+      promotionVideos(
         where: {
-          state: published
+          state: { equals: "published" }
         }
-        sortBy: [ sortOrder_ASC, updatedAt_DESC ]
+        orderBy: [{ sortOrder: asc }, { updatedAt: desc }]
       ) {
         ytUrl
       }
     }
     """;
 
-    Map<String, dynamic> variables = {};
+    final Map<String, dynamic> variables = {};
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByUrl(
-        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        headers: {"Content-Type": "application/json"});
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<YoutubePlaylistItem> youtubePlaylistItemList =
-        List<YoutubePlaylistItem>.from(
-            jsonResponse['data']['allPromotionVideos'].map((ytVideo) =>
-                YoutubePlaylistItem.fromPromotionVideosJson(ytVideo)));
-    List<int> removeIndex = [];
+    final List<YoutubePlaylistItem> youtubePlaylistItemList =
+    List<YoutubePlaylistItem>.from(
+      jsonResponse['data']['promotionVideos'].map(
+            (ytVideo) => YoutubePlaylistItem.fromPromotionVideosJson(ytVideo),
+      ),
+    );
+
+    final List<int> removeIndex = [];
     for (int i = 0; i < youtubePlaylistItemList.length; i++) {
-      final reponse =
-          await http.get(Uri.parse(youtubePlaylistItemList[i].photoUrl));
-      if (reponse.statusCode != 200) {
+      final response =
+      await http.get(Uri.parse(youtubePlaylistItemList[i].photoUrl));
+      if (response.statusCode != 200) {
         removeIndex.add(i);
       }
     }
-    for (var index in removeIndex) {
+
+    for (final index in removeIndex.reversed) {
       youtubePlaylistItemList.removeAt(index);
     }
+
     return youtubePlaylistItemList;
   }
 }

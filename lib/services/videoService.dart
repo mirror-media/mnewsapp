@@ -10,15 +10,15 @@ abstract class VideoRepos {
 }
 
 class VideoServices implements VideoRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<Video> fetchVideoByName(String name) async {
-    final String query = """
+    const String query = """
     query(
-      \$where: VideoWhereInput,
+      \$where: VideoWhereInput
     ){
-      allVideos(
+      videos(
         where: \$where
       ){
         url
@@ -26,26 +26,28 @@ class VideoServices implements VideoRepos {
     }    
     """;
 
-    Map<String, dynamic> variables = {
-      "where": {"name": name},
+    final Map<String, dynamic> variables = {
+      "where": {
+        "name": {"equals": name}
+      }
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByUrl(
-        Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        headers: {"Content-Type": "application/json"});
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
 
-    Video video;
     try {
-      video = Video.fromJson(jsonResponse['data']['allVideos'][0]);
+      return Video.fromJson(jsonResponse['data']['videos'][0]);
     } catch (e) {
       throw FormatException(e.toString());
     }
-    return video;
   }
 }

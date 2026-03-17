@@ -8,16 +8,18 @@ import 'package:tv/models/storyListItem.dart';
 
 abstract class TagStoryListRepos {
   Future<List<StoryListItem>> fetchStoryListByTagSlug(
-    String slug, {
-    int skip = 0,
-    int first = 10,
-    bool withCount = true,
-  });
+      String slug, {
+        int skip = 0,
+        int first = 10,
+        bool withCount = true,
+      });
+
   int allStoryCount = 0;
 }
 
 class TagStoryListServices implements TagStoryListRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
+
   @override
   int allStoryCount = 0;
 
@@ -25,51 +27,85 @@ class TagStoryListServices implements TagStoryListRepos {
   query (
     \$where: PostWhereInput,
     \$skip: Int,
-    \$first: Int,
-    \$withCount: Boolean!,
+    \$take: Int,
+    \$withCount: Boolean!
   ) {
-    allPosts(
-      where: \$where, 
-      skip: \$skip, 
-      first: \$first, 
-      sortBy: [ publishTime_DESC ]
+    posts(
+      where: \$where,
+      skip: \$skip,
+      take: \$take,
+      orderBy: [{ publishTime: desc }]
     ) {
       id
       slug
       name
+      url
+      style
+
       heroImage {
+        imageApiData
+        url
         urlMobileSized
+        mobile
+        w480
+        w800
+        w1200
+        original
+        src
+      }
+
+      heroVideo {
+        coverPhoto {
+          imageApiData
+          url
+          urlMobileSized
+          mobile
+          w480
+          w800
+          w1200
+          original
+          src
+        }
+      }
+
+      categories {
+        id
+        slug
+        name
       }
     }
-    _allPostsMeta(
-      where: \$where,
-    ) @include(if: \$withCount) {
-      count
-    }
+
+    postsCount(
+      where: \$where
+    ) @include(if: \$withCount)
   }
   """;
 
   @override
   Future<List<StoryListItem>> fetchStoryListByTagSlug(
-    String slug, {
-    int skip = 0,
-    int first = 10,
-    bool withCount = true,
-  }) async {
-    String key =
+      String slug, {
+        int skip = 0,
+        int first = 10,
+        bool withCount = true,
+      }) async {
+    final String key =
         'fetchStoryListByTagSlug?tagSlug=$slug&skip=$skip&first=$first';
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "tags_some": {"slug": slug}
+        "state": {"equals": "published"},
+        "tags": {
+          "some": {
+            "slug": {"equals": slug}
+          }
+        }
       },
       "skip": skip,
-      "first": first,
-      "withCount": withCount
+      "take": first,
+      "withCount": withCount,
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
@@ -78,21 +114,27 @@ class TagStoryListServices implements TagStoryListRepos {
     late final dynamic jsonResponse;
     if (skip > 20) {
       jsonResponse = await _helper.postByUrl(
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          headers: {"Content-Type": "application/json"});
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          maxAge: newsTabStoryList,
-          headers: {"Content-Type": "application/json"});
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {"Content-Type": "application/json"},
+      );
     }
 
-    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
-            ['allPosts']
-        .map((post) => StoryListItem.fromJson(post)));
+    final List<StoryListItem> newsList = List<StoryListItem>.from(
+      (jsonResponse['data']['posts'] as List<dynamic>)
+          .map((post) => StoryListItem.fromJson(post)),
+    );
 
     if (withCount) {
-      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+      allStoryCount = jsonResponse['data']['postsCount'] ?? 0;
     }
 
     return newsList;

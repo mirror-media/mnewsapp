@@ -30,16 +30,11 @@ class Contact {
   });
 
   factory Contact.fromJson(Map<String, dynamic> json) {
-    String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['anchorImg', 'urlMobileSized'])) {
-      photoUrl = json['anchorImg']['urlMobileSized'];
-    } else if (BaseModel.checkJsonKeys(
-        json, ['showhostImg', 'urlMobileSized'])) {
-      photoUrl = json['showhostImg']['urlMobileSized'];
-    }
+    final String photoUrl = _parsePhotoUrl(json);
+
     List<Paragraph>? bioApiData;
-    if (BaseModel.hasKey(json, 'bioApiData') && json["bioApiData"] != 'NaN') {
-      bioApiData = Paragraph.parseResponseBody(json["bioApiData"]);
+    if (BaseModel.hasKey(json, 'bioApiData') && json['bioApiData'] != 'NaN') {
+      bioApiData = Paragraph.parseResponseBody(json['bioApiData']);
     }
 
     return Contact(
@@ -51,8 +46,52 @@ class Contact {
       isHost: json['host'] ?? false,
       twitterUrl: json['twitter'],
       facebookUrl: json['facebook'],
-      instatgramUrl: json['instatgram'],
+      instatgramUrl: json['instagram'],
       bio: bioApiData,
     );
+  }
+
+  static String _parsePhotoUrl(Map<String, dynamic> json) {
+    const imageFields = ['anchorImg', 'showhostImg'];
+
+    for (final field in imageFields) {
+      final imageNode = json[field];
+      if (imageNode is! Map<String, dynamic>) continue;
+
+      // K6: imageApiData
+      final imageApiData = imageNode['imageApiData'];
+      final k6Url = _extractUrlFromImageApiData(imageApiData);
+      if (k6Url != null && k6Url.isNotEmpty) {
+        return k6Url;
+      }
+
+      // fallback: 舊版欄位
+      final legacyUrl = imageNode['urlMobileSized'];
+      if (legacyUrl is String && legacyUrl.isNotEmpty) {
+        return legacyUrl;
+      }
+    }
+
+    return Environment().config.mirrorNewsDefaultImageUrl;
+  }
+
+  static String? _extractUrlFromImageApiData(dynamic imageApiData) {
+    if (imageApiData == null) return null;
+
+    if (imageApiData is String && imageApiData.isNotEmpty) {
+      return imageApiData;
+    }
+
+    if (imageApiData is Map<String, dynamic>) {
+      final possibleKeys = ['url', 'original', 'src'];
+      for (final key in possibleKeys) {
+        final value = imageApiData[key];
+        if (value is String && value.isNotEmpty) {
+          return value;
+        }
+      }
+    }
+
+    return null;
   }
 }

@@ -12,80 +12,100 @@ abstract class EditorChoiceRepos {
 }
 
 class EditorChoiceServices implements EditorChoiceRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
+  @override
   @override
   Future<List<StoryListItem>> fetchEditorChoiceList() async {
     final key = 'fetchEditorChoiceList';
 
-    String query = """
-    query(
-      \$where: EditorChoiceWhereInput, 
-      \$first: Int){
-      allEditorChoices(
-        where: \$where, 
-        first: \$first, 
-        sortBy: [sortOrder_ASC, createdAt_DESC]
-      ) {
-        choice {
-          id
-          name
-          slug
-          style
-          heroImage {
-            urlMobileSized
-          }
-          heroVideo {
-            coverPhoto {
-              urlMobileSized
-            }
+    const String query = """
+  query(
+    \$where: EditorChoiceWhereInput,
+    \$take: Int
+  ) {
+    editorChoices(
+      where: \$where,
+      take: \$take,
+      orderBy: [{ sortOrder: asc }, { createdAt: desc }]
+    ) {
+      choice {
+        id
+        name
+        slug
+        style
+        heroImage {
+          imageApiData
+        }
+        heroVideo {
+          coverPhoto {
+            imageApiData
           }
         }
       }
     }
-    """;
+  }
+  """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "choice": {"state": "published"}
+        "state": {"equals": "published"},
+        "choice": {
+          "state": {"equals": "published"}
+        }
       },
-      "first": 10
+      "take": 10,
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
-    final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: editorChoiceCacheDuration,
-        headers: {"Content-Type": "application/json"});
+    print('===== fetchEditorChoiceList NEW VERSION =====');
+    print('===== fetchEditorChoiceList graphqlApi =====');
+    print(Environment().config.graphqlApi);
+    print('===== fetchEditorChoiceList request body =====');
+    print(jsonEncode(graphqlBody.toJson()));
 
-    List<dynamic> parsedJson = List.empty(growable: true);
-    for (int i = 0; i < jsonResponse['data']['allEditorChoices'].length; i++) {
-      parsedJson.add(jsonResponse['data']['allEditorChoices'][i]['choice']);
-    }
-    List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
-        parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)));
-    return editorChoiceList;
+    final jsonResponse = await _helper.postByCacheAndAutoCache(
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: editorChoiceCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
+
+    print('===== fetchEditorChoiceList response =====');
+    print(jsonResponse);
+
+    final List<dynamic> editorChoices =
+        (jsonResponse['data']?['editorChoices'] as List?) ?? [];
+
+    final List<dynamic> parsedJson = editorChoices
+        .map((item) => item['choice'])
+        .where((item) => item != null)
+        .toList();
+
+    return parsedJson
+        .map((editorChoice) => StoryListItem.fromJson(editorChoice))
+        .toList();
   }
 
   @override
   Future<List<StoryListItem>> fetchVideoEditorChoiceList() async {
     final key = 'fetchVideoEditorChoiceList';
 
-    String query = """
+    const String query = """
     query(
-      \$where: VideoEditorChoiceWhereInput, 
-      \$first: Int
-    ){
-      allVideoEditorChoices(
-        where: \$where, 
-        first: \$first, 
-        sortBy: [order_ASC, createdAt_DESC]
+      \$where: VideoEditorChoiceWhereInput,
+      \$take: Int
+    ) {
+      videoEditorChoices(
+        where: \$where,
+        take: \$take,
+        orderBy: [{ order: asc }, { createdAt: desc }]
       ) {
         videoEditor {
           id
@@ -93,11 +113,11 @@ class EditorChoiceServices implements EditorChoiceRepos {
           slug
           style
           heroImage {
-            urlMobileSized
+            imageApiData
           }
           heroVideo {
             coverPhoto {
-              urlMobileSized
+              imageApiData
             }
           }
         }
@@ -105,34 +125,42 @@ class EditorChoiceServices implements EditorChoiceRepos {
     }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "videoEditor": {"state": "published", "style": "videoNews"}
+        "state": {"equals": "published"},
+        "videoEditor": {
+          "state": {"equals": "published"},
+          "style": {"equals": "videoNews"}
+        }
       },
-      "first": 10
+      "take": 10,
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: videoEditorChoiceCacheDuration,
-        headers: {"Content-Type": "application/json"});
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: videoEditorChoiceCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<dynamic> parsedJson = List.empty(growable: true);
+    final List<dynamic> parsedJson = [];
     for (int i = 0;
-        i < jsonResponse['data']['allVideoEditorChoices'].length;
-        i++) {
-      parsedJson
-          .add(jsonResponse['data']['allVideoEditorChoices'][i]['videoEditor']);
+    i < jsonResponse['data']['videoEditorChoices'].length;
+    i++) {
+      parsedJson.add(jsonResponse['data']['videoEditorChoices'][i]['videoEditor']);
     }
-    List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
-        parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)));
+
+    final List<StoryListItem> editorChoiceList = List<StoryListItem>.from(
+      parsedJson.map((editorChoice) => StoryListItem.fromJson(editorChoice)),
+    );
+
     return editorChoiceList;
   }
 }

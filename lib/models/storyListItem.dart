@@ -1,6 +1,7 @@
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/baseModel.dart';
 import 'package:tv/models/category.dart';
+import 'dart:convert';
 
 enum StoryLinkType { story, external }
 
@@ -80,13 +81,17 @@ class StoryListItem {
 
   factory StoryListItem.fromJsonSales(Map<String, dynamic> json) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['adPost', 'heroImage', 'urlMobileSized'])) {
-      photoUrl = json['adPost']['heroImage']['urlMobileSized'];
+
+    if (json['adPost'] is Map<String, dynamic>) {
+      final adPost = json['adPost'] as Map<String, dynamic>;
+
+      photoUrl = _extractImageUrlFromNode(adPost['heroImage']) ??
+          Environment().config.mirrorNewsDefaultImageUrl;
     }
 
     String? displayCategory;
     List<Category>? allPostsCategory;
-    if (json['adPost']['categories'] != null) {
+    if (json['adPost']?['categories'] != null) {
       allPostsCategory = List<Category>.from(
         json['adPost']['categories'].map((category) => Category.fromJson(category)),
       );
@@ -124,7 +129,6 @@ class StoryListItem {
         url: url,
         slug: parsed?.slug,
         linkType: parsed?.type,
-
         photoUrl: (cover != null && cover.isNotEmpty)
             ? cover
             : Environment().config.mirrorNewsDefaultImageUrl,
@@ -134,14 +138,11 @@ class StoryListItem {
       );
     }
 
-    // GraphQL _source 包裝處理
     if (BaseModel.hasKey(json, '_source')) {
       json = json['_source'];
     }
 
-    // ==========================
-    // 判斷是否為 External 鏡報資料
-    // ==========================
+    // External
     if (json.containsKey('partner') || json.containsKey('brief_original')) {
       return StoryListItem(
         id: json[BaseModel.idKey]?.toString(),
@@ -170,16 +171,18 @@ class StoryListItem {
       );
     }
 
-    // ==========================
-    // 否則走舊 allPosts 流程（保留）
-    // ==========================
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
-      photoUrl = json['heroImage']['urlMobileSized'];
-    } else if (BaseModel.checkJsonKeys(json, ['heroVideo', 'coverPhoto', 'urlMobileSized'])) {
-      photoUrl = json['heroVideo']['coverPhoto']['urlMobileSized'];
-    }
 
+    // K6 優先：heroImage.imageApiData
+    photoUrl = _extractImageUrlFromNode(json['heroImage']) ??
+        _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']) ??
+        Environment().config.mirrorNewsDefaultImageUrl;
+    if (photoUrl == Environment().config.mirrorNewsDefaultImageUrl) {
+      print('=== image fallback triggered ===');
+      print('slug = ${json['slug']}');
+      print('heroImage = ${json['heroImage']}');
+      print('heroVideo.coverPhoto = ${json['heroVideo']?['coverPhoto']}');
+    }
     String? displayCategory;
     List<Category>? allPostsCategory;
     if (json['categories'] != null) {
@@ -213,6 +216,118 @@ class StoryListItem {
       categoryList: allPostsCategory,
       displayCategory: displayCategory,
     );
+  }
+
+  static String? _extractImageUrlFromNode(dynamic imageNode) {
+    if (imageNode == null) return null;
+    if (imageNode is! Map) return null;
+
+    final map = imageNode is Map<String, dynamic>
+        ? imageNode
+        : Map<String, dynamic>.from(imageNode);
+
+    final imageApiData = map['imageApiData'];
+    final k6Url = _extractUrlFromImageApiData(imageApiData);
+    if (k6Url != null && k6Url.isNotEmpty) {
+      return k6Url;
+    }
+
+    const directKeys = [
+      'url',
+      'urlMobileSized',
+      'mobile',
+      'w800',
+      'w480',
+      'w1200',
+      'original',
+      'src',
+    ];
+
+    for (final key in directKeys) {
+      final value = map[key];
+      if (value is String && value.isNotEmpty) {
+        return value;
+      }
+      if (value is Map) {
+        final nested = value is Map<String, dynamic>
+            ? value
+            : Map<String, dynamic>.from(value);
+
+        final nestedUrl = nested['url'];
+        if (nestedUrl is String && nestedUrl.isNotEmpty) {
+          return nestedUrl;
+        }
+      }
+    }
+
+    return null;
+  }
+
+  static String? _extractUrlFromImageApiData(dynamic imageApiData) {
+    if (imageApiData == null) return null;
+
+    if (imageApiData is String) {
+      final trimmed = imageApiData.trim();
+      if (trimmed.isEmpty) return null;
+
+      // 直接就是網址
+      if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
+        return trimmed;
+      }
+
+      // JSON 字串
+      if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
+        try {
+          final decoded = json.decode(trimmed);
+          return _extractUrlFromImageApiData(decoded);
+        } catch (_) {
+          return null;
+        }
+      }
+
+      return null;
+    }
+
+    if (imageApiData is Map<String, dynamic>) {
+      final directUrl = imageApiData['url'];
+      if (directUrl is String && directUrl.isNotEmpty) {
+        return directUrl;
+      }
+
+      final possibleKeys = [
+        'w800',
+        'w1200',
+        'w480',
+        'original',
+        'src',
+        'mobile',
+        'urlMobileSized',
+      ];
+
+      for (final key in possibleKeys) {
+        final value = imageApiData[key];
+        if (value is String && value.isNotEmpty) {
+          return value;
+        }
+        if (value is Map<String, dynamic>) {
+          final nestedUrl = value['url'];
+          if (nestedUrl is String && nestedUrl.isNotEmpty) {
+            return nestedUrl;
+          }
+        }
+      }
+    }
+
+    if (imageApiData is List) {
+      for (final item in imageApiData) {
+        final url = _extractUrlFromImageApiData(item);
+        if (url != null && url.isNotEmpty) {
+          return url;
+        }
+      }
+    }
+
+    return null;
   }
 
   Map<String, dynamic> toJson() => {
