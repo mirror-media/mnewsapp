@@ -16,6 +16,7 @@ abstract class OmbudsServiceRepos {
 
 class OmbudsService implements OmbudsServiceRepos {
   final ApiBaseHelper _helper = ApiBaseHelper();
+
   @override
   int allStoryCount = 0;
 
@@ -29,50 +30,54 @@ class OmbudsService implements OmbudsServiceRepos {
     query (
       \$where: PostWhereInput,
       \$skip: Int,
-      \$first: Int,
-      \$withCount: Boolean!,
+      \$take: Int,
+      \$withCount: Boolean!
     ) {
-      allPosts(
-        where: \$where, 
-        skip: \$skip, 
-        first: \$first, 
-        sortBy: [ publishTime_DESC ]
+      posts(
+        where: \$where,
+        skip: \$skip,
+        take: \$take,
+        orderBy: [{ publishTime: desc }]
       ) {
         id
         slug
         name
         heroImage {
-          urlMobileSized
+          imageApiData
         }
       }
-      _allPostsMeta(
-        where: \$where,
-      ) @include(if: \$withCount) {
-        count
-      }
+
+      postsCount(where: \$where) @include(if: \$withCount)
     }
     """;
-    String key = 'fetchStoryListByOmbuds&skip=$skip&first=$first';
 
-    Map<String, dynamic> variables = {
+    final String key = 'fetchStoryListByOmbuds&skip=$skip&first=$first';
+
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "categories_some": {"slug": 'ombuds'},
-        "slug_not_in": [
-          'biography',
-          'law',
-          'standards',
-          'faq',
-          'reports',
-          'complaint'
-        ]
+        "state": {"equals": "published"},
+        "categories": {
+          "some": {
+            "slug": {"equals": "ombuds"}
+          }
+        },
+        "slug": {
+          "notIn": [
+            'biography',
+            'law',
+            'standards',
+            'faq',
+            'reports',
+            'complaint'
+          ]
+        }
       },
       "skip": skip,
-      "first": first,
-      "withCount": withCount
+      "take": first,
+      "withCount": withCount,
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
@@ -82,18 +87,26 @@ class OmbudsService implements OmbudsServiceRepos {
 
     if (skip > 20) {
       jsonResponse = await _helper.postByUrl(
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          headers: {"Content-Type": "application/json"});
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
     } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(key,
-          Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-          maxAge: newsTabStoryList,
-          headers: {"Content-Type": "application/json"});
+      jsonResponse = await _helper.postByCacheAndAutoCache(
+        key,
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        maxAge: newsTabStoryList,
+        headers: {"Content-Type": "application/json"},
+      );
     }
+
     if (withCount) {
-      allStoryCount = jsonResponse['data']['_allPostsMeta']['count'];
+      allStoryCount = jsonResponse['data']['postsCount'];
     }
-    return List<StoryListItem>.from(jsonResponse['data']['allPosts']
-        .map((item) => StoryListItem.fromJson(item)));
+
+    return List<StoryListItem>.from(
+      jsonResponse['data']['posts'].map((item) => StoryListItem.fromJson(item)),
+    );
   }
 }

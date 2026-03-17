@@ -27,7 +27,7 @@ class _YoutubePlayerState extends State<YoutubePlayer>
   late double imageWidth;
   late double imageHeight;
 
-  late VideoPlayerController _videoController;
+  VideoPlayerController? _videoController;
   ChewieController? _chewieController;
 
   bool _isInitialized = false;
@@ -43,36 +43,46 @@ class _YoutubePlayerState extends State<YoutubePlayer>
     _initYoutubeVideo();
   }
 
+  @override
+  void didUpdateWidget(covariant YoutubePlayer oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.videoID != widget.videoID) {
+      _disposeControllers();
+      _youtubeThumbnail = ThumbnailSet(widget.videoID).maxResUrl;
+      _isInitialized = false;
+      _isError = false;
+      _initYoutubeVideo();
+    }
+  }
+
   Future<void> _initYoutubeVideo() async {
     final yt = YoutubeExplode();
 
     try {
-      final manifest =
-      await yt.videos.streamsClient.getManifest(widget.videoID);
+      final manifest = await yt.videos.streamsClient.getManifest(widget.videoID);
       String videoUrl;
 
-      // 若有畫質清單，用最高畫質
       if (manifest.muxed.isNotEmpty) {
         videoUrl = manifest.muxed.withHighestBitrate().url.toString();
       } else {
-        // 若是直播影片，抓 HLS live URL
         videoUrl = await yt.videos.streamsClient
             .getHttpLiveStreamUrl(VideoId(widget.videoID));
       }
 
       yt.close();
 
-      // 建立 VideoPlayer
-      _videoController = VideoPlayerController.network(videoUrl);
-      await _videoController.initialize();
+      final controller =
+      VideoPlayerController.networkUrl(Uri.parse(videoUrl));
+      await controller.initialize();
+      await controller.setLooping(false);
 
-      await _videoController.setLooping(false);
       if (widget.mute) {
-        await _videoController.setVolume(0.0);
+        await controller.setVolume(0.0);
       }
 
-      _chewieController = ChewieController(
-        videoPlayerController: _videoController,
+      final chewieController = ChewieController(
+        videoPlayerController: controller,
         autoPlay: widget.autoPlay,
         showControlsOnInitialize: false,
         allowPlaybackSpeedChanging: true,
@@ -86,26 +96,47 @@ class _YoutubePlayerState extends State<YoutubePlayer>
         ],
       );
 
+      if (!mounted) {
+        chewieController.dispose();
+        await controller.dispose();
+        return;
+      }
+
+      _videoController = controller;
+      _chewieController = chewieController;
+
       if (widget.autoPlay) {
-        _videoController.play();
+        await _videoController?.play();
       }
 
       setState(() {
         _isInitialized = true;
+        _isError = false;
       });
     } catch (e) {
       yt.close();
       print('Youtube error: $e');
+
+      if (!mounted) return;
+
       setState(() {
         _isError = true;
+        _isInitialized = false;
       });
     }
   }
 
+  void _disposeControllers() {
+    _chewieController?.dispose();
+    _chewieController = null;
+
+    _videoController?.dispose();
+    _videoController = null;
+  }
+
   @override
   void dispose() {
-    _chewieController?.dispose();
-    _videoController.dispose();
+    _disposeControllers();
     super.dispose();
   }
 
@@ -121,12 +152,13 @@ class _YoutubePlayerState extends State<YoutubePlayer>
         width: imageWidth,
         height: imageHeight,
         color: Colors.black,
-        child: const Center(child: Icon(Icons.error, color: Colors.white)),
+        child: const Center(
+          child: Icon(Icons.error, color: Colors.white),
+        ),
       );
     }
 
     if (!_isInitialized || _chewieController == null) {
-      // 播放器尚未初始化：顯示縮圖 + 轉圈圈
       return Stack(
         alignment: Alignment.center,
         children: [

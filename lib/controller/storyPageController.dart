@@ -39,12 +39,13 @@ class StoryPageController extends GetxController {
     isError = false;
     currentSlug = slug;
     update();
-
     print('[StoryPageController] loadStory start slug=$slug linkType=$linkType');
 
     try {
       story = await repository.fetchPublishedStoryBySlug(slug);
-
+      print('[StoryPageController] story brief length = ${story.brief?.length}');
+      print('[StoryPageController] story contentApiData length = ${story.contentApiData?.length}');
+      print('[StoryPageController] story style = ${story.style}');
       if (slug == 'law') {
         ombudsLawFile = await DefaultCacheManager().getSingleFile(ombudsLaw);
       }
