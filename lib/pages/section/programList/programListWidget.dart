@@ -193,6 +193,7 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   }
 
   Widget _programListViewItem(ProgramListItem now, ProgramListItem next) {
+    print('channelId = ${now.channelId}, programme = ${now.programme}');
     String startHour = (now.startTimeHour < 10)
         ? '0${now.startTimeHour.toString()}'
         : now.startTimeHour.toString();

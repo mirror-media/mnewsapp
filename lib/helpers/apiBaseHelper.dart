@@ -169,30 +169,40 @@ dynamic returnResponse(http.Response response, {bool skipCheck = false}) {
       String utf8Json = utf8.decode(response.bodyBytes);
       var responseJson = json.decode(utf8Json);
 
-      bool hasData = false;
-      // properties responded by member graphql
-      if (!skipCheck) {
-        hasData = responseJson.containsKey('data') ||
+      if (skipCheck) {
+        return responseJson;
+      }
+
+      /// 如果 root 就是 List，直接視為合法 JSON
+      if (responseJson is List) {
+        return responseJson;
+      }
+
+      /// 只有 Map 才做 containsKey 檢查
+      if (responseJson is Map<String, dynamic>) {
+        bool hasData = responseJson.containsKey('data') ||
             responseJson.containsKey('items') ||
-            // search response
             (responseJson.containsKey('body') &&
                 responseJson['body'] != null &&
+                responseJson['body'] is Map &&
                 responseJson['body'].containsKey('hits')) ||
-            // popular json
             responseJson.containsKey('report') ||
-            // category json
             responseJson.containsKey('allCategories') ||
+            responseJson.containsKey('featuredCategories') ||
+            responseJson.containsKey('categories') ||
             responseJson.containsKey('allPosts') ||
             responseJson.containsKey('allShows') ||
-            // election json
             responseJson.containsKey('polling');
+
+        if (!hasData) {
+          throw FormatException(response.body.toString());
+        }
+
+        return responseJson;
       }
 
-      if (!hasData && !skipCheck) {
-        throw FormatException(response.body.toString());
-      }
+      throw FormatException('Unsupported response format: ${responseJson.runtimeType}');
 
-      return responseJson;
     case 400:
     case 404:
       throw BadRequestException(response.body.toString());
@@ -204,6 +214,7 @@ dynamic returnResponse(http.Response response, {bool skipCheck = false}) {
       throw InternalServerErrorException(response.body.toString());
     default:
       throw FetchDataException(
-          'Error occured while Communication with Server with StatusCode : ${response.statusCode}');
+        'Error occured while Communication with Server with StatusCode : ${response.statusCode}',
+      );
   }
 }

@@ -1,114 +1,115 @@
 class QueryCommand {
-
   static String getYoutubeStreamList = '''
    query{
-    allVideos( 
-        where: {
-            name_contains:"%s"
-            state_in:published
-        }
-        sortBy: [ publishTime_DESC ]
+    videos( 
+      where: {
+        name: { contains: "%s" }
+        state: { equals: "published" }
+      }
+      orderBy: [{ publishTime: desc }]
     ){
-        name
-        youtubeUrl
-        state
+      name
+      youtubeUrl
+      state
     }
   }
   ''';
 
   static String getVideoPostList = '''
   query {
-    allPosts(
+    posts(
       where:{
-        state:published,
-        style_in:[videoNews],
-        style_not_in:[wide,projects,script,campaign,readr],
-        categories_some:{
-            slug:"%s"
+        state: { equals: "published" }
+        style: {
+          in: ["videoNews"]
+          notIn: ["wide","projects","script","campaign","readr"]
         }
-
-    },
-      skip:%d, 
-      first: %d, 
-      sortBy: [ publishTime_DESC ],
+        categories:{
+          some:{
+            slug:{ equals:"%s" }
+          }
+        }
+      }
+      skip:%d
+      take:%d
+      orderBy: [{ publishTime: desc }]
     ) {
       id
       slug
       name
       heroImage {
-        urlMobileSized
+        imageApiData
       }
     }
- 
   }
   ''';
 
-  static String getShowBySlug ='''
+  static String getShowBySlug = '''
   query {
-      allShows(
-        where: {slug:"%s"},
-      ) {
-        slug
-        name
-        introduction
-        picture {
-          urlMobileSized
-        }
-        playList01
-        playList02
+    shows(
+      where: { slug: { equals: "%s" } }
+    ) {
+      slug
+      name
+      introduction
+      picture {
+        imageApiData
       }
+      playList01
+      playList02
     }
+  }
   ''';
 
-  static String getLatestArticles ='''
+  static String getLatestArticles = '''
     query {
-      allPosts(
+      posts(
         where:{
-           state:published,
-           style_not_in:[wide,projects,script,campaign,readr],
-        },
-        skip:%d, 
-        first:%d, 
-        sortBy: [ publishTime_DESC ],
+          state: { equals: "published" }
+          style: {
+            notIn:["wide","projects","script","campaign","readr"]
+          }
+        }
+        skip:%d
+        take:%d
+        orderBy: [{ publishTime: desc }]
       ) {
         id
         slug
         name
         style
         categories{
-            name
-            id
-            slug
+          name
+          id
+          slug
         }
         heroImage {
-          urlMobileSized
+          imageApiData
         }
       }
- 
     }
   ''';
 
-  static String getSalesArticles = '''
+  static const String getSalesArticles = '''
   query{
-    allSales(
-      sortBy:[sortOrder_ASC]
+    sales(
+      orderBy:[{ sortOrder: asc }]
     ){
       adPost{
-         id
+        id
         slug
         name
         style
         categories{
-            name
-            id
-            slug
+          name
+          id
+          slug
         }
         heroImage {
-          urlMobileSized
+          imageApiData
         }
       }
     }
   }
   ''';
-
 }

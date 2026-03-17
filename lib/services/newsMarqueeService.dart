@@ -12,21 +12,21 @@ abstract class NewsMarqueeRepos {
 }
 
 class NewsMarqueeServices implements NewsMarqueeRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<List<StoryListItem>> fetchNewsList() async {
     final key = 'fetchNewsMarqueeList';
 
-    String query = """
+    const String query = """
     query (
       \$where: PostWhereInput,
-      \$first: Int,
+      \$take: Int
     ) {
-      allPosts(
-        where: \$where, 
-        first: \$first, 
-        sortBy: [ publishTime_DESC ]
+      posts(
+        where: \$where,
+        take: \$take,
+        orderBy: [{ publishTime: desc }]
       ) {
         slug
         name
@@ -34,34 +34,52 @@ class NewsMarqueeServices implements NewsMarqueeRepos {
     }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {
-        "state": "published",
-        "style_not_in": ["wide", "projects", "script", "campaign", "readr"],
-        "slug_not_in": filteredSlug,
-        "categories_every": {"slug_not_in": "ombuds"},
+        "state": {"equals": "published"},
+        "style": {
+          "notIn": ["wide", "projects", "script", "campaign", "readr"]
+        },
+        "slug": {
+          "notIn": filteredSlug
+        },
+        "categories": {
+          "every": {
+            "slug": {
+              "notIn": ["ombuds"]
+            }
+          }
+        },
         // TODO: need to be confirmed
-        // "categories_some": {
-        //   "slug_in": [],
+        // "categories": {
+        //   "some": {
+        //     "slug": {
+        //       "in": []
+        //     }
+        //   }
         // }
       },
-      "first": 10
+      "take": 10
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: newsMarqueeCacheDuration,
-        headers: {"Content-Type": "application/json"});
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: newsMarqueeCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<StoryListItem> newsList = List<StoryListItem>.from(jsonResponse['data']
-            ['allPosts']
-        .map((post) => StoryListItem.fromJson(post)));
+    final List<StoryListItem> newsList = List<StoryListItem>.from(
+      jsonResponse['data']['posts'].map((post) => StoryListItem.fromJson(post)),
+    );
+
     return newsList;
   }
 }

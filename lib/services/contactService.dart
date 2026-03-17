@@ -12,31 +12,31 @@ abstract class ContactRepos {
 }
 
 class ContactServices implements ContactRepos {
-  ApiBaseHelper _helper = ApiBaseHelper();
+  final ApiBaseHelper _helper = ApiBaseHelper();
 
   @override
   Future<List<Contact>> fetchAnchorpersonOrHostContactList() async {
     final key = 'fetchAnchorpersonOrHostContactList';
 
-    String query = """
+    const String query = """
     query {
-      allContacts(
+      contacts(
         where: {
           OR: [
             {
-              anchorperson: true
+              anchorperson: { equals: true }
             }
             {
-              host: true
+              host: { equals: true }
             }
           ]
         }
-        sortBy:[sortOrder_ASC]
+        orderBy: [{ sortOrder: asc }]
       ) {
         id
         name
         anchorImg {
-          urlMobileSized
+          imageApiData
         }
         slug
         anchorperson
@@ -45,22 +45,23 @@ class ContactServices implements ContactRepos {
     }
     """;
 
-    Map<String, String> variables = {};
-
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
-      variables: variables,
+      variables: {},
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: anchorPersonListCacheDuration,
-        headers: {"Content-Type": "application/json"});
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: anchorPersonListCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    List<Contact> contactList = List<Contact>.from(jsonResponse['data']
-            ['allContacts']
-        .map((contact) => Contact.fromJson(contact)));
+    final List<Contact> contactList = List<Contact>.from(
+      jsonResponse['data']['contacts'].map((contact) => Contact.fromJson(contact)),
+    );
 
     return contactList;
   }
@@ -69,13 +70,13 @@ class ContactServices implements ContactRepos {
   Future<Contact> fetchContactById(String contactId) async {
     final key = 'fetchContactById?contactId=$contactId';
 
-    String query = """
+    const String query = """
     query(\$where: ContactWhereUniqueInput!) {
-      Contact(where: \$where) {
+      contact(where: \$where) {
         id
         name
         showhostImg {
-          urlMobileSized
+          imageApiData
         }
         slug
         twitter
@@ -86,22 +87,25 @@ class ContactServices implements ContactRepos {
     }
     """;
 
-    Map<String, dynamic> variables = {
+    final Map<String, dynamic> variables = {
       "where": {"id": contactId}
     };
 
-    GraphqlBody graphqlBody = GraphqlBody(
+    final GraphqlBody graphqlBody = GraphqlBody(
       operationName: null,
       query: query,
       variables: variables,
     );
 
     final jsonResponse = await _helper.postByCacheAndAutoCache(
-        key, Environment().config.graphqlApi, jsonEncode(graphqlBody.toJson()),
-        maxAge: anchorPersonCacheDuration,
-        headers: {"Content-Type": "application/json"});
+      key,
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      maxAge: anchorPersonCacheDuration,
+      headers: {"Content-Type": "application/json"},
+    );
 
-    Contact contact = Contact.fromJson(jsonResponse['data']['Contact']);
+    final Contact contact = Contact.fromJson(jsonResponse['data']['contact']);
     return contact;
   }
 }

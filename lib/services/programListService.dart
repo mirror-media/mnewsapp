@@ -12,14 +12,35 @@ class ProgramListServices implements ProgramListRepos {
   @override
   Future<List<ProgramListItem>> fetchProgramList() async {
     final jsonResponse = await _helper.getByUrl(
-        Environment().config.programListUrl,
-        headers: {"Accept": "application/json"},
-        skipCheck: true);
+      Environment().config.programListUrl,
+      headers: {"Accept": "application/json"},
+      skipCheck: true,
+    );
+    print('===== fetchProgramList raw response type =====');
+    print(jsonResponse.runtimeType);
+
+    if (jsonResponse is List && jsonResponse.isNotEmpty) {
+      print('===== ProgramList raw item sample =====');
+      print(jsonResponse.first);
+
+      print('===== ProgramList keys =====');
+      print((jsonResponse.first as Map).keys.toList());
+    }
+    print('===== fetchProgramList raw response =====');
+    print(jsonResponse);
+    print('===== fetchProgramList runtimeType =====');
+    print(jsonResponse.runtimeType);
 
     List<ProgramListItem> programList;
     try {
-      programList = List<ProgramListItem>.from(jsonResponse
-          .map((programListItem) => ProgramListItem.fromJson(programListItem)));
+      programList = List<ProgramListItem>.from(
+        jsonResponse.map(
+              (programListItem) => ProgramListItem.fromJson(programListItem),
+        ),
+      );
+
+      print('===== fetchProgramList parsed count ===== ${programList.length}');
+
       programList.sort((ProgramListItem a, ProgramListItem b) {
         int compare = a.year.compareTo(b.year);
         if (compare != 0) return compare;
@@ -31,9 +52,13 @@ class ProgramListServices implements ProgramListRepos {
         if (compare != 0) return compare;
         return a.startTimeMinute.compareTo(b.startTimeMinute);
       });
-    } catch (e) {
+    } catch (e, s) {
+      print('===== fetchProgramList parse error =====');
+      print(e);
+      print(s);
       throw FormatException(e.toString());
     }
+
     return programList;
   }
 }

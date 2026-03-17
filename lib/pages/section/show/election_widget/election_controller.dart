@@ -50,14 +50,21 @@ class ElectionController extends GetxController
   }
 
   void fetchYoutubePlayList() async {
-    final playListId = rxnShowIntro.value?.playList01?.youtubePlayListId;
-    if (playListId == null) {
+    final playListId =
+    rxnShowIntro.value?.playList01?.youtubePlayListId?.trim();
+
+    print('[ElectionController] playList01 id = "$playListId"');
+
+    if (playListId == null || playListId.isEmpty) {
+      print('[ElectionController] playList01 is empty, skip request');
       return;
     }
+
     final newInfo = await articlesApiProvider.getYoutubePlayList(
-        playListId: playListId,
-        maxResult: defaultPlayListOnePageCount,
-        nextPageToken: rxPlayListInfo.value?.nextPageToken);
+      playListId: playListId,
+      maxResult: defaultPlayListOnePageCount,
+      nextPageToken: rxPlayListInfo.value?.nextPageToken,
+    );
 
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubePlayRenderList);
     resultList.addAll(newInfo.playList ?? []);
@@ -67,14 +74,21 @@ class ElectionController extends GetxController
   }
 
   void fetchYoutubeShortPlayList() async {
-    final playListId = rxnShowIntro.value?.playList02?.youtubePlayListId;
-    if (playListId == null) {
+    final playListId =
+    rxnShowIntro.value?.playList02?.youtubePlayListId?.trim();
+
+    print('[ElectionController] playList02 id = "$playListId"');
+
+    if (playListId == null || playListId.isEmpty) {
+      print('[ElectionController] playList02 is empty, skip request');
       return;
     }
+
     final newInfo = await articlesApiProvider.getYoutubePlayList(
-        playListId: playListId,
-        maxResult: defaultPlayListOnePageCount,
-        nextPageToken: rxShortPlayListInfo.value?.nextPageToken);
+      playListId: playListId,
+      maxResult: defaultPlayListOnePageCount,
+      nextPageToken: rxShortPlayListInfo.value?.nextPageToken,
+    );
 
     List<YoutubePlaylistItem> resultList = List.from(rxYoutubeShortRenderList);
     resultList.addAll(newInfo.playList ?? []);
