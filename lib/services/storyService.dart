@@ -47,18 +47,67 @@ class StoryServices implements StoryRepos {
         contentApiData
         publishTime
         updatedAt
+
         heroImage {
           imageApiData
+          file {
+            url
+            width
+            height
+            extension
+            filesize
+          }
+          resized {
+            original
+            w480
+            w800
+            w1200
+            w1600
+            w2400
+          }
+          resizedWebp {
+            original
+            w480
+            w800
+            w1200
+            w1600
+            w2400
+          }
         }
+
         heroVideo {
           coverPhoto {
             imageApiData
+            file {
+              url
+              width
+              height
+              extension
+              filesize
+            }
+            resized {
+              original
+              w480
+              w800
+              w1200
+              w1600
+              w2400
+            }
+            resizedWebp {
+              original
+              w480
+              w800
+              w1200
+              w1600
+              w2400
+            }
           }
           file {
             url
           }
           url
         }
+
         heroCaption
         categories { slug name }
         writers { name slug }
@@ -69,13 +118,67 @@ class StoryServices implements StoryRepos {
         vocals { name slug }
         otherbyline
         tags { id name slug }
+
         relatedPosts {
           slug
           name
+          style
           heroImage {
             imageApiData
+            file {
+              url
+              width
+              height
+              extension
+              filesize
+            }
+            resized {
+              original
+              w480
+              w800
+              w1200
+              w1600
+              w2400
+            }
+            resizedWebp {
+              original
+              w480
+              w800
+              w1200
+              w1600
+              w2400
+            }
+          }
+          heroVideo {
+            coverPhoto {
+              imageApiData
+              file {
+                url
+                width
+                height
+                extension
+                filesize
+              }
+              resized {
+                original
+                w480
+                w800
+                w1200
+                w1600
+                w2400
+              }
+              resizedWebp {
+                original
+                w480
+                w800
+                w1200
+                w1600
+                w2400
+              }
+            }
           }
         }
+
         download { name url }
       }
     }
@@ -212,6 +315,23 @@ class StoryServices implements StoryRepos {
       'heroImage': {
         'imageApiData':
         ext['thumbnail'] ?? Environment().config.mirrorNewsDefaultImageUrl,
+        'file': null,
+        'resized': {
+          'original': null,
+          'w480': null,
+          'w800': null,
+          'w1200': null,
+          'w1600': null,
+          'w2400': null,
+        },
+        'resizedWebp': {
+          'original': null,
+          'w480': null,
+          'w800': null,
+          'w1200': null,
+          'w1600': null,
+          'w2400': null,
+        },
       },
       'categories': _ensureList(ext['categories']),
       'tags': _ensureList(ext['tags']),
@@ -270,14 +390,27 @@ class StoryServices implements StoryRepos {
 
     final heroImage = _asMap(raw['heroImage']);
     if (heroImage != null) {
-      patched['heroImage'] = {
-        ...heroImage,
-        'imageApiData':
-        _normalizePossiblyComplexStringField(heroImage['imageApiData']),
-      };
+      patched['heroImage'] = _normalizeImageNode(heroImage);
     } else {
       patched['heroImage'] = {
         'imageApiData': Environment().config.mirrorNewsDefaultImageUrl,
+        'file': null,
+        'resized': {
+          'original': null,
+          'w480': null,
+          'w800': null,
+          'w1200': null,
+          'w1600': null,
+          'w2400': null,
+        },
+        'resizedWebp': {
+          'original': null,
+          'w480': null,
+          'w800': null,
+          'w1200': null,
+          'w1600': null,
+          'w2400': null,
+        },
       };
     }
 
@@ -286,13 +419,9 @@ class StoryServices implements StoryRepos {
       final coverPhoto = _asMap(heroVideo['coverPhoto']);
       patched['heroVideo'] = {
         ...heroVideo,
-        if (coverPhoto != null)
-          'coverPhoto': {
-            ...coverPhoto,
-            'imageApiData': _normalizePossiblyComplexStringField(
-              coverPhoto['imageApiData'],
-            ),
-          },
+        if (coverPhoto != null) 'coverPhoto': _normalizeImageNode(coverPhoto),
+        if (_asMap(heroVideo['file']) != null)
+          'file': Map<String, dynamic>.from(_asMap(heroVideo['file'])!),
       };
     }
 
@@ -302,14 +431,18 @@ class StoryServices implements StoryRepos {
         if (item == null) return e;
 
         final relatedHeroImage = _asMap(item['heroImage']);
+        final relatedHeroVideo = _asMap(item['heroVideo']);
+        final relatedCoverPhoto = _asMap(relatedHeroVideo?['coverPhoto']);
+
         return {
           ...item,
           if (relatedHeroImage != null)
-            'heroImage': {
-              ...relatedHeroImage,
-              'imageApiData': _normalizePossiblyComplexStringField(
-                relatedHeroImage['imageApiData'],
-              ),
+            'heroImage': _normalizeImageNode(relatedHeroImage),
+          if (relatedHeroVideo != null)
+            'heroVideo': {
+              ...relatedHeroVideo,
+              if (relatedCoverPhoto != null)
+                'coverPhoto': _normalizeImageNode(relatedCoverPhoto),
             },
         };
       }).toList();
@@ -327,6 +460,44 @@ class StoryServices implements StoryRepos {
     patched['download'] = _ensureList(raw['download']);
 
     return patched;
+  }
+
+  Map<String, dynamic> _normalizeImageNode(Map<String, dynamic> raw) {
+    final image = Map<String, dynamic>.from(raw);
+
+    image['imageApiData'] =
+        _normalizePossiblyComplexStringField(image['imageApiData']);
+
+    final file = _asMap(image['file']);
+    if (file != null) {
+      image['file'] = Map<String, dynamic>.from(file);
+    }
+
+    final resized = _asMap(image['resized']);
+    if (resized != null) {
+      image['resized'] = {
+        'original': _asString(resized['original']),
+        'w480': _asString(resized['w480']),
+        'w800': _asString(resized['w800']),
+        'w1200': _asString(resized['w1200']),
+        'w1600': _asString(resized['w1600']),
+        'w2400': _asString(resized['w2400']),
+      };
+    }
+
+    final resizedWebp = _asMap(image['resizedWebp']);
+    if (resizedWebp != null) {
+      image['resizedWebp'] = {
+        'original': _asString(resizedWebp['original']),
+        'w480': _asString(resizedWebp['w480']),
+        'w800': _asString(resizedWebp['w800']),
+        'w1200': _asString(resizedWebp['w1200']),
+        'w1600': _asString(resizedWebp['w1600']),
+        'w2400': _asString(resizedWebp['w2400']),
+      };
+    }
+
+    return image;
   }
 
   String _wrapApiDataLikeStoryModel(dynamic value) {
@@ -462,13 +633,31 @@ class StoryServices implements StoryRepos {
 
       final map = Map<String, dynamic>.from(block);
       final rawContent = map['content'];
+      final type = map['type']?.toString();
 
+      // 這三種絕對不能轉字串，必須保留原始結構
+      if (type == 'image' || type == 'slideshow' || type == 'embeddedcode') {
+        if (rawContent is List) {
+          map['content'] = rawContent.map((e) {
+            if (e is Map<String, dynamic>) return e;
+            if (e is Map) return Map<String, dynamic>.from(e);
+            return e;
+          }).toList();
+        }
+        return map;
+      }
+
+      // 一般文字段落：維持 List 結構，不要 join 成字串
       if (rawContent is List) {
-        map['content'] = rawContent.map((e) => e.toString()).join('\n');
+        map['content'] = rawContent.map((e) {
+          if (e is Map<String, dynamic>) return e;
+          if (e is Map) return Map<String, dynamic>.from(e);
+          return e.toString();
+        }).toList();
       } else if (rawContent == null) {
-        map['content'] = '';
-      } else if (rawContent is! String) {
-        map['content'] = rawContent.toString();
+        map['content'] = [];
+      } else {
+        map['content'] = [rawContent];
       }
 
       return map;

@@ -25,9 +25,46 @@ class TopicStoryList {
   factory TopicStoryList.fromJson(Map<String, dynamic> json,
       {bool withCount = true}) {
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
-    if (BaseModel.checkJsonKeys(json, ['heroImage', 'urlMobileSized'])) {
-      photoUrl = json['heroImage']['urlMobileSized'];
+
+    final heroImage = json['heroImage'];
+    if (heroImage is Map) {
+      final heroImageMap = Map<String, dynamic>.from(heroImage);
+      final imageApiData = heroImageMap['imageApiData'];
+
+      if (imageApiData is Map) {
+        final imageApiDataMap = Map<String, dynamic>.from(imageApiData);
+
+        final w800 = imageApiDataMap['w800'];
+        if (w800 is Map) {
+          final w800Map = Map<String, dynamic>.from(w800);
+          final url = w800Map['url'];
+          if (url is String && url.isNotEmpty) {
+            photoUrl = url;
+          }
+        }
+
+        if (photoUrl == Environment().config.mirrorNewsDefaultImageUrl) {
+          final directUrl = imageApiDataMap['url'];
+          if (directUrl is String && directUrl.isNotEmpty) {
+            photoUrl = directUrl;
+          }
+        }
+
+        if (photoUrl == Environment().config.mirrorNewsDefaultImageUrl) {
+          final w480 = imageApiDataMap['w480'];
+          if (w480 is Map) {
+            final w480Map = Map<String, dynamic>.from(w480);
+            final url = w480Map['url'];
+            if (url is String && url.isNotEmpty) {
+              photoUrl = url;
+            }
+          }
+        }
+      }
     }
+
+    print('===== TopicStoryList photoUrl =====');
+    print(photoUrl);
 
     List<StoryListItem>? storyListItemList;
     int? allStoryCount;

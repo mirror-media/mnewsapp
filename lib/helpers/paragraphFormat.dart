@@ -65,6 +65,7 @@ class ParagraphFormat {
         }
       case 'image':
         {
+          print('[ParagraphFormat][image] data = ${paragraph.contents![0].data}');
           var width = MediaQuery.of(context).size.width - 48;
           if (paragraph.contents!.length > 0) {
             return ImageDescriptionWidget(
