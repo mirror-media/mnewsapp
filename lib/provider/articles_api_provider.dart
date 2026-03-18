@@ -249,6 +249,11 @@ class ArticlesApiProvider extends GetConnect {
     QueryCommand.getLatestArticles.format([skip, first]);
     final result =
     await client?.value.query(QueryOptions(document: gql(queryString)));
+    print('===== getLatestArticles query =====');
+    print(queryString);
+
+    print('===== getLatestArticles raw result =====');
+    print(result?.data);
     if (result == null ||
         result.data == null ||
         !result.data!.containsKey('posts')) return [];
