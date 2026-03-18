@@ -65,6 +65,7 @@ class ParagraphFormat {
         }
       case 'image':
         {
+          print('[ParagraphFormat][image] data = ${paragraph.contents![0].data}');
           var width = MediaQuery.of(context).size.width - 48;
           if (paragraph.contents!.length > 0) {
             return ImageDescriptionWidget(
@@ -157,10 +158,14 @@ class ParagraphFormat {
         }
       case 'youtube':
         {
-          if (paragraph.contents!.length > 0) {
-            var splitList = paragraph.contents![0].data.split(': ');
-            String id = splitList[1].split(',')[0];
-            var description = splitList[2].split('}')[0];
+          if (paragraph.contents!.isNotEmpty) {
+            final String id = paragraph.contents![0].data;
+            final String? description = paragraph.contents![0].description;
+
+            if (id.isEmpty) {
+              return Container();
+            }
+
             return YoutubeWidget(
               youtubeId: id,
               description: description,

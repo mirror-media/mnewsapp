@@ -107,9 +107,12 @@ class Story {
     final heroImageJson = json['heroImage'];
     final parsedHeroImage = _extractImageUrlFromNode(heroImageJson) ??
         _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']);
+
     if (parsedHeroImage != null && parsedHeroImage.isNotEmpty) {
       heroImage = parsedHeroImage;
-      imageUrlList.insert(0, heroImage);
+      if (!imageUrlList.contains(heroImage)) {
+        imageUrlList.insert(0, heroImage);
+      }
     }
 
     // ---- heroVideo ----
@@ -121,6 +124,17 @@ class Story {
         heroVideo = heroVideoJson['url'] as String;
       } else if (heroVideoJson['file'] is Map<String, dynamic>) {
         final fileUrl = heroVideoJson['file']['url'];
+        if (fileUrl is String && fileUrl.isNotEmpty) {
+          heroVideo = fileUrl;
+        }
+      }
+    } else if (heroVideoJson is Map) {
+      final map = Map<String, dynamic>.from(heroVideoJson);
+      if (map['url'] is String && (map['url'] as String).isNotEmpty) {
+        heroVideo = map['url'] as String;
+      } else if (map['file'] is Map) {
+        final fileMap = Map<String, dynamic>.from(map['file']);
+        final fileUrl = fileMap['url'];
         if (fileUrl is String && fileUrl.isNotEmpty) {
           heroVideo = fileUrl;
         }
@@ -256,7 +270,6 @@ class Story {
         return [];
       }
 
-      // 1. String JSON
       if (source is String) {
         final trimmed = source.trim();
         if (trimmed.isEmpty) return [];
@@ -264,13 +277,11 @@ class Story {
         try {
           source = json.decode(trimmed);
         } catch (_) {
-          // 舊 parser 若能處理字串，最後再 fallback 一次
           final parsed = Paragraph.parseResponseBody(source);
           return parsed ?? [];
         }
       }
 
-      // 2. { apiData: [...] }
       if (source is Map<String, dynamic>) {
         final apiData = source['apiData'];
         if (apiData is List) {
@@ -279,12 +290,10 @@ class Story {
         return [];
       }
 
-      // 3. List
       if (source is List) {
         return _mapParagraphList(source);
       }
 
-      // 4. fallback 給舊 parser
       final parsed = Paragraph.parseResponseBody(raw);
       return parsed ?? [];
     } catch (e) {
@@ -327,23 +336,20 @@ class Story {
     final dynamic rawContent = map['content'];
 
     if (rawContent is String) {
-      map['content'] = [
-        rawContent
-      ];
-    }
-    else if (rawContent is List) {
+      map['content'] = [rawContent];
+    } else if (rawContent is List) {
       map['content'] = rawContent.map((e) {
         if (e is Map<String, dynamic>) return e;
         if (e is Map) return Map<String, dynamic>.from(e);
-        return { e.toString()};
+        return {'data': e.toString()};
       }).toList();
-    }
-    else if (rawContent == null) {
+    } else if (rawContent == null) {
       map['content'] = [];
     }
 
     return map;
   }
+
   static String? _extractImageUrlFromNode(dynamic imageNode) {
     if (imageNode == null) return null;
     if (imageNode is! Map) return null;
@@ -352,12 +358,46 @@ class Story {
         ? imageNode
         : Map<String, dynamic>.from(imageNode);
 
+    // 1. resized 直接就是字串 URL
+    final resizedUrl = _extractFromStringMap(
+      map['resized'],
+      priority: const ['w800', 'w480', 'w1600', 'w2400', 'original', 'w1200'],
+    );
+    if (resizedUrl != null && resizedUrl.isNotEmpty) {
+      return resizedUrl;
+    }
+
+    // 2. resizedWebp
+    final resizedWebpUrl = _extractFromStringMap(
+      map['resizedWebp'],
+      priority: const ['w800', 'w480', 'w1600', 'w2400', 'original', 'w1200'],
+    );
+    if (resizedWebpUrl != null && resizedWebpUrl.isNotEmpty) {
+      return resizedWebpUrl;
+    }
+
+    // 3. imageApiData
     final imageApiData = map['imageApiData'];
     final k6Url = _extractUrlFromImageApiData(imageApiData);
     if (k6Url != null && k6Url.isNotEmpty) {
       return k6Url;
     }
 
+    // 4. file.url
+    final file = map['file'];
+    if (file is Map) {
+      final fileMap = file is Map<String, dynamic>
+          ? file
+          : Map<String, dynamic>.from(file);
+      final fileUrl = fileMap['url'];
+      if (fileUrl is String &&
+          fileUrl.isNotEmpty &&
+          (fileUrl.startsWith('http://') || fileUrl.startsWith('https://'))) {
+        return fileUrl;
+      }
+    }
+
+    // 5. 舊扁平欄位 fallback
     const directKeys = [
       'url',
       'urlMobileSized',
@@ -389,20 +429,37 @@ class Story {
     return null;
   }
 
+  static String? _extractFromStringMap(
+      dynamic value, {
+        required List<String> priority,
+      }) {
+    if (value is! Map) return null;
+
+    final map = value is Map<String, dynamic>
+        ? value
+        : Map<String, dynamic>.from(value);
+
+    for (final key in priority) {
+      final v = map[key];
+      if (v is String && v.isNotEmpty) {
+        return v;
+      }
+    }
+
+    return null;
+  }
+
   static String? _extractUrlFromImageApiData(dynamic imageApiData) {
     if (imageApiData == null) return null;
 
-    // 1. 如果是字串，先判斷是不是 JSON 字串
     if (imageApiData is String) {
       final trimmed = imageApiData.trim();
       if (trimmed.isEmpty) return null;
 
-      // 如果本身就是一般 http url，直接回傳
       if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
         return trimmed;
       }
 
-      // 如果是 JSON 字串，先 decode 再繼續解析
       if (trimmed.startsWith('{') || trimmed.startsWith('[')) {
         try {
           final decoded = json.decode(trimmed);
@@ -415,30 +472,38 @@ class Story {
       return null;
     }
 
-    // 2. 如果是 Map，依常見 key 取圖
-    if (imageApiData is Map<String, dynamic>) {
-      final directUrl = imageApiData['url'];
+    if (imageApiData is Map) {
+      final map = imageApiData is Map<String, dynamic>
+          ? imageApiData
+          : Map<String, dynamic>.from(imageApiData);
+
+      final directUrl = map['url'];
       if (directUrl is String && directUrl.isNotEmpty) {
         return directUrl;
       }
 
-      final possibleKeys = [
+      const possibleKeys = [
         'w800',
-        'w1200',
         'w480',
+        'w1600',
+        'w2400',
         'original',
+        'w1200',
         'src',
         'mobile',
         'urlMobileSized',
       ];
 
       for (final key in possibleKeys) {
-        final value = imageApiData[key];
+        final value = map[key];
         if (value is String && value.isNotEmpty) {
           return value;
         }
-        if (value is Map<String, dynamic>) {
-          final nestedUrl = value['url'];
+        if (value is Map) {
+          final nested = value is Map<String, dynamic>
+              ? value
+              : Map<String, dynamic>.from(value);
+          final nestedUrl = nested['url'];
           if (nestedUrl is String && nestedUrl.isNotEmpty) {
             return nestedUrl;
           }
@@ -446,7 +511,6 @@ class Story {
       }
     }
 
-    // 3. 如果是 List，抓第一個可用的
     if (imageApiData is List) {
       for (final item in imageApiData) {
         final url = _extractUrlFromImageApiData(item);
