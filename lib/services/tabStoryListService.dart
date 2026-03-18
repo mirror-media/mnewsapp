@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
@@ -8,6 +9,8 @@ import 'package:tv/models/category.dart';
 import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/editorChoiceService.dart';
+
+import '../provider/articles_api_provider.dart';
 
 abstract class TabStoryListRepos {
   Future<List<StoryListItem>> fetchStoryList(
@@ -183,70 +186,82 @@ class TabStoryListServices implements TabStoryListRepos {
       );
     }
 
-    String key =
-        'fetchStoryListByCategorySlug?slug=$slug&skip=$skip&first=$first';
-    if (postStyle != null) {
-      key = '$key&postStyle=$postStyle';
+    final String queryString = """
+query {
+  posts(
+    where: {
+      state: { equals: "published" }
+      style: {
+        notIn: ["wide", "projects", "script", "campaign", "readr"]
+      }
+      categories: {
+        some: {
+          slug: { equals: "$slug" }
+        }
+      }
     }
-
-    final Map<String, dynamic> variables = {
-      "where": {
-        "state": {"equals": "published"},
-        "style": {
-          "notIn": ["wide", "projects", "script", "campaign", "readr"]
-        },
-        "categories": {
-          "some": {
-            "slug": {"equals": slug}
-          }
-        },
-      },
-      "skip": skip,
-      "take": first,
-      "withCount": withCount,
-    };
-
-    if (postStyle != null) {
-      variables["where"].addAll({
-        "style": {"equals": postStyle}
-      });
+    skip: $skip
+    take: $first
+    orderBy: [{ publishTime: desc }]
+  ) {
+    id
+    slug
+    name
+    style
+    heroImage {
+      imageApiData
     }
-
-    final GraphqlBody graphqlBody = GraphqlBody(
-      operationName: null,
-      query: query,
-      variables: variables,
-    );
-
-    late final dynamic jsonResponse;
-    if (skip > 40) {
-      jsonResponse = await _helper.postByUrl(
-        Environment().config.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        headers: {"Content-Type": "application/json"},
-      );
-    } else {
-      jsonResponse = await _helper.postByCacheAndAutoCache(
-        key,
-        Environment().config.graphqlApi,
-        jsonEncode(graphqlBody.toJson()),
-        maxAge: newsTabStoryList,
-        headers: {"Content-Type": "application/json"},
-      );
+    heroVideo {
+      coverPhoto {
+        imageApiData
+      }
     }
+    categories {
+      id
+      slug
+      name
+    }
+  }
+
+  postsCount(
+    where: {
+      state: { equals: "published" }
+      style: {
+        notIn: ["wide", "projects", "script", "campaign", "readr"]
+      }
+      categories: {
+        some: {
+          slug: { equals: "$slug" }
+        }
+      }
+    }
+  )
+}
+""";
 
     print('[fetchStoryListByCategorySlug] slug = $slug');
-    print('[fetchStoryListByCategorySlug] graphql raw = $jsonResponse');
+    print('[fetchStoryListByCategorySlug] query = $queryString');
 
-    final List<dynamic> postJsonList =
-        (jsonResponse['data']?['posts'] as List?) ?? [];
+    final result = await ArticlesApiProvider.instance.client?.value.query(
+      QueryOptions(
+        document: gql(queryString),
+        fetchPolicy: FetchPolicy.networkOnly,
+      ),
+    );
+
+    print('[fetchStoryListByCategorySlug] result.data = ${result?.data}');
+    print('[fetchStoryListByCategorySlug] result.exception = ${result?.exception}');
+
+    if (result == null || result.data == null) return [];
+
+    final List<dynamic> postJsonList = (result.data!['posts'] as List?) ?? [];
 
     final List<StoryListItem> newsList = postJsonList
         .map((post) => StoryListItem.fromJson(post))
         .toList();
 
     if (withCount) {
-      allStoryCount = jsonResponse['data']?['postsCount'] ?? 0;
+      allStoryCount = result.data!['postsCount'] ?? 0;
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
