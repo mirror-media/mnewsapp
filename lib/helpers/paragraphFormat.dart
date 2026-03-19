@@ -87,11 +87,23 @@ class ParagraphFormat {
             imageUrlList: imageUrlList ?? [],
           );
         }
-      case 'annotation':
+      case 'audio':
         {
+          print('[ParagraphFormat][audio] type = ${paragraph.type}');
+          print('[ParagraphFormat][audio] contents length = ${paragraph.contents?.length}');
+          print('[ParagraphFormat][audio] data = ${paragraph.contents?.isNotEmpty == true ? paragraph.contents![0].data : null}');
+          print('[ParagraphFormat][audio] description = ${paragraph.contents?.isNotEmpty == true ? paragraph.contents![0].description : null}');
+
           if (paragraph.contents!.length > 0) {
-            return AnnotationWidget(
-              data: paragraph.contents![0].data,
+            String? titleAndDescription;
+            if (paragraph.contents![0].description != null) {
+              titleAndDescription =
+              paragraph.contents![0].description!.split(';')[0];
+            }
+
+            return MNewsAudioPlayer(
+              audioUrl: paragraph.contents![0].data,
+              title: titleAndDescription,
               textSize: textSize,
             );
           }
@@ -131,6 +143,10 @@ class ParagraphFormat {
         }
       case 'video':
         {
+          print('[ParagraphFormat][video] type = ${paragraph.type}');
+          print('[ParagraphFormat][video] contents length = ${paragraph.contents?.length}');
+          print('[ParagraphFormat][video] data = ${paragraph.contents?.isNotEmpty == true ? paragraph.contents![0].data : null}');
+          print('[ParagraphFormat][video] description = ${paragraph.contents?.isNotEmpty == true ? paragraph.contents![0].description : null}');
           if (paragraph.contents!.length > 0) {
             return MNewsVideoPlayer(
               videourl: paragraph.contents![0].data,
