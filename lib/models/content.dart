@@ -38,7 +38,49 @@ class Content {
 
       print('[Content.fromJson] map keys = ${map.keys.toList()}');
 
-      // 新版文章內文圖片格式
+      // ---------- V2 wrapper support ----------
+      // slideshow-v2 / AUDIO-V2 / VIDEO-V2 可能包在 data 裡
+      if (map['data'] is Map) {
+        final innerData = Map<String, dynamic>.from(map['data']);
+
+        if (map['type'] == 'slideshow-v2' || map['type'] == 'SLIDESHOW-V2') {
+          print('[Content.fromJson] -> slideshow-v2 wrapper branch');
+          return Content(
+            data: '',
+            aspectRatio: null,
+            description: null,
+          );
+        }
+
+        if (map['type'] == 'AUDIO-V2') {
+          final audio = innerData['audio'];
+          if (audio is Map) {
+            final audioMap = Map<String, dynamic>.from(audio);
+            print('[Content.fromJson] -> AUDIO-V2 wrapper branch');
+            return Content(
+              data: audioMap['url']?.toString() ?? '',
+              aspectRatio: null,
+              description: audioMap['name']?.toString(),
+            );
+          }
+        }
+
+        if (map['type'] == 'VIDEO-V2') {
+          final video = innerData['video'];
+          if (video is Map) {
+            final videoMap = Map<String, dynamic>.from(video);
+            print('[Content.fromJson] -> VIDEO-V2 wrapper branch');
+            return Content(
+              data: _extractVideoUrl(videoMap) ?? '',
+              aspectRatio: null,
+              description:
+              innerData['desc']?.toString() ?? videoMap['name']?.toString(),
+            );
+          }
+        }
+      }
+
+      // ---------- image ----------
       if (map.containsKey('resized') ||
           map.containsKey('resizedWebp') ||
           map.containsKey('file')) {
@@ -58,6 +100,7 @@ class Content {
         );
       }
 
+      // ---------- old mobile image ----------
       if (BaseModel.checkJsonKeys(map, ['mobile'])) {
         print('[Content.fromJson] -> mobile branch');
         final mobile = map['mobile'];
@@ -80,6 +123,7 @@ class Content {
         }
       }
 
+      // ---------- youtube ----------
       if (BaseModel.checkJsonKeys(map, ['youtubeId'])) {
         print('[Content.fromJson] -> youtube branch');
         return Content(
@@ -89,6 +133,53 @@ class Content {
         );
       }
 
+      // ---------- audio (flattened K6) ----------
+      if (BaseModel.checkJsonKeys(map, ['audio'])) {
+        final audio = map['audio'];
+        if (audio is Map) {
+          final audioMap = Map<String, dynamic>.from(audio);
+          print('[Content.fromJson] -> audio branch');
+          return Content(
+            data: audioMap['url']?.toString() ?? '',
+            aspectRatio: null,
+            description: audioMap['name']?.toString(),
+          );
+        }
+      }
+
+      // ---------- video (flattened K6) ----------
+      if (BaseModel.checkJsonKeys(map, ['video'])) {
+        final video = map['video'];
+        if (video is Map) {
+          final videoMap = Map<String, dynamic>.from(video);
+          print('[Content.fromJson] -> video branch');
+          return Content(
+            data: _extractVideoUrl(videoMap) ?? '',
+            aspectRatio: null,
+            description:
+            map['desc']?.toString() ?? videoMap['name']?.toString(),
+          );
+        }
+      }
+
+      // ---------- slideshow flattened container ----------
+      if (BaseModel.checkJsonKeys(map, ['images'])) {
+        final images = map['images'];
+        if (images is List && images.isNotEmpty) {
+          final first = images.first;
+          if (first is Map) {
+            final firstMap = Map<String, dynamic>.from(first);
+            print('[Content.fromJson] -> slideshow images container branch');
+            return Content(
+              data: _extractImageUrl(firstMap) ?? '',
+              aspectRatio: _extractAspectRatioFromFile(firstMap['file']),
+              description: _extractDescription(firstMap),
+            );
+          }
+        }
+      }
+
+      // ---------- direct url ----------
       if (BaseModel.checkJsonKeys(map, ['url'])) {
         print('[Content.fromJson] -> url branch');
         return Content(
@@ -98,6 +189,7 @@ class Content {
         );
       }
 
+      // ---------- embedded code ----------
       if (BaseModel.checkJsonKeys(map, ['embeddedCode'])) {
         print('[Content.fromJson] -> embeddedCode branch');
         double? ratio;
@@ -116,6 +208,7 @@ class Content {
         );
       }
 
+      // ---------- title/body ----------
       if (BaseModel.checkJsonKeys(map, ['draftRawObj']) ||
           BaseModel.checkJsonKeys(map, ['title'])) {
         print('[Content.fromJson] -> title/body branch');
@@ -126,6 +219,7 @@ class Content {
         );
       }
 
+      // ---------- quote ----------
       if (BaseModel.checkJsonKeys(map, ['quote'])) {
         print('[Content.fromJson] -> quote branch');
         return Content(
@@ -135,7 +229,8 @@ class Content {
         );
       }
 
-      if (map['data'] != null) {
+      // ---------- generic data fallback ----------
+      if (map['data'] != null && map['data'] is! Map) {
         print('[Content.fromJson] -> data fallback branch');
         return Content(
           data: map['data']?.toString() ?? '',
@@ -195,6 +290,29 @@ class Content {
     final directUrl = map['url'];
     if (directUrl is String && directUrl.isNotEmpty) {
       return directUrl;
+    }
+
+    return null;
+  }
+
+  static String? _extractVideoUrl(Map<String, dynamic> map) {
+    final videoSrc = map['videoSrc'];
+    if (videoSrc is String && videoSrc.isNotEmpty) {
+      return videoSrc;
+    }
+
+    final url = map['url'];
+    if (url is String && url.isNotEmpty) {
+      return url;
+    }
+
+    final file = map['file'];
+    if (file is Map) {
+      final fileMap = Map<String, dynamic>.from(file);
+      final fileUrl = fileMap['url'];
+      if (fileUrl is String && fileUrl.isNotEmpty) {
+        return fileUrl;
+      }
     }
 
     return null;
