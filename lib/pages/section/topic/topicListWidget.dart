@@ -3,9 +3,8 @@ import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/topicList/bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/topic_list_controller.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -21,53 +20,41 @@ class TopicListWidget extends StatefulWidget {
 }
 
 class _TopicListWidgetState extends State<TopicListWidget> {
-  List<Topic> topicList = [];
   ParagraphFormat paragraphFormat = ParagraphFormat();
   final TextScaleFactorController textScaleFactorController = Get.find();
-
-  @override
-  void initState() {
-    _fetchTopicList();
-    super.initState();
-  }
-
-  _fetchTopicList() {
-    context.read<TopicListBloc>().add(FetchTopicList());
-  }
+  final TopicListController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TopicListBloc, TopicListState>(
-      builder: (BuildContext context, TopicListState state) {
-        if (state.status == TopicListStatus.error) {
-          final error = state.error;
+    return Obx(() {
+        final error = controller.error.value;
+        if (error != null) {
           print('TopicListError: ${error.message}');
           if (error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _fetchTopicList());
+            return error.renderWidget(onPressed: controller.fetchTopicList);
           }
 
           return error.renderWidget();
         }
 
-        if (state.status == TopicListStatus.loaded) {
-          topicList = state.topicList!;
+        if (!controller.isLoading.value) {
+          final topicList = controller.topicList;
           if (topicList.isEmpty) {
             return TabContentNoResultWidget();
           }
           return Container(
             color: Colors.white,
-            child: _buildTopicList(),
+            child: _buildTopicList(topicList),
           );
         }
 
         return Center(
           child: CircularProgressIndicator.adaptive(),
         );
-      },
-    );
+      });
   }
 
-  Widget _buildTopicList() {
+  Widget _buildTopicList(List<Topic> topicList) {
     List<Topic> firstSixTopics = [];
     List<Topic> sixToTwelveTopics = [];
     List<Topic> otherTopics = [];

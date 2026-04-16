@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/story/bloc.dart';
-import 'package:tv/blocs/story/events.dart';
-import 'package:tv/blocs/story/states.dart';
-import 'package:tv/blocs/video/video_cubit.dart';
+import 'package:tv/controller/ombuds_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/paragraph.dart';
 import 'package:tv/models/story.dart';
-import 'package:tv/models/video.dart' as myVideo;
 import 'package:tv/pages/section/ombuds/ombudsButton.dart';
 import 'package:tv/pages/section/ombuds/ombudsNewsListPage.dart';
 import 'package:tv/pages/storyPage.dart';
@@ -20,134 +15,104 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class OmbudsWidget extends StatefulWidget {
+  const OmbudsWidget({super.key});
+
   @override
-  _OmbudsWidgetState createState() => _OmbudsWidgetState();
+  State<OmbudsWidget> createState() => _OmbudsWidgetState();
 }
 
 class _OmbudsWidgetState extends State<OmbudsWidget> {
-  //double _leftAndRightPaddingNumber = 24.0;
   final TextScaleFactorController textScaleFactorController = Get.find();
-
-  @override
-  void initState() {
-    _loadOmbuds();
-    super.initState();
-  }
-
-  _loadOmbuds() async {
-    context.read<StoryBloc>().add(FetchPublishedStoryBySlug('biography'));
-    context.read<VideoCubit>().fetchVideoByName('ombuds_office_main_video');
-  }
+  final OmbudsController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    return BlocBuilder<StoryBloc, StoryState>(
-        builder: (BuildContext context, StoryState state) {
-      if (state is StoryError) {
-        final error = state.error;
-        print('NewsCategoriesError: ${error.message}');
+    final width = MediaQuery.of(context).size.width;
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         if (error is NoInternetException) {
-          return error.renderWidget(onPressed: () => _loadOmbuds());
+          return error.renderWidget(onPressed: controller.loadOmbuds);
         }
-
         return error.renderWidget(isNoButton: true);
       }
-      if (state is StoryLoaded) {
-        Story? story = state.story;
-        if (story == null) {
-          return Container();
-        }
 
-        return _buildContent(width, story);
+      final story = controller.story.value;
+      if (controller.isLoading.value && story == null) {
+        return _loadingWidget();
       }
 
-      // state is Init, loading, or other
-      return _loadingWidget();
-    });
-  }
-
-  Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
-
-  Widget _buildContent(double width, Story story) {
-    return ListView(children: [
-      SizedBox(
-        height: 44,
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-        child: _buildHeroWidget(width - 48, story),
-      ),
-      SizedBox(
-        height: 28,
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-        child: _buildBrief(story.brief!),
-      ),
-      SizedBox(
-        height: 8,
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-        child: _understandMoreBlock(),
-      ),
-      SizedBox(
-        height: 40,
-      ),
-      Container(
-        width: width,
-        color: Color(0xffF4F5F6),
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 28,
-              ),
-              _appealBlock(width),
-              SizedBox(
-                height: 32,
-              ),
-              _ombudsIntroBlock(width),
-              SizedBox(
-                height: 28,
-              ),
-            ],
-          ),
-        ),
-      ),
-    ]);
-  }
-
-  Widget _buildHeroWidget(double width, Story story) {
-    return BlocBuilder<VideoCubit, VideoState>(
-        builder: (BuildContext context, VideoState state) {
-      if (state is VideoError) {
-        final error = state.error;
-        print('OmbudsVideoError: ${error.message}');
+      if (story == null) {
         return Container();
       }
-      if (state is VideoLoaded) {
-        myVideo.Video? video = state.video;
-        if (video == null) {
-          return Container();
-        }
 
-        return _buildVideoWidget(video.url);
-      }
-
-      // state is Init, loading, or other
-      return _loadingWidget();
+      return _buildContent(width, story);
     });
   }
 
-  _buildVideoWidget(String videoUrl) {
-    String youtubeString = 'youtube';
-    if (videoUrl.contains(youtubeString)) {
-      String? ytId = VideoId.parseVideoId(videoUrl) ?? '';
+  Widget _loadingWidget() {
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    );
+  }
+
+  Widget _buildContent(double width, Story story) {
+    return ListView(
+      children: [
+        const SizedBox(height: 44),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+          child: _buildHeroWidget(width - 48),
+        ),
+        const SizedBox(height: 28),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+          child: _buildBrief(story.brief!),
+        ),
+        const SizedBox(height: 8),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+          child: _understandMoreBlock(),
+        ),
+        const SizedBox(height: 40),
+        Container(
+          width: width,
+          color: const Color(0xffF4F5F6),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 28),
+                _appealBlock(width),
+                const SizedBox(height: 32),
+                _ombudsIntroBlock(width),
+                const SizedBox(height: 28),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildHeroWidget(double width) {
+    return Obx(() {
+      final video = controller.video.value;
+      if (controller.isLoading.value && video == null) {
+        return _loadingWidget();
+      }
+
+      if (video == null) {
+        return Container();
+      }
+
+      return _buildVideoWidget(video.url);
+    });
+  }
+
+  Widget _buildVideoWidget(String videoUrl) {
+    if (videoUrl.contains('youtube')) {
+      final ytId = VideoId.parseVideoId(videoUrl) ?? '';
       return YoutubePlayer(ytId);
     }
 
@@ -160,10 +125,10 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
   }
 
   Widget _buildBrief(List<Paragraph> brief) {
-    List<Paragraph> unstyledBrief = [];
-    for (int i = 0; i < brief.length; i++) {
-      if (brief[i].type == 'unstyled') {
-        unstyledBrief.add(brief[i]);
+    final unstyledBrief = <Paragraph>[];
+    for (final paragraph in brief) {
+      if (paragraph.type == 'unstyled') {
+        unstyledBrief.add(paragraph);
       }
     }
 
@@ -173,146 +138,177 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
         Obx(
           () => Text(
             '外部公評人翁秀琪',
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 20,
               color: themeColor,
             ),
             textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         ListView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            itemCount: unstyledBrief.length,
-            itemBuilder: (context, index) {
-              return Obx(
-                () => Text(
-                  unstyledBrief[index].contents![0].data,
-                  style: TextStyle(
-                    fontSize: 17,
-                  ),
-                  textScaleFactor:
-                      textScaleFactorController.textScaleFactor.value,
-                ),
-              );
-            }),
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          itemCount: unstyledBrief.length,
+          itemBuilder: (context, index) {
+            return Obx(
+              () => Text(
+                unstyledBrief[index].contents![0].data,
+                style: const TextStyle(fontSize: 17),
+                textScaleFactor:
+                    textScaleFactorController.textScaleFactor.value,
+              ),
+            );
+          },
+        ),
       ],
     );
   }
 
   Widget _understandMoreBlock() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Container(),
-      InkWell(
-        child: Obx(
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Container(),
+        InkWell(
+          onTap: () => Get.to(
+            () => StoryPage(
+              slug: 'biography',
+              showAds: false,
+            ),
+          ),
+          child: Obx(
+            () => Text(
+              '了解更多＞',
+              style: const TextStyle(
+                fontSize: 20,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w600,
+              ),
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _appealBlock(double width) {
+    return Column(
+      children: [
+        Obx(
           () => Text(
-            '了解更多＞',
-            style: TextStyle(
-              fontSize: 20,
-              decoration: TextDecoration.underline,
-              fontWeight: FontWeight.w600,
+            '我要向公評人申訴',
+            style: const TextStyle(
+              fontSize: 22,
+              fontWeight: FontWeight.w500,
+              color: Color(0xff004DBC),
             ),
             textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
         ),
-        onTap: () => Get.to(() => StoryPage(
-              slug: 'biography',
-              showAds: false,
-            )),
-      )
-    ]);
-  }
-
-  // ignore: unused_element
-  Widget _appealBlock(double width) {
-    return Column(children: [
-      Obx(
-        () => Text(
-          '我要向公評人申訴',
-          style: TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.w500,
-            color: Color(0xff004DBC),
-          ),
-          textScaleFactor: textScaleFactorController.textScaleFactor.value,
-        ),
-      ),
-      SizedBox(height: 24),
-      Obx(
-        () => Text(
-          '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵。',
-          style: TextStyle(
-            fontSize: 15,
-            fontWeight: FontWeight.w400,
-            color: Color(0xff014DB8),
-          ),
-          textScaleFactor: textScaleFactorController.textScaleFactor.value,
-        ),
-      ),
-      SizedBox(height: 32),
-      _appealButton(
-        width,
-        '向公評人申訴',
-        () => Get.to(() => StoryPage(
-              slug: 'complaint',
-              showAds: false,
-            )),
-      ),
-      SizedBox(height: 20),
-      Obx(
-        () => RichText(
-          text: TextSpan(
-            text: '客服事項請打客服專線：',
-            children: [
-              WidgetSpan(
-                child: GestureDetector(
-                  child: Text(
-                    '（02）7752-5678',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff014DB8),
-                    ),
-                  ),
-                  onTap: () async {
-                    String url = 'tel:02-7752-5678';
-                    if (!await launchUrl(Uri.parse(url)))
-                      throw 'Could not launch $url';
-                  },
-                ),
-              ),
-              TextSpan(text: '\n或洽客服信箱：'),
-              WidgetSpan(
-                child: GestureDetector(
-                  child: Text(
-                    'mnews.cs@mnews.com.tw',
-                    style: TextStyle(
-                      decoration: TextDecoration.underline,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: Color(0xff014DB8),
-                    ),
-                  ),
-                  onTap: () async {
-                    String url = 'mailto:mnews.cs@mnews.com.tw';
-                    if (!await launchUrl(Uri.parse(url)))
-                      throw 'Could not launch $url';
-                  },
-                ),
-              ),
-            ],
-            style: TextStyle(
-              fontSize: 14,
+        const SizedBox(height: 24),
+        Obx(
+          () => Text(
+            '如果您對於我們的新聞內容有意見，例如：事實錯誤、侵害人權，或違反新聞倫理等，請按下方的向公評人申訴鍵。',
+            style: const TextStyle(
+              fontSize: 15,
               fontWeight: FontWeight.w400,
               color: Color(0xff014DB8),
             ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
           ),
-          textScaleFactor: textScaleFactorController.textScaleFactor.value,
         ),
-      ),
-    ]);
+        const SizedBox(height: 32),
+        _appealButton(
+          width,
+          '向公評人申訴',
+          () => Get.to(
+            () => StoryPage(
+              slug: 'complaint',
+              showAds: false,
+            ),
+          ),
+        ),
+        const SizedBox(height: 24),
+        Obx(
+          () => RichText(
+            text: const TextSpan(
+              text: '如果您要爆料給鏡新聞，或投書給鏡新聞，\n請來信',
+              children: [
+                TextSpan(
+                  text: 'newsbreak@mnews.tw',
+                  style: TextStyle(
+                    decoration: TextDecoration.underline,
+                  ),
+                ),
+              ],
+              style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff014DB8),
+              ),
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+        ),
+        const SizedBox(height: 20),
+        Obx(
+          () => RichText(
+            text: TextSpan(
+              text: '客服事項請打客服專線：',
+              children: [
+                WidgetSpan(
+                  child: GestureDetector(
+                    onTap: () async {
+                      const url = 'tel:02-7752-5678';
+                      if (!await launchUrl(Uri.parse(url))) {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                    child: const Text(
+                      '（02）7752-5678',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff014DB8),
+                      ),
+                    ),
+                  ),
+                ),
+                const TextSpan(text: '\n或洽客服信箱：'),
+                WidgetSpan(
+                  child: GestureDetector(
+                    onTap: () async {
+                      const url = 'mailto:mnews.cs@mnews.com.tw';
+                      if (!await launchUrl(Uri.parse(url))) {
+                        throw 'Could not launch $url';
+                      }
+                    },
+                    child: const Text(
+                      'mnews.cs@mnews.com.tw',
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: Color(0xff014DB8),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: Color(0xff014DB8),
+              ),
+            ),
+            textScaleFactor: textScaleFactorController.textScaleFactor.value,
+          ),
+        ),
+      ],
+    );
   }
 
   Widget _appealButton(
@@ -320,15 +316,28 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
     String title,
     VoidCallback? onPressed,
   ) {
-    return Container(
+    return SizedBox(
       width: width,
       child: OutlinedButton(
+        onPressed: onPressed,
+        style: ButtonStyle(
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(
+              color: Color(0xff014DB8),
+            ),
+          ),
+          side: MaterialStateProperty.all(
+            const BorderSide(
+              color: Color(0xff014DB8),
+            ),
+          ),
+        ),
         child: Padding(
           padding: const EdgeInsets.fromLTRB(0.0, 16.0, 0.0, 16.0),
           child: Obx(
             () => Text(
               title,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 17,
                 fontWeight: FontWeight.w500,
                 color: Color(0xff014DB8),
@@ -337,29 +346,16 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             ),
           ),
         ),
-        style: ButtonStyle(
-          textStyle: MaterialStateProperty.all(
-            TextStyle(
-              color: Color(0xff014DB8),
-            ),
-          ),
-          side: MaterialStateProperty.all(
-            BorderSide(
-              color: Color(0xff014DB8),
-            ),
-          ),
-        ),
-        onPressed: onPressed,
       ),
     );
   }
 
   Widget _ombudsIntroBlock(double width) {
-    double ombudsWidth = (width - 48 - 26) / 2;
+    final ombudsWidth = (width - 48 - 26) / 2;
 
     return Obx(() {
-      double height = 54 * textScaleFactorController.textScaleFactor.value + 72;
-      double aspectRatio = ombudsWidth / height;
+      final height = 54 * textScaleFactorController.textScaleFactor.value + 72;
+      final aspectRatio = ombudsWidth / height;
       return GridView(
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
@@ -379,10 +375,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
                 ? '關於'
                 : '關於鏡新聞',
             title2: '公評人',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'biography',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'biography',
+                showAds: false,
+              ),
+            ),
           ),
           OmbudsButton(
             width: ombudsWidth,
@@ -398,10 +396,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             imageLocationString: phoneSvg,
             title1: '申訴',
             title2: '流程',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'complaint',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'complaint',
+                showAds: false,
+              ),
+            ),
           ),
           OmbudsButton(
             width: ombudsWidth,
@@ -409,10 +409,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             imageLocationString: reportSvg,
             title1: '業務',
             title2: '報告',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'reports',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'reports',
+                showAds: false,
+              ),
+            ),
           ),
           OmbudsButton(
             width: ombudsWidth,
@@ -420,10 +422,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             imageLocationString: hammerSvg,
             title1: '公評人',
             title2: '設置章程',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'law',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'law',
+                showAds: false,
+              ),
+            ),
           ),
           OmbudsButton(
             width: ombudsWidth,
@@ -431,10 +435,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             imageLocationString: paperSvg,
             title1: '新聞自律 /',
             title2: '他律規範',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'standards',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'standards',
+                showAds: false,
+              ),
+            ),
           ),
           OmbudsButton(
             width: ombudsWidth,
@@ -442,10 +448,12 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
             imageLocationString: faqSvg,
             title1: '常見問題',
             title2: 'FAQ',
-            onTap: () => Get.to(() => StoryPage(
-                  slug: 'faq',
-                  showAds: false,
-                )),
+            onTap: () => Get.to(
+              () => StoryPage(
+                slug: 'faq',
+                showAds: false,
+              ),
+            ),
           ),
         ],
       );
