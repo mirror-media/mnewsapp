@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/search/bloc.dart';
+import 'package:get/get.dart';
+import 'package:tv/bindings/search_binding.dart';
+import 'package:tv/controller/search_controller.dart' as search;
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/search/searchWidget.dart';
@@ -13,14 +14,28 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    SearchBinding().dependencies();
     AnalyticsHelper.sendScreenView(screenName: 'SearchPage');
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<search.SearchController>()) {
+      Get.delete<search.SearchController>();
+    }
+    if (Get.isRegistered<SearchRepos>()) {
+      Get.delete<SearchRepos>();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: BlocProvider(
-        create: (context) => SearchBloc(searchRepos: SearchServices()),
-        child: SearchWidget(),
-      ),
+      body: SearchWidget(),
       resizeToAvoidBottomInset: false,
     );
   }
@@ -29,7 +44,7 @@ class _SearchPageState extends State<SearchPage> {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: Get.back,
       ),
       backgroundColor: appBarColor,
       title: Text('搜尋'),

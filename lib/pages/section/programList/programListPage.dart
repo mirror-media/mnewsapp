@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/programList/program_list_cubit.dart';
+import 'package:tv/bindings/program_list_binding.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/pages/section/programList/programListWidget.dart';
 
@@ -8,11 +7,9 @@ class ProgramListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     AnalyticsHelper.sendScreenView(screenName: 'ProgramListPage');
+    ProgramListBinding().dependencies();
     return Center(
-      child: BlocProvider(
-        create: (context) => ProgramListCubit(),
-        child: ProgramListWidget(),
-      ),
+      child: ProgramListWidget(),
     );
   }
 }

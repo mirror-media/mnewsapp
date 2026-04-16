@@ -1,17 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/search/bloc.dart';
-import 'package:tv/blocs/search/events.dart';
-import 'package:tv/blocs/search/states.dart';
+import 'package:tv/controller/search_controller.dart' as search;
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/search/searchNoResultWidget.dart';
 import 'package:tv/pages/storyPage.dart';
-import 'package:tv/pages/webStoryPage.dart';
 
 class SearchWidget extends StatefulWidget {
   @override
@@ -19,62 +15,37 @@ class SearchWidget extends StatefulWidget {
 }
 
 class _SearchWidgetState extends State<SearchWidget> {
+  final search.SearchController controller = Get.find<search.SearchController>();
   final TextEditingController _textController = TextEditingController();
   final ScrollController _listviewController = ScrollController();
-  late bool _isLoading;
-  late bool _isLoadingMax;
 
-  // 排序狀態：relevance / published_at
-  String _orderBy = 'relevance';
-
-  // 定義主題藍色，與截圖一致
   final Color themeBlue = const Color(0xFF0055BB);
 
   @override
   void initState() {
     super.initState();
-    _isLoading = true;
-    _isLoadingMax = false;
-
     _listviewController.addListener(() {
-      if (!_isLoadingMax &&
+      if (!controller.isLoadingMax &&
           _listviewController.position.pixels ==
               _listviewController.position.maxScrollExtent &&
-          !_isLoading) {
-        _searchNextPageByKeyword(_textController.text);
+          !controller.isLoading.value &&
+          !controller.isLoadingMore.value) {
+        controller.searchNextPage();
       }
     });
   }
 
   void _searchNewsStoryByKeyword(String keyword) {
-    if (keyword.trim().isEmpty) return;
-    context
-        .read<SearchBloc>()
-        .add(SearchNewsStoryByKeyword(keyword, orderBy: _orderBy));
-  }
-
-  void _searchNextPageByKeyword(String keyword) {
-    if (keyword.trim().isEmpty) return;
-    context
-        .read<SearchBloc>()
-        .add(SearchNextPageByKeyword(keyword, orderBy: _orderBy));
+    controller.searchNewsStoryByKeyword(keyword);
   }
 
   void _clearKeyword() {
     _textController.clear();
-    context.read<SearchBloc>().add(ClearKeyword());
+    controller.clearKeyword();
   }
 
-  // 當點擊切換按鈕時呼叫
   void _onChangeOrderBy(String nextOrderBy) {
-    if (_orderBy == nextOrderBy) return;
-
-    setState(() => _orderBy = nextOrderBy);
-
-    final keyword = _textController.text.trim();
-    if (keyword.isNotEmpty) {
-      _searchNewsStoryByKeyword(keyword);
-    }
+    controller.changeOrderBy(nextOrderBy);
   }
 
   @override
@@ -90,37 +61,33 @@ class _SearchWidgetState extends State<SearchWidget> {
 
     return Column(
       children: [
-        // 搜尋輸入框
         Padding(
           padding: const EdgeInsets.fromLTRB(12.0, 16.0, 12.0, 12.0),
           child: _keywordTextField(width - 24),
         ),
-
-        // ✅ 新增：並排切換按鈕 (依關聯性 / 依發布時間)
         Padding(
           padding: const EdgeInsets.fromLTRB(12.0, 0.0, 12.0, 12.0),
-          child: Container(
-            height: 40,
-            decoration: BoxDecoration(
-              border: Border.all(color: themeBlue, width: 1),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Row(
-              children: [
-                _buildSortButton('依關聯性', 'relevance'),
-                // 中間的分隔線
-                Container(width: 1, color: themeBlue),
-                _buildSortButton('依發布時間', 'published_at'),
-              ],
+          child: Obx(
+            () => Container(
+              height: 40,
+              decoration: BoxDecoration(
+                border: Border.all(color: themeBlue, width: 1),
+                borderRadius: BorderRadius.circular(4.0),
+              ),
+              child: Row(
+                children: [
+                  _buildSortButton('依關聯性', 'relevance'),
+                  Container(width: 1, color: themeBlue),
+                  _buildSortButton('依發布時間', 'published_at'),
+                ],
+              ),
             ),
           ),
         ),
-
-        // 搜尋結果列表
-        BlocBuilder<SearchBloc, SearchState>(
-          builder: (BuildContext context, SearchState state) {
-            if (state is SearchError) {
-              final error = state.error;
+        Obx(
+          () {
+            final error = controller.error.value;
+            if (error != null) {
               if (error is NoInternetException) {
                 return Expanded(
                   child: error.renderWidget(
@@ -132,62 +99,43 @@ class _SearchWidgetState extends State<SearchWidget> {
               return Expanded(child: error.renderWidget());
             }
 
-            if (state is SearchInitState) {
+            if (controller.isInitState) {
               return Container();
             }
 
-            if (state is SearchLoaded) {
-              _isLoading = false;
-              final storyListItemList = state.storyListItemList;
-              _isLoadingMax = storyListItemList.length == state.allStoryCount;
-
-              return Expanded(
-                child: _buildSearchList(
-                  context,
-                  storyListItemList,
-                  _textController.text,
-                ),
-              );
+            if (controller.isLoading.value &&
+                controller.storyListItemList.isEmpty) {
+              return _loadingWidget();
             }
 
-            if (state is SearchLoadingMore) {
-              _isLoading = true;
-              final storyListItemList = state.storyListItemList;
-
-              return Expanded(
-                child: _buildSearchList(
-                  context,
-                  storyListItemList,
-                  _textController.text,
-                  isLoadingMore: true,
-                ),
-              );
-            }
-
-            return _loadingWidget();
+            return Expanded(
+              child: _buildSearchList(
+                context,
+                controller.storyListItemList,
+                _textController.text,
+                isLoadingMore: controller.isLoadingMore.value,
+              ),
+            );
           },
         ),
       ],
     );
   }
 
-  // ✅ 封裝切換按鈕的小元件
   Widget _buildSortButton(String label, String value) {
-    bool isSelected = (_orderBy == value);
+    final bool isSelected = controller.orderBy.value == value;
 
     return Expanded(
       child: GestureDetector(
         onTap: () => _onChangeOrderBy(value),
         child: Container(
           alignment: Alignment.center,
-          // 選中時藍色，未選中時白色
           color: isSelected ? themeBlue : Colors.white,
           child: Text(
             label,
             style: TextStyle(
               fontSize: 15,
               fontWeight: FontWeight.w400,
-              // 選中時文字白色，未選中時文字藍色
               color: isSelected ? Colors.white : themeBlue,
             ),
           ),
@@ -233,8 +181,8 @@ class _SearchWidgetState extends State<SearchWidget> {
       BuildContext context,
       List<StoryListItem> storyListItemList,
       String keyword, {
-        bool isLoadingMore = false,
-      }) {
+    bool isLoadingMore = false,
+  }) {
     if (storyListItemList.isEmpty) {
       return SearchNoResultWidget(keyword: keyword);
     }
@@ -264,7 +212,7 @@ class _SearchWidgetState extends State<SearchWidget> {
       BuildContext context,
       StoryListItem storyListItem,
       int index,
-      ) {
+  ) {
     final width = MediaQuery.of(context).size.width;
     final imageSize = 33.3 * (width - 32) / 100;
 
@@ -309,16 +257,13 @@ class _SearchWidgetState extends State<SearchWidget> {
           ],
         ),
       ),
-        onTap: () {
-          final slug = storyListItem.slug;
-          final type = storyListItem.linkType;
-          if (slug != null && slug.isNotEmpty) {
-            Get.to(() => StoryPage(slug: slug, linkType: type));
-            return;
-          }
-          // 如果沒有 slug：你可以選擇不做事或顯示提示
-          // Get.snackbar('無法開啟', '此內容沒有 slug');
+      onTap: () {
+        final slug = storyListItem.slug;
+        final type = storyListItem.linkType;
+        if (slug != null && slug.isNotEmpty) {
+          Get.to(() => StoryPage(slug: slug, linkType: type));
         }
+      },
     );
   }
 

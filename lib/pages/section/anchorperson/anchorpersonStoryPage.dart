@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/contact/bloc.dart';
+import 'package:get/get.dart';
+import 'package:tv/bindings/anchorperson_story_binding.dart';
+import 'package:tv/controller/contact_detail_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/services/contactService.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonStoryWidget.dart';
 
 class AnchorpersonStoryPage extends StatefulWidget {
@@ -19,14 +19,25 @@ class AnchorpersonStoryPage extends StatefulWidget {
 
 class _AnchorpersonStoryPageState extends State<AnchorpersonStoryPage> {
   @override
+  void initState() {
+    super.initState();
+    AnchorpersonStoryBinding(widget.anchorpersonId).dependencies();
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<ContactDetailController>(tag: widget.anchorpersonId)) {
+      Get.delete<ContactDetailController>(tag: widget.anchorpersonId);
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: _buildBar(context),
-      body: BlocProvider(
-        create: (context) => ContactBloc(contactRepos: ContactServices()),
-        child: AnchorpersonStoryWidget(
-          anchorpersonId: widget.anchorpersonId,
-        ),
+      body: AnchorpersonStoryWidget(
+        anchorpersonId: widget.anchorpersonId,
       ),
     );
   }
@@ -35,7 +46,7 @@ class _AnchorpersonStoryPageState extends State<AnchorpersonStoryPage> {
     return AppBar(
       leading: IconButton(
         icon: Icon(Icons.arrow_back_ios),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: Get.back,
       ),
       backgroundColor: appBarColor,
       centerTitle: true,

@@ -1,12 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/contact/bloc.dart';
-import 'package:tv/blocs/contact/events.dart';
-import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/contact_detail_controller.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
@@ -32,41 +29,36 @@ class AnchorpersonStoryWidget extends StatefulWidget {
 class _AnchorpersonStoryWidgetState extends State<AnchorpersonStoryWidget> {
   final interstitialAdController = Get.find<InterstitialAdController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
+  late final ContactDetailController controller;
+
   @override
   void initState() {
-    _fetchContactById(widget.anchorpersonId);
+    controller = Get.find<ContactDetailController>(tag: widget.anchorpersonId);
     super.initState();
-  }
-
-  _fetchContactById(String contactId) async {
-    context.read<ContactBloc>().add(FetchContactById(contactId));
   }
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width;
 
-    return BlocBuilder<ContactBloc, ContactState>(
-        builder: (BuildContext context, ContactState state) {
-      if (state is ContactError) {
-        final error = state.error;
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         print('ContactError: ${error.message}');
         if (error is NoInternetException) {
-          return error.renderWidget(
-              onPressed: () => _fetchContactById(widget.anchorpersonId));
+          return error.renderWidget(onPressed: controller.fetchContactById);
         }
 
         return error.renderWidget();
       }
-      if (state is ContactLoaded) {
-        Contact contact = state.contact;
+      final contact = controller.contact.value;
+      if (!controller.isLoading.value && contact != null) {
         AnalyticsHelper.sendScreenView(
             screenName: 'AnchorpersonStoryPage name=${contact.name}');
         interstitialAdController.ramdomShowInterstitialAd();
         return _buildAnchorpersonStory(contact, width);
       }
 
-      // state is Init, loading, or other
       return _loadingWidget();
     });
   }

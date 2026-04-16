@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 
 import 'package:get/get.dart';
-import 'package:tv/blocs/programList/program_list_cubit.dart';
+import 'package:tv/controller/program_list_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/programListItem.dart';
@@ -16,35 +15,22 @@ class ProgramListWidget extends StatefulWidget {
 }
 
 class _ProgramListWidgetState extends State<ProgramListWidget> {
-  DateTime _selectedDate = DateTime.now();
-  String _buttonText = "請選擇日期";
-  bool _isDefault = true;
+  final ProgramListController controller = Get.find<ProgramListController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
-  void initState() {
-    _loadProgramList();
-    super.initState();
-  }
-
-  _loadProgramList() async {
-    context.read<ProgramListCubit>().fetchProgramList();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ProgramListCubit, ProgramListState>(
-      builder: (context, state) {
-        if (state is ProgramListError) {
-          final error = state.error;
+    return Obx(() {
+        final error = controller.error.value;
+        if (error != null) {
           print('ProgramListError: ${error.message}');
           if (error is NoInternetException) {
-            return error.renderWidget(onPressed: () => _loadProgramList());
+            return error.renderWidget(onPressed: controller.fetchProgramList);
           }
 
           return error.renderWidget(isNoButton: true);
         }
-        if (state is ProgramListLoaded) {
+        if (!controller.isLoading.value && controller.programList.isNotEmpty) {
           return Padding(
             padding: EdgeInsets.fromLTRB(20, 16, 20, 0),
             child: Column(
@@ -58,15 +44,14 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
                   height: 8,
                 ),
                 Expanded(
-                  child: _buildContent(state.programList),
+                  child: _buildContent(controller.programList),
                 )
               ],
             ),
           );
         }
         return _loadingWidget();
-      },
-    );
+      });
   }
 
   Widget _loadingWidget() => Center(
@@ -76,20 +61,15 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   Widget _buildChooseButton() {
     return OutlinedButton(
         style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all(Color(0xE5F4F5F6))),
+            backgroundColor: WidgetStateProperty.all(Color(0xE5F4F5F6))),
         onPressed: () {
-          _isDefault = false;
           DatePicker.showPicker(context,
               pickerModel: CustomPicker(
                   currentTime: DateTime.now(),
                   maxTime: DateTime.now().add(const Duration(days: 6)),
                   locale: LocaleType.zh),
               locale: LocaleType.tw, onConfirm: (date) {
-            setState(() {
-              _selectedDate = date;
-              _buttonText =
-                  '${_selectedDate.year}年${_selectedDate.month}月${_selectedDate.day}日';
-            });
+            controller.updateSelectedDate(date);
           });
         },
         child: Container(
@@ -99,9 +79,11 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
             children: [
               Obx(
                 () => Text(
-                  _buttonText,
+                  controller.buttonText.value,
                   style: TextStyle(
-                    color: _isDefault ? Color(0x3f000000) : Colors.black,
+                    color: controller.isDefaultDate.value
+                        ? Color(0x3f000000)
+                        : Colors.black,
                     fontSize: 17,
                   ),
                   textScaler: TextScaler.linear(
@@ -154,13 +136,13 @@ class _ProgramListWidgetState extends State<ProgramListWidget> {
   Widget _buildContent(List<ProgramListItem> programList) {
     List<ProgramListItem> _pickedProgramList = [];
     int start = programList.indexWhere((element) =>
-        element.year == _selectedDate.year &&
-        element.month == _selectedDate.month &&
-        element.day == _selectedDate.day);
+        element.year == controller.selectedDate.value.year &&
+        element.month == controller.selectedDate.value.month &&
+        element.day == controller.selectedDate.value.day);
     int end = programList.lastIndexWhere((element) =>
-        element.year == _selectedDate.year &&
-        element.month == _selectedDate.month &&
-        element.day == _selectedDate.day);
+        element.year == controller.selectedDate.value.year &&
+        element.month == controller.selectedDate.value.month &&
+        element.day == controller.selectedDate.value.day);
 
     if (start == -1 || end == -1) {
       return TabContentNoResultWidget();

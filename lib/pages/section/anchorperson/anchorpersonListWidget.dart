@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/contact/bloc.dart';
-import 'package:tv/blocs/contact/events.dart';
-import 'package:tv/blocs/contact/states.dart';
+import 'package:tv/controller/contact_list_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -20,38 +17,26 @@ class AnchorpersonListWidget extends StatefulWidget {
 
 class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
   final TextScaleFactorController textScaleFactorController = Get.find();
-  @override
-  void initState() {
-    _fetchAnchorpersonOrHostContactList();
-    super.initState();
-  }
-
-  _fetchAnchorpersonOrHostContactList() async {
-    context.read<ContactBloc>().add(FetchAnchorpersonOrHostContactList());
-  }
+  final ContactListController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
     var width = MediaQuery.of(context).size.width - 48 - 15;
 
-    return BlocBuilder<ContactBloc, ContactState>(
-        builder: (BuildContext context, ContactState state) {
-      if (state is ContactError) {
-        final error = state.error;
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         print('ContactError: ${error.message}');
         if (error is NoInternetException) {
           return error.renderWidget(
-              onPressed: () => _fetchAnchorpersonOrHostContactList());
+              onPressed: controller.fetchAnchorpersonOrHostContactList);
         }
 
         return error.renderWidget(isNoButton: true);
       }
-      if (state is ContactListLoaded) {
-        List<Contact> contactList = state.contactList;
-        List<Contact> anchorpersonContactList =
-            contactList.where((contact) => contact.isAnchorperson).toList();
-        List<Contact> hostContactList =
-            contactList.where((contact) => contact.isHost).toList();
+      if (!controller.isLoading.value && controller.contactList.isNotEmpty) {
+        final anchorpersonContactList = controller.anchorpersonContactList;
+        final hostContactList = controller.hostContactList;
 
         return ListView(
           children: [
@@ -120,7 +105,6 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
         );
       }
 
-      // state is Init, loading, or other
       return _loadingWidget();
     });
   }
@@ -146,8 +130,8 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
                 ),
-                textScaleFactor:
-                    textScaleFactorController.textScaleFactor.value,
+                textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value),
               ),
             ),
           ),
@@ -197,8 +181,8 @@ class _AnchorpersonListWidgetState extends State<AnchorpersonListWidget> {
                       contactList[index].name,
                       style:
                           TextStyle(fontSize: 17, fontWeight: FontWeight.w400),
-                      textScaleFactor:
-                          textScaleFactorController.textScaleFactor.value,
+                      textScaler: TextScaler.linear(
+                          textScaleFactorController.textScaleFactor.value),
                     ),
                   ),
                 ),

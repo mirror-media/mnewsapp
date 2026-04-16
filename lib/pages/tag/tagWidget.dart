@@ -1,8 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/tag/bloc.dart';
+import 'package:tv/controller/tag_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -19,89 +18,51 @@ class TagWidget extends StatefulWidget {
 }
 
 class _TagWidgetState extends State<TagWidget> {
-  bool loadingMore = false;
-  late List<StoryListItem> _tagStoryList;
-  int _allStoryCount = 0;
   final TextScaleFactorController textScaleFactorController = Get.find();
+  late final TagController controller;
 
   @override
   void initState() {
-    _fetchStoryListByTagSlug();
+    controller = Get.find<TagController>(tag: widget.tag.slug);
     super.initState();
-  }
-
-  _fetchStoryListByTagSlug() {
-    context
-        .read<TagStoryListBloc>()
-        .add(FetchStoryListByTagSlug(widget.tag.slug));
-  }
-
-  _fetchNextPageByTagSlug() async {
-    context
-        .read<TagStoryListBloc>()
-        .add(FetchNextPageByTagSlug(widget.tag.slug));
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TagStoryListBloc, TagStoryListState>(
-        builder: (BuildContext context, TagStoryListState state) {
-      if (state.status == TagStoryListStatus.error) {
-        final error = state.error;
-        print('TagStoryListError: ${error.message}');
-        if (loadingMore) {
-          _fetchNextPageByTagSlug();
-        } else {
-          if (error is NoInternetException) {
-            return error.renderWidget(
-                onPressed: () => _fetchNextPageByTagSlug());
-          }
-
-          return error.renderWidget();
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
+        if (error is NoInternetException) {
+          return error.renderWidget(
+            onPressed: controller.fetchStoryListByTagSlug,
+          );
         }
+        return error.renderWidget();
       }
 
-      if (state.status == TagStoryListStatus.loadingMore) {
-        _tagStoryList = state.tagStoryList!;
-        loadingMore = true;
-        return _buildList(_tagStoryList);
+      if (controller.isInitState || controller.isLoading.value) {
+        return const Center(child: CircularProgressIndicator.adaptive());
       }
 
-      if (state.status == TagStoryListStatus.loadingMoreFail) {
-        _tagStoryList = state.tagStoryList!;
-        loadingMore = true;
-        _fetchNextPageByTagSlug();
-        return _buildList(_tagStoryList);
-      }
-
-      if (state.status == TagStoryListStatus.loaded) {
-        _tagStoryList = state.tagStoryList!;
-        loadingMore = false;
-        _allStoryCount = state.allStoryCount!;
-        return _buildList(_tagStoryList);
-      }
-      // state is Init, loading, or other
-      return Center(child: const CircularProgressIndicator.adaptive());
+      return _buildList(controller.tagStoryList);
     });
   }
 
   Widget _buildList(List<StoryListItem> tagStoryList) {
-    bool isAll = false;
-    if (tagStoryList.length == _allStoryCount) {
-      isAll = true;
-    }
     return ListView.builder(
       itemCount: tagStoryList.length + 1,
       padding: const EdgeInsets.only(top: 24, left: 24, right: 24),
       itemBuilder: (context, index) {
         if (index == tagStoryList.length) {
-          if (isAll) {
+          if (controller.isAllLoaded) {
             return Container(
               padding: const EdgeInsets.only(bottom: 24),
             );
           }
-          if (!loadingMore) _fetchNextPageByTagSlug();
-          return Center(child: const CircularProgressIndicator.adaptive());
+          if (!controller.isLoadingMore.value) {
+            controller.fetchNextPageByTagSlug();
+          }
+          return const Center(child: CircularProgressIndicator.adaptive());
         }
         return Padding(
           padding: const EdgeInsets.only(bottom: 16),

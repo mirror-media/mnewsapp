@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/tag/bloc.dart';
+import 'package:get/get.dart';
+import 'package:tv/bindings/tag_binding.dart';
+import 'package:tv/controller/tag_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/tag.dart';
 import 'package:tv/pages/tag/tagWidget.dart';
@@ -18,11 +19,24 @@ class TagPage extends StatefulWidget {
 
 class _TagPageState extends State<TagPage> {
   late Tag _tag;
+  late final String _tagControllerTag;
 
   @override
   void initState() {
     _tag = widget.tag;
+    _tagControllerTag = _tag.slug;
+    final binding = TagBinding();
+    binding.dependencies();
+    binding.bindTagController(_tagControllerTag);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<TagController>(tag: _tagControllerTag)) {
+      Get.delete<TagController>(tag: _tagControllerTag);
+    }
+    super.dispose();
   }
 
   @override
@@ -30,11 +44,8 @@ class _TagPageState extends State<TagPage> {
     return Scaffold(
       appBar: _buildBar(context),
       backgroundColor: Colors.white,
-      body: BlocProvider(
-        create: (context) => TagStoryListBloc(),
-        child: SafeArea(
-          child: TagWidget(_tag),
-        ),
+      body: SafeArea(
+        child: TagWidget(_tag),
       ),
     );
   }
@@ -47,7 +58,7 @@ class _TagPageState extends State<TagPage> {
           Icons.arrow_back_ios,
           color: Colors.white,
         ),
-        onPressed: () => Navigator.of(context).pop(),
+        onPressed: Get.back,
       ),
       backgroundColor: appBarColor,
       centerTitle: true,
