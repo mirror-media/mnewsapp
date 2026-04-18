@@ -1,54 +1,41 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/categories/bloc.dart';
-import 'package:tv/blocs/categories/events.dart';
-import 'package:tv/blocs/categories/states.dart';
+import 'package:tv/controller/show_category_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
 import 'package:tv/pages/section/show/election_widget/election_controller.dart';
 import 'package:tv/pages/section/show/election_widget/election_widget.dart';
-
 import 'package:tv/pages/section/show/showTabContent.dart';
 
 class ShowCategoryTab extends StatefulWidget {
+  const ShowCategoryTab({super.key});
+
   @override
-  _ShowCategoryTabState createState() => _ShowCategoryTabState();
+  State<ShowCategoryTab> createState() => _ShowCategoryTabState();
 }
 
 class _ShowCategoryTabState extends State<ShowCategoryTab>
     with TickerProviderStateMixin {
-  /// tab controller
-  int _initialTabIndex = 0;
-  TabController? _tabController;
+  final ShowCategoryController controller = Get.find();
 
-  List<Tab> _tabs = List.empty(growable: true);
-  List<Widget> _tabWidgets = List.empty(growable: true);
+  int initialTabIndex = 0;
+  TabController? tabController;
+  final List<Tab> tabs = List.empty(growable: true);
+  final List<Widget> tabWidgets = List.empty(growable: true);
 
-  @override
-  void initState() {
-    _loadCategoryList();
-    super.initState();
-  }
+  void initializeTabController(List<Category> categoryList) {
+    tabs.clear();
+    tabWidgets.clear();
 
-  _loadCategoryList() async {
-    context.read<CategoriesBloc>().add(FetchCategories());
-  }
-
-  _initializeTabController(List<Category> categoryList) {
-    _tabs.clear();
-    _tabWidgets.clear();
-
-    for (int i = 0; i < categoryList.length; i++) {
-      Category category = categoryList[i];
-      _tabs.add(
+    for (final category in categoryList) {
+      tabs.add(
         Tab(
           child: Obx(
             () => Text(
               category.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
               textScaleFactor:
@@ -59,25 +46,24 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
       );
 
       if (category.slug!.contains('election')) {
-        _tabWidgets.add(
+        tabWidgets.add(
           ElectionWidget(tag: category.slug ?? ''),
         );
       } else {
-        _tabWidgets.add(ShowTabContent(
-          category: category,
-        ));
+        tabWidgets.add(
+          ShowTabContent(category: category),
+        );
       }
     }
 
-    // set controller
-    _tabController = TabController(
+    tabController = TabController(
       vsync: this,
       length: categoryList.length,
-      initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController!.index,
+      initialIndex: tabController == null ? initialTabIndex : tabController!.index,
     );
-    _tabController?.addListener(() {
-      final tag = categoryList[_tabController!.index].slug!;
+
+    tabController?.addListener(() {
+      final tag = categoryList[tabController!.index].slug!;
       if (tag.contains('election')) {
         if (Get.isRegistered<ElectionController>(tag: tag)) {
           Get.delete<ElectionController>(tag: tag);
@@ -89,41 +75,43 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
 
   @override
   void dispose() {
-    _tabController?.dispose();
+    tabController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesBloc, CategoriesState>(
-        builder: (BuildContext context, CategoriesState state) {
-      if (state is CategoriesError) {
-        final error = state.error!;
-        print('ShowCategoriesError: ${error.message}');
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         if (error is NoInternetException) {
-          return error.renderWidget(onPressed: () => _loadCategoryList());
+          return error.renderWidget(onPressed: controller.fetchCategories);
         }
 
         return error.renderWidget(isNoButton: true);
       }
-      if (state is CategoriesLoaded) {
-        List<Category> categoryList = state.categoryList;
-        _initializeTabController(categoryList);
 
-        return _buildTabs(_tabs, _tabWidgets, _tabController!);
+      final categoryList = controller.categoryList;
+      if (categoryList.isNotEmpty) {
+        initializeTabController(categoryList);
+        return buildTabs(tabs, tabWidgets, tabController!);
       }
 
-      // state is Init, loading, or other
-      return _loadingWidget();
+      return loadingWidget();
     });
   }
 
-  Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+  Widget loadingWidget() {
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    );
+  }
 
-  Widget _buildTabs(
-      List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
+  Widget buildTabs(
+    List<Tab> tabs,
+    List<Widget> tabWidgets,
+    TabController tabController,
+  ) {
     return Column(
       children: [
         Container(

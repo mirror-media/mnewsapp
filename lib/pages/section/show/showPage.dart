@@ -1,15 +1,33 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/categories/bloc.dart';
+import 'package:get/get.dart';
+import 'package:tv/bindings/show_binding.dart';
+import 'package:tv/controller/show_category_controller.dart';
 import 'package:tv/pages/section/show/showCategoryTab.dart';
-import 'package:tv/services/showService.dart';
 
-class ShowPage extends StatelessWidget {
+class ShowPage extends StatefulWidget {
+  const ShowPage({super.key});
+
+  @override
+  State<ShowPage> createState() => _ShowPageState();
+}
+
+class _ShowPageState extends State<ShowPage> {
+  @override
+  void initState() {
+    super.initState();
+    ShowBinding().dependencies();
+  }
+
+  @override
+  void dispose() {
+    if (Get.isRegistered<ShowCategoryController>()) {
+      Get.delete<ShowCategoryController>();
+    }
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => CategoriesBloc(categoryRepos: ShowServices()),
-      child: ShowCategoryTab(),
-    );
+    return const ShowCategoryTab();
   }
 }
