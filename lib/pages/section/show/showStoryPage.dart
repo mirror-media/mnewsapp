@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
@@ -12,7 +10,6 @@ import 'package:tv/helpers/dateTimeFormat.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
-import 'package:tv/services/youtubePlaylistService.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/youtube/youtubeWidget.dart';
 
@@ -95,7 +92,9 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
           tooltip: 'Share',
           onPressed: () {
             String url = youtubeLink + 'watch?v=' + widget.youtubePlayListId;
-            Share.share(url);
+            SharePlus.instance.share(
+              ShareParams(text: url),
+            );
           },
         ),
       ],
@@ -131,18 +130,15 @@ class _ShowStoryPageState extends State<ShowStoryPage> {
 
   Widget _buildMoreShowContent(
       {required String title, required String youtubePlayListId}) {
-    return BlocProvider(
-      create: (context) =>
-          YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
-      child: ShowPlaylistTabContent(
-        firstYoutubePlaylistItem: widget.youtubePlaylistItem,
-        youtubePlaylistInfo: YoutubePlaylistInfo(
-          name: title,
-          youtubePlayListId: youtubePlayListId,
-        ),
-        listviewController: _listviewController,
-        isMoreShow: true,
+    return ShowPlaylistTabContent(
+      controllerTag: '${youtubePlayListId}_more_show',
+      firstYoutubePlaylistItem: widget.youtubePlaylistItem,
+      youtubePlaylistInfo: YoutubePlaylistInfo(
+        name: title,
+        youtubePlayListId: youtubePlayListId,
       ),
+      listviewController: _listviewController,
+      isMoreShow: true,
     );
   }
 }

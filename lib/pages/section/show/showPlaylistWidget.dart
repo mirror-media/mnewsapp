@@ -1,49 +1,48 @@
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/youtubePlaylist/bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistInfo.dart';
 import 'package:tv/pages/section/show/showPlaylistTabContent.dart';
-import 'package:tv/services/youtubePlaylistService.dart';
 
 class ShowPlaylistWidget extends StatefulWidget {
-  final ShowIntro showIntro;
-  final ScrollController listviewController;
-  ShowPlaylistWidget({
+  const ShowPlaylistWidget({
+    super.key,
     required this.showIntro,
     required this.listviewController,
   });
 
+  final ShowIntro showIntro;
+  final ScrollController listviewController;
+
   @override
-  _ShowPlaylistWidgetState createState() => _ShowPlaylistWidgetState();
+  State<ShowPlaylistWidget> createState() => _ShowPlaylistWidgetState();
 }
 
 class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
-  int _segmentedControlGroupValue = 0;
-  Map<int, Widget> _tabs = Map();
-  List<Widget> _tabWidgets = List.empty(growable: true);
+  int segmentedControlGroupValue = 0;
+  Map<int, Widget> tabs = {};
+  List<Widget> tabWidgets = List.empty(growable: true);
 
   @override
   void initState() {
+    super.initState();
     if (widget.showIntro.playList01 != null &&
         widget.showIntro.playList02 != null) {
-      _initializeTabs(widget.showIntro);
+      initializeTabs(widget.showIntro);
     }
-    super.initState();
   }
 
-  _initializeTabs(ShowIntro showIntro) {
-    _segmentedControlGroupValue = 0;
-    _tabs = <int, Widget>{
+  void initializeTabs(ShowIntro showIntro) {
+    segmentedControlGroupValue = 0;
+    tabs = <int, Widget>{
       0: Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 12.0, 0.0, 12.0),
         child: Obx(
           () => Text(
             showIntro.playList01!.name,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),
@@ -58,7 +57,7 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
           () => Text(
             showIntro.playList02!.name,
             textAlign: TextAlign.center,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 17,
               fontWeight: FontWeight.w500,
             ),
@@ -68,58 +67,58 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
         ),
       ),
     };
-    _tabWidgets = [
-      _buildTabWidget(showIntro.playList01!),
-      _buildTabWidget(showIntro.playList02!),
+    tabWidgets = [
+      buildTabWidget(showIntro.playList01!, 'playlist_01'),
+      buildTabWidget(showIntro.playList02!, 'playlist_02'),
     ];
   }
 
   @override
   Widget build(BuildContext context) {
-    var width = MediaQuery.of(context).size.width;
-    // do not render anything
+    final width = MediaQuery.of(context).size.width;
     if (widget.showIntro.playList01 == null) {
       return Container();
     }
-    // just render play list 01
     if (widget.showIntro.playList02 == null) {
-      return _buildTabWidget(widget.showIntro.playList01!);
+      return buildTabWidget(widget.showIntro.playList01!, 'playlist_single');
     }
 
-    return Center(child: _buildTabs(width));
+    return Center(child: buildTabs(width));
   }
 
-  Widget _buildTabs(double width) {
+  Widget buildTabs(double width) {
     return Column(
       children: [
         SizedBox(
           width: width,
           child: CupertinoSegmentedControl(
-              padding: const EdgeInsets.all(0),
-              borderColor: Color(0xff004DBC),
-              selectedColor: Color(0xff004DBC),
-              groupValue: _segmentedControlGroupValue,
-              children: _tabs,
-              onValueChanged: (int i) {
-                setState(() {
-                  _segmentedControlGroupValue = i;
-                });
-              }),
+            padding: const EdgeInsets.all(0),
+            borderColor: const Color(0xff004DBC),
+            selectedColor: const Color(0xff004DBC),
+            groupValue: segmentedControlGroupValue,
+            children: tabs,
+            onValueChanged: (int i) {
+              setState(() {
+                segmentedControlGroupValue = i;
+              });
+            },
+          ),
         ),
-        SizedBox(height: 24),
-        _tabWidgets[_segmentedControlGroupValue],
+        const SizedBox(height: 24),
+        tabWidgets[segmentedControlGroupValue],
       ],
     );
   }
 
-  Widget _buildTabWidget(YoutubePlaylistInfo youtubePlaylistInfo) {
-    return BlocProvider(
-      create: (context) =>
-          YoutubePlaylistBloc(youtubePlaylistRepos: YoutubePlaylistServices()),
-      child: ShowPlaylistTabContent(
-        youtubePlaylistInfo: youtubePlaylistInfo,
-        listviewController: widget.listviewController,
-      ),
+  Widget buildTabWidget(
+    YoutubePlaylistInfo youtubePlaylistInfo,
+    String suffix,
+  ) {
+    final controllerTag = '${youtubePlaylistInfo.youtubePlayListId}_$suffix';
+    return ShowPlaylistTabContent(
+      controllerTag: controllerTag,
+      youtubePlaylistInfo: youtubePlaylistInfo,
+      listviewController: widget.listviewController,
     );
   }
 }
