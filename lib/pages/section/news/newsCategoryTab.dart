@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/categories/bloc.dart';
-import 'package:tv/blocs/categories/events.dart';
-import 'package:tv/blocs/categories/states.dart';
 import 'package:tv/blocs/newsMarquee/bloc.dart';
+import 'package:tv/controller/news_category_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -15,41 +13,33 @@ import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
 import 'package:tv/services/newsMarqueeService.dart';
 
 class NewsCategoryTab extends StatefulWidget {
+  const NewsCategoryTab({super.key});
+
   @override
-  _NewsCategoryTabState createState() => _NewsCategoryTabState();
+  State<NewsCategoryTab> createState() => _NewsCategoryTabState();
 }
 
 class _NewsCategoryTabState extends State<NewsCategoryTab>
     with TickerProviderStateMixin {
-  /// tab controller
-  int _initialTabIndex = 0;
-  TabController? _tabController;
+  final NewsCategoryController controller = Get.find();
 
-  List<Tab> _tabs = List.empty(growable: true);
-  List<Widget> _tabWidgets = List.empty(growable: true);
+  int initialTabIndex = 0;
+  TabController? tabController;
+  final List<Tab> tabs = List.empty(growable: true);
+  final List<Widget> tabWidgets = List.empty(growable: true);
 
-  @override
-  void initState() {
-    _loadCategoryList();
-    super.initState();
-  }
-
-  _loadCategoryList() async {
-    context.read<CategoriesBloc>().add(FetchCategories());
-  }
-
-  _initializeTabController(List<Category> categoryList) {
-    _tabs.clear();
-    _tabWidgets.clear();
+  void initializeTabController(List<Category> categoryList) {
+    tabs.clear();
+    tabWidgets.clear();
 
     for (int i = 0; i < categoryList.length; i++) {
-      Category category = categoryList[i];
-      _tabs.add(
+      final category = categoryList[i];
+      tabs.add(
         Tab(
           child: Obx(
             () => Text(
               category.name,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
               ),
               textScaleFactor:
@@ -59,9 +49,9 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
         ),
       );
 
-      _tabWidgets.add(
+      tabWidgets.add(
         category.slug == 'latest'
-            ? LatestTabContent()
+            ? const LatestTabContent()
             : NewsTabContent(
                 categorySlug: category.slug!,
                 needCarousel: categoryList[i].isLatestCategory(),
@@ -70,52 +60,52 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
       );
     }
 
-    // set controller
-    _tabController = TabController(
+    tabController = TabController(
       vsync: this,
       length: categoryList.length,
-      initialIndex:
-          _tabController == null ? _initialTabIndex : _tabController!.index,
+      initialIndex: tabController == null ? initialTabIndex : tabController!.index,
     );
   }
 
   @override
   void dispose() {
-    _tabController?.dispose();
+    tabController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<CategoriesBloc, CategoriesState>(
-        builder: (BuildContext context, CategoriesState state) {
-      if (state is CategoriesError) {
-        final error = state.error!;
-        print('NewsCategoriesError: ${error.message}');
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         if (error is NoInternetException) {
-          return error.renderWidget(onPressed: () => _loadCategoryList());
+          return error.renderWidget(onPressed: controller.fetchCategories);
         }
 
         return error.renderWidget(isNoButton: true);
       }
-      if (state is CategoriesLoaded) {
-        List<Category> categoryList = state.categoryList;
-        _initializeTabController(categoryList);
 
-        return _buildTabs(_tabs, _tabWidgets, _tabController!);
+      final categoryList = controller.categoryList;
+      if (categoryList.isNotEmpty) {
+        initializeTabController(categoryList);
+        return buildTabs(tabs, tabWidgets, tabController!);
       }
 
-      // state is Init, loading, or other
-      return _loadingWidget();
+      return loadingWidget();
     });
   }
 
-  Widget _loadingWidget() => Center(
-        child: CircularProgressIndicator.adaptive(),
-      );
+  Widget loadingWidget() {
+    return const Center(
+      child: CircularProgressIndicator.adaptive(),
+    );
+  }
 
-  Widget _buildTabs(
-      List<Tab> tabs, List<Widget> tabWidgets, TabController tabController) {
+  Widget buildTabs(
+    List<Tab> tabs,
+    List<Widget> tabWidgets,
+    TabController tabController,
+  ) {
     return Column(
       children: [
         Container(
@@ -138,8 +128,8 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
         BlocProvider(
           create: (context) =>
               NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
+          child: const Padding(
+            padding: EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
             child: BuildNewsMarquee(),
           ),
         ),
