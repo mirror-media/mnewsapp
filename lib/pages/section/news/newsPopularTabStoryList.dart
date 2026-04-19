@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/tabStoryList/bloc.dart';
-import 'package:tv/blocs/tabStoryList/events.dart';
-import 'package:tv/blocs/tabStoryList/states.dart';
+import 'package:tv/controller/news_story_list_controller.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/storyListItem.dart';
@@ -13,54 +11,56 @@ import 'package:tv/pages/shared/tabContentNoResultWidget.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 
 class NewsPopularTabStoryList extends StatefulWidget {
+  const NewsPopularTabStoryList({
+    super.key,
+    required this.controllerTag,
+  });
+
+  final String controllerTag;
+
   @override
-  _NewsPopularTabStoryListState createState() =>
+  State<NewsPopularTabStoryList> createState() =>
       _NewsPopularTabStoryListState();
 }
 
 class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
+  late final NewsStoryListController controller;
+
   @override
   void initState() {
-    _fetchPopularStoryList();
     super.initState();
-  }
-
-  _fetchPopularStoryList() async {
-    context.read<TabStoryListBloc>().add(FetchPopularStoryList());
+    controller = Get.find<NewsStoryListController>(tag: widget.controllerTag);
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TabStoryListBloc, TabStoryListState>(
-        builder: (BuildContext context, TabStoryListState state) {
-      if (state.status == TabStoryListStatus.error) {
-        final error = state.errorMessages;
-        print('NewsPopularTabStoryListError: ${error.message}');
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         if (error is NoInternetException) {
           return error.renderWidget(
-              onPressed: () => _fetchPopularStoryList(), isColumn: true);
+            onPressed: controller.fetchInitial,
+            isColumn: true,
+          );
         }
 
         return TabContentNoResultWidget();
       }
-      if (state.status == TabStoryListStatus.loaded) {
-        List<StoryListItem> storyListItemList = state.storyListItemList!;
 
-        if (storyListItemList.length == 0) {
-          return TabContentNoResultWidget();
-        }
-
-        return _tabStoryList(
-          storyListItemList: storyListItemList,
-        );
+      final storyListItemList = controller.storyList.toList();
+      if (storyListItemList.isNotEmpty) {
+        return tabStoryList(storyListItemList: storyListItemList);
       }
 
-      // state is Init, loading, or other
-      return Center(child: CircularProgressIndicator.adaptive());
+      if (!controller.isLoading.value) {
+        return TabContentNoResultWidget();
+      }
+
+      return const Center(child: CircularProgressIndicator.adaptive());
     });
   }
 
-  Widget _tabStoryList({
+  Widget tabStoryList({
     required List<StoryListItem> storyListItemList,
   }) {
     return ListView.separated(
@@ -103,9 +103,7 @@ class _NewsPopularTabStoryListState extends State<NewsPopularTabStoryList> {
             ],
           );
         }
-        return const SizedBox(
-          height: 16,
-        );
+        return const SizedBox(height: 16);
       },
       itemCount: storyListItemList.length + 1,
     );
