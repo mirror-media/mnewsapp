@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/controller/news_category_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
@@ -10,7 +8,6 @@ import 'package:tv/models/category.dart';
 import 'package:tv/pages/section/news/latestTabContent/latest_tab_content.dart';
 import 'package:tv/pages/section/news/newsTabContent.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
-import 'package:tv/services/newsMarqueeService.dart';
 
 class NewsCategoryTab extends StatefulWidget {
   const NewsCategoryTab({super.key});
@@ -125,13 +122,9 @@ class _NewsCategoryTabState extends State<NewsCategoryTab>
             ),
           ),
         ),
-        BlocProvider(
-          create: (context) =>
-              NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
-          child: const Padding(
-            padding: EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
-            child: BuildNewsMarquee(),
-          ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
+          child: BuildNewsMarquee(tag: 'news_marquee'),
         ),
         Expanded(
           child: TabBarView(

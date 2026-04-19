@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/newsMarquee/bloc.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/section/video/video_page_controller.dart';
 import 'package:tv/pages/shared/newsMarquee/newsMarqueeWidget.dart';
-import 'package:tv/services/newsMarqueeService.dart';
 
 class VideoPage extends GetView<VideoPageController> {
   @override
@@ -45,14 +42,9 @@ class VideoPage extends GetView<VideoPageController> {
           }),
         ),
 
-        ///跑馬燈保持用Bloc 代後續跟其他的跑馬燈一起修改
-        BlocProvider(
-          create: (context) =>
-              NewsMarqueeBloc(newsMarqueeRepos: NewsMarqueeServices()),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
-            child: BuildNewsMarquee(),
-          ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(4.0, 8.0, 4.0, 12.0),
+          child: BuildNewsMarquee(tag: 'video_marquee'),
         ),
         Obx(() {
           final isLoadingFinish = controller.rxIsLoadingFinish.value;

@@ -1,11 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/newsMarquee/bloc.dart';
-import 'package:tv/blocs/newsMarquee/events.dart';
-import 'package:tv/blocs/newsMarquee/states.dart';
+import 'package:tv/bindings/news_marquee_binding.dart';
+import 'package:tv/controller/news_marquee_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/data/value/string_default.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
@@ -13,58 +11,59 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/pages/shared/newsMarquee/marqueeWidget.dart';
 import 'package:tv/pages/storyPage.dart';
+import 'package:tv/services/newsMarqueeService.dart';
 
 class BuildNewsMarquee extends StatefulWidget {
-  const BuildNewsMarquee({super.key});
+  const BuildNewsMarquee({
+    super.key,
+    this.tag = 'default_news_marquee',
+  });
+
+  final String tag;
 
   @override
   State<BuildNewsMarquee> createState() => _BuildNewsMarqueeState();
 }
 
 class _BuildNewsMarqueeState extends State<BuildNewsMarquee> {
+  late final NewsMarqueeController controller;
+
   @override
   void initState() {
     super.initState();
-    _loadNewsList();
+    NewsMarqueeBinding(widget.tag).dependencies();
+    controller = Get.find<NewsMarqueeController>(tag: widget.tag);
   }
 
-  void _loadNewsList() {
-    context.read<NewsMarqueeBloc>().add(NewsMarqueeEvents.fetchNewsList);
+  @override
+  void dispose() {
+    if (Get.isRegistered<NewsMarqueeController>(tag: widget.tag)) {
+      Get.delete<NewsMarqueeController>(tag: widget.tag);
+    }
+    if (Get.isRegistered<NewsMarqueeServices>(tag: widget.tag)) {
+      Get.delete<NewsMarqueeServices>(tag: widget.tag);
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NewsMarqueeBloc, NewsMarqueeState>(
-      builder: (context, state) {
-        if (state is NewsMarqueeError) {
-          final error = state.error;
-          print('NewsMarqueeError: ${error.message}');
-          return const SizedBox();
-        }
-
-        if (state is NewsMarqueeLoaded) {
-          final newsList = state.newsList;
-          if (newsList.isEmpty) {
-            return const SizedBox();
-          }
-          return NewsMarquee(newsList: newsList);
-        }
-
-        // Init or Loading state
+    return Obx(() {
+      if (controller.error.value != null) {
         return const SizedBox();
-      },
-    );
+      }
+
+      final newsList = controller.newsList.toList();
+      if (newsList.isEmpty) {
+        return const SizedBox();
+      }
+
+      return NewsMarquee(newsList: newsList);
+    });
   }
 }
 
 class NewsMarquee extends StatefulWidget {
-  final List<StoryListItem> newsList;
-  final Axis direction;
-  final double height;
-  final Duration animationDuration;
-  final Duration backDuration;
-  final Duration pauseDuration;
-
   const NewsMarquee({
     super.key,
     required this.newsList,
@@ -75,20 +74,27 @@ class NewsMarquee extends StatefulWidget {
     this.pauseDuration = const Duration(milliseconds: 800),
   });
 
+  final List<StoryListItem> newsList;
+  final Axis direction;
+  final double height;
+  final Duration animationDuration;
+  final Duration backDuration;
+  final Duration pauseDuration;
+
   @override
   State<NewsMarquee> createState() => _NewsMarqueeState();
 }
 
 class _NewsMarqueeState extends State<NewsMarquee> {
-  late final carousel.CarouselSliderController _carouselController;
-  late carousel.CarouselOptions _options;
+  late final carousel.CarouselSliderController carouselController;
+  late carousel.CarouselOptions options;
   final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
   void initState() {
     super.initState();
-    _carouselController = carousel.CarouselSliderController();
-    _options = carousel.CarouselOptions(
+    carouselController = carousel.CarouselSliderController();
+    options = carousel.CarouselOptions(
       scrollPhysics: const NeverScrollableScrollPhysics(),
       height: widget.height,
       viewportFraction: 1,
@@ -111,24 +117,29 @@ class _NewsMarqueeState extends State<NewsMarquee> {
         Container(
           color: newsMarqueeLeadingColor,
           padding: const EdgeInsets.all(12.0),
-          child: Obx(() => Text(
-            '最新',
-            style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-            textScaleFactor: textScaleFactorController.textScaleFactor.value,
-          )),
+          child: Obx(
+            () => Text(
+              '最新',
+              style: const TextStyle(
+                fontSize: 17,
+                color: newsMarqueeContentColor,
+              ),
+              textScaleFactor: textScaleFactorController.textScaleFactor.value,
+            ),
+          ),
         ),
         Expanded(
           child: carousel.CarouselSlider(
-            items: _buildList(width, widget.newsList),
-            carouselController: _carouselController,
-            options: _options,
+            items: buildList(width, widget.newsList),
+            carouselController: carouselController,
+            options: options,
           ),
         ),
       ],
     );
   }
 
-  List<Widget> _buildList(double width, List<StoryListItem> newsList) {
+  List<Widget> buildList(double width, List<StoryListItem> newsList) {
     return List.generate(newsList.length, (i) {
       final story = newsList[i];
       return InkWell(
@@ -147,11 +158,17 @@ class _NewsMarqueeState extends State<NewsMarquee> {
             width: width,
             child: MarqueeWidget(
               animationDuration: const Duration(milliseconds: 4000),
-              child: Obx(() => AutoSizeText(
-                story.name ?? StringDefault.nullString,
-                style: TextStyle(fontSize: 17, color: newsMarqueeContentColor),
-                textScaleFactor: textScaleFactorController.textScaleFactor.value,
-              )),
+              child: Obx(
+                () => AutoSizeText(
+                  story.name ?? StringDefault.nullString,
+                  style: const TextStyle(
+                    fontSize: 17,
+                    color: newsMarqueeContentColor,
+                  ),
+                  textScaleFactor:
+                      textScaleFactorController.textScaleFactor.value,
+                ),
+              ),
             ),
           ),
         ),
