@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:tv/blocs/promotionVideo/bloc.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/pages/section/live/live_page_controller.dart';
 import 'package:tv/pages/section/live/promotionVideos.dart';
-import 'package:tv/services/promotionVideosService.dart';
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
 
 class LivePage extends GetView<LivePageController> {
+  const LivePage({super.key});
+
   @override
   Widget build(BuildContext context) {
     AnalyticsHelper.sendScreenView(screenName: 'LivePage');
@@ -107,10 +106,7 @@ class LivePage extends GetView<LivePageController> {
                 AdSize(width: 320, height: 480),
               ],
             ),
-            BlocProvider(
-                create: (context) => PromotionVideoBloc(
-                    promotionVideosRepos: PromotionVideosServices()),
-                child: PromotionVideos()),
+            const PromotionVideos(),
             InlineBannerAdWidget(
               adUnitId: AdUnitIdHelper.getBannerAdUnitId('NewsAT3'),
               sizes: [
@@ -118,7 +114,7 @@ class LivePage extends GetView<LivePageController> {
                 AdSize(width: 336, height: 280),
               ],
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
           ],
         ),
       ],

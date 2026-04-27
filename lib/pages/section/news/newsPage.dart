@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:tv/bindings/news_category_binding.dart';
 import 'package:tv/blocs/election/election_cubit.dart';
-import 'package:tv/blocs/live/liveCubit.dart';
 import 'package:tv/controller/news_category_controller.dart';
 import 'package:tv/pages/section/news/newsCategoryTab.dart';
 import 'package:tv/services/electionService.dart';
@@ -32,15 +31,10 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => LiveCubit()),
-        BlocProvider(
-          create: (context) => ElectionCubit(
-            repos: ElectionService(),
-          ),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => ElectionCubit(
+        repos: ElectionService(),
+      ),
       child: const NewsCategoryTab(),
     );
   }

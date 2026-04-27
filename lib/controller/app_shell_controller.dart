@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:tv/bindings/live_binding.dart';
 import 'package:tv/controller/interstitialAdController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/section/live/live_page_controller.dart';
@@ -39,7 +40,7 @@ class AppShellController extends GetxController {
         Get.put(NewsPageController());
         break;
       case MNewsSection.live:
-        Get.put(LivePageController());
+        LiveBinding().dependencies();
         break;
       case MNewsSection.video:
         Get.put(VideoPageController());
