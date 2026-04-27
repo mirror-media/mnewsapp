@@ -1,23 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:tv/blocs/section/section_cubit.dart';
-import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/app_shell_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/changeFontSizePage.dart';
 import 'package:tv/pages/search/searchPage.dart';
 import 'package:tv/pages/section/anchorperson/anchorpersonPage.dart';
 import 'package:tv/pages/section/live/livePage.dart';
-import 'package:tv/pages/section/live/live_page_controller.dart';
 import 'package:tv/pages/section/news/newsPage.dart';
-import 'package:tv/pages/section/news/news_page_controller.dart';
 import 'package:tv/pages/section/ombuds/ombudsPage.dart';
 import 'package:tv/pages/section/programList/programListPage.dart';
 import 'package:tv/pages/section/show/showPage.dart';
 import 'package:tv/pages/section/topic/topicListPage.dart';
 import 'package:tv/pages/section/video/videoPage.dart';
-import 'package:tv/pages/section/video/video_page_controller.dart';
 import 'package:tv/widgets/gDPR.dart';
 import 'package:tv/widgets/homeDrawer.dart';
 
@@ -30,7 +25,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   var _scaffoldkey = GlobalKey<ScaffoldState>();
-  final interstitialAdController = Get.find<InterstitialAdController>();
+  final appShellController = Get.find<AppShellController>();
 
   @override
   void initState() {
@@ -63,17 +58,7 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldkey,
       drawer: HomeDrawer(widget.appVersion),
       appBar: _buildBar(context, _scaffoldkey),
-      body: BlocBuilder<SectionCubit, SectionStateCubit>(
-          builder: (BuildContext context, SectionStateCubit state) {
-        if (state is SectionError) {
-          final error = state.error;
-          print('SectionError: ${error.message}');
-          return Container();
-        } else {
-          MNewsSection sectionId = state.sectionId;
-          return _buildBody(sectionId);
-        }
-      }),
+      body: Obx(() => _buildBody(appShellController.currentSection.value)),
     );
   }
 
@@ -109,33 +94,20 @@ class _HomePageState extends State<HomePage> {
   Widget _buildBody(MNewsSection sectionId) {
     switch (sectionId) {
       case MNewsSection.news:
-        interstitialAdController.ramdomShowInterstitialAd();
-        Get.delete<NewsPageController>();
-        Get.put(NewsPageController());
-        return NewsPage();
+        return const NewsPage();
       case MNewsSection.live:
-        interstitialAdController.ramdomShowInterstitialAd();
-        Get.delete<LivePageController>();
-        Get.put(LivePageController());
         return LivePage();
       case MNewsSection.video:
-        interstitialAdController.ramdomShowInterstitialAd();
-        Get.delete<VideoPageController>();
-        Get.put(VideoPageController());
         return VideoPage();
       case MNewsSection.show:
-        interstitialAdController.ramdomShowInterstitialAd();
-        return ShowPage();
+        return const ShowPage();
       case MNewsSection.anchorperson:
-        interstitialAdController.ramdomShowInterstitialAd();
         return AnchorpersonPage();
       case MNewsSection.ombuds:
-        return OmbudsPage();
+        return const OmbudsPage();
       case MNewsSection.programList:
-        interstitialAdController.ramdomShowInterstitialAd();
         return ProgramListPage();
       case MNewsSection.topicList:
-        interstitialAdController.ramdomShowInterstitialAd();
         return TopicListPage();
     }
   }

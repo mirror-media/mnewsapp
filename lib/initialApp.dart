@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
@@ -10,8 +8,6 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/configPage.dart';
 import 'package:tv/pages/homePage.dart';
 import 'package:upgrader/upgrader.dart';
-
-import 'blocs/section/section_cubit.dart';
 import 'helpers/updateMessages.dart';
 
 class InitialApp extends StatefulWidget {
@@ -46,11 +42,8 @@ class _InitialAppState extends State<InitialApp> {
                 minAppVersion: state.minAppVersion,
                 messages: UpdateMessages(),
               ),
-              child: BlocProvider(
-                create: (_) => SectionCubit(),
-                child: HomePage(
-                  appVersion: state.appVersion,
-                ),
+              child: HomePage(
+                appVersion: state.appVersion,
               ),
             );
           }

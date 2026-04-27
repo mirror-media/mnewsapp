@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/section/section_cubit.dart';
+import 'package:tv/controller/app_shell_controller.dart';
 import 'package:tv/controller/textScaleFactorController.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
@@ -17,11 +16,7 @@ class HomeDrawer extends StatefulWidget {
 }
 
 class _HomeDrawerState extends State<HomeDrawer> {
-  final sectionCubit = SectionCubit();
-  _changeSection(MNewsSection sectionId) {
-    context.read<SectionCubit>().changeSection(sectionId);
-  }
-
+  final appShellController = Get.find<AppShellController>();
   final TextScaleFactorController textScaleFactorController = Get.find();
 
   @override
@@ -29,41 +24,33 @@ class _HomeDrawerState extends State<HomeDrawer> {
     //var height = MediaQuery.of(context).size.height;
     var padding = MediaQuery.of(context).padding;
 
-    return BlocBuilder<SectionCubit, SectionStateCubit>(
-        builder: (BuildContext context, SectionStateCubit state) {
-      if (state is SectionError) {
-        final error = state.error;
-        print('SectionError: ${error.message}');
-        return Container();
-      } else {
-        MNewsSection sectionId = state.sectionId;
-
-        return Drawer(
-          child: CustomScrollView(
-            physics: const ClampingScrollPhysics(),
-            slivers: [
-              SliverToBoxAdapter(
-                child: Container(
-                  color: drawerColor,
-                  child: SafeArea(
-                    bottom: false,
-                    child: _buildDrawerHeader(padding),
-                  ),
+    return Obx(() {
+      final sectionId = appShellController.currentSection.value;
+      return Drawer(
+        child: CustomScrollView(
+          physics: const ClampingScrollPhysics(),
+          slivers: [
+            SliverToBoxAdapter(
+              child: Container(
+                color: drawerColor,
+                child: SafeArea(
+                  bottom: false,
+                  child: _buildDrawerHeader(padding),
                 ),
               ),
-              SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
-              SliverFillRemaining(
-                hasScrollBody: false,
-                child: Container(
-                  color: Colors.white,
-                  alignment: Alignment.bottomCenter,
-                  child: _thirdPartyBlock(),
-                ),
+            ),
+            SliverToBoxAdapter(child: _drawerButtonBlock(sectionId)),
+            SliverFillRemaining(
+              hasScrollBody: false,
+              child: Container(
+                color: Colors.white,
+                alignment: Alignment.bottomCenter,
+                child: _thirdPartyBlock(),
               ),
-            ],
-          ),
-        );
-      }
+            ),
+          ],
+        ),
+      );
     });
   }
 
@@ -176,7 +163,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   ],
                 ),
                 sectionId == sectionList[index].id, () async {
-              _changeSection(sectionList[index].id);
+              appShellController.changeSection(sectionList[index].id);
               await Future.delayed(Duration(milliseconds: 150));
               Navigator.of(context).pop();
             }),
