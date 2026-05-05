@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/content.dart';
 import 'package:tv/models/paragraph.dart';
-import 'package:flutter_embedded_webview/flutter_embedded_webview.dart';
-import 'package:tv/widgets/story/annotationWidget.dart';
 import 'package:tv/widgets/story/blockQuoteWidget.dart';
 import 'package:tv/widgets/story/imageAndDescriptionSlideShowWidget.dart';
 import 'package:tv/widgets/story/imageDescriptionWidget.dart';
@@ -13,6 +11,7 @@ import 'package:tv/widgets/story/mNewsAudioPlayer.dart';
 import 'package:tv/widgets/story/mNewsVideoPlayer.dart';
 import 'package:tv/widgets/story/parseTheTextToHtmlWidget.dart';
 import 'package:tv/widgets/story/quoteByWidget.dart';
+import 'package:tv/widgets/embedded_code/flutter_embedded_webview.dart';
 import 'package:tv/widgets/youtube/youtubeWidget.dart';
 
 class ParagraphFormat {
@@ -151,23 +150,6 @@ class ParagraphFormat {
             return MNewsVideoPlayer(
               videourl: paragraph.contents![0].data,
               aspectRatio: 16 / 9,
-            );
-          }
-          return Container();
-        }
-      case 'audio':
-        {
-          if (paragraph.contents!.length > 0) {
-            String? titleAndDescription;
-            if (paragraph.contents![0].description != null) {
-              titleAndDescription =
-                  paragraph.contents![0].description!.split(';')[0];
-            }
-
-            return MNewsAudioPlayer(
-              audioUrl: paragraph.contents![0].data,
-              title: titleAndDescription,
-              textSize: textSize,
             );
           }
           return Container();
