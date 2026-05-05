@@ -1,94 +1,27 @@
-import 'dart:async';
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:firebase_remote_config/firebase_remote_config.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:tv/blocs/election/election_cubit.dart';
+import 'package:tv/controller/news_election_controller.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
-import 'package:tv/models/election/municipality.dart';
 import 'package:tv/pages/section/news/election/municipalityItem.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:carousel_slider/carousel_slider.dart' as carousel;
 
-class ElectionWidget extends StatefulWidget {
-  const ElectionWidget({super.key});
+class ElectionWidget extends GetView<NewsElectionController> {
+  ElectionWidget({super.key});
 
-  @override
-  State<ElectionWidget> createState() => _ElectionWidgetState();
-}
-
-class _ElectionWidgetState extends State<ElectionWidget> {
-  List<Municipality> municipalityList = [];
-  DateTime? lastUpdateTime;
-  final carousel.CarouselSliderController carouselController = carousel.CarouselSliderController();
-  final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
-
-  Timer? autoUpdateTimer;
-  int currentIndex = 0;
-  String api = '';
-  String readmoreUrl = '';
-  DateTime? startShowTime;
-  DateTime? endShowTime;
-
-  @override
-  void initState() {
-    super.initState();
-
-    final electionJsonString = remoteConfig.getString('election');
-    try {
-      final electionJson = jsonDecode(electionJsonString);
-      api = electionJson['api'] ?? '';
-      readmoreUrl = electionJson['readMoreUrl'] ?? '';
-      startShowTime = DateTime.tryParse(electionJson['startTime'] ?? '');
-      endShowTime = DateTime.tryParse(electionJson['endTime'] ?? '');
-
-      if (startShowTime != null && endShowTime != null) {
-        fetchMunicipalityData();
-        autoUpdateTimer = Timer.periodic(
-          const Duration(minutes: 1),
-              (_) => fetchMunicipalityData(),
-        );
-      } else {
-        throw Exception('Invalid show time');
-      }
-    } catch (e) {
-      print('Init election widget error: $e');
-      autoUpdateTimer = null;
-      context.read<ElectionCubit>().hideWidget();
-    }
-  }
-
-  @override
-  void dispose() {
-    autoUpdateTimer?.cancel();
-    super.dispose();
-  }
-
-  void fetchMunicipalityData() {
-    final now = DateTime.now();
-    if (endShowTime != null && now.isAfter(endShowTime!)) {
-      context.read<ElectionCubit>().hideWidget();
-      autoUpdateTimer?.cancel();
-    } else if (startShowTime != null && now.isBefore(startShowTime!)) {
-      context.read<ElectionCubit>().hideWidget();
-    } else {
-      context.read<ElectionCubit>().fetchMunicipalityData(api);
-    }
-  }
+  final carousel.CarouselSliderController carouselController =
+      carousel.CarouselSliderController();
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ElectionCubit, ElectionState>(
-      builder: (context, state) {
-        if (state is HideWidget) return const SizedBox();
+    return Obx(() {
+        if (controller.isHidden.value) return const SizedBox();
 
-        if (state is ElectionDataLoaded) {
-          municipalityList = state.municipalityList;
-          lastUpdateTime = state.lastUpdateTime;
-        }
+        final municipalityList = controller.municipalityList;
+        final lastUpdateTime = controller.lastUpdateTime.value;
+        final currentIndex = controller.currentIndex.value;
 
         if (municipalityList.isEmpty) return const SizedBox();
 
@@ -171,7 +104,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                         autoPlayInterval: const Duration(seconds: 3),
                         height: 175,
                         onPageChanged: (index, _) {
-                          setState(() => currentIndex = index);
+                          controller.onPageChanged(index);
                         },
                       ),
                       items: items,
@@ -182,7 +115,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                       child: GestureDetector(
                         onTap: () {
                           AnalyticsHelper.logElectionEvent(eventName: 'to_2022Election');
-                          launchUrlString(readmoreUrl);
+                          launchUrlString(controller.readmoreUrl);
                         },
                         child: const Text(
                           '查看更多',
@@ -198,7 +131,7 @@ class _ElectionWidgetState extends State<ElectionWidget> {
                     const SizedBox(height: 8),
                     if (lastUpdateTime != null)
                       Text(
-                        '最後更新時間 ${DateFormat('yyyy/MM/dd HH:mm').format(lastUpdateTime!)}',
+                        '最後更新時間 ${DateFormat('yyyy/MM/dd HH:mm').format(lastUpdateTime)}',
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.w400,
@@ -211,7 +144,6 @@ class _ElectionWidgetState extends State<ElectionWidget> {
             )
           ],
         );
-      },
-    );
+      });
   }
 }
