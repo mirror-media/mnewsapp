@@ -54,10 +54,6 @@ dependencies:
   equatable: ^2.0.5
   youtube_explode_dart: ^2.0.2
   percent_indicator: ^4.2.3
-  real_time_invoice_widget:
-    git:
-      url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
-      ref: main
 
   google_mobile_ads: ^6.0.0
   shared_preferences: ^2.3.2

@@ -1,0 +1,4 @@
+enum ElectionStatus {
+  voteCounting,
+  voteCountCompleted,
+}

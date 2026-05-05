@@ -2,12 +2,12 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:real_time_invoice_widget/data/provider/election_data_provider.dart';
 import 'package:tv/configs/prodConfig.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/provider/articles_api_provider.dart';
 import 'package:tv/services/configService.dart';
+import 'package:tv/widgets/real_time_invoice/data/provider/election_data_provider.dart';
 
 class InitialAppController extends GetxController {
   InitialAppController({

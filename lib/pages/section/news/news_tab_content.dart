@@ -1,17 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:tv/bindings/news_story_list_binding.dart';
 import 'package:tv/controller/news_story_list_controller.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/helpers/environment.dart';
-import 'package:tv/pages/section/news/election/electionWidget.dart';
+import 'package:tv/pages/section/news/election/election_widget.dart';
 import 'package:tv/pages/section/news/news_page_controller.dart';
-import 'package:tv/pages/section/news/newsPopularTabStoryList.dart';
-import 'package:tv/pages/section/news/newsTabStoryList.dart';
-import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart' as cs;
+import 'package:tv/pages/section/news/news_popular_tab_story_list.dart';
+import 'package:tv/pages/section/news/news_tab_story_list.dart';
+import 'package:tv/widgets/editor_choice/editor_choice_carousel.dart' as cs;
 import 'package:tv/widgets/liveWidget.dart';
+import 'package:tv/widgets/real_time_invoice/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -128,7 +128,6 @@ class NewsTopFeature extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 27),
                         child: RealTimeInvoiceWidget(
-                          isPackage: true,
                           getMoreButtonClick: () async {
                             if (!await launchUrl(Uri.parse(
                                 Environment().config.electionGetMoreWebpage))) {
