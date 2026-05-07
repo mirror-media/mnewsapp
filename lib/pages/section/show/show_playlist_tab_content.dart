@@ -63,9 +63,6 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     if (Get.isRegistered<ShowPlaylistController>(tag: widget.controllerTag)) {
       Get.delete<ShowPlaylistController>(tag: widget.controllerTag);
     }
-    if (Get.isRegistered(tag: widget.controllerTag)) {
-      Get.delete(tag: widget.controllerTag);
-    }
     super.dispose();
   }
 

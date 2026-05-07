@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv/helpers/errorHelper.dart';
 import 'package:tv/helpers/exceptions.dart';
@@ -28,6 +27,7 @@ class NewsStoryListController extends GetxController {
   final RxBool isLoadingMore = false.obs;
   final RxBool isAllLoaded = false.obs;
   final Rxn<MNewException> error = Rxn<MNewException>();
+  final RxnString loadMoreErrorMessage = RxnString();
 
   int allStoryCount = 0;
 
@@ -85,18 +85,14 @@ class NewsStoryListController extends GetxController {
       allStoryCount = tabStoryListService.allStoryCount;
       isAllLoaded.value = allStoryCount > 0 && storyList.length >= allStoryCount;
     } catch (_) {
-      final context = Get.context;
-      if (context != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('加載失敗'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
+      loadMoreErrorMessage.value = '加載失敗';
     } finally {
       isLoadingMore.value = false;
     }
+  }
+
+  void clearLoadMoreErrorMessage() {
+    loadMoreErrorMessage.value = null;
   }
 
   Future<List<StoryListItem>> _fetchInitialStories() {

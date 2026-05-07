@@ -5,32 +5,42 @@ import 'widget/candidate_widget.dart';
 import 'widget/list_item_widget.dart';
 import 'real_time_invoice_controller.dart';
 
-class RealTimeInvoiceWidget extends GetView<RealTimeInvoiceController> {
+class RealTimeInvoiceWidget extends StatefulWidget {
   const RealTimeInvoiceWidget(
-      {super.key,
-      this.getMoreButtonClick,
-      this.backgroundColor,
-      required this.width});
+      {super.key, this.getMoreButtonClick, this.backgroundColor, required this.width});
 
   final Function()? getMoreButtonClick;
   final Color? backgroundColor;
   final double width;
 
   @override
-  Widget build(BuildContext context) {
+  State<RealTimeInvoiceWidget> createState() => _RealTimeInvoiceWidgetState();
+}
+
+class _RealTimeInvoiceWidgetState extends State<RealTimeInvoiceWidget> {
+  late final RealTimeInvoiceController controller;
+
+  @override
+  void initState() {
+    super.initState();
     if (!Get.isRegistered<RealTimeInvoiceController>()) {
       Get.put(RealTimeInvoiceController());
     }
+    controller = Get.find<RealTimeInvoiceController>();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.fromLTRB(10, 12, 10, 12),
       width: double.infinity,
-      color: backgroundColor ?? const Color(0xFFF5F5F5),
+      color: widget.backgroundColor ?? const Color(0xFFF5F5F5),
       child: Stack(
         children: [
           Obx(() {
             final index = controller.rxCurrentSelect.value;
             if (index == null) return const SizedBox.shrink();
-            final blockWidth = (width - 24 - 7 * 3) / 4;
+            final blockWidth = (widget.width - 24 - 7 * 3) / 4;
             final left = blockWidth + index * blockWidth + index * 7 + 3.5;
             return Positioned(
               top: 99 - 12,
@@ -158,8 +168,8 @@ class RealTimeInvoiceWidget extends GetView<RealTimeInvoiceController> {
               const SizedBox(height: 24),
               InkWell(
                 onTap: () {
-                  if (getMoreButtonClick != null) {
-                    getMoreButtonClick!();
+                  if (widget.getMoreButtonClick != null) {
+                    widget.getMoreButtonClick!();
                   }
                 },
                 child: const Text(

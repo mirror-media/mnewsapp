@@ -29,11 +29,31 @@ class NewsTabStoryList extends StatefulWidget {
 
 class _NewsTabStoryListState extends State<NewsTabStoryList> {
   late final NewsStoryListController controller;
+  late final Worker loadMoreErrorWorker;
 
   @override
   void initState() {
     super.initState();
     controller = Get.find<NewsStoryListController>(tag: widget.controllerTag);
+    loadMoreErrorWorker = ever<String?>(
+      controller.loadMoreErrorMessage,
+      (message) {
+        if (message == null || !mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(message),
+            backgroundColor: Colors.red,
+          ),
+        );
+        controller.clearLoadMoreErrorMessage();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    loadMoreErrorWorker.dispose();
+    super.dispose();
   }
 
   @override
