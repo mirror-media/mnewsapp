@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/interstitial_ad_controller.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/models/youtube_list_info.dart';

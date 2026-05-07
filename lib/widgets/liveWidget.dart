@@ -3,7 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tv/bindings/live_widget_binding.dart';
 import 'package:tv/controller/live_widget_controller.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/widgets/youtube/youtubePlayer.dart';
 
 class LiveWidget extends StatefulWidget {

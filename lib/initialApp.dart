@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:tv/bindings/initial_app_binding.dart';
 import 'package:tv/controller/initial_app_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
-import 'package:tv/pages/configPage.dart';
-import 'package:tv/pages/homePage.dart';
+import 'package:tv/pages/config_page.dart';
+import 'package:tv/pages/home_page.dart';
 import 'package:upgrader/upgrader.dart';
 import 'helpers/updateMessages.dart';
 

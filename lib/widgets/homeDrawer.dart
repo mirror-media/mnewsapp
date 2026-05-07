@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/app_shell_controller.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/models/section.dart';

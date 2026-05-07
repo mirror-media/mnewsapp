@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tv/bindings/live_binding.dart';
-import 'package:tv/controller/interstitialAdController.dart';
+import 'package:tv/controller/interstitial_ad_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/pages/section/live/live_page_controller.dart';
 import 'package:tv/pages/section/news/news_page_controller.dart';

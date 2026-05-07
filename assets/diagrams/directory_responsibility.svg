@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2100" height="1040" viewBox="0 0 2100 1040">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#111111"/>
+</marker>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans CJK TC", sans-serif; fill: #111111; }
+.title { font-size: 30px; font-weight: 700; }
+.label { font-size: 18px; font-weight: 600; }
+.small { font-size: 17px; font-weight: 600; }
+</style>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="60" y="60" class="title">目錄職責圖</text>
+<path d="M1560,288.0 L1640.0,288.0 L1640.0,288.0 L1720,288.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1360,558.0 L1490.0,558.0 L1490.0,558.0 L1620,558.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1240.0,586 L1240.0,698.0 L1140.0,698.0 L1140.0,810" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M740.0,586 L740.0,698.0 L540.0,698.0 L540.0,810" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1560,288.0 L1590.0,288.0 L1590.0,838.0 L1620,838.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,180 L240,180 L240,260" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,180 L640,180 L640,260" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,180 L1040,180 L1040,260" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,180 L1440,180 L1440,260" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,180 L1840,180 L1840,260" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,420 L240,420 L240,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,420 L740,420 L740,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,420 L1240,420 L1240,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,136 L1040,420 L1740,420 L1740,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M640,316 L640,420 L740,420 L740,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,316 L1040,380 L1240,380 L1240,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1040,316 L1040,420 L740,420 L740,530" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<rect x="920" y="80" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1040.0" y="114" text-anchor="middle" class="label">lib/</text>
+<rect x="120" y="260" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="240.0" y="294" text-anchor="middle" class="label">main_dev.dart /</text>
+<text x="240.0" y="314" text-anchor="middle" class="label">main_prod.dart</text>
+<text x="240.0" y="334" text-anchor="middle" class="label">App 入口</text>
+<rect x="520" y="260" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="640.0" y="294" text-anchor="middle" class="label">mNewsApp.dart /</text>
+<text x="640.0" y="314" text-anchor="middle" class="label">initialApp.dart</text>
+<text x="640.0" y="334" text-anchor="middle" class="label">App shell 與啟動流程</text>
+<rect x="920" y="260" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1040.0" y="284" text-anchor="middle" class="label">pages/</text>
+<text x="1040.0" y="304" text-anchor="middle" class="label">功能頁面</text>
+<rect x="1320" y="260" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1440.0" y="284" text-anchor="middle" class="label">widgets/</text>
+<text x="1440.0" y="304" text-anchor="middle" class="label">共用 UI 元件</text>
+<rect x="1720" y="260" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1840.0" y="284" text-anchor="middle" class="label">blocs/</text>
+<text x="1840.0" y="304" text-anchor="middle" class="label">主要狀態管理</text>
+<rect x="120" y="530" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="240.0" y="564" text-anchor="middle" class="label">controller/ +</text>
+<text x="240.0" y="584" text-anchor="middle" class="small">pages/*_controller.dart</text>
+<text x="240.0" y="604" text-anchor="middle" class="label">GetX 控制器</text>
+<rect x="620" y="530" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="740.0" y="554" text-anchor="middle" class="label">services/</text>
+<text x="740.0" y="574" text-anchor="middle" class="label">資料存取與商業邏輯</text>
+<rect x="1120" y="530" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1240.0" y="554" text-anchor="middle" class="label">provider/</text>
+<text x="1240.0" y="574" text-anchor="middle" class="small">GraphQL / API provider</text>
+<rect x="1620" y="530" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1740.0" y="554" text-anchor="middle" class="label">models/</text>
+<text x="1740.0" y="574" text-anchor="middle" class="label">資料模型</text>
+<rect x="420" y="810" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="540.0" y="834" text-anchor="middle" class="label">helpers/</text>
+<text x="540.0" y="854" text-anchor="middle" class="label">工具、常數、錯誤、API 包裝</text>
+<rect x="1020" y="810" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1140.0" y="834" text-anchor="middle" class="label">configs/</text>
+<text x="1140.0" y="854" text-anchor="middle" class="label">dev / prod 環境設定</text>
+<rect x="1620" y="810" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1740.0" y="834" text-anchor="middle" class="label">core/</text>
+<text x="1740.0" y="854" text-anchor="middle" class="label">enum / extension</text>
+</svg>

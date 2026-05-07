@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="620" viewBox="0 0 2000 620">
+<defs>
+<marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto" markerUnits="strokeWidth">
+<path d="M 0 0 L 10 5 L 0 10 z" fill="#111111"/>
+</marker>
+<style>
+text { font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans CJK TC", sans-serif; fill: #111111; }
+.title { font-size: 30px; font-weight: 700; }
+.label { font-size: 18px; font-weight: 600; }
+.small { font-size: 17px; font-weight: 600; }
+</style>
+</defs>
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="60" y="60" class="title">文章頁資料流</text>
+<path d="M360,248.0 L415.0,248.0 L415.0,248.0 L470,248.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M710,248.0 L785.0,248.0 L785.0,248.0 L860,248.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1100,248.0 L1190.0,248.0 L1190.0,138.0 L1280,138.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1100,248.0 L1190.0,248.0 L1190.0,358.0 L1280,358.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1520,138.0 L1610.0,138.0 L1610.0,248.0 L1700,248.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1520,358.0 L1610.0,358.0 L1610.0,248.0 L1700,248.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<path d="M1700,248.0 L1030.0,248.0 L1030.0,248.0 L360,248.0" fill="none" stroke="#111111" stroke-width="2.4" marker-end="url(#arrow)"/>
+<rect x="120" y="220" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="240.0" y="254" text-anchor="middle" class="label">StoryPage</text>
+<rect x="470" y="220" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="590.0" y="244" text-anchor="middle" class="label">StoryPageController</text>
+<text x="590.0" y="264" text-anchor="middle" class="label">(GetX)</text>
+<rect x="860" y="220" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="980.0" y="254" text-anchor="middle" class="label">StoryServices</text>
+<rect x="1280" y="110" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1400.0" y="144" text-anchor="middle" class="label">Internal GraphQL</text>
+<rect x="1280" y="330" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1400.0" y="354" text-anchor="middle" class="label">External API</text>
+<text x="1400.0" y="374" text-anchor="middle" class="label">fallback</text>
+<rect x="1700" y="220" width="240" height="56" rx="10" ry="10" fill="#ffffff" stroke="#111111" stroke-width="2"/>
+<text x="1820.0" y="254" text-anchor="middle" class="label">Story Model</text>
+</svg>
