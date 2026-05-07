@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv/data/value/string_default.dart';
 import 'package:tv/models/storyListItem.dart';
-import 'package:tv/pages/storyPage.dart';
+import 'package:tv/pages/story_page.dart';
 
 class ListStoryItem extends StatelessWidget {
   const ListStoryItem({super.key, required this.item});

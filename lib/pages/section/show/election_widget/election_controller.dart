@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/models/podcast_info/podcast_info.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:tv/blocs/live/liveCubit.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/bindings/live_widget_binding.dart';
+import 'package:tv/controller/live_widget_controller.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/widgets/youtube/youtubePlayer.dart';
 
 class LiveWidget extends StatefulWidget {
@@ -26,42 +26,48 @@ class LiveWidget extends StatefulWidget {
 class _LiveWidgetState extends State<LiveWidget> {
   late bool _needBuildLiveTitle;
   late bool _showIcon;
+
   @override
   void initState() {
-    _loadLiveId();
     _needBuildLiveTitle = widget.needBuildLiveTitle;
     _showIcon = widget.showIcon;
+    LiveWidgetBinding(widget.livePostId).dependencies();
     super.initState();
   }
 
-  _loadLiveId() {
-    context.read<LiveCubit>().fetchLiveId(widget.livePostId);
+  @override
+  void dispose() {
+    if (Get.isRegistered<LiveWidgetController>(tag: widget.livePostId)) {
+      Get.delete<LiveWidgetController>(tag: widget.livePostId);
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<LiveCubit, LiveState>(
-      builder: (BuildContext context, LiveState state) {
-        if (state is LiveIdLoaded) {
-          return Column(
-            children: [
-              _needBuildLiveTitle
-                  ? Padding(
-                      padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
-                      child: _buildLiveTitle(widget.liveTitle, widget.icon),
-                    )
-                  : Container(),
-              YoutubePlayer(
-                state.liveId,
-                autoPlay: true,
-                mute: true,
-              ),
-            ],
-          );
-        }
+    final controller = Get.find<LiveWidgetController>(tag: widget.livePostId);
+    return Obx(() {
+      final liveId = controller.liveId.value;
+      if (liveId == null || liveId.isEmpty) {
         return Container();
-      },
-    );
+      }
+
+      return Column(
+        children: [
+          _needBuildLiveTitle
+              ? Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 24, 24, 12),
+                  child: _buildLiveTitle(widget.liveTitle, widget.icon),
+                )
+              : Container(),
+          YoutubePlayer(
+            liveId,
+            autoPlay: true,
+            mute: true,
+          ),
+        ],
+      );
+    });
   }
 
   Widget _buildLiveTitle(String title, IconData icon) {

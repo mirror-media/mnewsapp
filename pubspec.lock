@@ -494,15 +494,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
-  flutter_embedded_webview:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: master
-      resolved-ref: "6581fff7a02cadb954e288db4e4e130a5f9b5920"
-      url: "https://github.com/mirror-media/flutter_embedded_webview.git"
-    source: git
-    version: "0.6.5"
   flutter_hooks:
     dependency: transitive
     description:
@@ -1110,15 +1101,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5+1"
-  real_time_invoice_widget:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: main
-      resolved-ref: "9e5331f247f4b93b1a445b3b12d1dfa52f54a18c"
-      url: "https://github.com/mirror-media/RealTimeInvoiceWidget.git"
-    source: git
-    version: "1.0.9+9"
   rxdart:
     dependency: transitive
     description:
@@ -1645,5 +1627,5 @@ packages:
     source: hosted
     version: "9.1.2"
 sdks:
-  dart: "3.7.2"
+  dart: ">=3.7.2 <4.0.0"
   flutter: ">=3.29.0"

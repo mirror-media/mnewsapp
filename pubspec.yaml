@@ -55,17 +55,6 @@ dependencies:
   youtube_explode_dart: ^2.0.2
   percent_indicator: ^4.2.3
 
-
-  flutter_embedded_webview:
-    git:
-      url: https://github.com/mirror-media/flutter_embedded_webview.git
-      ref: master
-
-  real_time_invoice_widget:
-    git:
-      url: https://github.com/mirror-media/RealTimeInvoiceWidget.git
-      ref: main
-
   google_mobile_ads: ^6.0.0
   shared_preferences: ^2.3.2
   comscore_analytics_flutter: ^1.0.0

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
-import 'package:real_time_invoice_widget/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:tv/core/enum/page_status.dart';
 import 'package:tv/helpers/adUnitIdHelper.dart';
 import 'package:tv/helpers/analyticsHelper.dart';
@@ -9,8 +8,9 @@ import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/pages/section/news/latestTabContent/widgets/list_story_item.dart';
 import 'package:tv/pages/section/news/news_page_controller.dart';
-import 'package:tv/pages/shared/editorChoice/editorChoiceCarousel.dart' as cs;
+import 'package:tv/widgets/editor_choice/editor_choice_carousel.dart' as cs;
 import 'package:tv/widgets/inlineBannerAdWidget.dart';
+import 'package:tv/widgets/real_time_invoice/real_time_invoice/real_time_invoice_widget.dart';
 import 'package:tv/widgets/youtube_stream_widget.dart';
 import 'package:tv/widgets/top_iframe_widget.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -33,7 +33,6 @@ class LatestTabContent extends GetView<NewsPageController> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 27),
                   child: RealTimeInvoiceWidget(
-                    isPackage: true,
                     getMoreButtonClick: () async {
                       if (!await launchUrl(Uri.parse(
                           Environment().config.electionGetMoreWebpage))) {
@@ -184,4 +183,3 @@ class LatestTabContent extends GetView<NewsPageController> {
     );
   }
 }
-
