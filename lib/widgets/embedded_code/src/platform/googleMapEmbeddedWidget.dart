@@ -18,6 +18,16 @@ class GoogleMapEmbeddedCodeWidget extends StatefulWidget {
 class _GoogleMapEmbeddedCodeWidgetState
     extends State<GoogleMapEmbeddedCodeWidget> {
   final double _aspectRatio = 8 / 7;
+  late final WebViewController _webViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(embeddedCodeHtmlUri(_getHtml(widget.embeddedCode)));
+  }
+
   String _getHtml(String embeddedCode) {
     return buildEmbeddedHtml(
       embeddedCode: embeddedCode,
@@ -37,11 +47,7 @@ max-width: 100%;
           return SizedBox(
             width: constraints.maxWidth,
             height: constraints.maxWidth / _aspectRatio,
-            child: WebViewWidget(
-              controller: WebViewController()
-                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                ..loadRequest(embeddedCodeHtmlUri(_getHtml(widget.embeddedCode)))
-            ),
+            child: WebViewWidget(controller: _webViewController),
           );
         });
   }

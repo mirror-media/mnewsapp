@@ -18,11 +18,15 @@ class GoogleSpreadsheetsEmbeddedCodeWidget extends StatefulWidget {
 class _GoogleSpreadsheetsEmbeddedCodeWidgetState
     extends State<GoogleSpreadsheetsEmbeddedCodeWidget> {
   double _aspectRatio = 16 / 9;
+  late final WebViewController _webViewController;
 
   @override
   void initState() {
     super.initState();
     _aspectRatio = extractIframeAspectRatio(widget.embeddedCode);
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(embeddedCodeHtmlUri(_getHtml(widget.embeddedCode)));
   }
 
   String _getHtml(String embeddedCode) {
@@ -55,11 +59,7 @@ max-width: 100%;
           return SizedBox(
             width: constraints.maxWidth,
             height: constraints.maxWidth / _aspectRatio,
-            child: WebViewWidget(
-              controller: WebViewController()
-                ..setJavaScriptMode(JavaScriptMode.unrestricted)
-                ..loadRequest(embeddedCodeHtmlUri(_getHtml(widget.embeddedCode)))
-            ),
+            child: WebViewWidget(controller: _webViewController),
           );
         });
   }

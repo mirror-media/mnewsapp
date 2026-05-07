@@ -18,6 +18,24 @@ class GeneralEmbeddedCodeWidget extends StatefulWidget {
 
 class _GeneralEmbeddedCodeWidgetState extends State<GeneralEmbeddedCodeWidget> {
   double _aspectRatio = 16 / 9;
+  late final WebViewController _webViewController;
+
+  @override
+  void initState() {
+    super.initState();
+    _webViewController = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel(
+        'PageAspectRatio',
+        onMessageReceived: (JavaScriptMessage message) {
+          _setAspectRatio(double.parse(message.message));
+        },
+      )
+      ..loadHtmlString(
+        _getHtml(widget.embeddedCode),
+        baseUrl: embeddedCodeHtmlUri('').toString(),
+      );
+  }
 
   String _getHtml(String embeddedCode) {
     return buildEmbeddedHtml(
@@ -47,20 +65,7 @@ max-width: 100%;
       return SizedBox(
         width: constraints.maxWidth,
         height: constraints.maxWidth / _aspectRatio,
-        child: WebViewWidget(
-          controller: WebViewController()
-            ..setJavaScriptMode(JavaScriptMode.unrestricted)
-            ..addJavaScriptChannel(
-              'PageAspectRatio',
-              onMessageReceived: (JavaScriptMessage message) {
-                _setAspectRatio(double.parse(message.message));
-              },
-            )
-            ..loadHtmlString(
-              _getHtml(widget.embeddedCode),
-              baseUrl: embeddedCodeHtmlUri('').toString(),
-            )
-        ),
+        child: WebViewWidget(controller: _webViewController),
       );
     });
   }

@@ -18,8 +18,6 @@ class ElectionDataProvider extends GetConnect {
 
   final http.Client _client = http.Client();
 
-  ElectionDataProvider(String this.apiUrl);
-
   Future<ElectionData?> getElectionData() async {
     if (apiUrl == null) return null;
 
