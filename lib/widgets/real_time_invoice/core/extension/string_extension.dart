@@ -16,11 +16,8 @@ extension NumberFormatExtension on String {
       formattedNumber.write(wholeNumber[i]);
     }
 
-    if (parts.length > 1) {
-      formattedNumber.write('.${parts[1]}');
-    }
-
-    return formattedNumber.toString().split('').reversed.join();
+    final formattedWhole = formattedNumber.toString().split('').reversed.join();
+    return parts.length > 1 ? '$formattedWhole.${parts[1]}' : formattedWhole;
   }
 
   String? electionRender() {
