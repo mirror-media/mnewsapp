@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:extended_text/extended_text.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/core/extensions/string_extension.dart';
 import 'package:tv/data/value/string_default.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';

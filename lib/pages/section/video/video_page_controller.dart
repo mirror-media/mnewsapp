@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:tv/controller/textScaleFactorController.dart';
+import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/pages/section/video/videoTabContent.dart';
+import 'package:tv/pages/section/video/video_tab_content.dart';
 import 'package:tv/pages/section/video/video_tab_controller.dart';
 import 'package:tv/provider/articles_api_provider.dart';
 

@@ -82,10 +82,16 @@ class NotificationSettingServices implements NotificationSettingRepos {
     if (assetList == null) return;
 
     for (final asset in assetList) {
-      final user = userList?.firstWhere(
-            (u) => u.id == asset.id,
-        orElse: () => null as NotificationSetting, // 只為了讓編譯器過；下一行會檢查 null
-      );
+      NotificationSetting? user;
+      if (userList != null) {
+        for (final item in userList) {
+          if (item.id == asset.id) {
+            user = item;
+            break;
+          }
+        }
+      }
+
       if (user != null && user.id == asset.id) {
         asset.value = user.value;
 
