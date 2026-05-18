@@ -32,12 +32,12 @@ if (prodKeystoreFile.exists()) {
 
 android {
     namespace "com.mirrortv.mnews"
-    compileSdkVersion 35
+    compileSdkVersion 36
 
     defaultConfig {
         applicationId "com.mirrortv.mnews"
         minSdk 24
-        targetSdk 35
+        targetSdk 36
         versionCode flutterVersionCodeStr.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
@@ -104,16 +104,6 @@ android {
             shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
-        }
-    }
-
-    // ✅ 正確的 abi 設定（替代 ndk { abiFilters }）
-    splits {
-        abi {
-            enable true
-            reset()
-            include "armeabi-v7a", "arm64-v8a"
-            universalApk false
         }
     }
 
