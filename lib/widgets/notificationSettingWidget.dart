@@ -1,63 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tv/blocs/notificationSetting/bloc.dart';
-import 'package:tv/blocs/notificationSetting/events.dart';
-import 'package:tv/blocs/notificationSetting/states.dart';
+import 'package:get/get.dart';
+import 'package:tv/controller/notification_setting_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/models/notificationSetting.dart';
 
-class NotificationSettingWidget extends StatefulWidget {
-  @override
-  _NotificationSettingWidgetState createState() =>
-      _NotificationSettingWidgetState();
-}
-
-class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
-  @override
-  void initState() {
-    _getNotificationSettingList();
-    super.initState();
-  }
-
-  _getNotificationSettingList() async {
-    context.read<NotificationSettingBloc>().add(GetNotificationSettingList());
-  }
-
-  _onExpansionChanged(List<NotificationSetting> notificationSettingList,
-      int index, bool value) async {
-    context.read<NotificationSettingBloc>().add(
-        NotificationOnExpansionChanged(notificationSettingList, index, value));
-  }
-
-  _onCheckBoxChanged(
-      List<NotificationSetting> notificationSettingList,
-      List<NotificationSetting> checkboxList,
-      int index,
-      bool isRepeatable) async {
-    context.read<NotificationSettingBloc>().add(
-          NotificationOnCheckBoxChanged(
-              notificationSettingList, checkboxList, index, isRepeatable),
-        );
-  }
+class NotificationSettingWidget extends GetView<NotificationSettingController> {
+  const NotificationSettingWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<NotificationSettingBloc, NotificationSettingState>(
-        builder: (BuildContext context, NotificationSettingState state) {
-      if (state is NotificationSettingError) {
-        final error = state.error;
+    return Obx(() {
+      final error = controller.error.value;
+      if (error != null) {
         print('NotificationSettingError: ${error.message}');
         return Container();
       }
-      if (state is NotificationSettingLoaded) {
-        List<NotificationSetting> notificationSettingList =
-            state.notificationSettingList;
 
+      final notificationSettingList = controller.notificationSettingList;
+      if (notificationSettingList.isNotEmpty) {
         return _buildNotificationSettingListSection(notificationSettingList);
       }
 
-      // state is Init, loading, or other
       return Container();
     });
   }
@@ -89,12 +53,11 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
               trailing: IgnorePointer(
                 child: CupertinoSwitch(
                     value: notificationSettingList[listViewIndex].value,
-                    activeColor: appBarColor,
+                    activeTrackColor: appBarColor,
                     onChanged: (bool value) {}),
               ),
               onExpansionChanged: (bool value) {
-                _onExpansionChanged(
-                    notificationSettingList, listViewIndex, value);
+                controller.onExpansionChanged(listViewIndex, value);
               },
               children: _renderCheckBoxChildren(
                   context, notificationSettingList, listViewIndex),
@@ -136,8 +99,11 @@ class _NotificationSettingWidgetState extends State<NotificationSettingWidget> {
         itemBuilder: (context, checkboxIndex) {
           return InkWell(
             onTap: () {
-              _onCheckBoxChanged(notificationSettingList, checkboxList,
-                  checkboxIndex, isRepeatable);
+              controller.onCheckBoxChanged(
+                checkboxList,
+                checkboxIndex,
+                isRepeatable,
+              );
             },
             child: IgnorePointer(
               child: Row(children: [

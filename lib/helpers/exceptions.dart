@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tv/pages/error/error400Widget.dart';
-import 'package:tv/pages/error/error500Widget.dart';
-import 'package:tv/pages/error/noSignalWidget.dart';
+import 'package:tv/pages/error/error_400_widget.dart';
+import 'package:tv/pages/error/error_500_widget.dart';
+import 'package:tv/pages/error/no_signal_widget.dart';
 
 abstract class MNewException {
   var message;
