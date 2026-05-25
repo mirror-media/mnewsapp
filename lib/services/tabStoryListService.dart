@@ -333,7 +333,7 @@ query {
         }
         skip: \$skip
         take: \$take
-        orderBy: [{ updatedAt: desc }]
+        orderBy: [{ publishTime: desc }]
       ) {
         id
         slug

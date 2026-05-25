@@ -215,6 +215,7 @@ class StoryListItem {
       isSales: false,
       categoryList: allPostsCategory,
       displayCategory: displayCategory,
+      publishTime: json['publishTime']?.toString(),
     );
   }
 

@@ -27,6 +27,10 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   @override
   void initState() {
     super.initState();
+    // ===== 選單排查 log =====
+    print('[選單排查] ShowPlaylistWidget.initState '
+        'A.id=${widget.showIntro.playList01?.youtubePlayListId} '
+        'B.id=${widget.showIntro.playList02?.youtubePlayListId}');
     if (widget.showIntro.playList01 != null &&
         widget.showIntro.playList02 != null) {
       initializeTabs(widget.showIntro);
@@ -34,6 +38,10 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
   }
 
   void initializeTabs(ShowIntro showIntro) {
+    // ===== 選單排查 log =====
+    print('[選單排查] initializeTabs '
+        'A(name=${showIntro.playList01!.name}, id=${showIntro.playList01!.youtubePlayListId}) | '
+        'B(name=${showIntro.playList02!.name}, id=${showIntro.playList02!.youtubePlayListId})');
     segmentedControlGroupValue = 0;
     tabs = <int, Widget>{
       0: Padding(
@@ -98,6 +106,9 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
             groupValue: segmentedControlGroupValue,
             children: tabs,
             onValueChanged: (int i) {
+              // ===== 選單排查 log:這就是「點擊選單」事件 =====
+              print('[選單排查] 點擊 segmented tab -> index=$i '
+                  '(0=選單A / 1=選單B)');
               setState(() {
                 segmentedControlGroupValue = i;
               });
@@ -115,7 +126,13 @@ class _ShowPlaylistWidgetState extends State<ShowPlaylistWidget> {
     String suffix,
   ) {
     final controllerTag = '${youtubePlaylistInfo.youtubePlayListId}_$suffix';
+    // ===== 選單排查 log =====
+    print('[選單排查] buildTabWidget 建立 tab widget tag=$controllerTag');
     return ShowPlaylistTabContent(
+      // key 讓 Flutter 切換選單時把舊分頁的 State dispose、建立新的 State;
+      // 少了 key,兩個分頁同為 ShowPlaylistTabContent 會共用同一個 State,
+      // initState 不會重跑 -> 點選單 B 時 binding/controller 不會重建,清單不更新。
+      key: ValueKey(controllerTag),
       controllerTag: controllerTag,
       youtubePlaylistInfo: youtubePlaylistInfo,
       listviewController: widget.listviewController,
