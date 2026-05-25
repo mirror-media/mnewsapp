@@ -32,6 +32,7 @@ class InitialAppController extends GetxController {
     isLoading.value = true;
     error.value = null;
     isConfigReady.value = false;
+    print('[initial-app-controller] loadConfig started');
 
     try {
       final FirebaseRemoteConfig remoteConfig = FirebaseRemoteConfig.instance;
@@ -49,6 +50,7 @@ class InitialAppController extends GetxController {
       });
 
       await remoteConfig.fetchAndActivate();
+      print('[initial-app-controller] Remote config fetched and activated');
 
       minAppVersion.value = remoteConfig.getString('min_version_number');
       final bool useTemporaryK6Routes =
@@ -62,18 +64,25 @@ class InitialAppController extends GetxController {
       );
 
       ArticlesApiProvider.instance.initGraphQLLink();
+      print('[initial-app-controller] GraphQL link initialized');
       _refreshElectionDataProvider();
+      print('[initial-app-controller] Election data provider refreshed');
       await configRepos.loadTheConfig();
+      print('[initial-app-controller] App config loaded');
       await MobileAds.instance.initialize();
+      print('[initial-app-controller] Mobile Ads initialized');
 
       final PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion.value =
           'v${packageInfo.version}(${packageInfo.buildNumber})';
       isConfigReady.value = true;
+      print('[initial-app-controller] Config ready flag set to true');
     } catch (e) {
+      print('[initial-app-controller] loadConfig failed: $e');
       error.value = UnknownException(e.toString());
     } finally {
       isLoading.value = false;
+      print('[initial-app-controller] loadConfig finished');
     }
   }
 

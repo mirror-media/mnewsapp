@@ -42,6 +42,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   @override
   void initState() {
     super.initState();
+    // ===== 選單排查 log =====
+    print('[選單排查] TabContent.initState tag=${widget.controllerTag} '
+        'playlistId="${widget.youtubePlaylistInfo.youtubePlayListId}"');
     ShowPlaylistBinding(
       controllerTag: widget.controllerTag,
       playlistId: widget.youtubePlaylistInfo.youtubePlayListId,
@@ -59,7 +62,21 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
   }
 
   @override
+  void didUpdateWidget(covariant ShowPlaylistTabContent oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // ===== 選單排查 log =====
+    // 若切換選單時印出這行、且 old/new tag 不同,代表 State 被重用、
+    // initState 沒有重跑 —— 這就是選單 B 點了清單不更新的元兇。
+    final reused = oldWidget.controllerTag != widget.controllerTag;
+    print('[選單排查] TabContent.didUpdateWidget '
+        'old=${oldWidget.controllerTag} new=${widget.controllerTag}'
+        '${reused ? "  <-- State 被重用,initState 未重跑!" : ""}');
+  }
+
+  @override
   void dispose() {
+    // ===== 選單排查 log =====
+    print('[選單排查] TabContent.dispose tag=${widget.controllerTag}');
     if (Get.isRegistered<ShowPlaylistController>(tag: widget.controllerTag)) {
       Get.delete<ShowPlaylistController>(tag: widget.controllerTag);
     }
@@ -71,11 +88,17 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
     return Obx(() {
       final error = controller.error.value;
       if (error != null) {
+        // ===== 選單排查 log =====
+        print('[選單排查] TabContent.build tag=${widget.controllerTag} '
+            '狀態=錯誤,顯示空白 Container | error=$error');
         return Container();
       }
 
       final youtubePlaylistItemList = controller.youtubePlaylistItemList.toList();
       if (youtubePlaylistItemList.isNotEmpty) {
+        // ===== 選單排查 log =====
+        print('[選單排查] TabContent.build tag=${widget.controllerTag} '
+            '狀態=有資料 count=${youtubePlaylistItemList.length}');
         return buildYoutubePlayListItemList(
           widget.youtubePlaylistInfo.youtubePlayListId,
           youtubePlaylistItemList,
@@ -83,6 +106,9 @@ class _ShowPlaylistTabContentState extends State<ShowPlaylistTabContent> {
         );
       }
 
+      // ===== 選單排查 log =====
+      print('[選單排查] TabContent.build tag=${widget.controllerTag} '
+          '狀態=空清單,顯示載入轉圈 | isLoading=${controller.isLoading.value}');
       return loadMoreWidget();
     });
   }

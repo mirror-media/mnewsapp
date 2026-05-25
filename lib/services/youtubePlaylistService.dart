@@ -18,10 +18,17 @@ class YoutubePlaylistServices implements YoutubePlaylistRepos {
   @override
   Future<List<YoutubePlaylistItem>> fetchSnippetByPlaylistId(String playlistId,
       {int maxResults = 5}) async {
-    final jsonResponse = await _helper.getByCacheAndAutoCache(
-        Environment().config.youtubeApi +
-            '/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults',
+    final String requestUrl = Environment().config.youtubeApi +
+        '/playlistItems?part=snippet&playlistId=$playlistId&maxResults=$maxResults';
+    // ===== 選單排查 log =====
+    print('[選單排查] YoutubePlaylistService 請求 URL=$requestUrl');
+    final jsonResponse = await _helper.getByCacheAndAutoCache(requestUrl,
         maxAge: youtubePlayListCacheDuration);
+
+    // ===== 選單排查 log =====
+    print('[選單排查] YoutubePlaylistService 回應 '
+        'keys=${jsonResponse is Map ? jsonResponse.keys.toList() : jsonResponse.runtimeType} '
+        'itemsCount=${jsonResponse is Map && jsonResponse['items'] is List ? (jsonResponse['items'] as List).length : "N/A(可能是錯誤回應)"}');
 
     _nextPageToken = jsonResponse['nextPageToken'];
 
