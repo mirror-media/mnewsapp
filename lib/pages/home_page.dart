@@ -29,6 +29,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void initState() {
+    debugPrint('[home-page] initState');
     _showGDPR();
     super.initState();
   }
@@ -36,8 +37,10 @@ class _HomePageState extends State<HomePage> {
   _showGDPR() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isFirstLaunch = prefs.getBool("isFirstLaunch");
+    debugPrint('[home-page] isFirstLaunch = $isFirstLaunch');
     if (isFirstLaunch == null || isFirstLaunch) {
       await Future.delayed(Duration(seconds: 1));
+      debugPrint('[home-page] Showing GDPR dialog');
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -49,11 +52,15 @@ class _HomePageState extends State<HomePage> {
         },
       );
       await prefs.setBool("isFirstLaunch", false);
+      debugPrint('[home-page] GDPR first-launch flag saved');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    debugPrint(
+      '[home-page] build with section ${appShellController.currentSection.value}',
+    );
     return Scaffold(
       key: _scaffoldkey,
       drawer: HomeDrawer(widget.appVersion),
@@ -92,6 +99,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget _buildBody(MNewsSection sectionId) {
+    debugPrint('[home-page] building body for $sectionId');
     switch (sectionId) {
       case MNewsSection.news:
         return const NewsPage();

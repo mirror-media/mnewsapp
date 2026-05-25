@@ -17,6 +17,7 @@ class _NewsPageState extends State<NewsPage> {
   @override
   void initState() {
     super.initState();
+    debugPrint('[news-page] initState');
     NewsCategoryBinding().dependencies();
     NewsElectionBinding().dependencies();
   }
@@ -34,6 +35,7 @@ class _NewsPageState extends State<NewsPage> {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint('[news-page] build');
     return const NewsCategoryTab();
   }
 }

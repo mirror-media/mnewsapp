@@ -60,7 +60,11 @@ class _TagWidgetState extends State<TagWidget> {
             );
           }
           if (!controller.isLoadingMore.value) {
-            controller.fetchNextPageByTagSlug();
+            // 延後到本幀 build 結束後再觸發，避免在 build 期間改動 Rx
+            // 狀態（isLoadingMore）造成 setState() during build 例外
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              controller.fetchNextPageByTagSlug();
+            });
           }
           return const Center(child: CircularProgressIndicator.adaptive());
         }

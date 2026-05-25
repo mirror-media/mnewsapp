@@ -29,6 +29,8 @@ class ShowPlaylistController extends GetxController {
   }
 
   Future<void> fetchInitial() async {
+    // ===== 選單排查 log =====
+    print('[選單排查] Controller.fetchInitial 開始 playlistId="$playlistId"');
     isLoading.value = true;
     error.value = null;
 
@@ -38,8 +40,12 @@ class ShowPlaylistController extends GetxController {
         maxResults: maxResults,
       );
       youtubePlaylistItemList.assignAll(items);
+      print('[選單排查] Controller.fetchInitial 成功 '
+          'playlistId="$playlistId" items=${items.length}');
     } catch (e) {
       error.value = determineException(e);
+      print('[選單排查] Controller.fetchInitial 失敗 '
+          'playlistId="$playlistId" error=$e');
     } finally {
       isLoading.value = false;
     }
