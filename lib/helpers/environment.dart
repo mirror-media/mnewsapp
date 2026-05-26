@@ -15,25 +15,15 @@ class Environment {
 
   late BaseConfig config;
 
-  void initConfig(
-      BuildFlavor buildFlavor, {
-        ProdRouteMode routeMode = ProdRouteMode.normal,
-      }) {
-    config = _getConfig(
-      buildFlavor,
-      routeMode: routeMode,
-    );
+  void initConfig(BuildFlavor buildFlavor) {
+    config = _getConfig(buildFlavor);
   }
 
-  BaseConfig _getConfig(
-      BuildFlavor buildFlavor, {
-        ProdRouteMode routeMode = ProdRouteMode.normal,
-      }) {
+  BaseConfig _getConfig(BuildFlavor buildFlavor) {
     switch (buildFlavor) {
       case BuildFlavor.production:
-        return ProdConfig(routeMode: routeMode);
+        return ProdConfig();
       case BuildFlavor.development:
-      default:
         return DevConfig();
     }
   }
