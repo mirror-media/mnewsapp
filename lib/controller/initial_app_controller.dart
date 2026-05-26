@@ -2,7 +2,6 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:get/get.dart';
 import 'package:google_mobile_ads/google_mobile_ads.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:tv/configs/prodConfig.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/provider/articles_api_provider.dart';
@@ -10,9 +9,7 @@ import 'package:tv/services/configService.dart';
 import 'package:tv/widgets/real_time_invoice/data/provider/election_data_provider.dart';
 
 class InitialAppController extends GetxController {
-  InitialAppController({
-    required this.configRepos,
-  });
+  InitialAppController({required this.configRepos});
 
   final ConfigRepos configRepos;
 
@@ -44,24 +41,12 @@ class InitialAppController extends GetxController {
         ),
       );
 
-      await remoteConfig.setDefaults({
-        'min_version_number': '',
-        'use_temporary_k6_routes': false,
-      });
+      await remoteConfig.setDefaults({'min_version_number': ''});
 
       await remoteConfig.fetchAndActivate();
       print('[initial-app-controller] Remote config fetched and activated');
 
       minAppVersion.value = remoteConfig.getString('min_version_number');
-      final bool useTemporaryK6Routes =
-          remoteConfig.getBool('use_temporary_k6_routes');
-
-      Environment().initConfig(
-        BuildFlavor.production,
-        routeMode: useTemporaryK6Routes
-            ? ProdRouteMode.temporaryK6
-            : ProdRouteMode.normal,
-      );
 
       ArticlesApiProvider.instance.initGraphQLLink();
       print('[initial-app-controller] GraphQL link initialized');
@@ -73,8 +58,7 @@ class InitialAppController extends GetxController {
       print('[initial-app-controller] Mobile Ads initialized');
 
       final PackageInfo packageInfo = await PackageInfo.fromPlatform();
-      appVersion.value =
-          'v${packageInfo.version}(${packageInfo.buildNumber})';
+      appVersion.value = 'v${packageInfo.version}(${packageInfo.buildNumber})';
       isConfigReady.value = true;
       print('[initial-app-controller] Config ready flag set to true');
     } catch (e) {
