@@ -1,6 +1,7 @@
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:tv/controller/initial_app_controller.dart';
 import 'package:tv/core/enum/page_status.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/provider/articles_api_provider.dart';
@@ -25,7 +26,10 @@ class NewsPageController extends GetxController {
   @override
   void onInit() async {
     super.onInit();
-    await firebaseRemoteConfig.fetchAndActivate();
+    // InitialAppController 已負責 fetchAndActivate，這裡等它完成再讀值，
+    // 避免兩個並行 fetch 造成 firebase_remote_config "cancelled" 例外、
+    // 導致 onInit 中斷使 election/banner/liveUrl/editorChoice/文章清單都沒載到。
+    await _waitForRemoteConfigReady();
     rxIsElectionShow.value = firebaseRemoteConfig.getBool('isElectionShow');
     rxIsBannerShow.value = firebaseRemoteConfig.getBool('isBannerShow');
     String? bannerJsonString = firebaseRemoteConfig.getString('BannerURL');
@@ -50,6 +54,21 @@ class NewsPageController extends GetxController {
     if (scrollController.position.pixels ==
         scrollController.position.maxScrollExtent) {
       fetchMoreArticle();
+    }
+  }
+
+  /// 等 InitialAppController 把 remote config fetchAndActivate 完成。
+  /// 若 InitialAppController 載入失敗（error 已設），也讓流程繼續，
+  /// 後續的 getBool/getString 會落回 setDefaults 設定的預設值。
+  Future<void> _waitForRemoteConfigReady() async {
+    while (true) {
+      if (Get.isRegistered<InitialAppController>()) {
+        final InitialAppController controller =
+            Get.find<InitialAppController>();
+        if (controller.isConfigReady.value) return;
+        if (controller.error.value != null) return;
+      }
+      await Future.delayed(const Duration(milliseconds: 50));
     }
   }
 
