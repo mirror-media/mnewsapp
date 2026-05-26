@@ -1,5 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+const String _youtubeEmbedOrigin = 'https://www.mnews.tw';
+const String _youtubeEmbedBaseUrl = '$_youtubeEmbedOrigin/';
 
 class YtEmbeddedCodeWidget extends StatefulWidget {
   final String embeddedCode;
@@ -24,15 +29,21 @@ class _YtEmbeddedCodeWidgetState extends State<YtEmbeddedCodeWidget> {
   void initState() {
     super.initState();
 
-    _iframeSrc = _extractSrcFromIframe(widget.embeddedCode);
+    _iframeSrc = _normalizeYoutubeEmbedSrc(
+      _extractSrcFromIframe(widget.embeddedCode),
+    );
     _aspectRatio = widget.aspectRatio ?? _extractAspectRatio();
 
     if (_iframeSrc != null) {
+      final escapedIframeSrc = const HtmlEscape().convert(_iframeSrc!);
       final htmlContent = '''
         <!DOCTYPE html>
         <html>
           <head>
+            <meta charset="UTF-8">
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <meta name="referrer" content="strict-origin-when-cross-origin">
+            <base href="$_youtubeEmbedBaseUrl">
             <style>
               body, html {
                 margin: 0;
@@ -58,8 +69,9 @@ class _YtEmbeddedCodeWidgetState extends State<YtEmbeddedCodeWidget> {
           <body>
             <div class="video-container">
               <iframe
-                src="$_iframeSrc"
+                src="$escapedIframeSrc"
                 title="YouTube video player"
+                referrerpolicy="strict-origin-when-cross-origin"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowfullscreen>
               </iframe>
@@ -68,20 +80,21 @@ class _YtEmbeddedCodeWidgetState extends State<YtEmbeddedCodeWidget> {
         </html>
       ''';
 
-      _controller = WebViewController()
-        ..setJavaScriptMode(JavaScriptMode.unrestricted)
-        ..loadHtmlString(htmlContent);
+      _controller =
+          WebViewController()
+            ..setJavaScriptMode(JavaScriptMode.unrestricted)
+            ..loadHtmlString(htmlContent, baseUrl: _youtubeEmbedBaseUrl);
     }
   }
 
   double _extractAspectRatio() {
     try {
-      final width = RegExp(r'width="(\d+)"')
-          .firstMatch(widget.embeddedCode)
-          ?.group(1);
-      final height = RegExp(r'height="(\d+)"')
-          .firstMatch(widget.embeddedCode)
-          ?.group(1);
+      final width = RegExp(
+        r'width="(\d+)"',
+      ).firstMatch(widget.embeddedCode)?.group(1);
+      final height = RegExp(
+        r'height="(\d+)"',
+      ).firstMatch(widget.embeddedCode)?.group(1);
       if (width != null && height != null) {
         return double.parse(width) / double.parse(height);
       }
@@ -90,8 +103,32 @@ class _YtEmbeddedCodeWidgetState extends State<YtEmbeddedCodeWidget> {
   }
 
   String? _extractSrcFromIframe(String code) {
-    final match = RegExp(r'src="([^"]+)"').firstMatch(code);
+    final match = RegExp(
+      r'''src\s*=\s*["']([^"']+)["']''',
+      caseSensitive: false,
+    ).firstMatch(code);
     return match?.group(1);
+  }
+
+  String? _normalizeYoutubeEmbedSrc(String? src) {
+    if (src == null || src.trim().isEmpty) return null;
+
+    final unescapedSrc = src
+        .trim()
+        .replaceAll('&amp;', '&')
+        .replaceAll('&#38;', '&');
+    final normalizedSrc =
+        unescapedSrc.startsWith('//') ? 'https:$unescapedSrc' : unescapedSrc;
+    final uri = Uri.tryParse(normalizedSrc);
+    if (uri == null || !uri.hasScheme || uri.host.isEmpty) {
+      return normalizedSrc;
+    }
+
+    final queryParameters = Map<String, String>.from(uri.queryParameters);
+    queryParameters.putIfAbsent('origin', () => _youtubeEmbedOrigin);
+    queryParameters.putIfAbsent('playsinline', () => '1');
+
+    return uri.replace(queryParameters: queryParameters).toString();
   }
 
   @override
