@@ -59,7 +59,7 @@ class TagStoryListServices implements TagStoryListRepos {
       publishTime
       heroImage { imageApiData }
       heroVideo { coverPhoto { imageApiData } }
-      categories { id slug name }
+      categories: categoriesInInputOrder { id slug name }
     }
     postsCount(
       where: {
@@ -90,7 +90,7 @@ class TagStoryListServices implements TagStoryListRepos {
       updatedAt
       thumbnail
       partner { id name slug }
-      categories { id slug name }
+      categories: categoriesInInputOrder { id slug name }
     }
     externalsCount(
       where: {
@@ -150,7 +150,8 @@ class TagStoryListServices implements TagStoryListRepos {
   }) async {
     try {
       final jsonResponse = await _post(
-        key: 'fetchTagPosts?slug=$slug&skip=$skip&first=$first',
+        key:
+            'fetchTagPosts?slug=$slug&skip=$skip&first=$first&manualOrder=v1',
         query: _postsQuery,
         slug: slug,
         skip: skip,
@@ -178,7 +179,8 @@ class TagStoryListServices implements TagStoryListRepos {
   }) async {
     try {
       final jsonResponse = await _post(
-        key: 'fetchTagExternals?slug=$slug&skip=$skip&first=$first',
+        key:
+            'fetchTagExternals?slug=$slug&skip=$skip&first=$first&manualOrder=v1',
         query: _externalsQuery,
         slug: slug,
         skip: skip,
