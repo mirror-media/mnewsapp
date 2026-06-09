@@ -15,6 +15,21 @@ class QueryCommand {
   }
   ''';
 
+  static const String getYoutubeStreamById = '''
+   query(
+    \$where: VideoWhereUniqueInput!
+   ){
+    video(
+      where: \$where
+    ){
+      id
+      name
+      youtubeUrl
+      state
+    }
+  }
+  ''';
+
   static String getVideoPostList = '''
   query {
     posts(
@@ -78,7 +93,7 @@ class QueryCommand {
         slug
         name
         style
-        categories{
+        categories: categoriesInInputOrder {
           name
           id
           slug
@@ -100,7 +115,7 @@ class QueryCommand {
         slug
         name
         style
-        categories{
+        categories: categoriesInInputOrder {
           name
           id
           slug
