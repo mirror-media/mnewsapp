@@ -36,7 +36,8 @@ class StoryServices implements StoryRepos {
   }
 
   Future<Story?> _fetchInternal(String slug) async {
-    final String key = 'fetchPublishedStoryBySlug_internal?slug=$slug';
+    final String key =
+        'fetchPublishedStoryBySlug_internal?slug=$slug&manualOrder=v1';
 
     const String internalQuery = """
     query (\$where: PostWhereInput) {
@@ -109,9 +110,9 @@ class StoryServices implements StoryRepos {
         }
 
         heroCaption
-        categories { slug name }
-        writers { name slug }
-        photographers { name slug }
+        categories: categoriesInInputOrder { id slug name }
+        writers: writersInInputOrder { name slug }
+        photographers: photographersInInputOrder { name slug }
         cameraOperators { name slug }
         designers { name slug }
         engineers { name slug }
@@ -233,7 +234,8 @@ class StoryServices implements StoryRepos {
   }
 
   Future<Story> _fetchExternalAndNormalize(String slug) async {
-    final String key = 'fetchPublishedStoryBySlug_external?slug=$slug';
+    final String key =
+        'fetchPublishedStoryBySlug_external?slug=$slug&manualOrder=v1';
 
     print('[ExternalTest] query slug=$slug');
 
@@ -260,7 +262,7 @@ class StoryServices implements StoryRepos {
         brief
         content
         tags { id name slug }
-        categories { id name slug }
+        categories: categoriesInInputOrder { id name slug }
         source
         updatedAt
         createdAt

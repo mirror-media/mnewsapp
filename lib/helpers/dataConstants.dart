@@ -90,6 +90,8 @@ const mNewsProdSectionList = [
 const String mNewsLiveYoutubeId = 'coYw-eVU0Ks';
 const String mNewsLiveSiteYoutubePlayListId =
     'PLT6yxVwBEbi2dWegLu37V63_tP-nI6em_';
+const String mNewsLiveVideoIdRemoteConfigKey = 'mNewsLiveVideoId';
+const String defaultMNewsLiveVideoId = '1';
 
 /// google admob
 const androidAdMobAppId = 'ca-app-pub-3940256099942544~3347511713';
@@ -122,4 +124,3 @@ const Map<String, String> partyLogoMap = {
   '無黨籍': noPartySvg,
   '無': noPartySvg,
 };
-

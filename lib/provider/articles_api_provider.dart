@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -44,16 +45,32 @@ class ArticlesApiProvider extends GetConnect {
   }
 
   Future<String?> getNewsLiveUrl() async {
-    final String queryString =
-    QueryCommand.getYoutubeStreamList.format(['mnews-live']);
-    final result =
-    await client?.value.query(QueryOptions(document: gql(queryString)));
+    final result = await client?.value.query(
+      QueryOptions(
+        document: gql(QueryCommand.getYoutubeStreamById),
+        variables: {
+          'where': {'id': _getMNewsLiveVideoId()},
+        },
+      ),
+    );
     if (result == null ||
         result.data == null ||
-        !result.data!.containsKey('videos')) return null;
-    final videoList = result.data!['videos'] as List<dynamic>;
-    if (videoList.isEmpty) return null;
-    return videoList[0]['youtubeUrl'];
+        !result.data!.containsKey('video'))
+      return null;
+    final video = result.data!['video'] as Map<String, dynamic>?;
+    if (video == null || video['state'] != 'published') return null;
+    final youtubeUrl = video['youtubeUrl']?.toString();
+    return youtubeUrl == null || youtubeUrl.isEmpty ? null : youtubeUrl;
+  }
+
+  String _getMNewsLiveVideoId() {
+    final configuredVideoId =
+        FirebaseRemoteConfig.instance
+            .getString(mNewsLiveVideoIdRemoteConfigKey)
+            .trim();
+    return configuredVideoId.isEmpty
+        ? defaultMNewsLiveVideoId
+        : configuredVideoId;
   }
 
   Future<List<String>> getLiveCamUrlList() async {
