@@ -73,7 +73,7 @@ class TabStoryListServices implements TabStoryListRepos {
         }
       }
 
-      categories {
+      categories: categoriesInInputOrder {
         id
         slug
         name
@@ -93,7 +93,7 @@ class TabStoryListServices implements TabStoryListRepos {
   @override
   Future<List<StoryListItem>> fetchStoryList(
       {int skip = 0, int first = 20, bool withCount = true}) async {
-    String key = 'fetchStoryList?skip=$skip&first=$first';
+    String key = 'fetchStoryList?skip=$skip&first=$first&manualOrder=v1';
     if (postStyle != null) {
       key = '$key&postStyle=$postStyle';
     }
@@ -216,7 +216,7 @@ query {
         imageApiData
       }
     }
-    categories {
+    categories: categoriesInInputOrder {
       id
       slug
       name
@@ -358,7 +358,7 @@ query {
           name
           slug
         }
-        categories {
+        categories: categoriesInInputOrder {
           id
           name
           slug

@@ -115,7 +115,8 @@ class TopicService {
         int first = 8,
         bool withCount = true,
       }) async {
-    final String key = 'fetchTopicStoryList&slug=$slug&skip=$skip';
+    final String key =
+        'fetchTopicStoryList&slug=$slug&skip=$skip&manualOrder=v1';
 
     final Map<String, dynamic> variables = {
       "where": {
@@ -151,7 +152,7 @@ class TopicService {
           id
           name
           slug
-          categories {
+          categories: categoriesInInputOrder {
             name
           }
           heroImage {
@@ -169,7 +170,7 @@ class TopicService {
           id
           name
           slug
-          categories {
+          categories: categoriesInInputOrder {
             name
           }
           heroImage {
