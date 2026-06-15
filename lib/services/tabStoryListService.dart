@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/environment.dart';
 import 'package:tv/helpers/apiBaseHelper.dart';
@@ -10,13 +9,18 @@ import 'package:tv/models/graphqlBody.dart';
 import 'package:tv/models/storyListItem.dart';
 import 'package:tv/services/editorChoiceService.dart';
 
-import '../provider/articles_api_provider.dart';
-
 abstract class TabStoryListRepos {
-  Future<List<StoryListItem>> fetchStoryList(
-      {int skip = 0, int first = 20, bool withCount = true});
-  Future<List<StoryListItem>> fetchStoryListByCategorySlug(String slug,
-      {int skip = 0, int first = 20, bool withCount = true});
+  Future<List<StoryListItem>> fetchStoryList({
+    int skip = 0,
+    int first = 20,
+    bool withCount = true,
+  });
+  Future<List<StoryListItem>> fetchStoryListByCategorySlug(
+    String slug, {
+    int skip = 0,
+    int first = 20,
+    bool withCount = true,
+  });
   Future<List<StoryListItem>> fetchPopularStoryList();
   int allStoryCount = 0;
 }
@@ -91,15 +95,18 @@ class TabStoryListServices implements TabStoryListRepos {
   }
 
   @override
-  Future<List<StoryListItem>> fetchStoryList(
-      {int skip = 0, int first = 20, bool withCount = true}) async {
+  Future<List<StoryListItem>> fetchStoryList({
+    int skip = 0,
+    int first = 20,
+    bool withCount = true,
+  }) async {
     String key = 'fetchStoryList?skip=$skip&first=$first&manualOrder=v1';
     if (postStyle != null) {
       key = '$key&postStyle=$postStyle';
     }
 
     final List<StoryListItem> editorChoiceList =
-    await EditorChoiceServices().fetchEditorChoiceList();
+        await EditorChoiceServices().fetchEditorChoiceList();
 
     final List<String> filterSlugList = [];
     filterSlugList.addAll(filteredSlug);
@@ -111,17 +118,15 @@ class TabStoryListServices implements TabStoryListRepos {
       "where": {
         "state": {"equals": "published"},
         "style": {
-          "notIn": ["wide", "projects", "script", "campaign", "readr"]
+          "notIn": ["wide", "projects", "script", "campaign", "readr"],
         },
-        "slug": {
-          "notIn": filterSlugList
-        },
+        "slug": {"notIn": filterSlugList},
         "categories": {
           "every": {
             "slug": {
-              "notIn": ["ombuds"]
-            }
-          }
+              "notIn": ["ombuds"],
+            },
+          },
         },
       },
       "skip": skip,
@@ -131,7 +136,7 @@ class TabStoryListServices implements TabStoryListRepos {
 
     if (postStyle != null) {
       variables["where"].addAll({
-        "style": {"equals": postStyle}
+        "style": {"equals": postStyle},
       });
     }
 
@@ -159,8 +164,9 @@ class TabStoryListServices implements TabStoryListRepos {
     }
 
     final List<StoryListItem> newsList = List<StoryListItem>.from(
-      (jsonResponse['data']['posts'] as List<dynamic>)
-          .map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['data']['posts'] as List<dynamic>).map(
+        (post) => StoryListItem.fromJson(post),
+      ),
     );
 
     if (withCount) {
@@ -172,22 +178,18 @@ class TabStoryListServices implements TabStoryListRepos {
 
   @override
   Future<List<StoryListItem>> fetchStoryListByCategorySlug(
-      String slug, {
-        int skip = 0,
-        int first = 20,
-        bool withCount = true,
-      }) async {
-    if (slug == 'mirrordaily') {
-      print('Slug = mirrordaily → 改走 externals partnerId = 2');
-      return await fetchExternalListByPartnerId(
-        partnerId: "2",
-        first: first,
-        skip: skip,
-      );
-    }
-
-    final String queryString = """
-query {
+    String slug, {
+    int skip = 0,
+    int first = 20,
+    bool withCount = true,
+  }) async {
+    final int take = skip + first;
+    const String queryString = """
+query FetchCategoryStoryList(
+  \$slug: String!,
+  \$take: Int!,
+  \$withCount: Boolean!
+) {
   posts(
     where: {
       state: { equals: "published" }
@@ -196,18 +198,18 @@ query {
       }
       categories: {
         some: {
-          slug: { equals: "$slug" }
+          slug: { equals: \$slug }
         }
       }
     }
-    skip: $skip
-    take: $first
+    take: \$take
     orderBy: [{ publishTime: desc }]
   ) {
     id
     slug
     name
     style
+    publishTime
     heroImage {
       imageApiData
     }
@@ -223,6 +225,51 @@ query {
     }
   }
 
+  externals(
+    where: {
+      state: { equals: "published" }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+    take: \$take
+    orderBy: [{ publishTime: desc }]
+  ) {
+    id
+    slug
+    name
+    subtitle
+    state
+    partner {
+      id
+      name
+      slug
+    }
+    publishTime
+    byline
+    thumbnail
+    heroCaption
+    brief_original
+    content_original
+    brief
+    content
+    tags {
+      id
+      name
+      slug
+    }
+    categories: categoriesInInputOrder {
+      id
+      name
+      slug
+    }
+    source
+    updatedAt
+    createdAt
+  }
+
   postsCount(
     where: {
       state: { equals: "published" }
@@ -231,37 +278,56 @@ query {
       }
       categories: {
         some: {
-          slug: { equals: "$slug" }
+          slug: { equals: \$slug }
         }
       }
     }
-  )
+  ) @include(if: \$withCount)
+
+  externalsCount(
+    where: {
+      state: { equals: "published" }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+  ) @include(if: \$withCount)
 }
 """;
 
-    print('[fetchStoryListByCategorySlug] slug = $slug');
-    print('[fetchStoryListByCategorySlug] query = $queryString');
-
-    final result = await ArticlesApiProvider.instance.client?.value.query(
-      QueryOptions(
-        document: gql(queryString),
-        fetchPolicy: FetchPolicy.networkOnly,
-      ),
+    final GraphqlBody graphqlBody = GraphqlBody(
+      operationName: 'FetchCategoryStoryList',
+      query: queryString,
+      variables: {"slug": slug, "take": take, "withCount": withCount},
     );
 
-    print('[fetchStoryListByCategorySlug] result.data = ${result?.data}');
-    print('[fetchStoryListByCategorySlug] result.exception = ${result?.exception}');
+    final jsonResponse = await _helper.postByUrl(
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
 
-    if (result == null || result.data == null) return [];
+    final List<dynamic> postJsonList =
+        (jsonResponse['data']?['posts'] as List?) ?? [];
+    final List<dynamic> externalJsonList =
+        (jsonResponse['data']?['externals'] as List?) ?? [];
 
-    final List<dynamic> postJsonList = (result.data!['posts'] as List?) ?? [];
-
-    final List<StoryListItem> newsList = postJsonList
-        .map((post) => StoryListItem.fromJson(post))
-        .toList();
+    final List<StoryListItem> newsList =
+        _mergeSorted([
+          ...postJsonList.map((post) => StoryListItem.fromJson(post)),
+          ...externalJsonList.map(
+            (external) => StoryListItem.fromJson(external),
+          ),
+        ]).skip(skip).take(first).toList();
 
     if (withCount) {
-      allStoryCount = result.data!['postsCount'] ?? 0;
+      final int postsCount =
+          (jsonResponse['data']?['postsCount'] as num?)?.toInt() ?? 0;
+      final int externalsCount =
+          (jsonResponse['data']?['externalsCount'] as num?)?.toInt() ?? 0;
+      allStoryCount = postsCount + externalsCount;
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
@@ -275,26 +341,26 @@ query {
     final List<dynamic> allPostsJson =
         (jsonResponseFromGCP['allPosts'] as List?) ?? [];
 
-    final List<StoryListItem> newsListFromGCP = allPostsJson
-        .map((post) => StoryListItem.fromJson(post))
-        .toList();
+    final List<StoryListItem> newsListFromGCP =
+        allPostsJson.map((post) => StoryListItem.fromJson(post)).toList();
 
     final List<dynamic> allCategoriesJson =
         (jsonResponseFromGCP['allCategories'] as List?) ?? [];
 
-    final List<Category> categoryList = allCategoriesJson
-        .map((category) => Category.fromJson(category))
-        .toList();
+    final List<Category> categoryList =
+        allCategoriesJson
+            .map((category) => Category.fromJson(category))
+            .toList();
 
     final matchedCategory = categoryList.firstWhere(
-          (element) => element.slug == slug,
+      (element) => element.slug == slug,
       orElse: () => Category(id: '', slug: '', name: ''),
     );
 
     final String? categoryId =
-    (matchedCategory.id != null && matchedCategory.id!.isNotEmpty)
-        ? matchedCategory.id
-        : null;
+        (matchedCategory.id != null && matchedCategory.id!.isNotEmpty)
+            ? matchedCategory.id
+            : null;
 
     print('Available categories: ${categoryList.map((e) => e.slug).toList()}');
     print('Current slug: $slug, found categoryId: $categoryId');
@@ -311,12 +377,36 @@ query {
     }
 
     if (featuredStory != null) {
-      newsList.removeWhere((item) => item.id == featuredStory!.id);
+      newsList.removeWhere(
+        (item) =>
+            item.id == featuredStory!.id && item.slug == featuredStory.slug,
+      );
       if (skip == 0) newsList.insert(0, featuredStory);
       print('Featured story added to top: ${featuredStory.name}');
     }
 
     return newsList;
+  }
+
+  List<StoryListItem> _mergeSorted(Iterable<StoryListItem> items) {
+    final seen = <String>{};
+    final result = <StoryListItem>[];
+
+    for (final item in items) {
+      final key = item.slug ?? item.id ?? item.url ?? '';
+      if (key.isEmpty || seen.add(key)) {
+        result.add(item);
+      }
+    }
+
+    result.sort((a, b) => _publishedAt(b).compareTo(_publishedAt(a)));
+    return result;
+  }
+
+  DateTime _publishedAt(StoryListItem item) {
+    final raw = item.publishTime ?? item.updatedAt;
+    return DateTime.tryParse(raw ?? '') ??
+        DateTime.fromMillisecondsSinceEpoch(0);
   }
 
   Future<List<StoryListItem>> fetchExternalListByPartnerId({
@@ -373,11 +463,7 @@ query {
     final GraphqlBody graphqlBody = GraphqlBody(
       operationName: 'GetAllExternalFields',
       query: externalQuery,
-      variables: {
-        "take": first,
-        "skip": skip,
-        "partnerId": partnerId,
-      },
+      variables: {"take": first, "skip": skip, "partnerId": partnerId},
     );
 
     final jsonResponse = await _helper.postByUrl(
@@ -387,8 +473,9 @@ query {
     );
 
     return List<StoryListItem>.from(
-      (jsonResponse['data']['externals'] as List<dynamic>)
-          .map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['data']['externals'] as List<dynamic>).map(
+        (post) => StoryListItem.fromJson(post),
+      ),
     );
   }
 
@@ -403,8 +490,9 @@ query {
 
     final jsonResponse = await _helper.getByUrl(jsonUrl);
     final List<StoryListItem> storyListItemList = List<StoryListItem>.from(
-      (jsonResponse['report'] as List<dynamic>)
-          .map((post) => StoryListItem.fromJson(post)),
+      (jsonResponse['report'] as List<dynamic>).map(
+        (post) => StoryListItem.fromJson(post),
+      ),
     );
 
     return storyListItemList;
