@@ -25,61 +25,66 @@ class NewsStoryListItem extends StatelessWidget {
     final TextScaleFactorController textScaleFactorController = Get.find();
 
     return InkWell(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CachedNetworkImage(
-                height: imageSize,
-                width: imageSize,
-                imageUrl: storyListItem.photoUrl,
-                placeholder: (context, url) => Container(
-                  height: imageSize,
-                  width: imageSize,
-                  color: Colors.grey,
-                ),
-                errorWidget: (context, url, error) => Container(
-                  height: imageSize,
-                  width: imageSize,
-                  color: Colors.grey,
-                  child: Icon(Icons.error),
-                ),
-                fit: BoxFit.cover,
-              ),
-              SizedBox(
-                width: 16,
-              ),
-              Expanded(
-                child: Obx(
-                  () => ExtendedText(
-                    storyListItem.name ?? StringDefault.nullString,
-                    joinZeroWidthSpace: true,
-                    overflow: TextOverflow.ellipsis,
-                    maxLines: 3,
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 20.0,
-                      height: 1.5,
-                    ),
-                    textScaler: TextScaler.linear(
-                        textScaleFactorController.textScaleFactor.value),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16.0, 0.0, 16.0, 0.0),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            CachedNetworkImage(
+              height: imageSize,
+              width: imageSize,
+              imageUrl: storyListItem.photoUrl,
+              placeholder:
+                  (context, url) => Container(
+                    height: imageSize,
+                    width: imageSize,
+                    color: Colors.grey,
+                  ),
+              errorWidget:
+                  (context, url, error) => Container(
+                    height: imageSize,
+                    width: imageSize,
+                    color: Colors.grey,
+                    child: Icon(Icons.error),
+                  ),
+              fit: BoxFit.cover,
+            ),
+            SizedBox(width: 16),
+            Expanded(
+              child: Obx(
+                () => ExtendedText(
+                  storyListItem.name ?? StringDefault.nullString,
+                  joinZeroWidthSpace: true,
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 20.0,
+                    height: 1.5,
+                  ),
+                  textScaler: TextScaler.linear(
+                    textScaleFactorController.textScaleFactor.value,
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
-        onTap: () {
-          AnalyticsHelper.logClick(
+      ),
+      onTap: () {
+        AnalyticsHelper.logClick(
+          slug: storyListItem.slug ?? StringDefault.nullString,
+          title: storyListItem.name ?? StringDefault.nullString,
+          location:
+              categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
+        );
+        Get.to(
+          () => StoryPage(
             slug: storyListItem.slug ?? StringDefault.nullString,
-            title: storyListItem.name ?? StringDefault.nullString,
-            location:
-                categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
-          );
-          Get.to(() => StoryPage(
-                slug: storyListItem.slug ?? StringDefault.nullString,
-              ));
-        });
+            linkType: storyListItem.linkType,
+          ),
+        );
+      },
+    );
   }
 }
