@@ -85,7 +85,8 @@ class StoryListItem {
     if (json['adPost'] is Map<String, dynamic>) {
       final adPost = json['adPost'] as Map<String, dynamic>;
 
-      photoUrl = _extractImageUrlFromNode(adPost['heroImage']) ??
+      photoUrl =
+          _extractImageUrlFromNode(adPost['heroImage']) ??
           Environment().config.mirrorNewsDefaultImageUrl;
     }
 
@@ -93,7 +94,9 @@ class StoryListItem {
     List<Category>? allPostsCategory;
     if (json['adPost']?['categories'] != null) {
       allPostsCategory = List<Category>.from(
-        json['adPost']['categories'].map((category) => Category.fromJson(category)),
+        json['adPost']['categories'].map(
+          (category) => Category.fromJson(category),
+        ),
       );
       if (allPostsCategory.isNotEmpty) {
         displayCategory = allPostsCategory.first.name;
@@ -129,12 +132,15 @@ class StoryListItem {
         url: url,
         slug: parsed?.slug,
         linkType: parsed?.type,
-        photoUrl: (cover != null && cover.isNotEmpty)
-            ? cover
-            : Environment().config.mirrorNewsDefaultImageUrl,
-        displayCategory: json['custom_attributes'] is Map
-            ? (json['custom_attributes']['article:section']?.toString() ?? '')
-            : '',
+        photoUrl:
+            (cover != null && cover.isNotEmpty)
+                ? cover
+                : Environment().config.mirrorNewsDefaultImageUrl,
+        displayCategory:
+            json['custom_attributes'] is Map
+                ? (json['custom_attributes']['article:section']?.toString() ??
+                    '')
+                : '',
       );
     }
 
@@ -148,11 +154,13 @@ class StoryListItem {
         id: json[BaseModel.idKey]?.toString(),
         name: json[BaseModel.nameKey],
         slug: json[BaseModel.slugKey],
+        linkType: StoryLinkType.external,
         subtitle: json['subtitle'],
         url: json['url']?.toString(),
-        photoUrl: (json['thumbnail']?.toString().isNotEmpty ?? false)
-            ? json['thumbnail'].toString()
-            : Environment().config.mirrorNewsDefaultImageUrl,
+        photoUrl:
+            (json['thumbnail']?.toString().isNotEmpty ?? false)
+                ? json['thumbnail'].toString()
+                : Environment().config.mirrorNewsDefaultImageUrl,
         heroCaption: json['heroCaption'],
         brief: json['brief'],
         content: json['content'],
@@ -162,19 +170,25 @@ class StoryListItem {
         updatedAt: json['updatedAt'],
         source: json['source'],
         partnerName: json['partner']?['name'],
-        categoryList: json['categories'] != null
-            ? List<Category>.from(json['categories'].map((c) => Category.fromJson(c)))
-            : [],
-        displayCategory: (json['categories'] != null && (json['categories'] as List).isNotEmpty)
-            ? json['categories'][0]['name']
-            : "鏡報",
+        categoryList:
+            json['categories'] != null
+                ? List<Category>.from(
+                  json['categories'].map((c) => Category.fromJson(c)),
+                )
+                : [],
+        displayCategory:
+            (json['categories'] != null &&
+                    (json['categories'] as List).isNotEmpty)
+                ? json['categories'][0]['name']
+                : "鏡報",
       );
     }
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
 
     // K6 優先：heroImage.imageApiData
-    photoUrl = _extractImageUrlFromNode(json['heroImage']) ??
+    photoUrl =
+        _extractImageUrlFromNode(json['heroImage']) ??
         _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']) ??
         Environment().config.mirrorNewsDefaultImageUrl;
     if (photoUrl == Environment().config.mirrorNewsDefaultImageUrl) {
@@ -223,9 +237,10 @@ class StoryListItem {
     if (imageNode == null) return null;
     if (imageNode is! Map) return null;
 
-    final map = imageNode is Map<String, dynamic>
-        ? imageNode
-        : Map<String, dynamic>.from(imageNode);
+    final map =
+        imageNode is Map<String, dynamic>
+            ? imageNode
+            : Map<String, dynamic>.from(imageNode);
 
     final imageApiData = map['imageApiData'];
     final k6Url = _extractUrlFromImageApiData(imageApiData);
@@ -250,9 +265,10 @@ class StoryListItem {
         return value;
       }
       if (value is Map) {
-        final nested = value is Map<String, dynamic>
-            ? value
-            : Map<String, dynamic>.from(value);
+        final nested =
+            value is Map<String, dynamic>
+                ? value
+                : Map<String, dynamic>.from(value);
 
         final nestedUrl = nested['url'];
         if (nestedUrl is String && nestedUrl.isNotEmpty) {

@@ -22,55 +22,62 @@ class NewsStoryFirstItem extends StatelessWidget {
     final TextScaleFactorController textScaleFactorController = Get.find();
     double width = MediaQuery.of(context).size.width;
     return InkWell(
-        child: Column(
-          children: [
-            CachedNetworkImage(
-              height: width / 16 * 9,
-              width: width,
-              imageUrl: storyListItem.photoUrl,
-              placeholder: (context, url) => Container(
-                height: width / 16 * 9,
-                width: width,
-                color: Colors.grey,
-              ),
-              errorWidget: (context, url, error) => Container(
-                height: width / 16 * 9,
-                width: width,
-                color: Colors.grey,
-                child: Icon(Icons.error),
-              ),
-              fit: BoxFit.cover,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
-              child: Obx(
-                () => ExtendedText(
-                  storyListItem.name ?? StringDefault.nullString,
-                  joinZeroWidthSpace: true,
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 3,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 20.0,
-                    height: 1.5,
-                  ),
-                  textScaler: TextScaler.linear(
-                      textScaleFactorController.textScaleFactor.value),
+      child: Column(
+        children: [
+          CachedNetworkImage(
+            height: width / 16 * 9,
+            width: width,
+            imageUrl: storyListItem.photoUrl,
+            placeholder:
+                (context, url) => Container(
+                  height: width / 16 * 9,
+                  width: width,
+                  color: Colors.grey,
+                ),
+            errorWidget:
+                (context, url, error) => Container(
+                  height: width / 16 * 9,
+                  width: width,
+                  color: Colors.grey,
+                  child: Icon(Icons.error),
+                ),
+            fit: BoxFit.cover,
+          ),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 8.0),
+            child: Obx(
+              () => ExtendedText(
+                storyListItem.name ?? StringDefault.nullString,
+                joinZeroWidthSpace: true,
+                overflow: TextOverflow.ellipsis,
+                maxLines: 3,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 20.0,
+                  height: 1.5,
+                ),
+                textScaler: TextScaler.linear(
+                  textScaleFactorController.textScaleFactor.value,
                 ),
               ),
             ),
-          ],
-        ),
-        onTap: () {
-          AnalyticsHelper.logClick(
+          ),
+        ],
+      ),
+      onTap: () {
+        AnalyticsHelper.logClick(
+          slug: storyListItem.slug ?? StringDefault.nullString,
+          title: storyListItem.name ?? StringDefault.nullString,
+          location:
+              categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
+        );
+        Get.to(
+          () => StoryPage(
             slug: storyListItem.slug ?? StringDefault.nullString,
-            title: storyListItem.name ?? StringDefault.nullString,
-            location:
-                categorySlug == 'latest' ? 'HomePage_最新列表' : 'CategoryPage_列表',
-          );
-          Get.to(() => StoryPage(
-                slug: storyListItem.slug ?? StringDefault.nullString,
-              ));
-        });
+            linkType: storyListItem.linkType,
+          ),
+        );
+      },
+    );
   }
 }

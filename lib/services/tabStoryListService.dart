@@ -183,151 +183,25 @@ class TabStoryListServices implements TabStoryListRepos {
     int first = 20,
     bool withCount = true,
   }) async {
-    final int take = skip + first;
-    const String queryString = """
-query FetchCategoryStoryList(
-  \$slug: String!,
-  \$take: Int!,
-  \$withCount: Boolean!
-) {
-  posts(
-    where: {
-      state: { equals: "published" }
-      style: {
-        notIn: ["wide", "projects", "script", "campaign", "readr"]
-      }
-      categories: {
-        some: {
-          slug: { equals: \$slug }
-        }
-      }
-    }
-    take: \$take
-    orderBy: [{ publishTime: desc }]
-  ) {
-    id
-    slug
-    name
-    style
-    publishTime
-    heroImage {
-      imageApiData
-    }
-    heroVideo {
-      coverPhoto {
-        imageApiData
-      }
-    }
-    categories: categoriesInInputOrder {
-      id
-      slug
-      name
-    }
-  }
+    final int pageSize = first > skip ? first - skip : first;
+    final int take = skip + pageSize;
 
-  externals(
-    where: {
-      state: { equals: "published" }
-      categories: {
-        some: {
-          slug: { equals: \$slug }
-        }
-      }
-    }
-    take: \$take
-    orderBy: [{ publishTime: desc }]
-  ) {
-    id
-    slug
-    name
-    subtitle
-    state
-    partner {
-      id
-      name
-      slug
-    }
-    publishTime
-    byline
-    thumbnail
-    heroCaption
-    brief_original
-    content_original
-    brief
-    content
-    tags {
-      id
-      name
-      slug
-    }
-    categories: categoriesInInputOrder {
-      id
-      name
-      slug
-    }
-    source
-    updatedAt
-    createdAt
-  }
+    final results = await Future.wait([
+      _fetchCategoryPosts(slug, take: take, withCount: withCount),
+      _fetchCategoryExternals(slug, take: take, withCount: withCount),
+    ]);
 
-  postsCount(
-    where: {
-      state: { equals: "published" }
-      style: {
-        notIn: ["wide", "projects", "script", "campaign", "readr"]
-      }
-      categories: {
-        some: {
-          slug: { equals: \$slug }
-        }
-      }
-    }
-  ) @include(if: \$withCount)
-
-  externalsCount(
-    where: {
-      state: { equals: "published" }
-      categories: {
-        some: {
-          slug: { equals: \$slug }
-        }
-      }
-    }
-  ) @include(if: \$withCount)
-}
-""";
-
-    final GraphqlBody graphqlBody = GraphqlBody(
-      operationName: 'FetchCategoryStoryList',
-      query: queryString,
-      variables: {"slug": slug, "take": take, "withCount": withCount},
-    );
-
-    final jsonResponse = await _helper.postByUrl(
-      Environment().config.graphqlApi,
-      jsonEncode(graphqlBody.toJson()),
-      headers: {"Content-Type": "application/json"},
-    );
-
-    final List<dynamic> postJsonList =
-        (jsonResponse['data']?['posts'] as List?) ?? [];
-    final List<dynamic> externalJsonList =
-        (jsonResponse['data']?['externals'] as List?) ?? [];
+    final _CategoryChunk postsChunk = results[0];
+    final _CategoryChunk externalsChunk = results[1];
 
     final List<StoryListItem> newsList =
         _mergeSorted([
-          ...postJsonList.map((post) => StoryListItem.fromJson(post)),
-          ...externalJsonList.map(
-            (external) => StoryListItem.fromJson(external),
-          ),
-        ]).skip(skip).take(first).toList();
+          ...postsChunk.items,
+          ...externalsChunk.items,
+        ]).skip(skip).take(pageSize).toList();
 
     if (withCount) {
-      final int postsCount =
-          (jsonResponse['data']?['postsCount'] as num?)?.toInt() ?? 0;
-      final int externalsCount =
-          (jsonResponse['data']?['externalsCount'] as num?)?.toInt() ?? 0;
-      allStoryCount = postsCount + externalsCount;
+      allStoryCount = postsChunk.count + externalsChunk.count;
     }
 
     final jsonResponseFromGCP = await _helper.getByCacheAndAutoCache(
@@ -386,6 +260,187 @@ query FetchCategoryStoryList(
     }
 
     return newsList;
+  }
+
+  Future<_CategoryChunk> _fetchCategoryPosts(
+    String slug, {
+    required int take,
+    required bool withCount,
+  }) async {
+    const String queryString = """
+query FetchCategoryPosts(
+  \$slug: String!,
+  \$take: Int!,
+  \$withCount: Boolean!
+) {
+  posts(
+    where: {
+      state: { equals: "published" }
+      style: {
+        notIn: ["wide", "projects", "script", "campaign", "readr"]
+      }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+    take: \$take
+    orderBy: [{ publishTime: desc }]
+  ) {
+    id
+    slug
+    name
+    style
+    publishTime
+    heroImage {
+      imageApiData
+    }
+    heroVideo {
+      coverPhoto {
+        imageApiData
+      }
+    }
+    categories: categoriesInInputOrder {
+      id
+      slug
+      name
+    }
+  }
+
+  postsCount(
+    where: {
+      state: { equals: "published" }
+      style: {
+        notIn: ["wide", "projects", "script", "campaign", "readr"]
+      }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+  ) @include(if: \$withCount)
+}
+""";
+
+    final GraphqlBody graphqlBody = GraphqlBody(
+      operationName: 'FetchCategoryPosts',
+      query: queryString,
+      variables: {"slug": slug, "take": take, "withCount": withCount},
+    );
+
+    final jsonResponse = await _helper.postByUrl(
+      Environment().config.graphqlApi,
+      jsonEncode(graphqlBody.toJson()),
+      headers: {"Content-Type": "application/json"},
+    );
+
+    final List<dynamic> postJsonList =
+        (jsonResponse['data']?['posts'] as List?) ?? [];
+
+    return _CategoryChunk(
+      items: postJsonList.map((post) => StoryListItem.fromJson(post)).toList(),
+      count: (jsonResponse['data']?['postsCount'] as num?)?.toInt() ?? 0,
+    );
+  }
+
+  Future<_CategoryChunk> _fetchCategoryExternals(
+    String slug, {
+    required int take,
+    required bool withCount,
+  }) async {
+    const String queryString = """
+query FetchCategoryExternals(
+  \$slug: String!,
+  \$take: Int!,
+  \$withCount: Boolean!
+) {
+  externals(
+    where: {
+      state: { equals: "published" }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+    take: \$take
+    orderBy: [{ publishTime: desc }]
+  ) {
+    id
+    slug
+    name
+    subtitle
+    state
+    partner {
+      id
+      name
+      slug
+    }
+    publishTime
+    byline
+    thumbnail
+    heroCaption
+    brief_original
+    content_original
+    brief
+    content
+    tags {
+      id
+      name
+      slug
+    }
+    categories: categoriesInInputOrder {
+      id
+      name
+      slug
+    }
+    source
+    updatedAt
+    createdAt
+  }
+
+  externalsCount(
+    where: {
+      state: { equals: "published" }
+      categories: {
+        some: {
+          slug: { equals: \$slug }
+        }
+      }
+    }
+  ) @include(if: \$withCount)
+}
+""";
+
+    try {
+      final GraphqlBody graphqlBody = GraphqlBody(
+        operationName: 'FetchCategoryExternals',
+        query: queryString,
+        variables: {"slug": slug, "take": take, "withCount": withCount},
+      );
+
+      final jsonResponse = await _helper.postByUrl(
+        Environment().config.graphqlApi,
+        jsonEncode(graphqlBody.toJson()),
+        headers: {"Content-Type": "application/json"},
+      );
+
+      final List<dynamic> externalJsonList =
+          (jsonResponse['data']?['externals'] as List?) ?? [];
+
+      return _CategoryChunk(
+        items:
+            externalJsonList
+                .map((external) => StoryListItem.fromJson(external))
+                .toList(),
+        count: (jsonResponse['data']?['externalsCount'] as num?)?.toInt() ?? 0,
+      );
+    } catch (e) {
+      print('Fetch category externals failed for slug=$slug: $e');
+      return const _CategoryChunk.empty();
+    }
   }
 
   List<StoryListItem> _mergeSorted(Iterable<StoryListItem> items) {
@@ -497,4 +552,13 @@ query FetchCategoryStoryList(
 
     return storyListItemList;
   }
+}
+
+class _CategoryChunk {
+  final List<StoryListItem> items;
+  final int count;
+
+  const _CategoryChunk({required this.items, required this.count});
+
+  const _CategoryChunk.empty() : items = const [], count = 0;
 }
