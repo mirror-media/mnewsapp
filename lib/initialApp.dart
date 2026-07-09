@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:tv/bindings/initial_app_binding.dart';
@@ -19,26 +21,42 @@ class InitialApp extends StatefulWidget {
 
 class _InitialAppState extends State<InitialApp> {
   late final InitialAppController controller;
-  bool _deepLinkHandled = false;
+  StreamSubscription<String>? _storyDeepLinkSubscription;
+  bool _pendingDeepLinkCallbackScheduled = false;
 
   @override
   void initState() {
     super.initState();
     InitialAppBinding().dependencies();
     controller = Get.find<InitialAppController>();
+    _storyDeepLinkSubscription = FirebaseMessagingHelper.storySlugStream.listen(
+      (_) {
+        _schedulePendingDeepLinkHandling();
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _storyDeepLinkSubscription?.cancel();
+    super.dispose();
   }
 
   /// 在 HomePage 掛載後執行：消化 cold-start 通知帶過來的 deep link slug。
-  /// 只會成功一次：[FirebaseMessagingHelper.consumePendingStorySlug] 取出後即清空，
-  /// 同時 `_deepLinkHandled` 保證 Obx rebuild 也不會重複 push。
-  void _handlePendingDeepLink() {
-    if (_deepLinkHandled) return;
-    _deepLinkHandled = true;
+  /// [FirebaseMessagingHelper.consumePendingStorySlug] 取出後即清空；
+  /// 若 FCM initialMessage 比 HomePage 晚回來，stream listener 會再次排程。
+  void _schedulePendingDeepLinkHandling() {
+    if (_pendingDeepLinkCallbackScheduled) return;
+    _pendingDeepLinkCallbackScheduled = true;
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      _pendingDeepLinkCallbackScheduled = false;
+      if (!mounted || !controller.isConfigReady.value) return;
+
       final slug = FirebaseMessagingHelper.consumePendingStorySlug();
       if (slug != null && slug.isNotEmpty) {
         debugPrint('[initial-app] Navigating to pending story: $slug');
-        Get.to(() => StoryPage(slug: slug));
+        Get.to(() => StoryPage(slug: slug), preventDuplicates: false);
       }
     });
   }
@@ -56,15 +74,13 @@ class _InitialAppState extends State<InitialApp> {
         debugPrint(
           '[initial-app] Config ready, showing HomePage with min version ${controller.minAppVersion.value}',
         );
-        _handlePendingDeepLink();
+        _schedulePendingDeepLinkHandling();
         return UpgradeAlert(
           upgrader: Upgrader(
             minAppVersion: controller.minAppVersion.value,
             messages: UpdateMessages(),
           ),
-          child: HomePage(
-            appVersion: controller.appVersion.value,
-          ),
+          child: HomePage(appVersion: controller.appVersion.value),
         );
       }
 
@@ -81,23 +97,16 @@ class _InitialAppState extends State<InitialApp> {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(
-              logoPng,
-              scale: 4.0,
+            Image.asset(logoPng, scale: 4.0),
+            const SizedBox(height: 20),
+            Text(
+              '載入失敗',
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
-            const SizedBox(
-              height: 20,
+            Text(
+              '請檢查網路連線後再重新開啟',
+              style: const TextStyle(color: Colors.white, fontSize: 17),
             ),
-            Text('載入失敗',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                )),
-            Text('請檢查網路連線後再重新開啟',
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 17,
-                )),
           ],
         ),
       ),
