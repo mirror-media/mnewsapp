@@ -1,16 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/text_scale_factor_controller.dart';
-import 'package:tv/models/podcast_info/podcast_info.dart';
 import 'package:tv/models/showIntro.dart';
 import 'package:tv/models/youtubePlaylistItem.dart';
 import 'package:tv/models/youtube_list_info.dart';
 import 'package:tv/provider/articles_api_provider.dart';
-import 'package:tv/widgets/podcast_sticky_panel/podcast_sticky_panel_controller.dart';
 
-class ElectionController extends GetxController
-    with GetTickerProviderStateMixin {
+class ElectionController extends GetxController {
   final ArticlesApiProvider articlesApiProvider = Get.find();
   final int defaultPlayListOnePageCount = 5;
   late int playListPage = 1;
@@ -23,26 +18,16 @@ class ElectionController extends GetxController
   final Rxn<YoutubeListInfo> rxPlayListInfo = Rxn();
   final Rxn<YoutubeListInfo> rxShortPlayListInfo = Rxn();
   final RxInt rxSegmentedControlValue = 0.obs;
-  final RxList<PodcastInfo> rxPodcastInfoList = RxList();
-  final Rxn<PodcastInfo> rxnSelectPodcastInfo = Rxn();
-  final RxInt rxPodcastDisplayCount = 5.obs;
-  final PodcastStickyPanelController podcastStickyPanelController = Get.find();
-
-  late AnimationController animationController;
-  late Animation<double> animation;
   late String? tag;
 
   @override
   void onInit() async {
     super.onInit();
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 200));
-    animation = Tween(begin: -130.0, end: 0.0).animate(animationController);
-    rxnShowIntro.value =
-        await articlesApiProvider.getShowIntro(slug: tag ?? '');
+    rxnShowIntro.value = await articlesApiProvider.getShowIntro(
+      slug: tag ?? '',
+    );
     fetchYoutubePlayList();
     fetchYoutubeShortPlayList();
-    fetchPodcastList();
   }
 
   ElectionController(String? _tag) {
@@ -51,7 +36,7 @@ class ElectionController extends GetxController
 
   void fetchYoutubePlayList() async {
     final playListId =
-    rxnShowIntro.value?.playList01?.youtubePlayListId?.trim();
+        rxnShowIntro.value?.playList01?.youtubePlayListId?.trim();
 
     print('[ElectionController] playList01 id = "$playListId"');
 
@@ -75,7 +60,7 @@ class ElectionController extends GetxController
 
   void fetchYoutubeShortPlayList() async {
     final playListId =
-    rxnShowIntro.value?.playList02?.youtubePlayListId?.trim();
+        rxnShowIntro.value?.playList02?.youtubePlayListId?.trim();
 
     print('[ElectionController] playList02 id = "$playListId"');
 
@@ -98,10 +83,6 @@ class ElectionController extends GetxController
     rxShortPlayListInfo.value = newInfo;
   }
 
-  void fetchPodcastList() async {
-    rxPodcastInfoList.value = await articlesApiProvider.getPodcastInfoList();
-  }
-
   void getMorePlayList() {
     if (rxSegmentedControlValue.value == 0) {
       playListPage++;
@@ -112,42 +93,7 @@ class ElectionController extends GetxController
     }
   }
 
-  void getMorePodcast() {
-    rxPodcastDisplayCount.value += 5;
-    if (rxPodcastDisplayCount.value > rxPodcastInfoList.length) {
-      rxPodcastDisplayCount.value = rxPodcastInfoList.length;
-      Fluttertoast.showToast(
-          msg: "所有Podcast都加載完畢囉",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.CENTER,
-          timeInSecForIosWeb: 1,
-          backgroundColor: Get.theme.primaryColor,
-          textColor: Colors.white,
-          fontSize: 16.0);
-    }
-  }
-
   void segmentedControlValueChange(int value) {
     rxSegmentedControlValue.value = value;
-  }
-
-  void podcastItemClickEvent(PodcastInfo podcastInfo) {
-    if (rxnSelectPodcastInfo.value == podcastInfo) {
-      return;
-    }
-    if (rxnSelectPodcastInfo.value == null) {
-      animationController.forward();
-    }
-    rxnSelectPodcastInfo.value = podcastInfo;
-    podcastStickyPanelController
-        .playAudio(rxnSelectPodcastInfo.value?.enclosures?[0].url);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    animationController.reverse();
-    rxnSelectPodcastInfo.value = null;
-    podcastStickyPanelController.playAudio(null);
   }
 }
