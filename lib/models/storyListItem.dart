@@ -186,7 +186,7 @@ class StoryListItem {
 
     String photoUrl = Environment().config.mirrorNewsDefaultImageUrl;
 
-    // K6 優先：heroImage.imageApiData
+    // 熱門 JSON 的 heroImage 是 URL 字串；GraphQL 則回傳 imageApiData 物件。
     photoUrl =
         _extractImageUrlFromNode(json['heroImage']) ??
         _extractImageUrlFromNode(json['heroVideo']?['coverPhoto']) ??
@@ -235,6 +235,13 @@ class StoryListItem {
 
   static String? _extractImageUrlFromNode(dynamic imageNode) {
     if (imageNode == null) return null;
+    if (imageNode is String) {
+      final url = imageNode.trim();
+      if (url.startsWith('http://') || url.startsWith('https://')) {
+        return url;
+      }
+      return null;
+    }
     if (imageNode is! Map) return null;
 
     final map =

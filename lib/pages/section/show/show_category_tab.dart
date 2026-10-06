@@ -5,8 +5,6 @@ import 'package:tv/controller/text_scale_factor_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/exceptions.dart';
 import 'package:tv/models/category.dart';
-import 'package:tv/pages/section/show/election_widget/election_controller.dart';
-import 'package:tv/pages/section/show/election_widget/election_widget.dart';
 import 'package:tv/pages/section/show/show_tab_content.dart';
 
 class ShowCategoryTab extends StatefulWidget {
@@ -45,15 +43,9 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
         ),
       );
 
-      if (category.slug!.contains('election')) {
-        tabWidgets.add(
-          ElectionWidget(tag: category.slug ?? ''),
-        );
-      } else {
-        tabWidgets.add(
-          ShowTabContent(category: category),
-        );
-      }
+      tabWidgets.add(
+        ShowTabContent(category: category),
+      );
     }
 
     tabController = TabController(
@@ -61,16 +53,6 @@ class _ShowCategoryTabState extends State<ShowCategoryTab>
       length: categoryList.length,
       initialIndex: tabController == null ? initialTabIndex : tabController!.index,
     );
-
-    tabController?.addListener(() {
-      final tag = categoryList[tabController!.index].slug!;
-      if (tag.contains('election')) {
-        if (Get.isRegistered<ElectionController>(tag: tag)) {
-          Get.delete<ElectionController>(tag: tag);
-        }
-        Get.put(ElectionController(tag), tag: tag);
-      }
-    });
   }
 
   @override
