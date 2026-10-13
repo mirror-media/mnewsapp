@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:tv/controller/ombuds_controller.dart';
+import 'package:tv/services/ombuds_title_service.dart';
 import 'package:tv/services/storyService.dart';
 import 'package:tv/services/videoService.dart';
 
@@ -19,6 +20,7 @@ class OmbudsBinding extends Bindings {
         () => OmbudsController(
           storyService: Get.find<StoryServices>(),
           videoService: Get.find<VideoServices>(),
+          titleService: OmbudsTitleService(),
         ),
       );
     }

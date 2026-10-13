@@ -137,7 +137,7 @@ class _OmbudsWidgetState extends State<OmbudsWidget> {
       children: [
         Obx(
           () => Text(
-            '外部公評人翁秀琪',
+            controller.title.value,
             style: const TextStyle(
               fontSize: 20,
               color: themeColor,
