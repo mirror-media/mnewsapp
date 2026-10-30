@@ -1,6 +1,6 @@
 class TopIframeSchedule {
-  static const startAtKey = 'topIframeV2StartAt';
-  static const endAtKey = 'topIframeV2EndAt';
+  static const startAtKey = 'homepageEmbedStartAt';
+  static const endAtKey = 'homepageEmbedEndAt';
 
   static final _timestampPattern = RegExp(
     r'^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})(?:\.(\d+))?(Z|[+-](\d{2}):(\d{2}))$',
