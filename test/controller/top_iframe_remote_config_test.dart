@@ -148,13 +148,17 @@ void main() {
     () {
       controller.checkVisibility();
 
-      expect(remoteConfig.getBool('isTopIframeShow'), isFalse);
-      for (final key in ['topIframeUrl', 'iframeTitle', 'iframeShowMoreUrl']) {
+      expect(remoteConfig.getBool('topIframeV2Enabled'), isFalse);
+      for (final key in [
+        'topIframeV2Url',
+        'topIframeV2Title',
+        'topIframeV2ShowMoreUrl',
+      ]) {
         expect(remoteConfig.getString(key), isEmpty);
         expect(remoteConfig.getValue(key).source, ValueSource.valueStatic);
       }
       expect(
-        remoteConfig.getValue('isTopIframeShow').source,
+        remoteConfig.getValue('topIframeV2Enabled').source,
         ValueSource.valueStatic,
       );
       expect(controller.isVisible.value, isFalse);
@@ -167,10 +171,10 @@ void main() {
 
   test('remote enable and URL display the iframe and optional values', () {
     applyRemoteValues({
-      'isTopIframeShow': true,
-      'topIframeUrl': iframeUrl,
-      'iframeTitle': '選舉即時資訊',
-      'iframeShowMoreUrl': 'https://example.com/more',
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': iframeUrl,
+      'topIframeV2Title': '選舉即時資訊',
+      'topIframeV2ShowMoreUrl': 'https://example.com/more',
     });
 
     expect(controller.isVisible.value, isTrue);
@@ -181,10 +185,16 @@ void main() {
   });
 
   test('remote disable removes an already displayed iframe and its width', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': iframeUrl,
+    });
     controller.currentWidth.value = 320;
 
-    applyRemoteValues({'isTopIframeShow': false, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'topIframeV2Enabled': false,
+      'topIframeV2Url': iframeUrl,
+    });
 
     expect(controller.isVisible.value, isFalse);
     expect(controller.currentUrl.value, isNull);
@@ -193,10 +203,13 @@ void main() {
   });
 
   test('an empty URL hides an iframe even when remotely enabled', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': iframeUrl,
+    });
     controller.currentWidth.value = 320;
 
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': ''});
+    applyRemoteValues({'topIframeV2Enabled': true, 'topIframeV2Url': ''});
 
     expect(controller.isVisible.value, isFalse);
     expect(controller.currentUrl.value, isNull);
@@ -207,17 +220,17 @@ void main() {
     'empty optional values remove existing controls and keep the iframe',
     () {
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '選舉即時資訊',
-        'iframeShowMoreUrl': 'https://example.com/more',
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'topIframeV2Title': '選舉即時資訊',
+        'topIframeV2ShowMoreUrl': 'https://example.com/more',
       });
 
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '',
-        'iframeShowMoreUrl': '',
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'topIframeV2Title': '',
+        'topIframeV2ShowMoreUrl': '',
       });
 
       expect(controller.isVisible.value, isTrue);
@@ -228,7 +241,10 @@ void main() {
   );
 
   test('changing the URL clears old dimensions, errors and loading state', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': iframeUrl,
+    });
     final previousKey = controller.webViewKey.value;
     controller.currentWidth.value = 320;
     controller.currentHeight.value = 330;
@@ -238,8 +254,8 @@ void main() {
     controller.errorMessage.value = 'Previous page failed';
 
     applyRemoteValues({
-      'isTopIframeShow': true,
-      'topIframeUrl': 'https://example.com/another-iframe',
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': 'https://example.com/another-iframe',
     });
 
     expect(controller.isVisible.value, isTrue);
@@ -256,7 +272,10 @@ void main() {
   test(
     'optional field changes keep the same URL, native instance and dimensions',
     () {
-      applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+      applyRemoteValues({
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+      });
       final previousKey = controller.webViewKey.value;
       controller.currentWidth.value = 320;
       controller.currentHeight.value = 330;
@@ -264,10 +283,10 @@ void main() {
       controller.isLoading.value = false;
 
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '新標題',
-        'iframeShowMoreUrl': 'https://example.com/more',
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'topIframeV2Title': '新標題',
+        'topIframeV2ShowMoreUrl': 'https://example.com/more',
       });
 
       expect(controller.title.value, '新標題');
@@ -284,10 +303,10 @@ void main() {
     'empty schedule fields preserve the original manual display behavior',
     () {
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'topIframeStartAt': '',
-        'topIframeEndAt': '',
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'topIframeV2StartAt': '',
+        'topIframeV2EndAt': '',
       });
 
       expect(controller.isVisible.value, isTrue);
@@ -302,11 +321,11 @@ void main() {
       fakeAsync((async) {
         platform.failFetch = true;
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt':
               scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
-          'topIframeEndAt':
+          'topIframeV2EndAt':
               scheduleNow.add(const Duration(seconds: 20)).toIso8601String(),
         });
         replaceController(
@@ -345,23 +364,23 @@ void main() {
       fakeAsync((async) {
         replaceController(() => scheduleNow.add(async.elapsed));
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt':
               scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
-          'topIframeEndAt':
+          'topIframeV2EndAt':
               scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
         });
         final futureStartTimer = controller.scheduleTimer!;
 
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt':
               scheduleNow
                   .subtract(const Duration(minutes: 1))
                   .toIso8601String(),
-          'topIframeEndAt':
+          'topIframeV2EndAt':
               scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
         });
         expect(futureStartTimer.isActive, isFalse);
@@ -372,7 +391,7 @@ void main() {
         controller.currentHeight.value = 330;
         controller.isLoading.value = false;
 
-        platform.remoteValues['topIframeEndAt'] =
+        platform.remoteValues['topIframeV2EndAt'] =
             scheduleNow.add(const Duration(seconds: 20)).toIso8601String();
         controller.checkVisibility();
 
@@ -405,19 +424,19 @@ void main() {
 
       for (final schedule in invalidSchedules) {
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeEndAt': validEnd,
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2EndAt': validEnd,
         });
         expect(controller.isVisible.value, isTrue);
         final previousTimer = controller.scheduleTimer!;
         controller.currentWidth.value = 320;
 
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt': schedule['start'],
-          'topIframeEndAt': schedule['end'],
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt': schedule['start'],
+          'topIframeV2EndAt': schedule['end'],
         });
 
         expect(controller.isVisible.value, isFalse, reason: '$schedule');
@@ -428,19 +447,19 @@ void main() {
     },
   );
 
-  test('the original master switch overrides an otherwise active schedule', () {
+  test('the V2 master switch overrides an otherwise active schedule', () {
     fakeAsync((async) {
       replaceController(() => scheduleNow.add(async.elapsed));
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'topIframeEndAt':
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'topIframeV2EndAt':
             scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
       });
       final previousTimer = controller.scheduleTimer!;
       expect(controller.isVisible.value, isTrue);
 
-      platform.remoteValues['isTopIframeShow'] = false;
+      platform.remoteValues['topIframeV2Enabled'] = false;
       controller.checkVisibility();
 
       expect(controller.isVisible.value, isFalse);
@@ -458,9 +477,9 @@ void main() {
         var now = scheduleNow;
         platform.failFetch = true;
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeEndAt':
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2EndAt':
               now.add(const Duration(seconds: 10)).toIso8601String(),
         });
         replaceController(() => now, fullInitialization: true);
@@ -487,11 +506,11 @@ void main() {
     () {
       fakeAsync((async) {
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt':
               scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
-          'topIframeEndAt':
+          'topIframeV2EndAt':
               scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
         });
         replaceController(() => scheduleNow, fullInitialization: true);
@@ -502,9 +521,9 @@ void main() {
         final fetchCallsBeforeUpdate = platform.fetchCalls;
         final activateCallsBeforeUpdate = platform.activateCalls;
 
-        platform.remoteValues['topIframeStartAt'] =
+        platform.remoteValues['topIframeV2StartAt'] =
             scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String();
-        platform.updates.add(RemoteConfigUpdate({'topIframeStartAt'}));
+        platform.updates.add(RemoteConfigUpdate({'topIframeV2StartAt'}));
         async.flushMicrotasks();
 
         expect(controller.isVisible.value, isTrue);
@@ -519,9 +538,204 @@ void main() {
         expect(activeTimer.isActive, isFalse);
         expect(controller.scheduleTimer, isNull);
         expect(platform.updates.hasListener, isFalse);
-        platform.updates.add(RemoteConfigUpdate({'topIframeStartAt'}));
+        platform.updates.add(RemoteConfigUpdate({'topIframeV2StartAt'}));
         async.flushMicrotasks();
         expect(platform.activateCalls, activateCallsBeforeUpdate + 1);
+      });
+    },
+  );
+
+  test('legacy enabled, URL, controls and schedule cannot enable V2', () {
+    replaceController(() => scheduleNow);
+    for (final v2UrlValues in [
+      <String, dynamic>{},
+      {'topIframeV2Url': iframeUrl},
+    ]) {
+      applyRemoteValues({
+        'isTopIframeShow': true,
+        'topIframeUrl': 'https://example.com/legacy-iframe',
+        'iframeTitle': '舊版標題',
+        'iframeShowMoreUrl': 'https://example.com/legacy-more',
+        'topIframeStartAt':
+            scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String(),
+        'topIframeEndAt':
+            scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+        ...v2UrlValues,
+      });
+
+      expect(controller.isVisible.value, isFalse, reason: '$v2UrlValues');
+      expect(controller.currentUrl.value, isNull, reason: '$v2UrlValues');
+      expect(controller.title.value, isNull, reason: '$v2UrlValues');
+      expect(controller.showMoreUrl.value, isNull, reason: '$v2UrlValues');
+      expect(controller.scheduleTimer, isNull, reason: '$v2UrlValues');
+    }
+  });
+
+  test('V2 disabled takes priority over legacy enabled and a valid URL', () {
+    replaceController(() => scheduleNow);
+    applyRemoteValues({
+      'isTopIframeShow': true,
+      'topIframeUrl': 'https://example.com/legacy-iframe',
+      'topIframeV2Enabled': false,
+      'topIframeV2Url': iframeUrl,
+      'topIframeV2EndAt':
+          scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+    });
+
+    expect(controller.isVisible.value, isFalse);
+    expect(controller.currentUrl.value, isNull);
+    expect(controller.scheduleTimer, isNull);
+  });
+
+  test('V2 values display independently of conflicting legacy values', () {
+    replaceController(() => scheduleNow);
+    applyRemoteValues({
+      'isTopIframeShow': false,
+      'topIframeUrl': 'https://example.com/legacy-iframe',
+      'iframeTitle': '舊版標題',
+      'iframeShowMoreUrl': 'https://example.com/legacy-more',
+      'topIframeStartAt':
+          scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+      'topIframeEndAt':
+          scheduleNow.add(const Duration(days: 2)).toIso8601String(),
+      'topIframeV2Enabled': true,
+      'topIframeV2Url': iframeUrl,
+      'topIframeV2Title': '新版標題',
+      'topIframeV2ShowMoreUrl': 'https://example.com/v2-more',
+      'topIframeV2StartAt':
+          scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String(),
+      'topIframeV2EndAt':
+          scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+    });
+
+    expect(controller.isVisible.value, isTrue);
+    expect(controller.currentUrl.value, iframeUrl);
+    expect(controller.title.value, '新版標題');
+    expect(controller.showMoreUrl.value, 'https://example.com/v2-more');
+    expect(controller.scheduleTimer?.isActive, isTrue);
+  });
+
+  test('missing or empty V2 URL never falls back to the legacy URL', () {
+    for (final v2UrlValues in [
+      <String, dynamic>{},
+      {'topIframeV2Url': ''},
+    ]) {
+      applyRemoteValues({
+        'isTopIframeShow': true,
+        'topIframeUrl': 'https://example.com/legacy-iframe',
+        'topIframeV2Enabled': true,
+        ...v2UrlValues,
+      });
+
+      expect(controller.isVisible.value, isFalse, reason: '$v2UrlValues');
+      expect(controller.currentUrl.value, isNull, reason: '$v2UrlValues');
+      expect(controller.scheduleTimer, isNull, reason: '$v2UrlValues');
+    }
+  });
+
+  test('legacy controls and times never fill missing or empty V2 fields', () {
+    replaceController(() => scheduleNow);
+    for (final v2OptionalValues in [
+      <String, dynamic>{},
+      {
+        'topIframeV2Title': '',
+        'topIframeV2ShowMoreUrl': '',
+        'topIframeV2StartAt': '',
+        'topIframeV2EndAt': '',
+      },
+    ]) {
+      applyRemoteValues({
+        'topIframeV2Enabled': true,
+        'topIframeV2Url': iframeUrl,
+        'iframeTitle': '舊版標題',
+        'iframeShowMoreUrl': 'https://example.com/legacy-more',
+        // Either legacy boundary would hide V2 if it were used as fallback.
+        'topIframeStartAt':
+            scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+        'topIframeEndAt':
+            scheduleNow.subtract(const Duration(days: 1)).toIso8601String(),
+        ...v2OptionalValues,
+      });
+
+      expect(controller.isVisible.value, isTrue, reason: '$v2OptionalValues');
+      expect(controller.currentUrl.value, iframeUrl);
+      expect(controller.title.value, isNull, reason: '$v2OptionalValues');
+      expect(controller.showMoreUrl.value, isNull, reason: '$v2OptionalValues');
+      expect(controller.scheduleTimer, isNull, reason: '$v2OptionalValues');
+    }
+  });
+
+  test(
+    'legacy real-time keys are ignored while V2 schedule updates still apply',
+    () {
+      fakeAsync((async) {
+        platform.remoteValues.addAll({
+          'topIframeV2Enabled': true,
+          'topIframeV2Url': iframeUrl,
+          'topIframeV2StartAt':
+              scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+          'topIframeV2EndAt':
+              scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
+        });
+        replaceController(() => scheduleNow, fullInitialization: true);
+        async.flushMicrotasks();
+        final previousTimer = controller.scheduleTimer!;
+        final fetchCallsBeforeUpdate = platform.fetchCalls;
+        final activateCallsBeforeUpdate = platform.activateCalls;
+
+        platform.remoteValues.addAll({
+          'isTopIframeShow': true,
+          'topIframeUrl': 'https://example.com/legacy-iframe',
+          'iframeTitle': '舊版標題',
+          'iframeShowMoreUrl': 'https://example.com/legacy-more',
+          'topIframeStartAt':
+              scheduleNow.subtract(const Duration(days: 1)).toIso8601String(),
+          'topIframeEndAt':
+              scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+        });
+        for (final legacyKey in [
+          'isTopIframeShow',
+          'topIframeUrl',
+          'iframeTitle',
+          'iframeShowMoreUrl',
+          'topIframeStartAt',
+          'topIframeEndAt',
+        ]) {
+          platform.updates.add(RemoteConfigUpdate({legacyKey}));
+          async.flushMicrotasks();
+
+          expect(
+            platform.activateCalls,
+            activateCallsBeforeUpdate,
+            reason: legacyKey,
+          );
+          expect(
+            platform.fetchCalls,
+            fetchCallsBeforeUpdate,
+            reason: legacyKey,
+          );
+          expect(
+            identical(controller.scheduleTimer, previousTimer),
+            isTrue,
+            reason: legacyKey,
+          );
+          expect(previousTimer.isActive, isTrue, reason: legacyKey);
+          expect(controller.isVisible.value, isFalse, reason: legacyKey);
+          expect(controller.title.value, isNull, reason: legacyKey);
+          expect(controller.showMoreUrl.value, isNull, reason: legacyKey);
+        }
+
+        platform.remoteValues['topIframeV2StartAt'] =
+            scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String();
+        platform.updates.add(RemoteConfigUpdate({'topIframeV2StartAt'}));
+        async.flushMicrotasks();
+
+        expect(platform.activateCalls, activateCallsBeforeUpdate + 1);
+        expect(platform.fetchCalls, fetchCallsBeforeUpdate);
+        expect(previousTimer.isActive, isFalse);
+        expect(controller.isVisible.value, isTrue);
+        expect(controller.currentUrl.value, iframeUrl);
+        expect(controller.scheduleTimer?.isActive, isTrue);
       });
     },
   );

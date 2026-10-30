@@ -14,10 +14,10 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
   final DateTime Function() _now;
 
   static const _configKeys = {
-    'isTopIframeShow',
-    'topIframeUrl',
-    'iframeTitle',
-    'iframeShowMoreUrl',
+    'topIframeV2Enabled',
+    'topIframeV2Url',
+    'topIframeV2Title',
+    'topIframeV2ShowMoreUrl',
     TopIframeSchedule.startAtKey,
     TopIframeSchedule.endAtKey,
   };
@@ -90,10 +90,11 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
 
   void checkVisibility() {
     if (_isDisposed) return;
-    final isShow = _remoteConfig.getBool('isTopIframeShow');
-    final url = _remoteConfig.getString('topIframeUrl');
-    final titleText = _remoteConfig.getString('iframeTitle');
-    final moreUrl = _remoteConfig.getString('iframeShowMoreUrl');
+    // Keep this slot independent of legacy clients and their published values.
+    final isShow = _remoteConfig.getBool('topIframeV2Enabled');
+    final url = _remoteConfig.getString('topIframeV2Url');
+    final titleText = _remoteConfig.getString('topIframeV2Title');
+    final moreUrl = _remoteConfig.getString('topIframeV2ShowMoreUrl');
     final schedule = TopIframeSchedule.parse(
       startAt: _remoteConfig.getString(TopIframeSchedule.startAtKey),
       endAt: _remoteConfig.getString(TopIframeSchedule.endAtKey),
