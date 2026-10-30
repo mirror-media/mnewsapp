@@ -148,13 +148,17 @@ void main() {
     () {
       controller.checkVisibility();
 
-      expect(remoteConfig.getBool('isTopIframeShow'), isFalse);
-      for (final key in ['topIframeUrl', 'iframeTitle', 'iframeShowMoreUrl']) {
+      expect(remoteConfig.getBool('homepageEmbedEnabled'), isFalse);
+      for (final key in [
+        'homepageEmbedUrl',
+        'homepageEmbedTitle',
+        'homepageEmbedShowMoreUrl',
+      ]) {
         expect(remoteConfig.getString(key), isEmpty);
         expect(remoteConfig.getValue(key).source, ValueSource.valueStatic);
       }
       expect(
-        remoteConfig.getValue('isTopIframeShow').source,
+        remoteConfig.getValue('homepageEmbedEnabled').source,
         ValueSource.valueStatic,
       );
       expect(controller.isVisible.value, isFalse);
@@ -167,10 +171,10 @@ void main() {
 
   test('remote enable and URL display the iframe and optional values', () {
     applyRemoteValues({
-      'isTopIframeShow': true,
-      'topIframeUrl': iframeUrl,
-      'iframeTitle': '選舉即時資訊',
-      'iframeShowMoreUrl': 'https://example.com/more',
+      'homepageEmbedEnabled': true,
+      'homepageEmbedUrl': iframeUrl,
+      'homepageEmbedTitle': '選舉即時資訊',
+      'homepageEmbedShowMoreUrl': 'https://example.com/more',
     });
 
     expect(controller.isVisible.value, isTrue);
@@ -181,10 +185,16 @@ void main() {
   });
 
   test('remote disable removes an already displayed iframe and its width', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'homepageEmbedEnabled': true,
+      'homepageEmbedUrl': iframeUrl,
+    });
     controller.currentWidth.value = 320;
 
-    applyRemoteValues({'isTopIframeShow': false, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'homepageEmbedEnabled': false,
+      'homepageEmbedUrl': iframeUrl,
+    });
 
     expect(controller.isVisible.value, isFalse);
     expect(controller.currentUrl.value, isNull);
@@ -193,10 +203,13 @@ void main() {
   });
 
   test('an empty URL hides an iframe even when remotely enabled', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'homepageEmbedEnabled': true,
+      'homepageEmbedUrl': iframeUrl,
+    });
     controller.currentWidth.value = 320;
 
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': ''});
+    applyRemoteValues({'homepageEmbedEnabled': true, 'homepageEmbedUrl': ''});
 
     expect(controller.isVisible.value, isFalse);
     expect(controller.currentUrl.value, isNull);
@@ -207,17 +220,17 @@ void main() {
     'empty optional values remove existing controls and keep the iframe',
     () {
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '選舉即時資訊',
-        'iframeShowMoreUrl': 'https://example.com/more',
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedTitle': '選舉即時資訊',
+        'homepageEmbedShowMoreUrl': 'https://example.com/more',
       });
 
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '',
-        'iframeShowMoreUrl': '',
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedTitle': '',
+        'homepageEmbedShowMoreUrl': '',
       });
 
       expect(controller.isVisible.value, isTrue);
@@ -228,7 +241,10 @@ void main() {
   );
 
   test('changing the URL clears old dimensions, errors and loading state', () {
-    applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+    applyRemoteValues({
+      'homepageEmbedEnabled': true,
+      'homepageEmbedUrl': iframeUrl,
+    });
     final previousKey = controller.webViewKey.value;
     controller.currentWidth.value = 320;
     controller.currentHeight.value = 330;
@@ -238,8 +254,8 @@ void main() {
     controller.errorMessage.value = 'Previous page failed';
 
     applyRemoteValues({
-      'isTopIframeShow': true,
-      'topIframeUrl': 'https://example.com/another-iframe',
+      'homepageEmbedEnabled': true,
+      'homepageEmbedUrl': 'https://example.com/another-iframe',
     });
 
     expect(controller.isVisible.value, isTrue);
@@ -256,7 +272,10 @@ void main() {
   test(
     'optional field changes keep the same URL, native instance and dimensions',
     () {
-      applyRemoteValues({'isTopIframeShow': true, 'topIframeUrl': iframeUrl});
+      applyRemoteValues({
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+      });
       final previousKey = controller.webViewKey.value;
       controller.currentWidth.value = 320;
       controller.currentHeight.value = 330;
@@ -264,10 +283,10 @@ void main() {
       controller.isLoading.value = false;
 
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'iframeTitle': '新標題',
-        'iframeShowMoreUrl': 'https://example.com/more',
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedTitle': '新標題',
+        'homepageEmbedShowMoreUrl': 'https://example.com/more',
       });
 
       expect(controller.title.value, '新標題');
@@ -284,10 +303,10 @@ void main() {
     'empty schedule fields preserve the original manual display behavior',
     () {
       applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'topIframeStartAt': '',
-        'topIframeEndAt': '',
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedStartAt': '',
+        'homepageEmbedEndAt': '',
       });
 
       expect(controller.isVisible.value, isTrue);
@@ -302,11 +321,11 @@ void main() {
       fakeAsync((async) {
         platform.failFetch = true;
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt':
               scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
-          'topIframeEndAt':
+          'homepageEmbedEndAt':
               scheduleNow.add(const Duration(seconds: 20)).toIso8601String(),
         });
         replaceController(
@@ -345,23 +364,23 @@ void main() {
       fakeAsync((async) {
         replaceController(() => scheduleNow.add(async.elapsed));
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt':
               scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
-          'topIframeEndAt':
+          'homepageEmbedEndAt':
               scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
         });
         final futureStartTimer = controller.scheduleTimer!;
 
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt':
               scheduleNow
                   .subtract(const Duration(minutes: 1))
                   .toIso8601String(),
-          'topIframeEndAt':
+          'homepageEmbedEndAt':
               scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
         });
         expect(futureStartTimer.isActive, isFalse);
@@ -372,7 +391,7 @@ void main() {
         controller.currentHeight.value = 330;
         controller.isLoading.value = false;
 
-        platform.remoteValues['topIframeEndAt'] =
+        platform.remoteValues['homepageEmbedEndAt'] =
             scheduleNow.add(const Duration(seconds: 20)).toIso8601String();
         controller.checkVisibility();
 
@@ -405,19 +424,19 @@ void main() {
 
       for (final schedule in invalidSchedules) {
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeEndAt': validEnd,
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedEndAt': validEnd,
         });
         expect(controller.isVisible.value, isTrue);
         final previousTimer = controller.scheduleTimer!;
         controller.currentWidth.value = 320;
 
         applyRemoteValues({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt': schedule['start'],
-          'topIframeEndAt': schedule['end'],
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt': schedule['start'],
+          'homepageEmbedEndAt': schedule['end'],
         });
 
         expect(controller.isVisible.value, isFalse, reason: '$schedule');
@@ -428,28 +447,31 @@ void main() {
     },
   );
 
-  test('the original master switch overrides an otherwise active schedule', () {
-    fakeAsync((async) {
-      replaceController(() => scheduleNow.add(async.elapsed));
-      applyRemoteValues({
-        'isTopIframeShow': true,
-        'topIframeUrl': iframeUrl,
-        'topIframeEndAt':
-            scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
+  test(
+    'the homepage embed master switch overrides an otherwise active schedule',
+    () {
+      fakeAsync((async) {
+        replaceController(() => scheduleNow.add(async.elapsed));
+        applyRemoteValues({
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedEndAt':
+              scheduleNow.add(const Duration(seconds: 10)).toIso8601String(),
+        });
+        final previousTimer = controller.scheduleTimer!;
+        expect(controller.isVisible.value, isTrue);
+
+        platform.remoteValues['homepageEmbedEnabled'] = false;
+        controller.checkVisibility();
+
+        expect(controller.isVisible.value, isFalse);
+        expect(controller.scheduleTimer, isNull);
+        expect(previousTimer.isActive, isFalse);
+        async.elapse(const Duration(seconds: 20));
+        expect(controller.isVisible.value, isFalse);
       });
-      final previousTimer = controller.scheduleTimer!;
-      expect(controller.isVisible.value, isTrue);
-
-      platform.remoteValues['isTopIframeShow'] = false;
-      controller.checkVisibility();
-
-      expect(controller.isVisible.value, isFalse);
-      expect(controller.scheduleTimer, isNull);
-      expect(previousTimer.isActive, isFalse);
-      async.elapse(const Duration(seconds: 20));
-      expect(controller.isVisible.value, isFalse);
-    });
-  });
+    },
+  );
 
   test(
     'resuming applies an expired cached schedule before a failed refresh',
@@ -458,9 +480,9 @@ void main() {
         var now = scheduleNow;
         platform.failFetch = true;
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeEndAt':
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedEndAt':
               now.add(const Duration(seconds: 10)).toIso8601String(),
         });
         replaceController(() => now, fullInitialization: true);
@@ -487,11 +509,11 @@ void main() {
     () {
       fakeAsync((async) {
         platform.remoteValues.addAll({
-          'isTopIframeShow': true,
-          'topIframeUrl': iframeUrl,
-          'topIframeStartAt':
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt':
               scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
-          'topIframeEndAt':
+          'homepageEmbedEndAt':
               scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
         });
         replaceController(() => scheduleNow, fullInitialization: true);
@@ -502,9 +524,9 @@ void main() {
         final fetchCallsBeforeUpdate = platform.fetchCalls;
         final activateCallsBeforeUpdate = platform.activateCalls;
 
-        platform.remoteValues['topIframeStartAt'] =
+        platform.remoteValues['homepageEmbedStartAt'] =
             scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String();
-        platform.updates.add(RemoteConfigUpdate({'topIframeStartAt'}));
+        platform.updates.add(RemoteConfigUpdate({'homepageEmbedStartAt'}));
         async.flushMicrotasks();
 
         expect(controller.isVisible.value, isTrue);
@@ -519,9 +541,233 @@ void main() {
         expect(activeTimer.isActive, isFalse);
         expect(controller.scheduleTimer, isNull);
         expect(platform.updates.hasListener, isFalse);
-        platform.updates.add(RemoteConfigUpdate({'topIframeStartAt'}));
+        platform.updates.add(RemoteConfigUpdate({'homepageEmbedStartAt'}));
         async.flushMicrotasks();
         expect(platform.activateCalls, activateCallsBeforeUpdate + 1);
+      });
+    },
+  );
+
+  test(
+    'legacy enabled, URL, controls and schedule cannot enable the homepage embed',
+    () {
+      replaceController(() => scheduleNow);
+      for (final embedUrlValues in [
+        <String, dynamic>{},
+        {'homepageEmbedUrl': iframeUrl},
+      ]) {
+        applyRemoteValues({
+          'isTopIframeShow': true,
+          'topIframeUrl': 'https://example.com/legacy-iframe',
+          'iframeTitle': '舊版標題',
+          'iframeShowMoreUrl': 'https://example.com/legacy-more',
+          'topIframeStartAt':
+              scheduleNow
+                  .subtract(const Duration(minutes: 1))
+                  .toIso8601String(),
+          'topIframeEndAt':
+              scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+          ...embedUrlValues,
+        });
+
+        expect(controller.isVisible.value, isFalse, reason: '$embedUrlValues');
+        expect(controller.currentUrl.value, isNull, reason: '$embedUrlValues');
+        expect(controller.title.value, isNull, reason: '$embedUrlValues');
+        expect(controller.showMoreUrl.value, isNull, reason: '$embedUrlValues');
+        expect(controller.scheduleTimer, isNull, reason: '$embedUrlValues');
+      }
+    },
+  );
+
+  test(
+    'a disabled homepage embed takes priority over legacy enabled and a valid URL',
+    () {
+      replaceController(() => scheduleNow);
+      applyRemoteValues({
+        'isTopIframeShow': true,
+        'topIframeUrl': 'https://example.com/legacy-iframe',
+        'homepageEmbedEnabled': false,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedEndAt':
+            scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+      });
+
+      expect(controller.isVisible.value, isFalse);
+      expect(controller.currentUrl.value, isNull);
+      expect(controller.scheduleTimer, isNull);
+    },
+  );
+
+  test(
+    'homepage embed values display independently of conflicting legacy values',
+    () {
+      replaceController(() => scheduleNow);
+      applyRemoteValues({
+        'isTopIframeShow': false,
+        'topIframeUrl': 'https://example.com/legacy-iframe',
+        'iframeTitle': '舊版標題',
+        'iframeShowMoreUrl': 'https://example.com/legacy-more',
+        'topIframeStartAt':
+            scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+        'topIframeEndAt':
+            scheduleNow.add(const Duration(days: 2)).toIso8601String(),
+        'homepageEmbedEnabled': true,
+        'homepageEmbedUrl': iframeUrl,
+        'homepageEmbedTitle': '新版標題',
+        'homepageEmbedShowMoreUrl': 'https://example.com/homepage-more',
+        'homepageEmbedStartAt':
+            scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String(),
+        'homepageEmbedEndAt':
+            scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+      });
+
+      expect(controller.isVisible.value, isTrue);
+      expect(controller.currentUrl.value, iframeUrl);
+      expect(controller.title.value, '新版標題');
+      expect(controller.showMoreUrl.value, 'https://example.com/homepage-more');
+      expect(controller.scheduleTimer?.isActive, isTrue);
+    },
+  );
+
+  test(
+    'missing or empty homepage embed URL never falls back to the legacy URL',
+    () {
+      for (final embedUrlValues in [
+        <String, dynamic>{},
+        {'homepageEmbedUrl': ''},
+      ]) {
+        applyRemoteValues({
+          'isTopIframeShow': true,
+          'topIframeUrl': 'https://example.com/legacy-iframe',
+          'homepageEmbedEnabled': true,
+          ...embedUrlValues,
+        });
+
+        expect(controller.isVisible.value, isFalse, reason: '$embedUrlValues');
+        expect(controller.currentUrl.value, isNull, reason: '$embedUrlValues');
+        expect(controller.scheduleTimer, isNull, reason: '$embedUrlValues');
+      }
+    },
+  );
+
+  test(
+    'legacy controls and times never fill missing or empty homepage embed fields',
+    () {
+      replaceController(() => scheduleNow);
+      for (final embedOptionalValues in [
+        <String, dynamic>{},
+        {
+          'homepageEmbedTitle': '',
+          'homepageEmbedShowMoreUrl': '',
+          'homepageEmbedStartAt': '',
+          'homepageEmbedEndAt': '',
+        },
+      ]) {
+        applyRemoteValues({
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'iframeTitle': '舊版標題',
+          'iframeShowMoreUrl': 'https://example.com/legacy-more',
+          // Either legacy boundary would hide the homepage embed if it were used as fallback.
+          'topIframeStartAt':
+              scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+          'topIframeEndAt':
+              scheduleNow.subtract(const Duration(days: 1)).toIso8601String(),
+          ...embedOptionalValues,
+        });
+
+        expect(
+          controller.isVisible.value,
+          isTrue,
+          reason: '$embedOptionalValues',
+        );
+        expect(controller.currentUrl.value, iframeUrl);
+        expect(controller.title.value, isNull, reason: '$embedOptionalValues');
+        expect(
+          controller.showMoreUrl.value,
+          isNull,
+          reason: '$embedOptionalValues',
+        );
+        expect(
+          controller.scheduleTimer,
+          isNull,
+          reason: '$embedOptionalValues',
+        );
+      }
+    },
+  );
+
+  test(
+    'legacy real-time keys are ignored while homepage embed schedule updates still apply',
+    () {
+      fakeAsync((async) {
+        platform.remoteValues.addAll({
+          'homepageEmbedEnabled': true,
+          'homepageEmbedUrl': iframeUrl,
+          'homepageEmbedStartAt':
+              scheduleNow.add(const Duration(minutes: 1)).toIso8601String(),
+          'homepageEmbedEndAt':
+              scheduleNow.add(const Duration(minutes: 2)).toIso8601String(),
+        });
+        replaceController(() => scheduleNow, fullInitialization: true);
+        async.flushMicrotasks();
+        final previousTimer = controller.scheduleTimer!;
+        final fetchCallsBeforeUpdate = platform.fetchCalls;
+        final activateCallsBeforeUpdate = platform.activateCalls;
+
+        platform.remoteValues.addAll({
+          'isTopIframeShow': true,
+          'topIframeUrl': 'https://example.com/legacy-iframe',
+          'iframeTitle': '舊版標題',
+          'iframeShowMoreUrl': 'https://example.com/legacy-more',
+          'topIframeStartAt':
+              scheduleNow.subtract(const Duration(days: 1)).toIso8601String(),
+          'topIframeEndAt':
+              scheduleNow.add(const Duration(days: 1)).toIso8601String(),
+        });
+        for (final legacyKey in [
+          'isTopIframeShow',
+          'topIframeUrl',
+          'iframeTitle',
+          'iframeShowMoreUrl',
+          'topIframeStartAt',
+          'topIframeEndAt',
+        ]) {
+          platform.updates.add(RemoteConfigUpdate({legacyKey}));
+          async.flushMicrotasks();
+
+          expect(
+            platform.activateCalls,
+            activateCallsBeforeUpdate,
+            reason: legacyKey,
+          );
+          expect(
+            platform.fetchCalls,
+            fetchCallsBeforeUpdate,
+            reason: legacyKey,
+          );
+          expect(
+            identical(controller.scheduleTimer, previousTimer),
+            isTrue,
+            reason: legacyKey,
+          );
+          expect(previousTimer.isActive, isTrue, reason: legacyKey);
+          expect(controller.isVisible.value, isFalse, reason: legacyKey);
+          expect(controller.title.value, isNull, reason: legacyKey);
+          expect(controller.showMoreUrl.value, isNull, reason: legacyKey);
+        }
+
+        platform.remoteValues['homepageEmbedStartAt'] =
+            scheduleNow.subtract(const Duration(minutes: 1)).toIso8601String();
+        platform.updates.add(RemoteConfigUpdate({'homepageEmbedStartAt'}));
+        async.flushMicrotasks();
+
+        expect(platform.activateCalls, activateCallsBeforeUpdate + 1);
+        expect(platform.fetchCalls, fetchCallsBeforeUpdate);
+        expect(previousTimer.isActive, isFalse);
+        expect(controller.isVisible.value, isTrue);
+        expect(controller.currentUrl.value, iframeUrl);
+        expect(controller.scheduleTimer?.isActive, isTrue);
       });
     },
   );
