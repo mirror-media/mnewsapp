@@ -1,9 +1,11 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
 import 'package:tv/controller/top_iframe_controller.dart';
 import 'package:tv/helpers/dataConstants.dart';
 import 'package:tv/helpers/top_iframe_helper.dart';
+import 'package:tv/widgets/top_iframe_gesture_recognizer.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class TopIframeWidget extends StatelessWidget {
@@ -75,6 +77,16 @@ class TopIframeWidget extends StatelessWidget {
                           child: ClipRect(
                             child: InAppWebView(
                               key: ValueKey(instanceKey),
+                              gestureRecognizers: {
+                                Factory<TopIframeVerticalDragGestureRecognizer>(
+                                  () => TopIframeVerticalDragGestureRecognizer(
+                                      isDropdownOpen:
+                                          () => controller.isDropdownOpen,
+                                    )
+                                    ..gestureSettings =
+                                        MediaQuery.gestureSettingsOf(context),
+                                ),
+                              },
                               initialUrlRequest: URLRequest(url: WebUri(url)),
                               initialOptions:
                                   TopIframeHelper.createWebViewSettings(),

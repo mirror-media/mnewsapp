@@ -3,6 +3,7 @@ import 'package:firebase_core_platform_interface/test.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tv/controller/top_iframe_controller.dart';
+import 'package:tv/helpers/top_iframe_helper.dart';
 
 class _TestTopIframeController extends TopIframeController {
   @override
@@ -32,6 +33,17 @@ class _FakeWebViewPlatformController extends PlatformInAppWebViewController {
 
   final evaluatedSources = <String>[];
   final handlers = <String, JavaScriptHandlerCallback>{};
+
+  String get observationToken =>
+      RegExp(
+        r'\}\)\("([^"]+)"\);',
+      ).firstMatch(evaluatedSources.first)!.group(1)!;
+
+  void reportDropdown(bool open, {String? token}) {
+    handlers[TopIframeHelper.dropdownStateHandlerName]!([
+      {'token': token ?? observationToken, 'open': open},
+    ]);
+  }
 
   @override
   Future<dynamic> evaluateJavascript({
@@ -152,4 +164,87 @@ void main() {
       expect(platform.evaluatedSources, isEmpty);
     },
   );
+
+  group('dropdown interaction messages', () {
+    setUp(() async {
+      await controller.onLoadStop();
+    });
+
+    test('accepts open and close only for the active document', () {
+      expect(controller.isDropdownOpen, isFalse);
+      platform.reportDropdown(true, token: 'previous-document');
+      expect(controller.isDropdownOpen, isFalse);
+
+      platform.reportDropdown(true);
+      expect(controller.isDropdownOpen, isTrue);
+      for (final message in [
+        null,
+        {'token': platform.observationToken, 'open': 'false'},
+        {'token': platform.observationToken},
+      ]) {
+        platform.handlers[TopIframeHelper.dropdownStateHandlerName]!([message]);
+        expect(controller.isDropdownOpen, isTrue);
+      }
+      platform.reportDropdown(false);
+      expect(controller.isDropdownOpen, isFalse);
+    });
+
+    test(
+      'navigation clears state and ignores messages from the old page',
+      () async {
+        platform.reportDropdown(true);
+        final oldToken = platform.observationToken;
+        controller.onLoadStart();
+        expect(controller.isDropdownOpen, isFalse);
+        platform.reportDropdown(true, token: oldToken);
+        expect(controller.isDropdownOpen, isFalse);
+
+        await controller.onLoadStop();
+        platform.reportDropdown(true, token: oldToken);
+        expect(controller.isDropdownOpen, isFalse);
+        final source = platform.evaluatedSources.firstWhere(
+          (source) =>
+              source.contains('TopIframeDropdownState') &&
+              !source.contains('"$oldToken"'),
+        );
+        final newToken =
+            RegExp(r'\}\)\("([^"]+)"\);').firstMatch(source)!.group(1)!;
+        platform.reportDropdown(true, token: newToken);
+        expect(controller.isDropdownOpen, isTrue);
+      },
+    );
+
+    test('errors clear state and reject further open messages', () {
+      platform.reportDropdown(true);
+      controller.onLoadError('Failed to load');
+      expect(controller.isDropdownOpen, isFalse);
+      platform.reportDropdown(true);
+      expect(controller.isDropdownOpen, isFalse);
+    });
+
+    test(
+      'refresh detaches the handler and ignores a queued stale callback',
+      () {
+        platform.reportDropdown(true);
+        final callback =
+            platform.handlers[TopIframeHelper.dropdownStateHandlerName]!;
+        final oldToken = platform.observationToken;
+        controller.resetWebViewState();
+        expect(controller.isDropdownOpen, isFalse);
+        expect(platform.handlers, isEmpty);
+        callback([
+          {'token': oldToken, 'open': true},
+        ]);
+        expect(controller.isDropdownOpen, isFalse);
+      },
+    );
+
+    test('hiding and detaching a view clears dropdown state', () {
+      platform.reportDropdown(true);
+      controller.isVisible.value = false;
+      controller.resetWebViewState();
+      expect(controller.isDropdownOpen, isFalse);
+      expect(platform.handlers, isEmpty);
+    });
+  });
 }

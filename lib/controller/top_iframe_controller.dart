@@ -49,6 +49,9 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
   int _documentGeneration = 0;
   String? _activeInstanceKey;
   String? _activeObservationToken;
+  bool _isDropdownOpen = false;
+
+  bool get isDropdownOpen => _isDropdownOpen;
 
   void initialize({
     Duration refreshInterval = const Duration(minutes: 1),
@@ -234,6 +237,25 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
         return null;
       },
     );
+    controller.addJavaScriptHandler(
+      handlerName: TopIframeHelper.dropdownStateHandlerName,
+      callback: (arguments) {
+        if (!_isCurrentWebView(controller, key) ||
+            generation != _webViewGeneration ||
+            hasError.value ||
+            arguments.isEmpty) {
+          return null;
+        }
+        final payload = arguments.first;
+        if (payload is Map &&
+            _activeObservationToken != null &&
+            payload['token'] == _activeObservationToken &&
+            payload['open'] is bool) {
+          _isDropdownOpen = payload['open'] as bool;
+        }
+        return null;
+      },
+    );
     _startLoadingTimeout();
   }
 
@@ -245,6 +267,7 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
     if (view == null || !_isCurrentWebView(view, instanceKey)) return;
     _documentGeneration++;
     _activeObservationToken = null;
+    _isDropdownOpen = false;
     currentWidth.value = null;
     hasDetectedHeight.value = false;
     isLoading.value = true;
@@ -272,6 +295,7 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
     if (view == null || !_isCurrentWebView(view, instanceKey)) return;
     _documentGeneration++;
     _activeObservationToken = null;
+    _isDropdownOpen = false;
     isLoading.value = false;
     hasError.value = true;
     errorMessage.value = error;
@@ -287,7 +311,7 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
     final token = '${_activeInstanceKey}_${generation}_$documentGeneration';
     _activeObservationToken = token;
     try {
-      await TopIframeHelper.installContentSizeObserver(
+      await TopIframeHelper.installContentObservers(
         view,
         observationToken: token,
       );
@@ -364,6 +388,7 @@ class TopIframeController extends GetxController with WidgetsBindingObserver {
     _documentGeneration++;
     _activeInstanceKey = null;
     _activeObservationToken = null;
+    _isDropdownOpen = false;
     final previousView = webViewController;
     webViewController = null;
     TopIframeHelper.safeDisposeWebView(previousView);
