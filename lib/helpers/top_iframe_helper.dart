@@ -12,6 +12,7 @@ class TopIframeContentSize {
 
 class TopIframeHelper {
   static const String contentSizeHandlerName = 'TopIframeContentSize';
+  static const String dropdownStateHandlerName = 'TopIframeDropdownState';
   static int _nextWebViewKey = 0;
 
   // Measure an authored content root rather than the WebView's viewport. The
@@ -176,6 +177,64 @@ class TopIframeHelper {
 })(${jsonEncode(observationToken)});
 ''';
 
+  // Radix Select portals its listbox into body. Watch that document as well as
+  // the trigger, independently of the debounced content-size measurements.
+  static String dropdownStateObserverScript(String observationToken) => '''
+(function(token) {
+  var previous = window.__topIframeDropdownObserver;
+  if (previous && previous.dispose) previous.dispose();
+  var disposed = false;
+  var lastOpen = null;
+
+  function isVisible(element) {
+    if (element.closest('[hidden], [aria-hidden="true"]')) return false;
+    var style = window.getComputedStyle(element);
+    var rect = element.getBoundingClientRect();
+    return style.display !== 'none' && style.visibility !== 'hidden' &&
+      rect.width > 0 && rect.height > 0;
+  }
+
+  function report() {
+    if (disposed) return;
+    var open = Array.from(document.querySelectorAll(
+      '[role="combobox"][aria-expanded="true"], ' +
+      '[aria-haspopup="listbox"][aria-expanded="true"], ' +
+      '[role="listbox"]:not([data-state="closed"])'
+    )).some(isVisible);
+    if (lastOpen === open) return;
+    var bridge = window.flutter_inappwebview;
+    if (!bridge || typeof bridge.callHandler !== 'function') return;
+    lastOpen = open;
+    Promise.resolve(bridge.callHandler('$dropdownStateHandlerName', {
+      token: token, open: open
+    })).catch(function() { lastOpen = null; });
+  }
+
+  var observer = typeof MutationObserver === 'function'
+    ? new MutationObserver(report) : null;
+  if (observer && document.documentElement) {
+    observer.observe(document.documentElement, {
+      childList: true, subtree: true, attributes: true,
+      attributeFilter: [
+        'aria-expanded', 'aria-hidden', 'data-state', 'role',
+        'class', 'style', 'hidden'
+      ]
+    });
+  }
+  window.addEventListener('resize', report);
+  window.addEventListener('flutterInAppWebViewPlatformReady', report);
+  window.__topIframeDropdownObserver = {
+    dispose: function() {
+      disposed = true;
+      if (observer) observer.disconnect();
+      window.removeEventListener('resize', report);
+      window.removeEventListener('flutterInAppWebViewPlatformReady', report);
+    }
+  };
+  report();
+})(${jsonEncode(observationToken)});
+''';
+
   static InAppWebViewGroupOptions createWebViewSettings() {
     return InAppWebViewGroupOptions(
       crossPlatform: InAppWebViewOptions(
@@ -234,12 +293,14 @@ class TopIframeHelper {
     return number != null && number.isFinite && number > 0 ? number : null;
   }
 
-  static Future<void> installContentSizeObserver(
+  static Future<void> installContentObservers(
     InAppWebViewController controller, {
     required String observationToken,
   }) async {
     await controller.evaluateJavascript(
-      source: contentSizeObserverScript(observationToken),
+      source:
+          '${contentSizeObserverScript(observationToken)}\n'
+          '${dropdownStateObserverScript(observationToken)}',
     );
   }
 
@@ -279,9 +340,14 @@ class TopIframeHelper {
   // here, so late messages cannot reach the controller for a different URL.
   static void safeDisposeWebView(InAppWebViewController? controller) {
     if (controller == null) return;
-    try {
-      controller.removeJavaScriptHandler(handlerName: contentSizeHandlerName);
-    } catch (_) {}
+    for (final handlerName in [
+      contentSizeHandlerName,
+      dropdownStateHandlerName,
+    ]) {
+      try {
+        controller.removeJavaScriptHandler(handlerName: handlerName);
+      } catch (_) {}
+    }
     unawaited(_disconnectContentSizeObserver(controller));
   }
 
@@ -295,6 +361,9 @@ class TopIframeHelper {
   var observer = window.__topIframeContentSizeObserver;
   if (observer && observer.dispose) observer.dispose();
   delete window.__topIframeContentSizeObserver;
+  var dropdownObserver = window.__topIframeDropdownObserver;
+  if (dropdownObserver && dropdownObserver.dispose) dropdownObserver.dispose();
+  delete window.__topIframeDropdownObserver;
 })();
 ''',
       );
